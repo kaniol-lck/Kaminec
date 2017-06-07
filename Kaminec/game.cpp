@@ -87,7 +87,7 @@ QStringList game::genLibpath()
 
 QStringList game::genGameargs()
 {
-    return QStringList{gameJson.getMCMainClass()+
+    return QStringList{gameJson.getMCMainClass()+" "+
                        gameJson.getMCArgs()
                        .replace("${auth_player_name}",gameProfile.username)
                        .replace("${version_name}",gameProfile.version)
