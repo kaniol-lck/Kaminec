@@ -5,6 +5,7 @@
 #include <QVariantMap>
 #include <QStringList>
 #include <QPair>
+#include <QUrl>
 
 class jsonManager
 {
@@ -13,7 +14,8 @@ public:
 
     QStringList                   getLibfileList();
     QStringList                   getExtractfileList();
-    QList<QPair<QString,QString>> getDownloadfileUrls();
+    QList<QPair<QUrl,QString>>    getDownloadLibUrls();
+    QList<QPair<QUrl,QString>>    getDownloadAssertUrls();
     QString                       getMCArgs();
     QString                       getMCMainClass();
     QString                       getAssetIndex();

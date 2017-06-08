@@ -134,5 +134,5 @@ void KaminecLauncher::on_start_pb_clicked()
     QTime t;
     game g(this->getProfile(),mode::Online);
     g.start();
-    qDebug()<<t.elapsed();
+    qDebug()<<"Time eslaped:"<<t.elapsed()<<"ms.";
 }

@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -27,12 +28,14 @@ SOURCES += main.cpp\
         kamineclauncher.cpp \
     profile.cpp \
     game.cpp \
-    jsonmanager.cpp
+    jsonmanager.cpp \
+    downloadmanager.cpp
 
 HEADERS  += kamineclauncher.h \
     profile.h \
     game.h \
     gamemode.h \
-    jsonmanager.h
+    jsonmanager.h \
+    downloadmanager.h
 
 FORMS    += kamineclauncher.ui

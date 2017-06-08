@@ -30,6 +30,8 @@ int game::start()
     for(auto& i:startcode)
         out<<i<<" ";
 
+    qDebug()<<gameJson.getDownloadAssertUrls();
+
     auto gameProcess = new QProcess;
     gameProcess->start(
                 "\""+gameProfile.javaDir+"\"",

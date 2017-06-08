@@ -65,10 +65,10 @@ QStringList jsonManager::getExtractfileList()
 
 #include <QPair>
 
-QList<QPair<QString, QString> > jsonManager::getDownloadfileUrls()
+QList<QPair<QUrl, QString> > jsonManager::getDownloadLibUrls()
 {
-    return std::accumulate(libList.begin(),libList.end(),QList<QPair<QString, QString>>(),
-                           [](QList<QPair<QString,QString>> libUrls,QVariant libElem){
+    return std::accumulate(libList.begin(),libList.end(),QList<QPair<QUrl, QString>>(),
+                           [](QList<QPair<QUrl,QString>> libUrls,QVariant libElem){
         return libElem
                 .toMap().take("downloads")
                 .toMap().contains("artifact")?
@@ -76,7 +76,7 @@ QList<QPair<QString, QString> > jsonManager::getDownloadfileUrls()
                               .toMap().take("downloads")
                               .toMap().take("artifact")
                               .toMap().take("url")
-                              .toString(),
+                              .toUrl(),
                                        libElem
                               .toMap().take("downloads")
                               .toMap().take("artifact")
@@ -88,7 +88,7 @@ QList<QPair<QString, QString> > jsonManager::getDownloadfileUrls()
                               .toMap().take("classifiers")
                               .toMap().take("natives-windows")
                               .toMap().take("url")
-                              .toString(),
+                              .toUrl(),
                                        libElem
                               .toMap().take("downloads")
                               .toMap().take("classifiers")
@@ -96,6 +96,65 @@ QList<QPair<QString, QString> > jsonManager::getDownloadfileUrls()
                               .toMap().take("path")
                               .toString());
     });
+}
+
+
+#include <QByteArray>
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkRequest>
+#include <QtNetwork/QNetworkReply>
+#include <QEventLoop>
+
+QList<QPair<QUrl, QString> > jsonManager::getDownloadAssertUrls()
+{
+    //QUrl assertUrl=jsonMap.take("assetIndex")
+    //                  .toMap().take("url").toUrl();
+    //
+    //qDebug()<<"start download:"<<assertUrl;
+    //QNetworkAccessManager m_qnam;
+    //QNetworkRequest qnr(assertUrl);
+    //QNetworkReply* reply = m_qnam.get(qnr); //m_qnam是QNetworkAccessManager对象
+    //
+    //QEventLoop eventLoop;
+    //QObject::connect(reply, &QNetworkReply::finished, &eventLoop, &QEventLoop::quit);
+    //eventLoop.exec(QEventLoop::ExcludeUserInputEvents);
+    //
+    //qDebug()<<"finished:"<<reply->readAll()<<"???";
+
+    QByteArray assertByte;
+
+
+
+
+    QFile f("J:/库/桌面/1.10.json");
+
+    if(!f.exists())qDebug()<<"jsonfile file does not exist";
+    if(!f.open(QIODevice::ReadOnly | QIODevice::Text))qDebug()<<"Open failed";
+    qDebug()<<"jsonfile file opened!!!";
+    assertByte.resize(f.bytesAvailable());
+    assertByte = f.readAll();
+    f.close();
+
+
+
+    QJsonParseError ok;
+    auto assertDoc = QJsonDocument::fromJson(assertByte,&ok);
+    if(ok.error != QJsonParseError::NoError){qDebug()<<"Json failed."<<endl<<ok.error;}
+
+    auto objectMap = assertDoc.toVariant().toMap().take("objects").toMap();
+
+    QList<QPair<QUrl, QString>> downloadAssertUrls;
+
+    for(auto it=objectMap.begin();it!=objectMap.end();it++){
+        QString hash = it.value().toMap().take("hash").toString();
+        QString name = it.key();
+        QUrl url = QString("resources.download.minecraft.net/%1/%2").arg(hash.left(2),hash);
+        downloadAssertUrls.push_back(qMakePair(url,name));
+    }
+
+    //这个地方不知道为什么“downloadAssertUrls”放循环里正常，外边访问就不对
+    qDebug()<<downloadAssertUrls;
+    return downloadAssertUrls;
 }
 
 
