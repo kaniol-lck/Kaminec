@@ -115,16 +115,16 @@ void KaminecLauncher::on_load_pb_clicked()
 
     //解析profile的json模型
 
-    ui->username_le->setText(loadProfile.take("username").toString());
-    ui->version_le->setText(loadProfile.take("version").toString());
-    ui->gameDir_le->setText(loadProfile.take("gameDir").toString());
-    ui->javaDir_le->setText(loadProfile.take("javaDir").toString());
+    ui->username_le->setText(loadProfile.value("username").toString());
+    ui->version_le->setText(loadProfile.value("version").toString());
+    ui->gameDir_le->setText(loadProfile.value("gameDir").toString());
+    ui->javaDir_le->setText(loadProfile.value("javaDir").toString());
 
-    ui->minMem_sb->setValue(loadProfile.take("minMem").toInt());
-    ui->maxMem_sb->setValue(loadProfile.take("maxMem").toInt());
+    ui->minMem_sb->setValue(loadProfile.value("minMem").toInt());
+    ui->maxMem_sb->setValue(loadProfile.value("maxMem").toInt());
 
-    ui->width_sb->setValue(loadProfile.take("width").toInt());
-    ui->height_sb->setValue(loadProfile.take("height").toInt());
+    ui->width_sb->setValue(loadProfile.value("width").toInt());
+    ui->height_sb->setValue(loadProfile.value("height").toInt());
 }
 
 #include <QTime>

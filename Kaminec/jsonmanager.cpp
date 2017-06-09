@@ -24,7 +24,7 @@ jsonManager::jsonManager(QString jsonName)
     if(ok.error != QJsonParseError::NoError){qDebug()<<"Json failed."<<endl<<ok.error;}
 
     jsonMap = jsonDoc.toVariant().toMap();
-    libList = jsonMap.take("libraries").toList();
+    libList = jsonMap.value("libraries").toList();
 }
 
 
@@ -34,12 +34,12 @@ QStringList jsonManager::getLibfileList()
     return std::accumulate(libList.begin(),libList.end(),QStringList(),
                            [](QStringList libfileList,QVariant libElem){
         return libElem
-                .toMap().take("downloads")
+                .toMap().value("downloads")
                 .toMap().contains("artifact")?
                     (libfileList<<libElem
-                            .toMap().take("downloads")
-                            .toMap().take("artifact")
-                            .toMap().take("path")
+                            .toMap().value("downloads")
+                            .toMap().value("artifact")
+                            .toMap().value("path")
                             .toString()):
                     libfileList;
     });
@@ -53,10 +53,10 @@ QStringList jsonManager::getExtractfileList()
                            [](QStringList libfileList,QVariant libElem){
         return libElem.toMap().contains("extract")?
                     (libfileList<<libElem
-                            .toMap().take("downloads")
-                            .toMap().take("classifiers")
-                            .toMap().take("natives-windows")
-                            .toMap().take("path")
+                            .toMap().value("downloads")
+                            .toMap().value("classifiers")
+                            .toMap().value("natives-windows")
+                            .toMap().value("path")
                             .toString()):
                     libfileList;
     });
@@ -70,30 +70,30 @@ QList<QPair<QUrl, QString> > jsonManager::getDownloadLibUrls()
     return std::accumulate(libList.begin(),libList.end(),QList<QPair<QUrl, QString>>(),
                            [](QList<QPair<QUrl,QString>> libUrls,QVariant libElem){
         return libElem
-                .toMap().take("downloads")
+                .toMap().value("downloads")
                 .toMap().contains("artifact")?
                     libUrls<<qMakePair(libElem
-                              .toMap().take("downloads")
-                              .toMap().take("artifact")
-                              .toMap().take("url")
+                              .toMap().value("downloads")
+                              .toMap().value("artifact")
+                              .toMap().value("url")
                               .toUrl(),
                                        libElem
-                              .toMap().take("downloads")
-                              .toMap().take("artifact")
-                              .toMap().take("path")
+                              .toMap().value("downloads")
+                              .toMap().value("artifact")
+                              .toMap().value("path")
                               .toString()):
 
                     libUrls<<qMakePair(libElem
-                              .toMap().take("downloads")
-                              .toMap().take("classifiers")
-                              .toMap().take("natives-windows")
-                              .toMap().take("url")
+                              .toMap().value("downloads")
+                              .toMap().value("classifiers")
+                              .toMap().value("natives-windows")
+                              .toMap().value("url")
                               .toUrl(),
                                        libElem
-                              .toMap().take("downloads")
-                              .toMap().take("classifiers")
-                              .toMap().take("natives-windows")
-                              .toMap().take("path")
+                              .toMap().value("downloads")
+                              .toMap().value("classifiers")
+                              .toMap().value("natives-windows")
+                              .toMap().value("path")
                               .toString());
     });
 }
@@ -107,8 +107,8 @@ QList<QPair<QUrl, QString> > jsonManager::getDownloadLibUrls()
 
 QList<QPair<QUrl, QString> > jsonManager::getDownloadAssertUrls()
 {
-    //QUrl assertUrl=jsonMap.take("assetIndex")
-    //                  .toMap().take("url").toUrl();
+    //QUrl assertUrl=jsonMap.value("assetIndex")
+    //                  .toMap().value("url").toUrl();
     //
     //qDebug()<<"start download:"<<assertUrl;
     //QNetworkAccessManager m_qnam;
@@ -141,12 +141,12 @@ QList<QPair<QUrl, QString> > jsonManager::getDownloadAssertUrls()
     auto assertDoc = QJsonDocument::fromJson(assertByte,&ok);
     if(ok.error != QJsonParseError::NoError){qDebug()<<"Json failed."<<endl<<ok.error;}
 
-    auto objectMap = assertDoc.toVariant().toMap().take("objects").toMap();
+    auto objectMap = assertDoc.toVariant().toMap().value("objects").toMap();
 
     QList<QPair<QUrl, QString>> downloadAssertUrls;
 
     for(auto it=objectMap.begin();it!=objectMap.end();it++){
-        QString hash = it.value().toMap().take("hash").toString();
+        QString hash = it.value().toMap().value("hash").toString();
         QString name = it.key();
         QUrl url = QString("resources.download.minecraft.net/%1/%2").arg(hash.left(2),hash);
         downloadAssertUrls.push_back(qMakePair(url,name));
@@ -161,18 +161,18 @@ QList<QPair<QUrl, QString> > jsonManager::getDownloadAssertUrls()
 
 QString jsonManager::getMCArgs()
 {
-    return jsonMap.take("minecraftArguments").toString();
+    return jsonMap.value("minecraftArguments").toString();
 }
 
 
 
 QString jsonManager::getMCMainClass()
 {
-    return jsonMap.take("mainClass").toString();
+    return jsonMap.value("mainClass").toString();
 }
 
 QString jsonManager::getAssetIndex()
 {
-    return jsonMap.take("assets")
+    return jsonMap.value("assets")
             .toString();
 }
