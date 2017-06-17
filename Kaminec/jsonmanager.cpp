@@ -166,9 +166,9 @@ QString jsonManager::getMCArgs()
 
 
 
-QString jsonManager::getMCMainClass()
+QStringList jsonManager::getMCMainClass()
 {
-    return jsonMap.value("mainClass").toString();
+    return jsonMap.value("mainClass").toStringList();
 }
 
 QString jsonManager::getAssetIndex()

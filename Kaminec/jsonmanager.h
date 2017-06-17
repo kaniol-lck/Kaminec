@@ -17,7 +17,7 @@ public:
     QList<QPair<QUrl,QString>>    getDownloadLibUrls();
     QList<QPair<QUrl,QString>>    getDownloadAssertUrls();
     QString                       getMCArgs();
-    QString                       getMCMainClass();
+    QStringList                   getMCMainClass();
     QString                       getAssetIndex();
 
 private:

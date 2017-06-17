@@ -32,9 +32,11 @@ int game::start()
 
     qDebug()<<gameJson.getDownloadAssertUrls();
 
+    for(auto& i:startcode)
+        i.replace('/',"\\");
     auto gameProcess = new QProcess;
     gameProcess->start(
-                "\""+gameProfile.javaDir+"\"",
+                gameProfile.javaDir,
                 startcode);
     return 0;
 }
@@ -52,6 +54,9 @@ QStringList game::genStartcode()
 
 QStringList game::genJVMargs()
 {
+    QString nativesPath=gameProfile.gameDir+"/natives";//待改
+    this->extractNatives(nativesPath);
+
     return QStringList
     {
         "-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump",
@@ -60,6 +65,7 @@ QStringList game::genJVMargs()
         "-XX:-OmitStackTraceInFastThrow",
         QString("-Xmn%1m").arg(gameProfile.minMem),
         QString("-Xmx%1m").arg(gameProfile.maxMem),
+        QString("-Djava.library.path=%1").arg(nativesPath),
         "-Dfml.ignoreInvalidMinecraftCertificates=true",
         "-Dfml.ignorePatchDiscrepancies=true"
     };
@@ -70,13 +76,10 @@ QStringList game::genLibpath()
 {
     QStringList libargs;
 
-    QString nativesPath=gameProfile.gameDir+"/natives";//待改
-    this->extractNatives(nativesPath);
-    libargs<<"-Djava.library.path="+nativesPath;
-
     auto libfileList =gameJson.getLibfileList();
 
-    libargs<<std::accumulate(libfileList.begin(),libfileList.end(),QString(),
+    libargs<<"-cp"
+           <<std::accumulate(libfileList.begin(),libfileList.end(),QString(""),
                              [=](QString filenames,QString singleFile){
              return (filenames+=gameProfile.gameDir+"/libraries/"+singleFile+";");
     })
@@ -89,15 +92,19 @@ QStringList game::genLibpath()
 
 QStringList game::genGameargs()
 {
-    return QStringList{gameJson.getMCMainClass()+" "+
+    return QStringList(gameJson.getMCMainClass()+
                        gameJson.getMCArgs()
                        .replace("${auth_player_name}",gameProfile.username)
                        .replace("${version_name}",gameProfile.version)
-                       .replace("${game_directory}",gameProfile.gameDir)
-                       .replace("${assets_root}",gameProfile.gameDir+"/assets")
+                       .replace("${game_directory}",QString("\"%1\"").arg(gameProfile.gameDir))
+                       .replace("${assets_root}",QString("\"%1/assets\"").arg(gameProfile.gameDir))
                        .replace("${assets_index_name}",gameJson.getAssetIndex())
+                       .replace("${auth_uuid}","bf500b0b7dcc94d0f803cc980f2b4d3f")
+                       .replace("${auth_access_token}","bf500b0b7dcc94d0f803cc980f2b4d3f")
                        .replace("${user_type}","Legacy")
-                       .replace("${version_type}","Kaminec")};
+                       .replace("${version_type}","\"Kaminec\"").split(" ")<<
+                       QString("--height")<<QString::number(gameProfile.height)<<
+                       QString("--width")<<QString::number(gameProfile.width));
 }
 
 
