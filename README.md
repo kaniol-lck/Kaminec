@@ -9,11 +9,8 @@ You can find this project on GitHub:[kaniol-lck/Kaminec](www.github.com/kaniol-l
 
 ------
 
-## **WARNING**:CANNOT LAUNCH THE GAME CORRECTLY IN THIS VERSION!!!
 
-------
-
-## Function Table
+## Functionality Table
 
 - Basic launch arguments  generate
 - Json Manager
