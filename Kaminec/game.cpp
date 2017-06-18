@@ -30,10 +30,8 @@ int game::start()
     for(auto& i:startcode)
         out<<i<<" ";
 
-    qDebug()<<gameJson.getDownloadAssertUrls();
+    //qDebug()<<gameJson.getDownloadAssertUrls();
 
-    for(auto& i:startcode)
-        i.replace('/',"\\");
     auto gameProcess = new QProcess;
     gameProcess->start(
                 gameProfile.javaDir,
@@ -96,13 +94,13 @@ QStringList game::genGameargs()
                        gameJson.getMCArgs()
                        .replace("${auth_player_name}",gameProfile.username)
                        .replace("${version_name}",gameProfile.version)
-                       .replace("${game_directory}",QString("\"%1\"").arg(gameProfile.gameDir))
-                       .replace("${assets_root}",QString("\"%1/assets\"").arg(gameProfile.gameDir))
+                       .replace("${game_directory}",gameProfile.gameDir)
+                       .replace("${assets_root}",QString("%1/assets").arg(gameProfile.gameDir))
                        .replace("${assets_index_name}",gameJson.getAssetIndex())
                        .replace("${auth_uuid}","bf500b0b7dcc94d0f803cc980f2b4d3f")
                        .replace("${auth_access_token}","bf500b0b7dcc94d0f803cc980f2b4d3f")
                        .replace("${user_type}","Legacy")
-                       .replace("${version_type}","\"Kaminec\"").split(" ")<<
+                       .replace("${version_type}","Kaminec").split(" ")<<
                        QString("--height")<<QString::number(gameProfile.height)<<
                        QString("--width")<<QString::number(gameProfile.width));
 }
