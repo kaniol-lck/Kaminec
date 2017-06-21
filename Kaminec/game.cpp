@@ -1,5 +1,6 @@
 #include "game.h"
 
+#include <QTime>
 #include <QDebug>
 #include <QProcess>
 #include <QStringList>
@@ -18,22 +19,33 @@ game::game(profile gp, mode gm):
 int game::start()
 {
     //auto gameProcess = new QProcess;
+    QTime t;
     auto startcode = this->genStartcode();
+    auto time =t.elapsed();
 
     qDebug()<<"java="<<gameProfile.javaDir<<endl
-           <<"args="<<startcode;
+           <<"args="<<startcode
+          <<"Time elapsed:"<<time<<"ms.";
 
-    QFile f("J:/库/桌面/argss.txt");
-    if (!f.open(QIODevice::WriteOnly | QIODevice::Text))
-        return 0;
-    QTextStream out(&f);
-    for(auto& i:startcode)
-        out<<i<<" ";
+    QFile logs("logs.txt");
+    logs.open(QIODevice::WriteOnly | QIODevice::Text);
 
-    //qDebug()<<gameJson.getDownloadAssertUrls();
+    QTextStream out(&logs);
+    out<<"java path:"<<gameProfile.javaDir<<endl;
+    out<<"game arguments:";
+    for(auto& i:startcode)out<<i<<" ";
+    out<<endl;
+    out<<"game directory:"<<gameProfile.gameDir<<endl;
+    out<<"Time used:"<<time<<"ms";
 
-    auto gameProcess = new QProcess;
-    gameProcess->start(
+    //textTime.txt
+    QFile ttf("timeTest.txt");
+    ttf.open(QIODevice::WriteOnly | QIODevice::Text | QFile::Append);
+
+    QTextStream out2(&ttf);
+    out2<<time<<endl;
+
+    gameProcess.start(
                 gameProfile.javaDir,
                 startcode);
     return 0;
@@ -131,12 +143,11 @@ int game::extractNatives(QString nativesDir)
             return -1;
         }
         else{
-            auto unjar = new QProcess;
             QStringList unzipargs;
             unzipargs<< "x"
                      << filename
                      <<"-o"+nativesDir+"/";
-            unjar->start("7za",unzipargs);
+            QProcess::startDetached("7za",unzipargs);
         }
 
     }

@@ -4,6 +4,7 @@
 #include "gamemode.h"
 #include "game.h"
 
+#include <QTime>
 #include <QDebug>
 #include <QString>
 #include <QByteArray>
@@ -82,7 +83,7 @@ void KaminecLauncher::on_save_pb_clicked()
     qDebug()<<bytes;
 
     //生成profile的json文档
-    QFile savefile(R"(J:\库\桌面\profile.json)");
+    QFile savefile("profile.json");
     savefile.open(QIODevice::WriteOnly|QIODevice::Text);
 
     QTextStream output(&savefile);
@@ -93,7 +94,7 @@ void KaminecLauncher::on_save_pb_clicked()
 //载入profile文件
 void KaminecLauncher::on_load_pb_clicked()
 {
-    QFile loadfile(R"(J:\库\桌面\profile.json)");
+    QFile loadfile("profile.json");
     if(!loadfile.open(QIODevice::ReadOnly|QIODevice::Text)){
         QMessageBox::warning(this,"File not exist.",R"(It's no file called "profile.json".)");
         return;
@@ -127,12 +128,58 @@ void KaminecLauncher::on_load_pb_clicked()
     ui->height_sb->setValue(loadProfile.value("height").toInt());
 }
 
-#include <QTime>
 
 void KaminecLauncher::on_start_pb_clicked()
 {
-    QTime t;
     game g(this->getProfile(),mode::Online);
     g.start();
-    qDebug()<<"Time eslaped:"<<t.elapsed()<<"ms.";
+}
+
+void KaminecLauncher::on_pushButton_clicked()
+{
+    game g(this->getProfile(),mode::Online);
+    QTime t;
+    g.genStartcode();
+    auto time = t.elapsed();
+    QFile ttf("timeTest.txt");
+    ttf.open(QIODevice::WriteOnly | QIODevice::Text | QFile::Append);
+
+    QTextStream out2(&ttf);
+    out2<<time<<endl;
+}
+
+void KaminecLauncher::on_pushButton_2_clicked()
+{
+    QFile ttf("timeTest.txt");
+    ttf.open(QIODevice::WriteOnly | QIODevice::Text | QFile::Append);
+    QTextStream out2(&ttf);
+
+    QTime at;
+    game g(this->getProfile(),mode::Online);
+    for(auto i=1;i!=10;++i){
+        QTime t;
+        g.genStartcode();
+        auto time = t.elapsed();
+        out2<<time<<endl;
+    }
+
+    out2<<"#10#"<<at.elapsed()<<endl;
+}
+
+void KaminecLauncher::on_pushButton_3_clicked()
+{
+    QFile ttf("timeTest.txt");
+    ttf.open(QIODevice::WriteOnly | QIODevice::Text | QFile::Append);
+    QTextStream out2(&ttf);
+
+    QTime at;
+    game g(this->getProfile(),mode::Online);
+    for(auto i=1;i!=100;++i){
+        QTime t;
+        g.genStartcode();
+        auto time = t.elapsed();
+        out2<<time<<endl;
+    }
+
+    out2<<"#100#"<<at.elapsed()<<endl;
 }

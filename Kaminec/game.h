@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <QString>
+#include <QProcess>
 
 #include "profile.h"
 #include "gamemode.h"
@@ -25,6 +26,8 @@ public:
 
     int extractNatives(QString);
 private:
+    QProcess gameProcess;
+
     profile gameProfile;
     mode gamemode;
     jsonManager gameJson;
