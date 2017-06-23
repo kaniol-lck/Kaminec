@@ -159,9 +159,9 @@ QList<QPair<QUrl, QString> > jsonManager::getDownloadAssertUrls()
 
 
 
-QString jsonManager::getMCArgs()
+QStringList jsonManager::getMCArgs()
 {
-    return jsonMap.value("minecraftArguments").toString();
+    return jsonMap.value("minecraftArguments").toString().split(" ");
 }
 
 

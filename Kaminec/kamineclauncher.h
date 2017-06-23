@@ -18,6 +18,8 @@ public:
     ~KaminecLauncher();
 
     const profile getProfile();
+    void loadProfileJson();
+    void saveProfileJson();
 private slots:
     void on_fileDlg1_pb_clicked();
 

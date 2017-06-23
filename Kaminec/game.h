@@ -24,10 +24,8 @@ public:
     QStringList genGameargs();
     QStringList checkSession();
 
-    int extractNatives(QString);
+    int extractNatives(QString nativesDir);
 private:
-    QProcess gameProcess;
-
     profile gameProfile;
     mode gamemode;
     jsonManager gameJson;

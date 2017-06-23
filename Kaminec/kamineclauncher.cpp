@@ -20,6 +20,7 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
     ui(new Ui::KaminecLauncher)
 {
     ui->setupUi(this);
+    this->loadProfileJson();
 }
 
 KaminecLauncher::~KaminecLauncher()
@@ -42,57 +43,7 @@ inline const profile KaminecLauncher::getProfile()
                    ui->height_sb->value()};
 }
 
-//选择游戏目录
-void KaminecLauncher::on_fileDlg1_pb_clicked()
-{
-    ui->gameDir_le->setText(
-                QFileDialog::getExistingDirectory(this,"Choose game directory..."));
-}
-
-//选择javaw.exe路径
-void KaminecLauncher::on_fileDlg2_pb_clicked()
-{
-    ui->javaDir_le->setText(
-                QFileDialog::getOpenFileName(this,"Choose javaw,exe...","C:/","javaw(javaw.exe)"));
-}
-
-//保存profile文件
-void KaminecLauncher::on_save_pb_clicked()
-{
-    QJsonObject saveProfile;
-
-    //生成profile的json模型
-
-    saveProfile.insert("username",ui->username_le->text());
-    saveProfile.insert("version",ui->version_le->text());
-    saveProfile.insert("gameDir",ui->gameDir_le->text());
-    saveProfile.insert("javaDir",ui->javaDir_le->text());
-
-    saveProfile.insert("minMem",ui->minMem_sb->value());
-    saveProfile.insert("maxMem",ui->maxMem_sb->value());
-
-    saveProfile.insert("width",ui->width_sb->value());
-    saveProfile.insert("height",ui->height_sb->value());
-
-
-    QJsonDocument saveDoc;
-    saveDoc.setObject(saveProfile);
-
-    QByteArray bytes = saveDoc.toJson(QJsonDocument::Compact);
-
-    qDebug()<<bytes;
-
-    //生成profile的json文档
-    QFile savefile("profile.json");
-    savefile.open(QIODevice::WriteOnly|QIODevice::Text);
-
-    QTextStream output(&savefile);
-    output<<bytes;
-    savefile.close();
-}
-
-//载入profile文件
-void KaminecLauncher::on_load_pb_clicked()
+void KaminecLauncher::loadProfileJson()
 {
     QFile loadfile("profile.json");
     if(!loadfile.open(QIODevice::ReadOnly|QIODevice::Text)){
@@ -126,6 +77,66 @@ void KaminecLauncher::on_load_pb_clicked()
 
     ui->width_sb->setValue(loadProfile.value("width").toInt());
     ui->height_sb->setValue(loadProfile.value("height").toInt());
+}
+
+void KaminecLauncher::saveProfileJson()
+{
+    QJsonObject saveProfile;
+
+    //生成profile的json模型
+
+    saveProfile.insert("username",ui->username_le->text());
+    saveProfile.insert("version",ui->version_le->text());
+    saveProfile.insert("gameDir",ui->gameDir_le->text());
+    saveProfile.insert("javaDir",ui->javaDir_le->text());
+
+    saveProfile.insert("minMem",ui->minMem_sb->value());
+    saveProfile.insert("maxMem",ui->maxMem_sb->value());
+
+    saveProfile.insert("width",ui->width_sb->value());
+    saveProfile.insert("height",ui->height_sb->value());
+
+
+    QJsonDocument saveDoc;
+    saveDoc.setObject(saveProfile);
+
+    QByteArray bytes = saveDoc.toJson(QJsonDocument::Compact);
+
+    qDebug()<<bytes;
+
+    //生成profile的json文档
+    QFile savefile("profile.json");
+    savefile.open(QIODevice::WriteOnly|QIODevice::Text);
+
+    QTextStream output(&savefile);
+    output<<bytes;
+    savefile.close();
+}
+
+//选择游戏目录
+void KaminecLauncher::on_fileDlg1_pb_clicked()
+{
+    ui->gameDir_le->setText(
+                QFileDialog::getExistingDirectory(this,"Choose game directory..."));
+}
+
+//选择javaw.exe路径
+void KaminecLauncher::on_fileDlg2_pb_clicked()
+{
+    ui->javaDir_le->setText(
+                QFileDialog::getOpenFileName(this,"Choose javaw,exe...","C:/","javaw(javaw.exe)"));
+}
+
+//保存profile文件
+void KaminecLauncher::on_save_pb_clicked()
+{
+    this->loadProfileJson();
+}
+
+//载入profile文件
+void KaminecLauncher::on_load_pb_clicked()
+{
+    this->loadProfileJson();
 }
 
 
