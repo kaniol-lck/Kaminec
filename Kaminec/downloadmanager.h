@@ -1,34 +1,41 @@
 #ifndef DOWNLOADMANAGER_H
 #define DOWNLOADMANAGER_H
 
-#include <QCoreApplication>
 #include <QFile>
-#include <QFileInfo>
-#include <QList>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
-#include <QtNetwork/QSslError>
-#include <QStringList>
-#include <QTimer>
+#include <QObject>
+#include <QQueue>
+#include <QTime>
+#include <QPair>
 #include <QUrl>
+#include <QNetworkAccessManager>
 
 class downloadManager: public QObject
 {
     Q_OBJECT
-    QNetworkAccessManager manager;
-    QList<QNetworkReply *> currentDownloads;
-
 public:
-    downloadManager();
-    void doDownload(const QUrl &url);
-    QString saveFileName(const QUrl &url);
-    bool saveToDisk(const QString &filename, QIODevice *data);
+    downloadManager(QObject *parent = 0);
 
-public slots:
-    void execute();
-    void downloadFinished(QNetworkReply *reply);
-    void sslErrors(const QList<QSslError> &errors);
+    void append(const QPair<QUrl,QString> &url);
+    void append(const QList<QPair<QUrl,QString>> &urlList);
+
+signals:
+    void finished();
+
+private slots:
+    void startNextDownload();
+    void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
+    void downloadFinished();
+    void downloadReadyRead();
+
+private:
+    QNetworkAccessManager manager;
+    QQueue<QPair<QUrl,QString>> downloadQueue;
+    QNetworkReply *currentDownload;
+    QFile output;
+    QTime downloadTime;
+
+    int downloadedCount;
+    int totalCount;
 };
 
-#endif // DOWNLOADMANAGER_H
+#endif

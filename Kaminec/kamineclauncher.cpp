@@ -1,6 +1,7 @@
 #include "kamineclauncher.h"
 #include "ui_kamineclauncher.h"
 
+#include "downloadmanager.h"
 #include "gamemode.h"
 #include "game.h"
 
@@ -193,4 +194,10 @@ void KaminecLauncher::on_pushButton_3_clicked()
     }
 
     out2<<"#100#"<<at.elapsed()<<endl;
+}
+
+
+void KaminecLauncher::on_pushButton_4_clicked()
+{
+    qDebug()<<"Downloading";
 }

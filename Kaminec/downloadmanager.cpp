@@ -1,109 +1,93 @@
 #include "downloadManager.h"
 
-downloadManager::downloadManager()
+#include <QFileInfo>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QString>
+#include <QStringList>
+#include <QTimer>
+#include <stdio.h>
+
+downloadManager::downloadManager(QObject *parent)
+    : QObject(parent), downloadedCount(0), totalCount(0)
 {
-    connect(&manager, SIGNAL(finished(QNetworkReply*)),
-            SLOT(downloadFinished(QNetworkReply*)));
 }
 
-void downloadManager::doDownload(const QUrl &url)
+void downloadManager::append(const QList<QPair<QUrl, QString> > &urlList)
 {
-    QNetworkRequest request(url);
-    QNetworkReply *reply = manager.get(request);
+    for(QPair<QUrl, QString> url: urlList)
+        append(url);
 
-#ifndef QT_NO_SSL
-    connect(reply, SIGNAL(sslErrors(QList<QSslError>)), SLOT(sslErrors(QList<QSslError>)));
-#endif
-
-    currentDownloads.append(reply);
+    if (downloadQueue.isEmpty())
+        QTimer::singleShot(0, this, SIGNAL(finished()));
 }
 
-QString downloadManager::saveFileName(const QUrl &url)
+void downloadManager::append(const QPair<QUrl, QString> &url)
 {
-    QString path = url.path();
-    QString basename = QFileInfo(path).fileName();
+    if (downloadQueue.isEmpty())
+        QTimer::singleShot(0, this, SLOT(startNextDownload()));
 
-    if (basename.isEmpty())
-        basename = "download";
-
-    if (QFile::exists(basename)) {
-        // already exists, don't overwrite
-        int i = 0;
-        basename += '.';
-        while (QFile::exists(basename + QString::number(i)))
-            ++i;
-
-        basename += QString::number(i);
-    }
-
-    return basename;
+    downloadQueue.enqueue(url);
+    ++totalCount;
 }
 
-bool downloadManager::saveToDisk(const QString &filename, QIODevice *data)
+void downloadManager::startNextDownload()
 {
-    QFile file(filename);
-    if (!file.open(QIODevice::WriteOnly)) {
-        fprintf(stderr, "Could not open %s for writing: %s\n",
-                qPrintable(filename),
-                qPrintable(file.errorString()));
-        return false;
-    }
-
-    file.write(data->readAll());
-    file.close();
-
-    return true;
-}
-
-void downloadManager::execute()
-{
-    QStringList args = QCoreApplication::instance()->arguments();
-    args.takeFirst();           // skip the first argument, which is the program's name
-    if (args.isEmpty()) {
-        printf("Qt Download example - downloads all URLs in parallel\n"
-               "Usage: download url1 [url2... urlN]\n"
-               "\n"
-               "Downloads the URLs passed in the command-line to the local directory\n"
-               "If the target file already exists, a .0, .1, .2, etc. is appended to\n"
-               "differentiate.\n");
-        QCoreApplication::instance()->quit();
+    if (downloadQueue.isEmpty()) {
+        printf("%d/%d files downloaded successfully\n", downloadedCount, totalCount);
+        emit finished();
         return;
     }
 
-    foreach (QString arg, args) {
-        QUrl url = QUrl::fromEncoded(arg.toLocal8Bit());
-        doDownload(url);
+    auto url = downloadQueue.dequeue();
+
+    QString filename = url.second;//!
+    output.setFileName(filename);
+    if (!output.open(QIODevice::WriteOnly)) {
+        fprintf(stderr, "Problem opening save file '%s' for download '%s': %s\n",
+                qPrintable(filename), url.first.toEncoded().constData(),
+                qPrintable(output.errorString()));
+
+        startNextDownload();
+        return;                 // skip this download
     }
+
+    QNetworkRequest request(url.first);
+    currentDownload = manager.get(request);
+    connect(currentDownload, SIGNAL(downloadProgress(qint64,qint64)),
+            SLOT(downloadProgress(qint64,qint64)));
+    connect(currentDownload, SIGNAL(finished()),
+            SLOT(downloadFinished()));
+    connect(currentDownload, SIGNAL(readyRead()),
+            SLOT(downloadReadyRead()));
+
+    // prepare the output
+    printf("Downloading %s...\n", url.first.toEncoded().constData());
+    downloadTime.start();
 }
 
-void downloadManager::sslErrors(const QList<QSslError> &sslErrors)
+void downloadManager::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 {
-#ifndef QT_NO_SSL
-    foreach (const QSslError &error, sslErrors)
-        fprintf(stderr, "SSL error: %s\n", qPrintable(error.errorString()));
-#else
-    Q_UNUSED(sslErrors);
-#endif
 }
 
-void downloadManager::downloadFinished(QNetworkReply *reply)
+void downloadManager::downloadFinished()
 {
-    QUrl url = reply->url();
-    if (reply->error()) {
-        fprintf(stderr, "Download of %s failed: %s\n",
-                url.toEncoded().constData(),
-                qPrintable(reply->errorString()));
+    //progressBar.clear();//!
+    output.close();
+
+    if (currentDownload->error()) {
+        // download failed
+        fprintf(stderr, "Failed: %s\n", qPrintable(currentDownload->errorString()));
     } else {
-        QString filename = saveFileName(url);
-        if (saveToDisk(filename, reply))
-            printf("Download of %s succeeded (saved to %s)\n",
-                   url.toEncoded().constData(), qPrintable(filename));
+        printf("Succeeded.\n");
+        ++downloadedCount;
     }
 
-    currentDownloads.removeAll(reply);
-    reply->deleteLater();
+    currentDownload->deleteLater();
+    startNextDownload();
+}
 
-    if (currentDownloads.isEmpty())
-        // all downloads finished
-        QCoreApplication::instance()->quit();
+void downloadManager::downloadReadyRead()
+{
+    output.write(currentDownload->readAll());
 }

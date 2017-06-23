@@ -98,37 +98,21 @@ QList<QPair<QUrl, QString> > jsonManager::getDownloadLibUrls()
     });
 }
 
-
-#include <QByteArray>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
-#include <QEventLoop>
+#include "downloadmanager.h"
 
 QList<QPair<QUrl, QString> > jsonManager::getDownloadAssertUrls()
 {
-    //QUrl assertUrl=jsonMap.value("assetIndex")
-    //                  .toMap().value("url").toUrl();
-    //
-    //qDebug()<<"start download:"<<assertUrl;
-    //QNetworkAccessManager m_qnam;
-    //QNetworkRequest qnr(assertUrl);
-    //QNetworkReply* reply = m_qnam.get(qnr); //m_qnam是QNetworkAccessManager对象
-    //
-    //QEventLoop eventLoop;
-    //QObject::connect(reply, &QNetworkReply::finished, &eventLoop, &QEventLoop::quit);
-    //eventLoop.exec(QEventLoop::ExcludeUserInputEvents);
-    //
-    //qDebug()<<"finished:"<<reply->readAll()<<"???";
+    QUrl assertUrl=jsonMap.value("assetIndex")
+                      .toMap().value("url").toUrl();
 
-    QByteArray assertByte;
-
-
-
+    auto dm = new downloadManager;
+    dm->append(qMakePair(assertUrl,QString("J:/库/桌面/1.10.json")));
 
     QFile f("J:/库/桌面/1.10.json");
 
-    if(!f.exists())qDebug()<<"jsonfile file does not exist";
+    QByteArray assertByte;
+
+    if(!f.exists())qDebug()<<"jsonfile(1.10.json) file does not exist";
     if(!f.open(QIODevice::ReadOnly | QIODevice::Text))qDebug()<<"Open failed";
     qDebug()<<"jsonfile file opened!!!";
     assertByte.resize(f.bytesAvailable());
@@ -145,15 +129,17 @@ QList<QPair<QUrl, QString> > jsonManager::getDownloadAssertUrls()
 
     QList<QPair<QUrl, QString>> downloadAssertUrls;
 
-    for(auto it=objectMap.begin();it!=objectMap.end();it++){
-        QString hash = it.value().toMap().value("hash").toString();
-        QString name = it.key();
-        QUrl url = QString("resources.download.minecraft.net/%1/%2").arg(hash.left(2),hash);
-        downloadAssertUrls.push_back(qMakePair(url,name));
+    for(auto it:objectMap){
+        QString hash = it.toMap().value("hash").toString();
+        QString name = QString("%1/%2").arg(hash.left(2),hash);
+        QUrl url = "resources.download.minecraft.net/"+name;
+        downloadAssertUrls<<qMakePair(url,name);
     }
 
+    qDebug()<<"ha?";
     //这个地方不知道为什么“downloadAssertUrls”放循环里正常，外边访问就不对
-    qDebug()<<downloadAssertUrls;
+    for(auto& i:downloadAssertUrls)
+        qDebug()<<i;
     return downloadAssertUrls;
 }
 

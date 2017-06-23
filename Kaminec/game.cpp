@@ -19,6 +19,8 @@ game::game(profile gp, mode gm):
 
 int game::start()
 {
+    gameJson.getDownloadAssertUrls();
+
     //auto gameProcess = new QProcess;
     QTime t;
     auto startcode = this->genStartcode();
