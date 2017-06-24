@@ -2,6 +2,7 @@
 #include "ui_kamineclauncher.h"
 
 #include "downloadmanager.h"
+#include "jsonmanager.h"
 #include "gamemode.h"
 #include "game.h"
 
@@ -114,6 +115,28 @@ void KaminecLauncher::saveProfileJson()
     savefile.close();
 }
 
+int KaminecLauncher::download()
+{
+    jsonManager jm(ui->gameDir_le->text(),ui->version_le->text());
+    downloadManager dm;
+    auto downloadLibUrls = jm.getDownloadLibUrls();
+    for(auto& i:downloadLibUrls){
+        i.second.prepend(ui->gameDir_le->text()+"/libraries/");
+        qDebug()<<i;
+    }
+    dm.append(downloadLibUrls);
+
+    auto downloadAssertUrls = jm.getDownloadAssertUrls();
+    for(auto& i:downloadAssertUrls){
+        i.second.prepend(ui->gameDir_le->text()+"/assets/objects/");
+        qDebug()<<i;
+    }
+    dm.append(downloadAssertUrls);
+
+    if(dm.waitForFinished()==-1)return -1;
+    return 0;
+}
+
 //选择游戏目录
 void KaminecLauncher::on_fileDlg1_pb_clicked()
 {
@@ -131,7 +154,7 @@ void KaminecLauncher::on_fileDlg2_pb_clicked()
 //保存profile文件
 void KaminecLauncher::on_save_pb_clicked()
 {
-    this->loadProfileJson();
+    this->saveProfileJson();
 }
 
 //载入profile文件
@@ -200,4 +223,9 @@ void KaminecLauncher::on_pushButton_3_clicked()
 void KaminecLauncher::on_pushButton_4_clicked()
 {
     qDebug()<<"Downloading";
+}
+
+void KaminecLauncher::on_download_pb_clicked()
+{
+    this->download();
 }

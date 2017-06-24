@@ -20,6 +20,7 @@ public:
     const profile getProfile();
     void loadProfileJson();
     void saveProfileJson();
+    int download();
 private slots:
     void on_fileDlg1_pb_clicked();
 
@@ -38,6 +39,8 @@ private slots:
     void on_pushButton_3_clicked();
 
     void on_pushButton_4_clicked();
+
+    void on_download_pb_clicked();
 
 private:
     Ui::KaminecLauncher *ui;

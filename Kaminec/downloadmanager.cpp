@@ -1,5 +1,7 @@
 #include "downloadManager.h"
 
+#include <QDebug>
+#include <QDir>
 #include <QFileInfo>
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -22,6 +24,19 @@ void downloadManager::append(const QList<QPair<QUrl, QString> > &urlList)
         QTimer::singleShot(0, this, SIGNAL(finished()));
 }
 
+#include <QEventLoop>
+int downloadManager::waitForFinished()
+{
+    QEventLoop eventLoop(this);
+    connect(this,SIGNAL(finished()),&eventLoop,SLOT(quit()));
+    eventLoop.exec();
+    if(!downloadQueue.empty()){
+        qDebug()<<"exceptionally finished";
+        return -1;
+    }
+    return 0;
+}
+
 void downloadManager::append(const QPair<QUrl, QString> &url)
 {
     if (downloadQueue.isEmpty())
@@ -42,6 +57,9 @@ void downloadManager::startNextDownload()
     auto url = downloadQueue.dequeue();
 
     QString filename = url.second;//!
+    QDir d = QFileInfo(filename).path();
+    if(!d.exists())
+        d.mkpath(d.path());
     output.setFileName(filename);
     if (!output.open(QIODevice::WriteOnly)) {
         fprintf(stderr, "Problem opening save file '%s' for download '%s': %s\n",
@@ -68,6 +86,7 @@ void downloadManager::startNextDownload()
 
 void downloadManager::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 {
+    qDebug()<<QString("%1%  %2/%3").arg(bytesTotal==0?0:bytesReceived*100/bytesTotal,3).arg(bytesReceived,6).arg(bytesTotal,6);
 }
 
 void downloadManager::downloadFinished()
@@ -77,7 +96,7 @@ void downloadManager::downloadFinished()
 
     if (currentDownload->error()) {
         // download failed
-        fprintf(stderr, "Failed: %s\n", qPrintable(currentDownload->errorString()));
+        qDebug()<<"Failed:"<<qPrintable(currentDownload->errorString())<<"\n";
     } else {
         printf("Succeeded.\n");
         ++downloadedCount;

@@ -17,6 +17,7 @@ public:
 
     void append(const QPair<QUrl,QString> &url);
     void append(const QList<QPair<QUrl,QString>> &urlList);
+    int waitForFinished();
 
 signals:
     void finished();

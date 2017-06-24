@@ -1,6 +1,8 @@
 #ifndef JSONMANAGER_H
 #define JSONMANAGER_H
 
+#include "downloadmanager.h"
+
 #include <QJsonDocument>
 #include <QVariantMap>
 #include <QStringList>
@@ -10,7 +12,7 @@
 class jsonManager
 {
 public:
-    jsonManager(QString jsonName);
+    jsonManager(QString gamePath, QString version);
 
     QStringList                   getLibfileList();
     QStringList                   getExtractfileList();
@@ -24,6 +26,8 @@ private:
     QJsonDocument jsonDoc;
     QVariantMap jsonMap;
     QList<QVariant> libList;
+    downloadManager jsonDownload;
+    QString gameDir;
 };
 
 #endif // JSONMANAGER_H

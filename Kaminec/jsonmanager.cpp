@@ -6,13 +6,14 @@
 #include <QDebug>
 
 
-jsonManager::jsonManager(QString jsonName)
+jsonManager::jsonManager(QString gamePath,QString version):
+    gameDir(gamePath)
 {
-    QFile jsonFile(jsonName);
+    QFile jsonFile(gamePath+QString("/versions/%1/%1.json").arg(version));
 
     if(!jsonFile.exists())qDebug()<<"jsonfile file does not exist";
     if(!jsonFile.open(QIODevice::ReadOnly | QIODevice::Text))qDebug()<<"Open failed";
-    qDebug()<<"jsonfile file opened";
+    qDebug()<<"jsonfile(1.10.2.json) file opened";
 
     QByteArray jsonByte;
     jsonByte.resize(jsonFile.bytesAvailable());
@@ -71,28 +72,27 @@ QList<QPair<QUrl, QString> > jsonManager::getDownloadLibUrls()
                            [](QList<QPair<QUrl,QString>> libUrls,QVariant libElem){
         return libElem
                 .toMap().value("downloads")
-                .toMap().contains("artifact")?
+                .toMap().contains("classifiers")?
                     libUrls<<qMakePair(libElem
                               .toMap().value("downloads")
-                              .toMap().value("artifact")
+                              .toMap().value("classifiers")
+                              .toMap().value("natives-windows")
                               .toMap().value("url")
                               .toUrl(),
                                        libElem
                               .toMap().value("downloads")
-                              .toMap().value("artifact")
+                              .toMap().value("classifiers")
+                              .toMap().value("natives-windows")
                               .toMap().value("path")
                               .toString()):
-
                     libUrls<<qMakePair(libElem
                               .toMap().value("downloads")
-                              .toMap().value("classifiers")
-                              .toMap().value("natives-windows")
+                              .toMap().value("artifact")
                               .toMap().value("url")
                               .toUrl(),
                                        libElem
                               .toMap().value("downloads")
-                              .toMap().value("classifiers")
-                              .toMap().value("natives-windows")
+                              .toMap().value("artifact")
                               .toMap().value("path")
                               .toString());
     });
@@ -105,16 +105,16 @@ QList<QPair<QUrl, QString> > jsonManager::getDownloadAssertUrls()
     QUrl assertUrl=jsonMap.value("assetIndex")
                       .toMap().value("url").toUrl();
 
-    auto dm = new downloadManager;
-    dm->append(qMakePair(assertUrl,QString("J:/库/桌面/1.10.json")));
+    jsonDownload.append(qMakePair(assertUrl,gameDir+"/assets/indexes/1.10.json"));
+    jsonDownload.waitForFinished();
 
-    QFile f("J:/库/桌面/1.10.json");
+    QFile f(gameDir+"/assets/indexes/1.10.json");
 
     QByteArray assertByte;
 
     if(!f.exists())qDebug()<<"jsonfile(1.10.json) file does not exist";
     if(!f.open(QIODevice::ReadOnly | QIODevice::Text))qDebug()<<"Open failed";
-    qDebug()<<"jsonfile file opened!!!";
+    qDebug()<<"jsonfile(1.10.json) file opened!!!";
     assertByte.resize(f.bytesAvailable());
     assertByte = f.readAll();
     f.close();
@@ -132,7 +132,7 @@ QList<QPair<QUrl, QString> > jsonManager::getDownloadAssertUrls()
     for(auto it:objectMap){
         QString hash = it.toMap().value("hash").toString();
         QString name = QString("%1/%2").arg(hash.left(2),hash);
-        QUrl url = "resources.download.minecraft.net/"+name;
+        QUrl url = "http://resources.download.minecraft.net/"+name;
         downloadAssertUrls<<qMakePair(url,name);
     }
 

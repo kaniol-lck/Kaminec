@@ -1,4 +1,6 @@
 #include "game.h"
+#include "profile.h"
+#include "downloadmanager.h"
 
 #include <QDir>
 #include <QTime>
@@ -6,20 +8,19 @@
 #include <QProcess>
 #include <QStringList>
 #include <QFile>
+#include <QFileInfo>
 #include <QTextStream>
 #include <algorithm>
 
 game::game(profile gp, mode gm):
     gameProfile(gp),
     gamemode(gm),
-    gameJson(gameProfile.gameDir
-             +QString("/versions/%1/%1.json")
-             .arg(gameProfile.version))
+    gameJson(gameProfile.gameDir,gameProfile.version)
 {}
 
 int game::start()
 {
-    gameJson.getDownloadAssertUrls();
+
 
     //auto gameProcess = new QProcess;
     QTime t;
