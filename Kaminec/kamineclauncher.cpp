@@ -11,11 +11,13 @@
 #include <QString>
 #include <QByteArray>
 #include <QFile>
+#include <QDir>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QTextStream>
+#include <QStandardItemModel>
 
 KaminecLauncher::KaminecLauncher(QWidget *parent) :
     QMainWindow(parent),
@@ -35,8 +37,8 @@ inline const profile KaminecLauncher::getProfile()
 {
     return profile{ui->username_le->text(),
                    ui->version_le->text(),
-                   ui->gameDir_le->text(),
-                   ui->javaDir_le->text(),
+                   QDir(ui->gameDir_le->text()).absolutePath(),
+                   QDir(ui->javaDir_le->text()).absolutePath(),
 
                    ui->minMem_sb->value(),
                    ui->maxMem_sb->value(),
@@ -117,23 +119,47 @@ void KaminecLauncher::saveProfileJson()
 
 int KaminecLauncher::download()
 {
+    ui->download_pb->setText("Downloading...");
+    ui->download_pb->setDisabled(true);
+
+    auto dm = new downloadManager(this);
+    dm->append(qMakePair(QUrl("https://launchermeta.mojang.com/mc/game/1920a2b4e996bae0af1a67d38d63706bac10ac47/1.10.2.json"),
+                        QString("%1/versions/%2/%2.json").arg(ui->gameDir_le->text()).arg(ui->version_le->text())));
+    dm->waitForFinished();
     jsonManager jm(ui->gameDir_le->text(),ui->version_le->text());
-    downloadManager dm;
+    dm->append(qMakePair(jm.getDownloadClientUrl(),
+                        QString("%1/versions/%2/%2.jar").arg(ui->gameDir_le->text()).arg(ui->version_le->text())));
     auto downloadLibUrls = jm.getDownloadLibUrls();
     for(auto& i:downloadLibUrls){
         i.second.prepend(ui->gameDir_le->text()+"/libraries/");
         qDebug()<<i;
     }
-    dm.append(downloadLibUrls);
+    dm->append(downloadLibUrls);
 
+    qDebug()<<"before";
     auto downloadAssertUrls = jm.getDownloadAssertUrls();
+    qDebug()<<"after";
     for(auto& i:downloadAssertUrls){
         i.second.prepend(ui->gameDir_le->text()+"/assets/objects/");
         qDebug()<<i;
     }
-    dm.append(downloadAssertUrls);
+    dm->append(downloadAssertUrls);
 
-    if(dm.waitForFinished()==-1)return -1;
+    qDebug()<<dm->getTotalCount();
+
+    totalCount = dm->getTotalCount();
+    ui->downloadValue_label->setText(QString("0/%1").arg(totalCount));
+    ui->downloadProgress_progressBar->setMaximum(dm->getTotalCount());
+    ui->downloadProgress_progressBar_2->setMaximum(dm->getTotalCount());
+
+    //QStandardItemModel model;
+    //ui->download_listView->setModel(model);
+
+    connect(dm,SIGNAL(downloadedCountChanged(int)),this,SLOT(updateDownloadCount(int)));
+    connect(dm,SIGNAL(downloadedCountChanged(int)),ui->downloadProgress_progressBar,SLOT(setValue(int)));
+    connect(dm,SIGNAL(downloadedCountChanged(int)),ui->downloadProgress_progressBar_2,SLOT(setValue(int)));
+    connect(dm,SIGNAL(finished()),this,SLOT(downloadFinished()));
+    if(dm->waitForFinished()==-1)return -1;
     return 0;
 }
 
@@ -166,13 +192,17 @@ void KaminecLauncher::on_load_pb_clicked()
 
 void KaminecLauncher::on_start_pb_clicked()
 {
-    game g(this->getProfile(),mode::Online);
-    g.start();
+    auto g=new game(this,this->getProfile(),mode::Online);
+    g->start();
+    ui->start_pb->setText("Gaming...");
+    ui->start_pb->setDisabled(true);
+    connect(g,SIGNAL(finished(int)),this,SLOT(gameFinished()));
+
 }
 
 void KaminecLauncher::on_pushButton_clicked()
 {
-    game g(this->getProfile(),mode::Online);
+    game g(this,this->getProfile(),mode::Online);
     QTime t;
     g.genStartcode();
     auto time = t.elapsed();
@@ -190,7 +220,7 @@ void KaminecLauncher::on_pushButton_2_clicked()
     QTextStream out2(&ttf);
 
     QTime at;
-    game g(this->getProfile(),mode::Online);
+    game g(this,this->getProfile(),mode::Online);
     for(auto i=1;i!=10;++i){
         QTime t;
         g.genStartcode();
@@ -208,7 +238,7 @@ void KaminecLauncher::on_pushButton_3_clicked()
     QTextStream out2(&ttf);
 
     QTime at;
-    game g(this->getProfile(),mode::Online);
+    game g(this,this->getProfile(),mode::Online);
     for(auto i=1;i!=100;++i){
         QTime t;
         g.genStartcode();
@@ -220,12 +250,26 @@ void KaminecLauncher::on_pushButton_3_clicked()
 }
 
 
-void KaminecLauncher::on_pushButton_4_clicked()
-{
-    qDebug()<<"Downloading";
-}
-
 void KaminecLauncher::on_download_pb_clicked()
 {
     this->download();
+}
+
+void KaminecLauncher::updateDownloadCount(int downloaded)
+{
+    qDebug()<<"changed:"<<downloaded;
+    ui->downloadValue_label->setText(QString("%1/%2").arg(downloaded).arg(totalCount));
+}
+
+void KaminecLauncher::downloadFinished()
+{
+    ui->download_pb->setText("&Download");
+    ui->download_pb->setEnabled(true);
+}
+
+void KaminecLauncher::gameFinished()
+{
+    qDebug()<<"finished";
+    ui->start_pb->setText("&Start");
+    ui->start_pb->setEnabled(true);
 }

@@ -12,7 +12,8 @@
 #include <QTextStream>
 #include <algorithm>
 
-game::game(profile gp, mode gm):
+game::game(QObject *parent,profile gp, mode gm):
+    QObject(parent),
     gameProfile(gp),
     gamemode(gm),
     gameJson(gameProfile.gameDir,gameProfile.version)
@@ -54,6 +55,9 @@ int game::start()
     gameProcess->start(
                 gameProfile.javaDir,
                 startcode);
+
+    connect(gameProcess,SIGNAL(finished(int)),this,SIGNAL(finished(int)));
+
     return 0;
 }
 

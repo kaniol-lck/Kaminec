@@ -1,6 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <QObject>
 #include <QString>
 #include <QProcess>
 
@@ -8,12 +9,11 @@
 #include "gamemode.h"
 #include "jsonmanager.h"
 
-class game
+class game: public QObject
 {
+    Q_OBJECT
 public:
-    game()=default;
-    explicit game(profile gp,mode gm);
-    ~game()=default;
+    game(QObject *parent,profile gp,mode gm);
 
     int start();
 
@@ -29,6 +29,9 @@ private:
     profile gameProfile;
     mode gamemode;
     jsonManager gameJson;
+
+signals:
+    void finished(int);
 
 };
 

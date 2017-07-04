@@ -37,6 +37,16 @@ int downloadManager::waitForFinished()
     return 0;
 }
 
+int downloadManager::getDownloadedCount()
+{
+    return downloadedCount;
+}
+
+int downloadManager::getTotalCount()
+{
+    return totalCount;
+}
+
 void downloadManager::append(const QPair<QUrl, QString> &url)
 {
     if (downloadQueue.isEmpty())
@@ -100,6 +110,7 @@ void downloadManager::downloadFinished()
     } else {
         printf("Succeeded.\n");
         ++downloadedCount;
+        emit downloadedCountChanged(downloadedCount);
     }
 
     currentDownload->deleteLater();

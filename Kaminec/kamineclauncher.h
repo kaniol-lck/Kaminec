@@ -38,12 +38,17 @@ private slots:
 
     void on_pushButton_3_clicked();
 
-    void on_pushButton_4_clicked();
-
     void on_download_pb_clicked();
+
+    void updateDownloadCount(int);
+
+    void gameFinished();
+
+    void downloadFinished();
 
 private:
     Ui::KaminecLauncher *ui;
+    int totalCount;
 };
 
 #endif // KAMINECLAUNCHER_H

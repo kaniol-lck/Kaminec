@@ -18,9 +18,12 @@ public:
     void append(const QPair<QUrl,QString> &url);
     void append(const QList<QPair<QUrl,QString>> &urlList);
     int waitForFinished();
+    int getDownloadedCount();
+    int getTotalCount();
 
 signals:
     void finished();
+    void downloadedCountChanged(int);
 
 private slots:
     void startNextDownload();
@@ -31,7 +34,8 @@ private slots:
 private:
     QNetworkAccessManager manager;
     QQueue<QPair<QUrl,QString>> downloadQueue;
-    QNetworkReply *currentDownload;
+    QPair<QUrl,QString> currentDownloadQueue;
+    QNetworkReply * currentDownload;
     QFile output;
     QTime downloadTime;
 

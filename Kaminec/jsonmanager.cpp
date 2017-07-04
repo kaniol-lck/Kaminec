@@ -1,6 +1,8 @@
 #include "jsonmanager.h"
 
+#include <QPair>
 #include <QFile>
+#include <QMessageBox>
 #include <QByteArray>
 #include <algorithm>
 #include <QDebug>
@@ -12,8 +14,11 @@ jsonManager::jsonManager(QString gamePath,QString version):
     QFile jsonFile(gamePath+QString("/versions/%1/%1.json").arg(version));
 
     if(!jsonFile.exists())qDebug()<<"jsonfile file does not exist";
-    if(!jsonFile.open(QIODevice::ReadOnly | QIODevice::Text))qDebug()<<"Open failed";
-    qDebug()<<"jsonfile(1.10.2.json) file opened";
+    if(!jsonFile.open(QIODevice::ReadOnly | QIODevice::Text)){
+        qDebug()<<"Open failed";
+        QMessageBox::about(0,"Not find json file","Json file NOT find,The program will terminate.");
+    }
+    qDebug()<<"jsonfile("<<version<<".json) file opened";
 
     QByteArray jsonByte;
     jsonByte.resize(jsonFile.bytesAvailable());
@@ -64,7 +69,6 @@ QStringList jsonManager::getExtractfileList()
 }
 
 
-#include <QPair>
 
 QList<QPair<QUrl, QString> > jsonManager::getDownloadLibUrls()
 {
@@ -107,8 +111,8 @@ QList<QPair<QUrl, QString> > jsonManager::getDownloadAssertUrls()
 
     jsonDownload.append(qMakePair(assertUrl,gameDir+"/assets/indexes/1.10.json"));
     jsonDownload.waitForFinished();
-
-    QFile f(gameDir+"/assets/indexes/1.10.json");
+    //try{
+    QFile f(gameDir+"/assets/indexes/1.10.json");//!
 
     QByteArray assertByte;
 
@@ -118,8 +122,6 @@ QList<QPair<QUrl, QString> > jsonManager::getDownloadAssertUrls()
     assertByte.resize(f.bytesAvailable());
     assertByte = f.readAll();
     f.close();
-
-
 
     QJsonParseError ok;
     auto assertDoc = QJsonDocument::fromJson(assertByte,&ok);
@@ -141,6 +143,10 @@ QList<QPair<QUrl, QString> > jsonManager::getDownloadAssertUrls()
     for(auto& i:downloadAssertUrls)
         qDebug()<<i;
     return downloadAssertUrls;
+    //}catch(...){
+    //        qDebug()<<"exception";
+    //        throw;
+    //}
 }
 
 
@@ -161,4 +167,11 @@ QString jsonManager::getAssetIndex()
 {
     return jsonMap.value("assets")
             .toString();
+}
+
+QUrl jsonManager::getDownloadClientUrl()
+{
+    return jsonMap.value("downloads").toMap()
+                  .value("client").toMap()
+                  .value("url").toString();
 }
