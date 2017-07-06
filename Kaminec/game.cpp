@@ -12,14 +12,14 @@
 #include <QTextStream>
 #include <algorithm>
 
-game::game(QObject *parent,profile gp, mode gm):
+Game::Game(QObject *parent, Profile gp, Mode gm):
     QObject(parent),
     gameProfile(gp),
     gamemode(gm),
     gameJson(gameProfile.gameDir,gameProfile.version)
 {}
 
-int game::start()
+int Game::start()
 {
 
 
@@ -61,7 +61,7 @@ int game::start()
     return 0;
 }
 
-QStringList game::genStartcode()
+QStringList Game::genStartcode()
 {
     QStringList startcode;
     startcode<<this->genJVMargs()
@@ -72,7 +72,7 @@ QStringList game::genStartcode()
     return startcode;
 }
 
-QStringList game::genJVMargs()
+QStringList Game::genJVMargs()
 {
     return QStringList
     {
@@ -89,7 +89,7 @@ QStringList game::genJVMargs()
 }
 
 
-QStringList game::genLibpath()
+QStringList Game::genLibpath()
 {
     QStringList libargs;
 
@@ -107,7 +107,7 @@ QStringList game::genLibpath()
     return libargs;
 }
 
-QStringList game::genGameargs()
+QStringList Game::genGameargs()
 {
     auto MCArgs = gameJson.getMCArgs();
 
@@ -128,14 +128,14 @@ QStringList game::genGameargs()
 
 #include <QtNetwork/QNetworkRequest>
 
-QStringList game::checkSession()
+QStringList Game::checkSession()
 {
     return QStringList();
 }
 
 
 
-int game::extractNatives(QString nativesDir)
+int Game::extractNatives(QString nativesDir)
 {
     QDir nd(nativesDir);
     if(nd.entryList().size()==12) return 1;//检查是否已存在natives

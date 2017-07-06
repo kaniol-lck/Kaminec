@@ -1,8 +1,9 @@
-#include "downloadManager.h"
+#include "DownloadManager.h"
 
 #include <QDebug>
 #include <QDir>
 #include <QFileInfo>
+#include <QStandardItemModel>
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QString>
@@ -10,12 +11,21 @@
 #include <QTimer>
 #include <stdio.h>
 
-downloadManager::downloadManager(QObject *parent)
-    : QObject(parent), downloadedCount(0), totalCount(0)
+DownloadManager::DownloadManager(QObject *parent):
+    QObject(parent),
+    downloadedCount(0),
+    totalCount(0),
+    model(new QStandardItemModel(this))
 {
+    model->setColumnCount(5);
+    model->setHeaderData(0,Qt::Horizontal,"filename");
+    model->setHeaderData(1,Qt::Horizontal,"size");
+    model->setHeaderData(2,Qt::Horizontal,"sha1");
+    model->setHeaderData(3,Qt::Horizontal,"path");
+    model->setHeaderData(4,Qt::Horizontal,"url");
 }
 
-void downloadManager::append(const QList<QPair<QUrl, QString> > &urlList)
+void DownloadManager::append(const QList<QPair<QUrl, QString> > &urlList)
 {
     for(QPair<QUrl, QString> url: urlList)
         append(url);
@@ -24,8 +34,27 @@ void downloadManager::append(const QList<QPair<QUrl, QString> > &urlList)
         QTimer::singleShot(0, this, SIGNAL(finished()));
 }
 
+void DownloadManager::append(FileItem &item)
+{
+    if (downloadQueue.isEmpty())
+        QTimer::singleShot(0, this, SLOT(startNextDownload()));
+
+    downloadQueue.enqueue(item.getDownloadInfo());
+    model->appendRow(item.getInfoList());
+    ++totalCount;
+}
+
+void DownloadManager::append(QList<FileItem> &itemList)
+{
+    for(auto item: itemList)
+        append(item);
+
+    if (downloadQueue.isEmpty())
+        QTimer::singleShot(0, this, SIGNAL(finished()));
+}
+
 #include <QEventLoop>
-int downloadManager::waitForFinished()
+int DownloadManager::waitForFinished()
 {
     QEventLoop eventLoop(this);
     connect(this,SIGNAL(finished()),&eventLoop,SLOT(quit()));
@@ -37,26 +66,32 @@ int downloadManager::waitForFinished()
     return 0;
 }
 
-int downloadManager::getDownloadedCount()
+int DownloadManager::getDownloadedCount()
 {
     return downloadedCount;
 }
 
-int downloadManager::getTotalCount()
+int DownloadManager::getTotalCount()
 {
     return totalCount;
 }
 
-void downloadManager::append(const QPair<QUrl, QString> &url)
+QStandardItemModel *DownloadManager::getModel()
+{
+    return model;
+}
+
+void DownloadManager::append(const QPair<QUrl, QString> &url)
 {
     if (downloadQueue.isEmpty())
         QTimer::singleShot(0, this, SLOT(startNextDownload()));
 
     downloadQueue.enqueue(url);
+    //model->appendRow();
     ++totalCount;
 }
 
-void downloadManager::startNextDownload()
+void DownloadManager::startNextDownload()
 {
     if (downloadQueue.isEmpty()) {
         printf("%d/%d files downloaded successfully\n", downloadedCount, totalCount);
@@ -65,6 +100,7 @@ void downloadManager::startNextDownload()
     }
 
     auto url = downloadQueue.dequeue();
+    model->removeRow(0);
 
     QString filename = url.second;//!
     QDir d = QFileInfo(filename).path();
@@ -94,12 +130,12 @@ void downloadManager::startNextDownload()
     downloadTime.start();
 }
 
-void downloadManager::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
+void DownloadManager::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 {
     qDebug()<<QString("%1%  %2/%3").arg(bytesTotal==0?0:bytesReceived*100/bytesTotal,3).arg(bytesReceived,6).arg(bytesTotal,6);
 }
 
-void downloadManager::downloadFinished()
+void DownloadManager::downloadFinished()
 {
     //progressBar.clear();//!
     output.close();
@@ -117,7 +153,7 @@ void downloadManager::downloadFinished()
     startNextDownload();
 }
 
-void downloadManager::downloadReadyRead()
+void DownloadManager::downloadReadyRead()
 {
     output.write(currentDownload->readAll());
 }

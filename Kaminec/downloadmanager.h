@@ -1,5 +1,7 @@
-#ifndef DOWNLOADMANAGER_H
-#define DOWNLOADMANAGER_H
+#ifndef DownloadManager_H
+#define DownloadManager_H
+
+#include "fileitem.h"
 
 #include <QFile>
 #include <QObject>
@@ -8,18 +10,23 @@
 #include <QPair>
 #include <QUrl>
 #include <QNetworkAccessManager>
+#include <QStandardItemModel>
 
-class downloadManager: public QObject
+class DownloadManager: public QObject
 {
     Q_OBJECT
 public:
-    downloadManager(QObject *parent = 0);
+    DownloadManager(QObject *parent = 0);
 
-    void append(const QPair<QUrl,QString> &url);
+    void append(const QPair<QUrl, QString>& url);
     void append(const QList<QPair<QUrl,QString>> &urlList);
+    void append(FileItem &item);
+    void append(QList<FileItem>& itemList);
     int waitForFinished();
     int getDownloadedCount();
     int getTotalCount();
+
+    QStandardItemModel* getModel();
 
 signals:
     void finished();
@@ -41,6 +48,8 @@ private:
 
     int downloadedCount;
     int totalCount;
+
+    QStandardItemModel* model;
 };
 
 #endif

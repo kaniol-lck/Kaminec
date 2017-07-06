@@ -9,11 +9,11 @@
 #include "gamemode.h"
 #include "jsonmanager.h"
 
-class game: public QObject
+class Game: public QObject
 {
     Q_OBJECT
 public:
-    game(QObject *parent,profile gp,mode gm);
+    Game(QObject *parent,Profile gp,Mode gm);
 
     int start();
 
@@ -26,9 +26,9 @@ public:
 
     int extractNatives(QString nativesDir);
 private:
-    profile gameProfile;
-    mode gamemode;
-    jsonManager gameJson;
+    Profile gameProfile;
+    Mode gamemode;
+    JsonManager gameJson;
 
 signals:
     void finished(int);

@@ -1,4 +1,5 @@
-#include "jsonmanager.h"
+#include "JsonManager.h"
+#include "fileitem.h"
 
 #include <QPair>
 #include <QFile>
@@ -8,7 +9,7 @@
 #include <QDebug>
 
 
-jsonManager::jsonManager(QString gamePath,QString version):
+JsonManager::JsonManager(QString gamePath,QString version):
     gameDir(gamePath)
 {
     QFile jsonFile(gamePath+QString("/versions/%1/%1.json").arg(version));
@@ -35,7 +36,7 @@ jsonManager::jsonManager(QString gamePath,QString version):
 
 
 
-QStringList jsonManager::getLibfileList()
+QStringList JsonManager::getLibfileList()
 {
     return std::accumulate(libList.begin(),libList.end(),QStringList(),
                            [](QStringList libfileList,QVariant libElem){
@@ -53,7 +54,7 @@ QStringList jsonManager::getLibfileList()
 
 
 
-QStringList jsonManager::getExtractfileList()
+QStringList JsonManager::getExtractfileList()
 {
     return std::accumulate(libList.begin(),libList.end(),QStringList(),
                            [](QStringList libfileList,QVariant libElem){
@@ -70,41 +71,69 @@ QStringList jsonManager::getExtractfileList()
 
 
 
-QList<QPair<QUrl, QString> > jsonManager::getDownloadLibUrls()
+QList<FileItem> JsonManager::getDownloadLibUrls()
 {
-    return std::accumulate(libList.begin(),libList.end(),QList<QPair<QUrl, QString>>(),
-                           [](QList<QPair<QUrl,QString>> libUrls,QVariant libElem){
+    return std::accumulate(libList.begin(),libList.end(),QList<FileItem>(),
+                           [](QList<FileItem> libUrls,QVariant libElem){
         return libElem
                 .toMap().value("downloads")
                 .toMap().contains("classifiers")?
-                    libUrls<<qMakePair(libElem
+                    libUrls<<FileItem(libElem
+                              .toMap().value("name")
+                              .toString(),
+                                      libElem
                               .toMap().value("downloads")
                               .toMap().value("classifiers")
                               .toMap().value("natives-windows")
-                              .toMap().value("url")
-                              .toUrl(),
+                              .toMap().value("size")
+                              .toInt(),
+                                      libElem
+                              .toMap().value("downloads")
+                              .toMap().value("classifiers")
+                              .toMap().value("natives-windows")
+                              .toMap().value("sha1")
+                              .toString(),
                                        libElem
                               .toMap().value("downloads")
                               .toMap().value("classifiers")
                               .toMap().value("natives-windows")
                               .toMap().value("path")
-                              .toString()):
-                    libUrls<<qMakePair(libElem
+                              .toString(),
+                                       libElem
+                              .toMap().value("downloads")
+                              .toMap().value("classifiers")
+                              .toMap().value("natives-windows")
+                              .toMap().value("url")
+                              .toUrl()):
+                    libUrls<<FileItem(libElem
+                              .toMap().value("name")
+                              .toString(),
+                                      libElem
                               .toMap().value("downloads")
                               .toMap().value("artifact")
-                              .toMap().value("url")
-                              .toUrl(),
+                              .toMap().value("size")
+                              .toInt(),
+                                      libElem
+                              .toMap().value("downloads")
+                              .toMap().value("artifact")
+                              .toMap().value("sha1")
+                              .toString(),
                                        libElem
                               .toMap().value("downloads")
                               .toMap().value("artifact")
                               .toMap().value("path")
-                              .toString());
+                              .toString(),
+                                       libElem
+                              .toMap().value("downloads")
+                              .toMap().value("artifact")
+                              .toMap().value("url")
+                              .toUrl());
     });
 }
 
 #include "downloadmanager.h"
 
-QList<QPair<QUrl, QString> > jsonManager::getDownloadAssertUrls()
+QList<FileItem> JsonManager::getDownloadAssertUrls()
 {
     QUrl assertUrl=jsonMap.value("assetIndex")
                       .toMap().value("url").toUrl();
@@ -129,19 +158,24 @@ QList<QPair<QUrl, QString> > jsonManager::getDownloadAssertUrls()
 
     auto objectMap = assertDoc.toVariant().toMap().value("objects").toMap();
 
-    QList<QPair<QUrl, QString>> downloadAssertUrls;
+    QList<FileItem> downloadAssertUrls;
 
-    for(auto it:objectMap){
-        QString hash = it.toMap().value("hash").toString();
-        QString name = QString("%1/%2").arg(hash.left(2),hash);
-        QUrl url = "http://resources.download.minecraft.net/"+name;
-        downloadAssertUrls<<qMakePair(url,name);
+    for(auto it=objectMap.begin();it!=objectMap.end();it++){
+        QString name = it.key();
+        QString hash = it.value().toMap().value("hash").toString();
+        QString path = QString("%1/%2").arg(hash.left(2),hash);
+        QUrl url = "http://resources.download.minecraft.net/"+path;
+        downloadAssertUrls<<FileItem(name,
+                                     it.value().toMap().value("size").toInt(),
+                                     "NULL",
+                                     path,
+                                     url);
     }
 
     qDebug()<<"ha?";
     //这个地方不知道为什么“downloadAssertUrls”放循环里正常，外边访问就不对
     for(auto& i:downloadAssertUrls)
-        qDebug()<<i;
+        qDebug()<<i.name;
     return downloadAssertUrls;
     //}catch(...){
     //        qDebug()<<"exception";
@@ -151,25 +185,25 @@ QList<QPair<QUrl, QString> > jsonManager::getDownloadAssertUrls()
 
 
 
-QStringList jsonManager::getMCArgs()
+QStringList JsonManager::getMCArgs()
 {
     return jsonMap.value("minecraftArguments").toString().split(" ");
 }
 
 
 
-QStringList jsonManager::getMCMainClass()
+QStringList JsonManager::getMCMainClass()
 {
     return jsonMap.value("mainClass").toStringList();
 }
 
-QString jsonManager::getAssetIndex()
+QString JsonManager::getAssetIndex()
 {
     return jsonMap.value("assets")
             .toString();
 }
 
-QUrl jsonManager::getDownloadClientUrl()
+QUrl JsonManager::getDownloadClientUrl()
 {
     return jsonMap.value("downloads").toMap()
                   .value("client").toMap()

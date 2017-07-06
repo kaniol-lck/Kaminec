@@ -487,9 +487,6 @@
         <string>Download Progress</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_4">
-        <item row="0" column="0" colspan="2">
-         <widget class="QListView" name="download_listView"/>
-        </item>
         <item row="1" column="0">
          <widget class="QProgressBar" name="downloadProgress_progressBar_2">
           <property name="sizeIncrement">
@@ -509,6 +506,9 @@
            <string>0/0</string>
           </property>
          </widget>
+        </item>
+        <item row="0" column="0" colspan="2">
+         <widget class="QTreeView" name="download_treeView"/>
         </item>
        </layout>
       </widget>

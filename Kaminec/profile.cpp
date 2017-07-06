@@ -1,6 +1,6 @@
 #include "profile.h"
 
-profile::profile(QString un, QString v, QString gd, QString jd, int mn, int mx, int w, int h):
+Profile::Profile(QString un, QString v, QString gd, QString jd, int mn, int mx, int w, int h):
     username(un),
     version(v),
     gameDir(gd),

@@ -17,7 +17,7 @@ public:
     explicit KaminecLauncher(QWidget *parent = 0);
     ~KaminecLauncher();
 
-    const profile getProfile();
+    const Profile getProfile();
     void loadProfileJson();
     void saveProfileJson();
     int download();

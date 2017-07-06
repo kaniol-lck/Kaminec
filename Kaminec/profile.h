@@ -4,10 +4,10 @@
 #include <QString>
 
 
-struct profile
+struct Profile
 {
-    profile()=default;
-    explicit profile(QString un,
+    Profile()=default;
+    explicit Profile(QString un,
                      QString v,
                      QString gd,
                      QString jd,

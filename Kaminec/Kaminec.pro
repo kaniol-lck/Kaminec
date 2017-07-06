@@ -29,13 +29,15 @@ SOURCES += main.cpp\
     profile.cpp \
     jsonmanager.cpp \
     downloadmanager.cpp \
-    game.cpp
+    game.cpp \
+    fileitem.cpp
 
 HEADERS  += kamineclauncher.h \
     profile.h \
     gamemode.h \
     jsonmanager.h \
     downloadmanager.h \
-    game.h
+    game.h \
+    fileitem.h
 
 FORMS    += kamineclauncher.ui
