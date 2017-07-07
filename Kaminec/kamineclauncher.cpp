@@ -22,12 +22,15 @@
 
 KaminecLauncher::KaminecLauncher(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::KaminecLauncher)
+    ui(new Ui::KaminecLauncher),
+    SavesManager(this)
 {
     ui->setupUi(this);
     this->loadProfileJson();
     ui->downloadProgress_label->setVisible(false);
     ui->downloadProgress_progressBar->setVisible(false);
+
+    ui->saveMgr_treeView->setModel(SavesManager.getModel());
 }
 
 KaminecLauncher::~KaminecLauncher()
@@ -280,4 +283,19 @@ void KaminecLauncher::gameFinished()
     qDebug()<<"finished";
     ui->start_pb->setText("&Start");
     ui->start_pb->setEnabled(true);
+}
+
+void KaminecLauncher::on_addSaves_pb_clicked()
+{
+    SavesManager.addSaves();
+}
+
+void KaminecLauncher::on_deleteSaves_pb_clicked()
+{
+
+}
+
+void KaminecLauncher::on_backupSaves_pb_clicked()
+{
+    SavesManager.backup();
 }

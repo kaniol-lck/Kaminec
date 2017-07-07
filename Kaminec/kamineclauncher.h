@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 #include "profile.h"
+#include "savesmanager.h"
 
 namespace Ui {
 class KaminecLauncher;
@@ -46,8 +47,15 @@ private slots:
 
     void downloadFinished();
 
+    void on_addSaves_pb_clicked();
+
+    void on_deleteSaves_pb_clicked();
+
+    void on_backupSaves_pb_clicked();
+
 private:
     Ui::KaminecLauncher *ui;
+    SavesManager SavesManager;
     int totalCount;
 };
 

@@ -16,7 +16,7 @@ class DownloadManager: public QObject
 {
     Q_OBJECT
 public:
-    DownloadManager(QObject *parent = 0);
+    explicit DownloadManager(QObject *parent = 0);
 
     void append(const QPair<QUrl, QString>& url);
     void append(const QList<QPair<QUrl,QString>> &urlList);
@@ -49,7 +49,7 @@ private:
     int downloadedCount;
     int totalCount;
 
-    QStandardItemModel* model;
+    QStandardItemModel model;
 };
 
 #endif

@@ -21,7 +21,7 @@ struct FileItem
 
     QString name;
     int   size;
-    QString CRC;
+    QString sha1;
     QString path;
     QUrl    url;
 };

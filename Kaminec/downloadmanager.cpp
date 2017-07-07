@@ -15,14 +15,14 @@ DownloadManager::DownloadManager(QObject *parent):
     QObject(parent),
     downloadedCount(0),
     totalCount(0),
-    model(new QStandardItemModel(this))
+    model()
 {
-    model->setColumnCount(5);
-    model->setHeaderData(0,Qt::Horizontal,"filename");
-    model->setHeaderData(1,Qt::Horizontal,"size");
-    model->setHeaderData(2,Qt::Horizontal,"sha1");
-    model->setHeaderData(3,Qt::Horizontal,"path");
-    model->setHeaderData(4,Qt::Horizontal,"url");
+    model.setColumnCount(5);
+    model.setHeaderData(0,Qt::Horizontal,"filename");
+    model.setHeaderData(1,Qt::Horizontal,"size");
+    model.setHeaderData(2,Qt::Horizontal,"sha1");
+    model.setHeaderData(3,Qt::Horizontal,"path");
+    model.setHeaderData(4,Qt::Horizontal,"url");
 }
 
 void DownloadManager::append(const QList<QPair<QUrl, QString> > &urlList)
@@ -40,7 +40,7 @@ void DownloadManager::append(FileItem &item)
         QTimer::singleShot(0, this, SLOT(startNextDownload()));
 
     downloadQueue.enqueue(item.getDownloadInfo());
-    model->appendRow(item.getInfoList());
+    model.appendRow(item.getInfoList());
     ++totalCount;
 }
 
@@ -78,7 +78,7 @@ int DownloadManager::getTotalCount()
 
 QStandardItemModel *DownloadManager::getModel()
 {
-    return model;
+    return &model;
 }
 
 void DownloadManager::append(const QPair<QUrl, QString> &url)
@@ -100,7 +100,7 @@ void DownloadManager::startNextDownload()
     }
 
     auto url = downloadQueue.dequeue();
-    model->removeRow(0);
+    model.removeRow(0);
 
     QString filename = url.second;//!
     QDir d = QFileInfo(filename).path();

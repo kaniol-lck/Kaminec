@@ -24,7 +24,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="moduleSwitch">
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="startment">
        <attribute name="title">
@@ -509,6 +509,41 @@
         </item>
         <item row="0" column="0" colspan="2">
          <widget class="QTreeView" name="download_treeView"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Manage Saves</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_5">
+        <item row="1" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout_14">
+          <item>
+           <widget class="QPushButton" name="addSaves_pb">
+            <property name="text">
+             <string>&amp;Add</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="deleteSaves_pb">
+            <property name="text">
+             <string>&amp;Delete</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="backupSaves_pb">
+            <property name="text">
+             <string>&amp;Backup</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="0" column="0">
+         <widget class="QTreeView" name="saveMgr_treeView"/>
         </item>
        </layout>
       </widget>
