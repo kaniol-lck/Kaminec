@@ -125,23 +125,32 @@ void KaminecLauncher::saveProfileJson()
 
 int KaminecLauncher::download()
 {
+    auto dm = new DownloadManager(this);
+
+    ui->download_treeView->setModel(dm->getModel());
     ui->download_pb->setText("Downloading...");
     ui->download_pb->setDisabled(true);
     ui->downloadProgress_label->setVisible(true);
     ui->downloadProgress_progressBar->setVisible(true);
 
-    auto dm = new DownloadManager(this);
-    dm->append(qMakePair(QUrl("https://launchermeta.mojang.com/mc/game/1920a2b4e996bae0af1a67d38d63706bac10ac47/1.10.2.json"),
-                        QString("%1/versions/%2/%2.json").arg(ui->gameDir_le->text()).arg(ui->version_le->text())));
+    auto fileItem = FileItem(QUrl("https://launchermeta.mojang.com/mc/game/1920a2b4e996bae0af1a67d38d63706bac10ac47/1.10.2.json"),
+                             QString("%1/versions/%2/%2.json").arg(ui->gameDir_le->text()).arg(ui->version_le->text()));
+
+    dm->append(fileItem);
     dm->waitForFinished();
-    JsonManager jm(ui->gameDir_le->text(),ui->version_le->text());
-    dm->append(qMakePair(jm.getDownloadClientUrl(),
-                        QString("%1/versions/%2/%2.jar").arg(ui->gameDir_le->text()).arg(ui->version_le->text())));
+
+    JsonManager jm(this,ui->gameDir_le->text(),ui->version_le->text());
+
+    fileItem = FileItem(jm.getDownloadClientUrl(),
+                        QString("%1/versions/%2/%2.jar").arg(ui->gameDir_le->text()).arg(ui->version_le->text()));
+    dm->append(fileItem);
+
     auto downloadLibUrls = jm.getDownloadLibUrls();
     for(auto& i:downloadLibUrls){
         i.path.prepend(ui->gameDir_le->text()+"/libraries/");
         qDebug()<<i.name;
     }
+
     dm->append(downloadLibUrls);
 
     qDebug()<<"before";
@@ -159,7 +168,6 @@ int KaminecLauncher::download()
     ui->downloadValue_label->setText(QString("0/%1").arg(totalCount));
     ui->downloadProgress_progressBar->setMaximum(dm->getTotalCount());
     ui->downloadProgress_progressBar_2->setMaximum(dm->getTotalCount());
-    ui->download_treeView->setModel(dm->getModel());
 
     //QStandardItemModel model;
     //ui->download_treeView->setModel(model);

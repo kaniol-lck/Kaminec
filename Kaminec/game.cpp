@@ -16,7 +16,7 @@ Game::Game(QObject *parent, Profile gp, Mode gm):
     QObject(parent),
     gameProfile(gp),
     gamemode(gm),
-    gameJson(gameProfile.gameDir,gameProfile.version)
+    gameJson(parent,gameProfile.gameDir,gameProfile.version)
 {}
 
 int Game::start()

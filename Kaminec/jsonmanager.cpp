@@ -9,7 +9,8 @@
 #include <QDebug>
 
 
-JsonManager::JsonManager(QString gamePath,QString version):
+JsonManager::JsonManager(QObject *parent, QString gamePath, QString version):
+    jsonDownload(new DownloadManager(this)),
     gameDir(gamePath)
 {
     QFile jsonFile(gamePath+QString("/versions/%1/%1.json").arg(version));
@@ -138,10 +139,13 @@ QList<FileItem> JsonManager::getDownloadAssertUrls()
     QUrl assertUrl=jsonMap.value("assetIndex")
                       .toMap().value("url").toUrl();
 
-    jsonDownload.append(qMakePair(assertUrl,gameDir+"/assets/indexes/1.10.json"));
-    jsonDownload.waitForFinished();
+    QString filename = gameDir+"/assets/indexes/1.10.json";
+    jsonDownload->append(qMakePair(assertUrl,filename));
+    qDebug()<<"before?";
+    jsonDownload->waitForFinished();
+    qDebug()<<"after?";
     //try{
-    QFile f(gameDir+"/assets/indexes/1.10.json");//!
+    QFile f(filename);//!
 
     QByteArray assertByte;
 

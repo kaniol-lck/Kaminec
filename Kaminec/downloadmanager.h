@@ -50,6 +50,7 @@ private:
     int totalCount;
 
     QStandardItemModel model;
+    QList<QList<QStandardItem *>> itemList;
 };
 
 #endif

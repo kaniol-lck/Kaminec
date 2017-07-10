@@ -25,21 +25,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += main.cpp\
-        kamineclauncher.cpp \
-    profile.cpp \
-    jsonmanager.cpp \
-    downloadmanager.cpp \
-    game.cpp \
-    fileitem.cpp \
-    savesmanager.cpp
+           kamineclauncher.cpp \
+           profile.cpp \
+           jsonmanager.cpp \
+           downloadmanager.cpp \
+           game.cpp \
+           fileitem.cpp \
+           savesmanager.cpp
 
 HEADERS  += kamineclauncher.h \
-    profile.h \
-    gamemode.h \
-    jsonmanager.h \
-    downloadmanager.h \
-    game.h \
-    fileitem.h \
-    savesmanager.h
+            profile.h \
+            gamemode.h \
+            jsonmanager.h \
+            downloadmanager.h \
+            game.h \
+            fileitem.h \
+            savesmanager.h
 
 FORMS    += kamineclauncher.ui

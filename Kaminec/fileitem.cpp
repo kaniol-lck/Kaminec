@@ -4,6 +4,7 @@
 #include <QStringList>
 #include <QPair>
 #include <QList>
+#include <QFileInfo>
 
 FileItem::FileItem(QString n,
                    int s,
@@ -15,6 +16,22 @@ FileItem::FileItem(QString n,
     sha1(sh),
     path(p),
     url(u)
+{}
+
+FileItem::FileItem(QUrl u, QString p):
+    FileItem(QFileInfo(p).fileName(),
+             0,
+             "NULL",
+             p,
+             u)
+{}
+
+FileItem::FileItem(QPair<QUrl, QString> urlBind):
+    FileItem(QFileInfo(urlBind.second).fileName(),
+             0,
+             "NULL",
+             urlBind.second,
+             urlBind.first)
 {}
 
 QList<QStandardItem *> FileItem::getInfoList()

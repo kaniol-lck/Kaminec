@@ -5,6 +5,7 @@
 #include <QList>
 #include <QSize>
 #include <QString>
+#include <QPair>
 #include <QUrl>
 
 struct FileItem
@@ -15,6 +16,9 @@ struct FileItem
                       QString sh,
                       QString p,
                       QUrl u);
+    explicit FileItem(QUrl u, QString p);
+
+    explicit FileItem(QPair<QUrl,QString> urlBind);
 
     QList<QStandardItem *> getInfoList();
     QPair<QUrl,QString> getDownloadInfo();

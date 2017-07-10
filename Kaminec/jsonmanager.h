@@ -7,13 +7,15 @@
 #include <QJsonDocument>
 #include <QVariantMap>
 #include <QStringList>
+#include <QObject>
 #include <QPair>
 #include <QUrl>
 
-class JsonManager
+class JsonManager : public QObject
 {
+    Q_OBJECT
 public:
-    JsonManager(QString gamePath, QString version);
+    JsonManager(QObject *parent,QString gamePath, QString version);
 
     QStringList                   getLibfileList();
     QStringList                   getExtractfileList();
@@ -28,7 +30,7 @@ private:
     QJsonDocument jsonDoc;
     QVariantMap jsonMap;
     QList<QVariant> libList;
-    DownloadManager jsonDownload;
+    DownloadManager *jsonDownload;
     QString gameDir;
 };
 

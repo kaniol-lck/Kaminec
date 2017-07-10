@@ -15,7 +15,8 @@ DownloadManager::DownloadManager(QObject *parent):
     QObject(parent),
     downloadedCount(0),
     totalCount(0),
-    model()
+    model(),
+    itemList()
 {
     model.setColumnCount(5);
     model.setHeaderData(0,Qt::Horizontal,"filename");
@@ -23,6 +24,18 @@ DownloadManager::DownloadManager(QObject *parent):
     model.setHeaderData(2,Qt::Horizontal,"sha1");
     model.setHeaderData(3,Qt::Horizontal,"path");
     model.setHeaderData(4,Qt::Horizontal,"url");
+}
+
+void DownloadManager::append(const QPair<QUrl, QString> &url)
+{
+    if (downloadQueue.isEmpty())
+        QTimer::singleShot(0, this, SLOT(startNextDownload()));
+
+    QList<QStandardItem *> info = FileItem(url).getInfoList();
+    downloadQueue.enqueue(url);
+    model.appendRow(info);
+    itemList.append(info);
+    ++totalCount;
 }
 
 void DownloadManager::append(const QList<QPair<QUrl, QString> > &urlList)
@@ -40,7 +53,9 @@ void DownloadManager::append(FileItem &item)
         QTimer::singleShot(0, this, SLOT(startNextDownload()));
 
     downloadQueue.enqueue(item.getDownloadInfo());
-    model.appendRow(item.getInfoList());
+    auto info = item.getInfoList();
+    model.appendRow(info);
+    itemList.append(info);
     ++totalCount;
 }
 
@@ -81,15 +96,6 @@ QStandardItemModel *DownloadManager::getModel()
     return &model;
 }
 
-void DownloadManager::append(const QPair<QUrl, QString> &url)
-{
-    if (downloadQueue.isEmpty())
-        QTimer::singleShot(0, this, SLOT(startNextDownload()));
-
-    downloadQueue.enqueue(url);
-    //model->appendRow();
-    ++totalCount;
-}
 
 void DownloadManager::startNextDownload()
 {
@@ -100,8 +106,6 @@ void DownloadManager::startNextDownload()
     }
 
     auto url = downloadQueue.dequeue();
-    model.removeRow(0);
-
     QString filename = url.second;//!
     QDir d = QFileInfo(filename).path();
     if(!d.exists())
@@ -137,8 +141,12 @@ void DownloadManager::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 
 void DownloadManager::downloadFinished()
 {
-    //progressBar.clear();//!
     output.close();
+
+    model.removeRow(0);
+    for(auto p:itemList.at(0))
+        delete p;
+    itemList.removeFirst();
 
     if (currentDownload->error()) {
         // download failed
