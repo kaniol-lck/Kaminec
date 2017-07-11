@@ -11,17 +11,17 @@
 struct FileItem
 {
     FileItem()=default;
-    explicit FileItem(QString n,
+    FileItem(QString n,
                       int s,
                       QString sh,
                       QString p,
                       QUrl u);
-    explicit FileItem(QUrl u, QString p);
+    FileItem(QUrl u, QString p);
 
-    explicit FileItem(QPair<QUrl,QString> urlBind);
+    FileItem(QPair<QUrl,QString> urlBind);
 
-    QList<QStandardItem *> getInfoList();
-    QPair<QUrl,QString> getDownloadInfo();
+    QList<QStandardItem *> getInfoList() const;
+    QPair<QUrl,QString> getDownloadInfo() const;
 
     QString name;
     int   size;

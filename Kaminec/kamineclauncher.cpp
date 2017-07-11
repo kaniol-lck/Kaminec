@@ -7,6 +7,7 @@
 #include "game.h"
 #include "fileitem.h"
 
+#include <algorithm>
 #include <QTime>
 #include <QDebug>
 #include <QString>
@@ -29,8 +30,40 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
     this->loadProfileJson();
     ui->downloadProgress_label->setVisible(false);
     ui->downloadProgress_progressBar->setVisible(false);
+    ui->downloadProgress_progressBar_2->setVisible(false);
+    ui->downloadValue_label->setVisible(false);
 
     ui->saveMgr_treeView->setModel(SavesManager.getModel());
+    auto dm = new DownloadManager(this);
+    dm->append(FileItem(QString("version_manifest.json"),26389,QString("NULL"),QString("./version_manifest.json"),QUrl("https://launchermeta.mojang.com/mc/game/version_manifest.json")));
+    dm->waitForFinished();
+    //加载版本
+    QFile jsonFile("./version_manifest.json");
+
+    if(!jsonFile.exists())qDebug()<<"jsonfile file does not exist";
+    if(!jsonFile.open(QIODevice::ReadOnly | QIODevice::Text)){
+        qDebug()<<"Open failed";
+        QMessageBox::about(0,"Not find json file","Json file NOT find,The program will terminate.");
+    }
+    qDebug()<<"versionfile.json) file opened";
+
+    QByteArray jsonByte;
+    jsonByte.resize(jsonFile.bytesAvailable());
+    jsonByte = jsonFile.readAll();
+    jsonFile.close();
+
+    QJsonParseError ok;
+    auto jsonDoc = QJsonDocument::fromJson(jsonByte,&ok);
+    if(ok.error != QJsonParseError::NoError){qDebug()<<"Json failed."<<endl<<ok.error;}
+
+    auto jsonMap = jsonDoc.toVariant().toMap();
+    versionList = jsonMap.value("versions").toList();
+    ui->version_cb->addItems(std::accumulate(versionList.begin(),versionList.end(),QStringList(),
+                                             [](QStringList versionNameList,QVariant versionElem){
+                                 return versionNameList<<versionElem
+                                        .toMap().value("id").toString();
+                             }));
+
 }
 
 KaminecLauncher::~KaminecLauncher()
@@ -42,7 +75,7 @@ KaminecLauncher::~KaminecLauncher()
 inline const Profile KaminecLauncher::getProfile()
 {
     return Profile{ui->username_le->text(),
-                   ui->version_le->text(),
+                   ui->version_cb->currentText(),
                    QDir(ui->gameDir_le->text()).absolutePath(),
                    QDir(ui->javaDir_le->text()).absolutePath(),
 
@@ -78,7 +111,7 @@ void KaminecLauncher::loadProfileJson()
     //解析profile的json模型
 
     ui->username_le->setText(loadProfile.value("username").toString());
-    ui->version_le->setText(loadProfile.value("version").toString());
+    ui->version_cb->setCurrentText(loadProfile.value("version").toString());
     ui->gameDir_le->setText(loadProfile.value("gameDir").toString());
     ui->javaDir_le->setText(loadProfile.value("javaDir").toString());
 
@@ -96,7 +129,7 @@ void KaminecLauncher::saveProfileJson()
     //生成profile的json模型
 
     saveProfile.insert("username",ui->username_le->text());
-    saveProfile.insert("version",ui->version_le->text());
+    saveProfile.insert("version",ui->version_cb->currentText());
     saveProfile.insert("gameDir",ui->gameDir_le->text());
     saveProfile.insert("javaDir",ui->javaDir_le->text());
 
@@ -132,17 +165,22 @@ int KaminecLauncher::download()
     ui->download_pb->setDisabled(true);
     ui->downloadProgress_label->setVisible(true);
     ui->downloadProgress_progressBar->setVisible(true);
+    ui->downloadProgress_progressBar_2->setVisible(true);
+    ui->downloadValue_label->setVisible(true);
 
-    auto fileItem = FileItem(QUrl("https://launchermeta.mojang.com/mc/game/1920a2b4e996bae0af1a67d38d63706bac10ac47/1.10.2.json"),
-                             QString("%1/versions/%2/%2.json").arg(ui->gameDir_le->text()).arg(ui->version_le->text()));
-
+    qDebug()<<"???"<<QString("%1/versions/%2/%2.json").arg(ui->gameDir_le->text()).arg(ui->version_cb->currentText());
+    auto fileItem = FileItem(QString("%1.json").arg(ui->version_cb->currentText()),
+                             0,
+                             QString("NULL"),
+                             QString("%1/versions/%2/%2.json").arg(ui->gameDir_le->text()).arg(ui->version_cb->currentText()),
+                             versionList.at(ui->version_cb->currentIndex()).toMap().value("url").toUrl());
     dm->append(fileItem);
     dm->waitForFinished();
 
-    JsonManager jm(this,ui->gameDir_le->text(),ui->version_le->text());
+    JsonManager jm(this,ui->gameDir_le->text(),ui->version_cb->currentText());
 
     fileItem = FileItem(jm.getDownloadClientUrl(),
-                        QString("%1/versions/%2/%2.jar").arg(ui->gameDir_le->text()).arg(ui->version_le->text()));
+                        QString("%1/versions/%2/%2.jar").arg(ui->gameDir_le->text()).arg(ui->version_cb->currentText()));
     dm->append(fileItem);
 
     auto downloadLibUrls = jm.getDownloadLibUrls();
@@ -284,6 +322,8 @@ void KaminecLauncher::downloadFinished()
     ui->download_pb->setEnabled(true);
     ui->downloadProgress_label->setVisible(false);
     ui->downloadProgress_progressBar->setVisible(false);
+    ui->downloadProgress_progressBar_2->setVisible(false);
+    ui->downloadValue_label->setVisible(false);
 }
 
 void KaminecLauncher::gameFinished()

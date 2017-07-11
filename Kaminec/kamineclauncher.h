@@ -57,6 +57,7 @@ private:
     Ui::KaminecLauncher *ui;
     SavesManager SavesManager;
     int totalCount;
+    QList<QVariant> versionList;
 };
 
 #endif // KAMINECLAUNCHER_H

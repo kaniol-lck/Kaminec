@@ -47,11 +47,14 @@ void DownloadManager::append(const QList<QPair<QUrl, QString> > &urlList)
         QTimer::singleShot(0, this, SIGNAL(finished()));
 }
 
-void DownloadManager::append(FileItem &item)
+void DownloadManager::append(const FileItem &item)
 {
     if (downloadQueue.isEmpty())
         QTimer::singleShot(0, this, SLOT(startNextDownload()));
 
+    QFileInfo fileInfo(item.path);
+    if(fileInfo.exists()&&fileInfo.size()==item.size)
+        return;
     downloadQueue.enqueue(item.getDownloadInfo());
     auto info = item.getInfoList();
     model.appendRow(info);

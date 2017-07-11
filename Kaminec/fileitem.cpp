@@ -34,7 +34,7 @@ FileItem::FileItem(QPair<QUrl, QString> urlBind):
              urlBind.first)
 {}
 
-QList<QStandardItem *> FileItem::getInfoList()
+QList<QStandardItem *> FileItem::getInfoList() const
 {
     return QList<QStandardItem*>{
         new QStandardItem(name),
@@ -45,7 +45,7 @@ QList<QStandardItem *> FileItem::getInfoList()
     };
 }
 
-QPair<QUrl, QString> FileItem::getDownloadInfo()
+QPair<QUrl, QString> FileItem::getDownloadInfo() const
 {
     return qMakePair(url,path);
 }

@@ -209,7 +209,7 @@ QString JsonManager::getAssetIndex()
 
 QUrl JsonManager::getDownloadClientUrl()
 {
-    return jsonMap.value("downloads").toMap()
-                  .value("client").toMap()
-                  .value("url").toString();
+    return QString("https://")+jsonMap.value("downloads").toMap()
+                                      .value("client").toMap()
+                                      .value("url").toString();
 }

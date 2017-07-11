@@ -24,7 +24,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="moduleSwitch">
       <property name="currentIndex">
-       <number>3</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="startment">
        <attribute name="title">
@@ -141,13 +141,10 @@
               <property name="alignment">
                <set>Qt::AlignCenter</set>
               </property>
-              <property name="buddy">
-               <cstring>version_le</cstring>
-              </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="version_le"/>
+             <widget class="QComboBox" name="version_cb"/>
             </item>
            </layout>
           </item>
@@ -576,7 +573,6 @@
   <tabstop>moduleSwitch</tabstop>
   <tabstop>start_pb</tabstop>
   <tabstop>username_le</tabstop>
-  <tabstop>version_le</tabstop>
   <tabstop>gameDir_le</tabstop>
   <tabstop>fileDlg1_pb</tabstop>
   <tabstop>javaDir_le</tabstop>
