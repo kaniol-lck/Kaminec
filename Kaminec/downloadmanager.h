@@ -20,8 +20,8 @@ public:
 
     void append(const QPair<QUrl, QString>& url);
     void append(const QList<QPair<QUrl,QString>> &urlList);
-    void append(const FileItem &item);
-    void append(QList<FileItem>& itemList);
+    int append(const FileItem &item);
+    int append(QList<FileItem>& itemList);
     int waitForFinished();
     int getDownloadedCount();
     int getTotalCount();
@@ -50,7 +50,7 @@ private:
     int totalCount;
 
     QStandardItemModel model;
-    QList<QList<QStandardItem *>> itemList;
+    QList<QList<QStandardItem*>> itemList;
 };
 
 #endif

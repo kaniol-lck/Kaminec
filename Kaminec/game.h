@@ -29,7 +29,7 @@ private:
     Profile gameProfile;
     Mode gamemode;
     JsonManager gameJson;
-
+    QProcess *gameProcess;
 signals:
     void finished(int);
 

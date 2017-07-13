@@ -6,6 +6,7 @@
 #include <QStandardItemModel>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QMessageBox>
 #include <QString>
 #include <QStringList>
 #include <QTimer>
@@ -18,12 +19,13 @@ DownloadManager::DownloadManager(QObject *parent):
     model(),
     itemList()
 {
-    model.setColumnCount(5);
+    model.setColumnCount(6);
     model.setHeaderData(0,Qt::Horizontal,"filename");
-    model.setHeaderData(1,Qt::Horizontal,"size");
-    model.setHeaderData(2,Qt::Horizontal,"sha1");
-    model.setHeaderData(3,Qt::Horizontal,"path");
-    model.setHeaderData(4,Qt::Horizontal,"url");
+    model.setHeaderData(1,Qt::Horizontal,"downloaded size");
+    model.setHeaderData(2,Qt::Horizontal,"total size");
+    model.setHeaderData(3,Qt::Horizontal,"sha1");
+    model.setHeaderData(4,Qt::Horizontal,"path");
+    model.setHeaderData(5,Qt::Horizontal,"url");
 }
 
 void DownloadManager::append(const QPair<QUrl, QString> &url)
@@ -47,28 +49,41 @@ void DownloadManager::append(const QList<QPair<QUrl, QString> > &urlList)
         QTimer::singleShot(0, this, SIGNAL(finished()));
 }
 
-void DownloadManager::append(const FileItem &item)
+int DownloadManager::append(const FileItem &item)
 {
+    QFileInfo fileInfo(item.path);
+    if(fileInfo.exists()&&fileInfo.size()==item.size){
+        emit finished();
+        return 1;
+    }
+
     if (downloadQueue.isEmpty())
         QTimer::singleShot(0, this, SLOT(startNextDownload()));
 
-    QFileInfo fileInfo(item.path);
-    if(fileInfo.exists()&&fileInfo.size()==item.size)
-        return;
-    downloadQueue.enqueue(item.getDownloadInfo());
     auto info = item.getInfoList();
+
+    if(item.size==0)
+        info.at(2)->setText(QString("unkonwn"));
+
+    downloadQueue.enqueue(item.getDownloadInfo());
     model.appendRow(info);
     itemList.append(info);
     ++totalCount;
+    return 0;
 }
 
-void DownloadManager::append(QList<FileItem> &itemList)
+int DownloadManager::append(QList<FileItem> &itemList)
 {
-    for(auto item: itemList)
-        append(item);
+    int dld=0;
+    for(auto item: itemList){
+        if(append(item)!=1)
+            dld=0;
+    }
 
     if (downloadQueue.isEmpty())
         QTimer::singleShot(0, this, SIGNAL(finished()));
+
+    return dld;
 }
 
 #include <QEventLoop>
@@ -113,6 +128,8 @@ void DownloadManager::startNextDownload()
     QDir d = QFileInfo(filename).path();
     if(!d.exists())
         d.mkpath(d.path());
+    if(output.exists())
+        output.remove();
     output.setFileName(filename);
     if (!output.open(QIODevice::WriteOnly)) {
         fprintf(stderr, "Problem opening save file '%s' for download '%s': %s\n",
@@ -139,6 +156,9 @@ void DownloadManager::startNextDownload()
 
 void DownloadManager::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 {
+    itemList.at(0).at(1)->setText(QString::number(bytesReceived));
+    if(itemList.at(0).at(2)->text()=="0")
+        itemList.at(0).at(2)->setText(QString::number(bytesTotal));
     qDebug()<<QString("%1%  %2/%3").arg(bytesTotal==0?0:bytesReceived*100/bytesTotal,3).arg(bytesReceived,6).arg(bytesTotal,6);
 }
 
@@ -146,18 +166,19 @@ void DownloadManager::downloadFinished()
 {
     output.close();
 
-    model.removeRow(0);
-    for(auto p:itemList.at(0))
-        delete p;
-    itemList.removeFirst();
-
     if (currentDownload->error()) {
         // download failed
         qDebug()<<"Failed:"<<qPrintable(currentDownload->errorString())<<"\n";
+        QMessageBox::warning(static_cast<QWidget*>(parent()),"Download Failed",QString(currentDownload->errorString()));
     } else {
         printf("Succeeded.\n");
         ++downloadedCount;
         emit downloadedCountChanged(downloadedCount);
+
+        model.removeRow(0);
+        for(auto p:itemList.at(0))
+            delete p;
+        itemList.removeFirst();
     }
 
     currentDownload->deleteLater();

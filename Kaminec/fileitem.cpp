@@ -38,6 +38,7 @@ QList<QStandardItem *> FileItem::getInfoList() const
 {
     return QList<QStandardItem*>{
         new QStandardItem(name),
+        new QStandardItem(),
         new QStandardItem(QString::number(size)),
         new QStandardItem(sha1),
         new QStandardItem(path),

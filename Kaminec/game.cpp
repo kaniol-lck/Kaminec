@@ -16,7 +16,8 @@ Game::Game(QObject *parent, Profile gp, Mode gm):
     QObject(parent),
     gameProfile(gp),
     gamemode(gm),
-    gameJson(parent,gameProfile.gameDir,gameProfile.version)
+    gameJson(parent,gameProfile.gameDir,gameProfile.version),
+    gameProcess(new QProcess(this))
 {}
 
 int Game::start()
@@ -50,7 +51,6 @@ int Game::start()
         QTextStream out2(&ttf);
         out2<<time<<endl;
 
-    auto gameProcess = new QProcess;
     this->extractNatives(gameProfile.gameDir+"/natives");
     gameProcess->start(
                 gameProfile.javaDir,
