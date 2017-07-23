@@ -7,13 +7,13 @@
 DownloadManagerPlus::DownloadManagerPlus(QObject *parent) : QObject(parent)
 {
     for(int index = 0; index!= downloadNumber;++index){
-        downloaderPool.append(new SingleDownload(this,index));
-   }
+        downloaderPool.append(new SingleDownload(this,itemList.takeAt(index),&manager,index));
+    }
 }
 
 void DownloadManagerPlus::append(const FileItem &item)
 {
-    
+
     auto info = item.getInfoList();
 
     if(item.size==0)
@@ -23,7 +23,7 @@ void DownloadManagerPlus::append(const FileItem &item)
     model.appendRow(info);
     itemList.append(info);
     ++totalCount;
-    
+
 }
 
 void DownloadManagerPlus::append(QList<FileItem> &itemList)
@@ -35,8 +35,8 @@ void DownloadManagerPlus::append(QList<FileItem> &itemList)
 void DownloadManagerPlus::startDownload()
 {
     for(int index = 0; index != downloadNumber; index++){
-        if(!downloaderPool.at(index).isDownload()&&!downloadQueue.empty()){
-            downloaderPool.at(index).start(downloadQueue.dequeue());
+        if(!downloaderPool.at(index)->isDownload()&&!downloadQueue.empty()){
+            downloaderPool.at(index)->start(downloadQueue.dequeue());
         }
     }
 }
@@ -63,11 +63,24 @@ int DownloadManagerPlus::getTotalCount()
     return totalCount;
 }
 
+QStandardItemModel *DownloadManagerPlus::getModel()
+{
+    return &model;
+}
+
 void DownloadManagerPlus::startNextDownload(int index)
 {
     if(downloadQueue.empty()){
         emit finished();
     }
-    
-    downloaderPool.at(index).start(downloadQueue.dequeue());
+
+    downloaderPool.at(index)->start(downloadQueue.dequeue());
+}
+
+void DownloadManagerPlus::singleFinished(int index)
+{
+    if(downloadQueue.empty())
+        return;
+
+    downloaderPool.at(index)->start(downloadQueue.dequeue());
 }
