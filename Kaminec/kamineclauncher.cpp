@@ -2,6 +2,7 @@
 #include "ui_kamineclauncher.h"
 
 #include "downloadmanager.h"
+#include "downloadmanagerplus.h"
 #include "JsonManager.h"
 #include "gamemode.h"
 #include "game.h"
@@ -34,15 +35,18 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
     ui->downloadValue_label->setVisible(false);
 
     ui->saveMgr_treeView->setModel(SavesManager.getModel());
-    auto dm = new DownloadManager(this);
+    auto dm = new DownloadManagerPlus(this);
     auto versions = FileItem(QString("version_manifest.json"),
                              26389,
                              QString("NULL"),
                              QString("./version_manifest.json"),
                              QUrl("https://launchermeta.mojang.com/mc/game/version_manifest.json"));
-    if(dm->append(versions)==0){
-        dm->waitForFinished();
-    }
+    dm->append(versions);
+    dm->startDownload();
+    qDebug()<<"????";
+    dm->waitForFinished();
+    qDebug()<<"hhh";
+
     //加载版本
     QFile jsonFile("./version_manifest.json");
 
@@ -165,7 +169,7 @@ void KaminecLauncher::saveProfileJson()
 
 int KaminecLauncher::download()
 {
-    auto dm = new DownloadManager(this);
+    auto dm = new DownloadManagerPlus(this);
 
     ui->download_treeView->setModel(dm->getModel());
     ui->download_pb->setText("Downloading...");
@@ -181,9 +185,9 @@ int KaminecLauncher::download()
                              QString("NULL"),
                              QString("%1/versions/%2/%2.json").arg(ui->gameDir_le->text()).arg(ui->version_cb->currentText()),
                              versionList.at(ui->version_cb->currentIndex()).toMap().value("url").toUrl());
-    if(dm->append(fileItem)==1){
-        dm->waitForFinished();
-    }
+    dm->append(fileItem);
+    dm->startDownload();
+    dm->waitForFinished();
 
     JsonManager jm(this,ui->gameDir_le->text(),ui->version_cb->currentText());
 
@@ -193,29 +197,31 @@ int KaminecLauncher::download()
                         QString("%1/versions/%2/%2.jar").arg(ui->gameDir_le->text()).arg(ui->version_cb->currentText()),
                         jm.getDownloadClientUrl());
     qDebug()<<jm.getDownloadClientUrl();
-    if(dm->append(fileItem)==1){
-        dm->waitForFinished();
-    }
+    dm->append(fileItem);
+    dm->startDownload();
+    dm->waitForFinished();
+
 
     auto downloadLibUrls = jm.getDownloadLibUrls();
     for(auto& i:downloadLibUrls){
-        i.path.prepend(ui->gameDir_le->text()+"/libraries/");
+        i.mPath.prepend(ui->gameDir_le->text()+"/libraries/");
         //qDebug()<<i.name;
     }
 
-    if(dm->append(downloadLibUrls)==1){
-        dm->waitForFinished();
-    }
+    dm->append(downloadLibUrls);
+    dm->startDownload();
+    dm->waitForFinished();
+
     //qDebug()<<"before";
     auto downloadAssertUrls = jm.getDownloadAssertUrls();
     //qDebug()<<"after";
     for(auto& i:downloadAssertUrls){
-        i.path.prepend(ui->gameDir_le->text()+"/assets/objects/");
+        i.mPath.prepend(ui->gameDir_le->text()+"/assets/objects/");
         //qDebug()<<i.name;
     }
-    if(dm->append(downloadAssertUrls)==1){
-        dm->waitForFinished();
-    }
+    dm->append(downloadAssertUrls);
+    dm->startDownload();
+    dm->waitForFinished();
 
     qDebug()<<dm->getTotalCount();
 

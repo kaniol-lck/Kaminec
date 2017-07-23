@@ -11,23 +11,24 @@
 struct FileItem
 {
     FileItem()=default;
-    FileItem(QString n,
-                      int s,
-                      QString sh,
-                      QString p,
-                      QUrl u);
-    FileItem(QUrl u, QString p);
+    explicit FileItem(QString name,
+                      int     size,
+                      QString sha1,
+                      QString path,
+                      QUrl url);
+    explicit FileItem(QUrl u, QString p);
 
     FileItem(QPair<QUrl,QString> urlBind);
 
     QList<QStandardItem *> getInfoList() const;
     QPair<QUrl,QString> getDownloadInfo() const;
 
-    QString name;
-    int   size;
-    QString sha1;
-    QString path;
-    QUrl    url;
+    QString mName;
+    int   mSize;
+    QString mSha1;
+    QString mPath;
+    QUrl    mUrl;
+
 };
 
 #endif // FILEITEM_H

@@ -51,8 +51,8 @@ void DownloadManager::append(const QList<QPair<QUrl, QString> > &urlList)
 
 int DownloadManager::append(const FileItem &item)
 {
-    QFileInfo fileInfo(item.path);
-    if(fileInfo.exists()&&fileInfo.size()==item.size){
+    QFileInfo fileInfo(item.mPath);
+    if(fileInfo.exists()&&fileInfo.size()==item.mSize){
         emit finished();
         return 1;
     }
@@ -62,7 +62,7 @@ int DownloadManager::append(const FileItem &item)
 
     auto info = item.getInfoList();
 
-    if(item.size==0)
+    if(item.mSize==0)
         info.at(2)->setText(QString("unkonwn"));
 
     downloadQueue.enqueue(item.getDownloadInfo());

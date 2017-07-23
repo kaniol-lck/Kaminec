@@ -14,11 +14,11 @@ class SingleDownload : public QObject
 {
     Q_OBJECT
 public:
-    explicit SingleDownload(QObject *parent, QList<QStandardItem*> modelItem, QNetworkAccessManager *manager,int index);
+    explicit SingleDownload(QObject *parent,QNetworkAccessManager *manager,int index);
 
     bool isDownload() const;
 
-    void start(FileItem fileItem);
+    void start(QList<QStandardItem *> modelItem, FileItem fileItem);
 
 signals:
     void finished(int) const;
@@ -37,7 +37,7 @@ private:
     QFile *output;
 
     QList<QStandardItem*> mModelItem;
-    bool mIsdownload;
+    bool mIsdownload = false;
     int mIndex;
 };
 

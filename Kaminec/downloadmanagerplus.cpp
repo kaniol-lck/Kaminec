@@ -7,8 +7,15 @@
 DownloadManagerPlus::DownloadManagerPlus(QObject *parent) : QObject(parent)
 {
     for(int index = 0; index!= downloadNumber;++index){
-        downloaderPool.append(new SingleDownload(this,itemList.takeAt(index),&manager,index));
+        downloaderPool.append(new SingleDownload(this,&manager,index));
     }
+    model.setColumnCount(6);
+    model.setHeaderData(0,Qt::Horizontal,"filename");
+    model.setHeaderData(1,Qt::Horizontal,"downloaded size");
+    model.setHeaderData(2,Qt::Horizontal,"total size");
+    model.setHeaderData(3,Qt::Horizontal,"sha1");
+    model.setHeaderData(4,Qt::Horizontal,"path");
+    model.setHeaderData(5,Qt::Horizontal,"url");
 }
 
 void DownloadManagerPlus::append(const FileItem &item)
@@ -16,7 +23,7 @@ void DownloadManagerPlus::append(const FileItem &item)
 
     auto info = item.getInfoList();
 
-    if(item.size==0)
+    if(item.mSize==0)
         info.at(2)->setText(QString("unkonwn"));
 
     downloadQueue.enqueue(item.getDownloadInfo());
@@ -36,7 +43,8 @@ void DownloadManagerPlus::startDownload()
 {
     for(int index = 0; index != downloadNumber; index++){
         if(!downloaderPool.at(index)->isDownload()&&!downloadQueue.empty()){
-            downloaderPool.at(index)->start(downloadQueue.dequeue());
+            downloaderPool.at(index)->start(itemList.takeFirst(),downloadQueue.dequeue());
+            connect(downloaderPool.at(index),SIGNAL(finished(int)),SLOT(startNextDownload(int)));
         }
     }
 }
@@ -70,11 +78,16 @@ QStandardItemModel *DownloadManagerPlus::getModel()
 
 void DownloadManagerPlus::startNextDownload(int index)
 {
+    if(model.rowCount()!=0){
+//        model.removeRow(0);//!!!!!!!!!
+    }
+    qDebug()<<"next";
     if(downloadQueue.empty()){
         emit finished();
+        return;
     }
 
-    downloaderPool.at(index)->start(downloadQueue.dequeue());
+    downloaderPool.at(index)->start(itemList.takeFirst(),downloadQueue.dequeue());
 }
 
 void DownloadManagerPlus::singleFinished(int index)
@@ -82,5 +95,5 @@ void DownloadManagerPlus::singleFinished(int index)
     if(downloadQueue.empty())
         return;
 
-    downloaderPool.at(index)->start(downloadQueue.dequeue());
+    downloaderPool.at(index)->start(itemList.takeFirst(),downloadQueue.dequeue());
 }

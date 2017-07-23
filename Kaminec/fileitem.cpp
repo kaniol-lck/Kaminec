@@ -6,16 +6,16 @@
 #include <QList>
 #include <QFileInfo>
 
-FileItem::FileItem(QString n,
-                   int s,
-                   QString sh,
-                   QString p,
-                   QUrl u):
-    name(n),
-    size(s),
-    sha1(sh),
-    path(p),
-    url(u)
+FileItem::FileItem(QString name,
+                   int size,
+                   QString sha1,
+                   QString path,
+                   QUrl url):
+    mName(name),
+    mSize(size),
+    mSha1(sha1),
+    mPath(path),
+    mUrl(url)
 {}
 
 FileItem::FileItem(QUrl u, QString p):
@@ -37,16 +37,16 @@ FileItem::FileItem(QPair<QUrl, QString> urlBind):
 QList<QStandardItem *> FileItem::getInfoList() const
 {
     return QList<QStandardItem*>{
-        new QStandardItem(name),
+        new QStandardItem(mName),
         new QStandardItem(),
-        new QStandardItem(QString::number(size)),
-        new QStandardItem(sha1),
-        new QStandardItem(path),
-        new QStandardItem(url.toString())
+        new QStandardItem(QString::number(mSize)),
+        new QStandardItem(mSha1),
+        new QStandardItem(mPath),
+        new QStandardItem(mUrl.toString())
     };
 }
 
 QPair<QUrl, QString> FileItem::getDownloadInfo() const
 {
-    return qMakePair(url,path);
+    return qMakePair(mUrl,mPath);
 }
