@@ -39,15 +39,17 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
     ui->downloadProgress_progressBar_2->setVisible(false);
     ui->downloadValue_label->setVisible(false);
 
-    ui->saveMgr_treeView->setModel(SavesManager.getModel());
-    auto dm = new DownloadManagerPlus(this);
-    auto versions = FileItem(QString("version_manifest.json"),
-                             26389,
-                             QString("NULL"),
-                             QString("./version_manifest.json"),
-                             QUrl("https://launchermeta.mojang.com/mc/game/version_manifest.json"));
-    dm->append(versions);
-    dm->waitForFinished();
+	ui->saveMgr_treeView->setModel(SavesManager.getModel());
+	if(!QFile("./version_manifest.json").exists()){
+		auto dm = new DownloadManager(this);
+		auto versions = FileItem(QString("version_manifest.json"),
+								 0,
+								 QString("NULL"),
+								 QString("./version_manifest.json"),
+								 QUrl("https://launchermeta.mojang.com/mc/game/version_manifest.json"));
+		dm->append(versions);
+		dm->waitForFinished();
+	}
 
     //加载版本
     QFile jsonFile("./version_manifest.json");
@@ -235,7 +237,7 @@ int KaminecLauncher::download()
     //QStandardItemModel model;
     //ui->download_treeView->setModel(model);
 
-//    connect(dm,SIGNAL(downloadedCountChanged(int)),this,SLOT(updateDownloadCount(int)));
+	connect(dmp,SIGNAL(downloadedCountChanged(int)),this,SLOT(updateDownloadCount(int)));
 	connect(dmp,SIGNAL(downloadedCountChanged(int)),ui->downloadProgress_progressBar,SLOT(setValue(int)));
 	connect(dmp,SIGNAL(downloadedCountChanged(int)),ui->downloadProgress_progressBar_2,SLOT(setValue(int)));
 	connect(dmp,SIGNAL(finished()),this,SLOT(downloadFinished()));

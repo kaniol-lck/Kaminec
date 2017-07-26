@@ -29,6 +29,7 @@ public:
 
 signals:
     void                    finished();
+	void                    downloadedCountChanged(int);
 
 private slots:
     void                    startNextDownload(int index);
@@ -41,8 +42,8 @@ private:
     QQueue<FileItem> downloadQueue;
 
     QTime downloadTime;
-    int totalCount;
-    int downloadedCount;
+	int totalCount = 0;
+	int downloadedCount = 0;
 
     QStandardItemModel model;
     QList<QList<QStandardItem*>> itemList;

@@ -88,6 +88,8 @@ void DownloadManagerPlus::startNextDownload(int index)
 //        model.removeRow(0);//!!!!!!!!!
     }
     qDebug()<<"downloader "<<index<<" finished,next";
+	++downloadedCount;
+	emit downloadedCountChanged(downloadedCount);
     if(downloadQueue.empty()){
         bool d = false;
         for(auto downloader: downloaderPool){
@@ -106,7 +108,6 @@ void DownloadManagerPlus::startNextDownload(int index)
     downloaderPool.at(index)->start(itemList.takeFirst(),downloadQueue.dequeue());
 }
 
-void DownloadManagerPlus::singleFinished(int index)
+void DownloadManagerPlus::singleFinished(int /*index*/)
 {
-
 }
