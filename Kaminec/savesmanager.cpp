@@ -16,7 +16,7 @@
 SavesManager::SavesManager(QObject *parent) :
     QObject(parent),
     savesFile("./saves.json"),
-    backuoDir("J:/库/桌面/backup")
+	backuoDir("./backup")
 {
     model.setColumnCount(3);
     model.setHeaderData(0,Qt::Horizontal,"saevs name");
