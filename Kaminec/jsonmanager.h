@@ -3,6 +3,7 @@
 
 #include "fileitem.h"
 #include "downloadmanager.h"
+#include "downloadmanagerplus.h"
 
 #include <QJsonDocument>
 #include <QVariantMap>
@@ -30,7 +31,7 @@ private:
     QJsonDocument jsonDoc;
     QVariantMap jsonMap;
     QList<QVariant> libList;
-    DownloadManager *jsonDownload;
+    DownloadManagerPlus *jsonDownload;
     QString gameDir;
 };
 

@@ -1,9 +1,12 @@
 #include "game.h"
+#include "gamemode.h"
 #include "profile.h"
 #include "downloadmanager.h"
+#include "auth.h"
 
 #include <QDir>
 #include <QTime>
+#include <QUuid>
 #include <QDebug>
 #include <QProcess>
 #include <QStringList>
@@ -12,12 +15,14 @@
 #include <QTextStream>
 #include <algorithm>
 
-Game::Game(QObject *parent, Profile gp, Mode gm):
+Game::Game(QObject *parent, Profile gp, Mode gm, QPair<QString, QString> account,bool autoName):
     QObject(parent),
     gameProfile(gp),
-    gamemode(gm),
+	gameMode(gm),
     gameJson(parent,gameProfile.gameDir,gameProfile.version),
-    gameProcess(new QProcess(this))
+	gameProcess(new QProcess(this)),
+	gameAccount(account),
+	mAutoName(autoName)
 {}
 
 int Game::start()
@@ -33,28 +38,40 @@ int Game::start()
     //       <<"args="<<startcode
     //      <<"Time elapsed:"<<time<<"ms.";
 
-        QFile logs("logs.txt");
-        logs.open(QIODevice::WriteOnly | QIODevice::Text);
+	QFile logs("logs.txt");
+	logs.open(QIODevice::WriteOnly | QIODevice::Text);
 
-        QTextStream out(&logs);
-        out<<"java path:"<<gameProfile.javaDir<<endl;
-        out<<"game arguments:";
-        for(auto& i:startcode)out<<i<<" ";
-        out<<endl;
-        out<<"game directory:"<<gameProfile.gameDir<<endl;
-        out<<"Time used:"<<time<<"ms";
+	QTextStream out(&logs);
+	out<<"java path:"<<gameProfile.javaDir<<endl;
+	out<<"game arguments:";
+	for(auto& i:startcode)out<<i<<" ";
+	out<<endl;
+	out<<"game directory:"<<gameProfile.gameDir<<endl;
+	out<<"Time used:"<<time<<"ms";
 
-        //textTime.txt
-        QFile ttf("timeTest.txt");
-        ttf.open(QIODevice::WriteOnly | QIODevice::Text | QFile::Append);
+	//textTime.txt
+	QFile ttf("timeTest.txt");
+	ttf.open(QIODevice::WriteOnly | QIODevice::Text | QFile::Append);
 
-        QTextStream out2(&ttf);
-        out2<<time<<endl;
+	QTextStream out2(&ttf);
+	out2<<time<<endl;
+///////////////////////////////////////////////////////////////////
+	this->extractNatives(gameProfile.gameDir+"/natives");
+	if(gameMode == Mode::Online){
+		auto auth = new Auth(this,gameAccount);
+		if(auth->check()){
+			startcode.replace(startcode.indexOf("${auth_uuid}"),auth->getUuid());
+			startcode.replace(startcode.indexOf("${auth_access_token}"),auth->getAccessToken());
+			startcode.replace(startcode.indexOf("Legacy"),"mojang");
+			if(mAutoName){
+				startcode.replace(startcode.indexOf(gameProfile.username),auth->getPlayerName());
+			}
+		}
+	}
 
-    this->extractNatives(gameProfile.gameDir+"/natives");
-    gameProcess->start(
-                gameProfile.javaDir,
-                startcode);
+	gameProcess->start(
+				gameProfile.javaDir,
+				startcode);
 
     connect(gameProcess,SIGNAL(finished(int)),this,SIGNAL(finished(int)));
 
@@ -66,8 +83,7 @@ QStringList Game::genStartcode()
     QStringList startcode;
     startcode<<this->genJVMargs()
              <<this->genLibpath()
-             <<this->genGameargs()
-            //<<this->checkSession()
+			 <<this->genGameargs()
             ;
     return startcode;
 }
@@ -115,10 +131,11 @@ QStringList Game::genGameargs()
     MCArgs.replace(MCArgs.indexOf("${version_name}"),gameProfile.version);
     MCArgs.replace(MCArgs.indexOf("${game_directory}"),gameProfile.gameDir);
     MCArgs.replace(MCArgs.indexOf("${assets_root}"),QString("%1/assets").arg(gameProfile.gameDir));
-    MCArgs.replace(MCArgs.indexOf("${assets_index_name}"),gameJson.getAssetIndex());
-    MCArgs.replace(MCArgs.indexOf("${auth_uuid}"),"bf500b0b7dcc94d0f803cc980f2b4d3f");
-    MCArgs.replace(MCArgs.indexOf("${auth_access_token}"),"bf500b0b7dcc94d0f803cc980f2b4d3f");
-    MCArgs.replace(MCArgs.indexOf("${user_type}"),"Legacy");
+	MCArgs.replace(MCArgs.indexOf("${assets_index_name}"),gameJson.getAssetIndex());
+	//MCArgs.replace(MCArgs.indexOf("${auth_uuid}"),"bf500b0b7dcc94d0f803cc980f2b4d3f");
+	//MCArgs.replace(MCArgs.indexOf("${auth_access_token}"),"bf500b0b7dcc94d0f803cc980f2b4d3f");
+	MCArgs.replace(MCArgs.indexOf("${user_type}"),"Legacy");
+
     MCArgs.replace(MCArgs.indexOf("${version_type}"),"Kaminec Launcher");
     MCArgs<<QString("--height")<<QString::number(gameProfile.height)
           <<QString("--width")<<QString::number(gameProfile.width);
@@ -130,6 +147,7 @@ QStringList Game::genGameargs()
 
 QStringList Game::checkSession()
 {
+
     return QStringList();
 }
 
@@ -158,7 +176,7 @@ int Game::extractNatives(QString nativesDir)
             unzipargs<< "x"
                      << filename
                      <<"-o"+nativesDir+"/";
-            QProcess::startDetached("7za",unzipargs);
+			QProcess::startDetached("7za",unzipargs);
         }
 
     }

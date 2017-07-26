@@ -33,7 +33,8 @@ SOURCES += main.cpp\
            fileitem.cpp \
            savesmanager.cpp \
     downloadmanagerplus.cpp \
-    singledownload.cpp
+    singledownload.cpp \
+    auth.cpp
 
 HEADERS  += kamineclauncher.h \
             profile.h \
@@ -44,6 +45,7 @@ HEADERS  += kamineclauncher.h \
             fileitem.h \
             savesmanager.h \
     downloadmanagerplus.h \
-    singledownload.h
+    singledownload.h \
+    auth.h
 
 FORMS    += kamineclauncher.ui

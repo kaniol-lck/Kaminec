@@ -21,6 +21,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QTextStream>
+#include <QProcess>
 #include <QStandardItemModel>
 
 KaminecLauncher::KaminecLauncher(QWidget *parent) :
@@ -29,6 +30,10 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
     SavesManager(this)
 {
     ui->setupUi(this);
+
+	ui->verifyBox->setVisible(false);
+	ui->password_le->setEchoMode(QLineEdit::Password);
+
     ui->downloadProgress_label->setVisible(false);
     ui->downloadProgress_progressBar->setVisible(false);
     ui->downloadProgress_progressBar_2->setVisible(false);
@@ -42,10 +47,7 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
                              QString("./version_manifest.json"),
                              QUrl("https://launchermeta.mojang.com/mc/game/version_manifest.json"));
     dm->append(versions);
-    dm->startDownload();
-    qDebug()<<"????";
     dm->waitForFinished();
-    qDebug()<<"hhh";
 
     //加载版本
     QFile jsonFile("./version_manifest.json");
@@ -55,7 +57,7 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
         qDebug()<<"Open failed";
         QMessageBox::about(0,"Not find json file","Json file NOT find,The program will terminate.");
     }
-    qDebug()<<"versionfile.json) file opened";
+    qDebug()<<"versionfile.json file opened";
 
     QByteArray jsonByte;
     jsonByte.resize(jsonFile.bytesAvailable());
@@ -94,7 +96,12 @@ inline const Profile KaminecLauncher::getProfile()
                    ui->maxMem_sb->value(),
 
                    ui->width_sb->value(),
-                   ui->height_sb->value()};
+				ui->height_sb->value()};
+}
+
+QPair<QString, QString> KaminecLauncher::getAccount()
+{
+	return qMakePair(ui->email_le->text(),ui->password_le->text());
 }
 
 void KaminecLauncher::loadProfileJson()
@@ -169,9 +176,11 @@ void KaminecLauncher::saveProfileJson()
 
 int KaminecLauncher::download()
 {
-    auto dm = new DownloadManagerPlus(this);
 
-    ui->download_treeView->setModel(dm->getModel());
+	auto dm = new DownloadManager(this);
+	auto dmp = new DownloadManagerPlus(this);
+
+	ui->download_treeView->setModel(dmp->getModel());
     ui->download_pb->setText("Downloading...");
     ui->download_pb->setDisabled(true);
     ui->downloadProgress_label->setVisible(true);
@@ -186,7 +195,6 @@ int KaminecLauncher::download()
                              QString("%1/versions/%2/%2.json").arg(ui->gameDir_le->text()).arg(ui->version_cb->currentText()),
                              versionList.at(ui->version_cb->currentIndex()).toMap().value("url").toUrl());
     dm->append(fileItem);
-    dm->startDownload();
     dm->waitForFinished();
 
     JsonManager jm(this,ui->gameDir_le->text(),ui->version_cb->currentText());
@@ -197,9 +205,7 @@ int KaminecLauncher::download()
                         QString("%1/versions/%2/%2.jar").arg(ui->gameDir_le->text()).arg(ui->version_cb->currentText()),
                         jm.getDownloadClientUrl());
     qDebug()<<jm.getDownloadClientUrl();
-    dm->append(fileItem);
-    dm->startDownload();
-    dm->waitForFinished();
+	dmp->append(fileItem);
 
 
     auto downloadLibUrls = jm.getDownloadLibUrls();
@@ -208,9 +214,7 @@ int KaminecLauncher::download()
         //qDebug()<<i.name;
     }
 
-    dm->append(downloadLibUrls);
-    dm->startDownload();
-    dm->waitForFinished();
+	dmp->append(downloadLibUrls);
 
     //qDebug()<<"before";
     auto downloadAssertUrls = jm.getDownloadAssertUrls();
@@ -219,25 +223,23 @@ int KaminecLauncher::download()
         i.mPath.prepend(ui->gameDir_le->text()+"/assets/objects/");
         //qDebug()<<i.name;
     }
-    dm->append(downloadAssertUrls);
-    dm->startDownload();
-    dm->waitForFinished();
+	dmp->append(downloadAssertUrls);
 
-    qDebug()<<dm->getTotalCount();
+	qDebug()<<dmp->getTotalCount();
 
-    totalCount = dm->getTotalCount();
+	totalCount = dmp->getTotalCount();
     ui->downloadValue_label->setText(QString("0/%1").arg(totalCount));
-    ui->downloadProgress_progressBar->setMaximum(dm->getTotalCount());
-    ui->downloadProgress_progressBar_2->setMaximum(dm->getTotalCount());
+	ui->downloadProgress_progressBar->setMaximum(dmp->getTotalCount());
+	ui->downloadProgress_progressBar_2->setMaximum(dmp->getTotalCount());
 
     //QStandardItemModel model;
     //ui->download_treeView->setModel(model);
 
-    connect(dm,SIGNAL(downloadedCountChanged(int)),this,SLOT(updateDownloadCount(int)));
-    connect(dm,SIGNAL(downloadedCountChanged(int)),ui->downloadProgress_progressBar,SLOT(setValue(int)));
-    connect(dm,SIGNAL(downloadedCountChanged(int)),ui->downloadProgress_progressBar_2,SLOT(setValue(int)));
-    connect(dm,SIGNAL(finished()),this,SLOT(downloadFinished()));
-    if(dm->waitForFinished()==-1)return -1;
+//    connect(dm,SIGNAL(downloadedCountChanged(int)),this,SLOT(updateDownloadCount(int)));
+	connect(dmp,SIGNAL(downloadedCountChanged(int)),ui->downloadProgress_progressBar,SLOT(setValue(int)));
+	connect(dmp,SIGNAL(downloadedCountChanged(int)),ui->downloadProgress_progressBar_2,SLOT(setValue(int)));
+	connect(dmp,SIGNAL(finished()),this,SLOT(downloadFinished()));
+	dmp->waitForFinished();
     return 0;
 }
 
@@ -270,17 +272,12 @@ void KaminecLauncher::on_load_pb_clicked()
 
 void KaminecLauncher::on_start_pb_clicked()
 {
-    auto g=new Game(this,this->getProfile(),Mode::Online);
-    g->start();
-    ui->start_pb->setText("Gaming...");
-    ui->start_pb->setDisabled(true);
-    connect(g,SIGNAL(finished(int)),this,SLOT(gameFinished()));
-
+	this->startGame();
 }
 
 void KaminecLauncher::on_pushButton_clicked()
 {
-    Game g(this,this->getProfile(),Mode::Online);
+	Game g(this,this->getProfile(),Mode::Offline,this->getAccount(),ui->isOriginalName_cb->isChecked());
     QTime t;
     g.genStartcode();
     auto time = t.elapsed();
@@ -298,7 +295,7 @@ void KaminecLauncher::on_pushButton_2_clicked()
     QTextStream out2(&ttf);
 
     QTime at;
-    Game g(this,this->getProfile(),Mode::Online);
+	Game g(this,this->getProfile(),Mode::Offline,this->getAccount(),ui->isOriginalName_cb->isChecked());
     for(auto i=1;i!=10;++i){
         QTime t;
         g.genStartcode();
@@ -316,7 +313,7 @@ void KaminecLauncher::on_pushButton_3_clicked()
     QTextStream out2(&ttf);
 
     QTime at;
-    Game g(this,this->getProfile(),Mode::Online);
+	Game g(this,this->getProfile(),Mode::Offline,this->getAccount(),ui->isOriginalName_cb->isChecked());
     for(auto i=1;i!=100;++i){
         QTime t;
         g.genStartcode();
@@ -369,4 +366,58 @@ void KaminecLauncher::on_deleteSaves_pb_clicked()
 void KaminecLauncher::on_backupSaves_pb_clicked()
 {
     SavesManager.backup();
+}
+
+void KaminecLauncher::on_autoJavaPath_pb_clicked()
+{
+	auto environment = QProcess::systemEnvironment();
+	auto PATH = environment.at(environment.indexOf(QRegExp("PATH.*")))
+						   .split(";");
+	auto index = PATH.indexOf(QRegExp(".*\\javapath"));
+	if(index==-1){
+		QMessageBox::warning(this,"Cannot find java path in environment...","Cannot find java path in environment,plaese choose it manually");
+		return;
+	}
+	auto javaPath = PATH.at(index);
+	javaPath.replace('\\',"/");
+	ui->javaDir_le->setText(javaPath);
+//	qDebug()<<javaPath;
+
+}
+
+void KaminecLauncher::startGame()
+{
+	Game *game;
+	if(ui->verify_cb->isChecked()){
+		game = new Game(this,this->getProfile(),Mode::Online,this->getAccount(),ui->isOriginalName_cb->isChecked());
+	}else{
+		game = new Game(this,this->getProfile(),Mode::Offline,this->getAccount(),ui->isOriginalName_cb->isChecked());
+	}
+	game->start();
+	ui->start_pb->setText("Gaming...");
+	ui->start_pb->setDisabled(true);
+	connect(game,SIGNAL(finished(int)),this,SLOT(gameFinished()));
+
+}
+
+void KaminecLauncher::on_showPassword_pb_clicked()
+{
+	if(isShowPassword){
+		ui->password_le->setEchoMode(QLineEdit::Password);
+		ui->showPassword_pb->setText("Show password");
+		isShowPassword = !isShowPassword;
+	}else{
+		ui->password_le->setEchoMode(QLineEdit::Normal);
+		ui->showPassword_pb->setText("Hide passeord");
+		isShowPassword = !isShowPassword;
+	}
+}
+
+void KaminecLauncher::on_verify_cb_stateChanged(int arg1)
+{
+	if(arg1){
+		ui->verifyBox->setVisible(true);
+	}else{
+		ui->verifyBox->setVisible(false);
+	}
 }

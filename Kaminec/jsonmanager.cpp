@@ -11,7 +11,7 @@
 
 JsonManager::JsonManager(QObject *parent, QString gamePath, QString version):
     QObject(parent),
-    jsonDownload(new DownloadManager(this)),
+    jsonDownload(new DownloadManagerPlus(this)),
     gameDir(gamePath)
 {
     QFile jsonFile(gamePath+QString("/versions/%1/%1.json").arg(version));
@@ -21,9 +21,10 @@ JsonManager::JsonManager(QObject *parent, QString gamePath, QString version):
         qDebug()<<"Open failed:"<<gamePath+QString("/versions/%1/%1.json").arg(version);
         QMessageBox::about(0,"Not find json file","Json file NOT find,The program will terminate.");
     }
-    qDebug()<<"jsonfile("<<version<<".json) file opened";
+    qDebug()<<"jsonfile("<<version<<".json) file opened:"<<jsonFile.fileName();
 
     QByteArray jsonByte;
+	qDebug()<<QString(jsonByte);
     jsonByte.resize(jsonFile.bytesAvailable());
     jsonByte = jsonFile.readAll();
     jsonFile.close();
@@ -134,6 +135,7 @@ QList<FileItem> JsonManager::getDownloadLibUrls()
 }
 
 #include "downloadmanager.h"
+#include "downloadmanagerplus.h"
 
 QList<FileItem> JsonManager::getDownloadAssertUrls()
 {
@@ -141,13 +143,12 @@ QList<FileItem> JsonManager::getDownloadAssertUrls()
                       .toMap().value("url").toUrl();
 
     QString filename = gameDir+QString("/assets/indexes/%1.json").arg(getAssetIndex());
-    if(jsonDownload->append(FileItem(QString(getAssetIndex()+".json"),
+    jsonDownload->append(FileItem(QString(getAssetIndex()+".json"),
                                   0,
                                   QString(),
                                   filename,
-                                     assertUrl))==1){
-        jsonDownload->waitForFinished();
-    }
+                                  assertUrl));
+    jsonDownload->waitForFinished();
     //try{
     qDebug()<<filename;
     QFile f(filename);//!

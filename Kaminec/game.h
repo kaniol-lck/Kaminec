@@ -13,7 +13,7 @@ class Game: public QObject
 {
     Q_OBJECT
 public:
-    Game(QObject *parent,Profile gp,Mode gm);
+	Game(QObject *parent, Profile gp, Mode gm, QPair<QString,QString> account, bool autoName);
 
     int start();
 
@@ -27,9 +27,11 @@ public:
     int extractNatives(QString nativesDir);
 private:
     Profile gameProfile;
-    Mode gamemode;
+	Mode gameMode;
     JsonManager gameJson;
     QProcess *gameProcess;
+	QPair<QString,QString> gameAccount;
+	bool mAutoName;
 signals:
     void finished(int);
 

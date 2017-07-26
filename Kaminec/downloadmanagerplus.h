@@ -48,7 +48,7 @@ private:
     QList<QList<QStandardItem*>> itemList;
     QList<SingleDownload*> downloaderPool;
 
-    static const int downloadNumber = 5;
+	static const int downloadNumber = 16;
 };
 
 #endif // DOWNLOADMANAGERPLUS_H

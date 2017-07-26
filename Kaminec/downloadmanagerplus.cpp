@@ -31,6 +31,7 @@ void DownloadManagerPlus::append(const FileItem &item)
     itemList.append(info);
     ++totalCount;
 
+    startDownload();
 }
 
 void DownloadManagerPlus::append(QList<FileItem> &itemList)
@@ -41,10 +42,15 @@ void DownloadManagerPlus::append(QList<FileItem> &itemList)
 
 void DownloadManagerPlus::startDownload()
 {
+	//for each downloader
     for(int index = 0; index != downloadNumber; index++){
+		//if downloader is not downloading and download queue is not empty
         if(!downloaderPool.at(index)->isDownload()&&!downloadQueue.empty()){
+			//add a task to the free downloader
             downloaderPool.at(index)->start(itemList.takeFirst(),downloadQueue.dequeue());
+			//once downloader finished and start next download
             connect(downloaderPool.at(index),SIGNAL(finished(int)),SLOT(startNextDownload(int)));
+//            connect(downloaderPool.at(index),SIGNAL(finished(int)),SLOT(singleFinished(int)));
         }
     }
 }
@@ -81,9 +87,19 @@ void DownloadManagerPlus::startNextDownload(int index)
     if(model.rowCount()!=0){
 //        model.removeRow(0);//!!!!!!!!!
     }
-    qDebug()<<"next";
+    qDebug()<<"downloader "<<index<<" finished,next";
     if(downloadQueue.empty()){
-        emit finished();
+        bool d = false;
+        for(auto downloader: downloaderPool){
+            if(downloader->isDownload()){
+                d = true;
+                break;
+            }
+        }
+        if(!d){
+            qDebug()<<"All finished";
+            emit finished();
+        }
         return;
     }
 
@@ -92,8 +108,5 @@ void DownloadManagerPlus::startNextDownload(int index)
 
 void DownloadManagerPlus::singleFinished(int index)
 {
-    if(downloadQueue.empty())
-        return;
 
-    downloaderPool.at(index)->start(itemList.takeFirst(),downloadQueue.dequeue());
 }
