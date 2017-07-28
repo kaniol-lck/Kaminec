@@ -1,6 +1,7 @@
 #include "auth.h"
 #include <QJsonDocument>
 #include <QEventLoop>
+#include <QMessageBox>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -59,7 +60,6 @@ void Auth::replyFinished(QNetworkReply *reply)
 {
 	auto statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 	qDebug()<<statusCode;
-	if(statusCode==200) success = true;
 	QByteArray data = reply->readAll();
 	qDebug() << data;
 
@@ -67,10 +67,18 @@ void Auth::replyFinished(QNetworkReply *reply)
 	auto doc = QJsonDocument::fromJson(data,&ok);
 	if(ok.error != QJsonParseError::NoError){qDebug()<<"AuthJson failed."<<endl<<ok.error;}
 
-	uuid = doc.toVariant().toMap().value("selectedProfile")
-						  .toMap().value("id").toString();
-	accessToken = doc.toVariant().toMap().value("accessToken").toString();
-	playerName = doc.toVariant().toMap().value("selectedProfile")
-				 .toMap().value("name").toString();
-	qDebug()<<playerName;
+	if(statusCode==200){
+		success = true;
+		uuid = doc.toVariant().toMap().value("selectedProfile")
+			   .toMap().value("id").toString();
+		accessToken = doc.toVariant().toMap().value("accessToken").toString();
+		playerName = doc.toVariant().toMap().value("selectedProfile")
+					 .toMap().value("name").toString();
+		qDebug()<<playerName;
+	}else{
+		qDebug()<<"statusCode:"<<statusCode;
+		QMessageBox::warning(0,
+							 doc.toVariant().toMap().value("error").toString(),
+							 doc.toVariant().toMap().value("errorMessage").toString());
+	}
 }

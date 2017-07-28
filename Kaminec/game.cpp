@@ -14,6 +14,7 @@
 #include <QFileInfo>
 #include <QTextStream>
 #include <algorithm>
+#include <QMessageBox>
 
 Game::Game(QObject *parent, Profile gp, Mode gm, QPair<QString, QString> account,bool autoName):
     QObject(parent),
@@ -27,8 +28,13 @@ Game::Game(QObject *parent, Profile gp, Mode gm, QPair<QString, QString> account
 
 int Game::start()
 {
-
-
+	if(!QFile(gameProfile.javaDir).exists()){
+		QMessageBox::warning(0,"Java path error",
+							 "javaw.exe does not exist,plaese rechoose!");
+		emit finished(0);
+		return 0;
+	}
+///////////////////////////////////////////////////////////////////
     //auto gameProcess = new QProcess;
     QTime t;
     auto startcode = this->genStartcode();
@@ -66,6 +72,9 @@ int Game::start()
 			if(mAutoName){
 				startcode.replace(startcode.indexOf(gameProfile.username),auth->getPlayerName());
 			}
+		}else{
+			emit finished(0);
+			return 0;
 		}
 	}
 

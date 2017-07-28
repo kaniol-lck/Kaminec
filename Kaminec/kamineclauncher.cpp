@@ -31,6 +31,7 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 {
     ui->setupUi(this);
 
+	ui->isOriginalName_cb->setChecked(true);
 	ui->verifyBox->setVisible(false);
 	ui->password_le->setEchoMode(QLineEdit::Password);
 
@@ -89,16 +90,18 @@ KaminecLauncher::~KaminecLauncher()
 //获取当前选择的profile
 inline const Profile KaminecLauncher::getProfile()
 {
-    return Profile{ui->username_le->text(),
-                   ui->version_cb->currentText(),
-                   QDir(ui->gameDir_le->text()).absolutePath(),
-                   QDir(ui->javaDir_le->text()).absolutePath(),
+	return Profile{
+				ui->username_le->text(),
+				ui->version_cb->currentText(),
+				QDir(ui->gameDir_le->text()).absolutePath(),
+				QDir(ui->javaDir_le->text()).absolutePath(),
 
-                   ui->minMem_sb->value(),
-                   ui->maxMem_sb->value(),
+				ui->minMem_sb->value(),
+				ui->maxMem_sb->value(),
 
-                   ui->width_sb->value(),
-				ui->height_sb->value()};
+				ui->width_sb->value(),
+				ui->height_sb->value()
+	};
 }
 
 QPair<QString, QString> KaminecLauncher::getAccount()
@@ -190,11 +193,14 @@ int KaminecLauncher::download()
     ui->downloadProgress_progressBar_2->setVisible(true);
     ui->downloadValue_label->setVisible(true);
 
-    qDebug()<<"???"<<QString("%1/versions/%2/%2.json").arg(ui->gameDir_le->text()).arg(ui->version_cb->currentText());
+	qDebug()<<"???"<<QString("%1/versions/%2/%2.json")
+			  .arg(ui->gameDir_le->text()).arg(ui->version_cb->currentText());
+
     auto fileItem = FileItem(QString("%1.json").arg(ui->version_cb->currentText()),
                              0,
                              QString("NULL"),
-                             QString("%1/versions/%2/%2.json").arg(ui->gameDir_le->text()).arg(ui->version_cb->currentText()),
+							 QString("%1/versions/%2/%2.json")
+								 .arg(ui->gameDir_le->text()).arg(ui->version_cb->currentText()),
                              versionList.at(ui->version_cb->currentIndex()).toMap().value("url").toUrl());
     dm->append(fileItem);
     dm->waitForFinished();
@@ -204,7 +210,8 @@ int KaminecLauncher::download()
     fileItem = FileItem(QString("%1.jar").arg(ui->version_cb->currentText()),
                         0,
                         QString("NULL"),
-                        QString("%1/versions/%2/%2.jar").arg(ui->gameDir_le->text()).arg(ui->version_cb->currentText()),
+						QString("%1/versions/%2/%2.jar")
+							.arg(ui->gameDir_le->text()).arg(ui->version_cb->currentText()),
                         jm.getDownloadClientUrl());
     qDebug()<<jm.getDownloadClientUrl();
 	dmp->append(fileItem);
@@ -248,15 +255,20 @@ int KaminecLauncher::download()
 //选择游戏目录
 void KaminecLauncher::on_fileDlg1_pb_clicked()
 {
-    ui->gameDir_le->setText(
-                QFileDialog::getExistingDirectory(this,"Choose game directory..."));
+	auto gamePath = QFileDialog::getExistingDirectory(this,
+													  "Choose game directory...");
+	if(gamePath!="")
+		ui->gameDir_le->setText(gamePath);
 }
 
 //选择javaw.exe路径
 void KaminecLauncher::on_fileDlg2_pb_clicked()
 {
-    ui->javaDir_le->setText(
-                QFileDialog::getOpenFileName(this,"Choose javaw,exe...","C:/","javaw(javaw.exe)"));
+	auto javaPath = QFileDialog::getOpenFileName(this,
+												 "Choose javaw,exe...",
+												 "C:/","javaw(javaw.exe)");
+	if(javaPath!="")
+		ui->javaDir_le->setText(javaPath);
 }
 
 //保存profile文件
@@ -277,55 +289,6 @@ void KaminecLauncher::on_start_pb_clicked()
 	this->startGame();
 }
 
-void KaminecLauncher::on_pushButton_clicked()
-{
-	Game g(this,this->getProfile(),Mode::Offline,this->getAccount(),ui->isOriginalName_cb->isChecked());
-    QTime t;
-    g.genStartcode();
-    auto time = t.elapsed();
-    QFile ttf("timeTest.txt");
-    ttf.open(QIODevice::WriteOnly | QIODevice::Text | QFile::Append);
-
-    QTextStream out2(&ttf);
-    out2<<time<<endl;
-}
-
-void KaminecLauncher::on_pushButton_2_clicked()
-{
-    QFile ttf("timeTest.txt");
-    ttf.open(QIODevice::WriteOnly | QIODevice::Text | QFile::Append);
-    QTextStream out2(&ttf);
-
-    QTime at;
-	Game g(this,this->getProfile(),Mode::Offline,this->getAccount(),ui->isOriginalName_cb->isChecked());
-    for(auto i=1;i!=10;++i){
-        QTime t;
-        g.genStartcode();
-        auto time = t.elapsed();
-        out2<<time<<endl;
-    }
-
-    out2<<"#10#"<<at.elapsed()<<endl;
-}
-
-void KaminecLauncher::on_pushButton_3_clicked()
-{
-    QFile ttf("timeTest.txt");
-    ttf.open(QIODevice::WriteOnly | QIODevice::Text | QFile::Append);
-    QTextStream out2(&ttf);
-
-    QTime at;
-	Game g(this,this->getProfile(),Mode::Offline,this->getAccount(),ui->isOriginalName_cb->isChecked());
-    for(auto i=1;i!=100;++i){
-        QTime t;
-        g.genStartcode();
-        auto time = t.elapsed();
-        out2<<time<<endl;
-    }
-
-    out2<<"#100#"<<at.elapsed()<<endl;
-}
-
 
 void KaminecLauncher::on_download_pb_clicked()
 {
@@ -335,7 +298,8 @@ void KaminecLauncher::on_download_pb_clicked()
 void KaminecLauncher::updateDownloadCount(int downloaded)
 {
     qDebug()<<"changed:"<<downloaded;
-    ui->downloadValue_label->setText(QString("%1/%2").arg(downloaded).arg(totalCount));
+	ui->downloadValue_label->setText(QString("%1/%2")
+									 .arg(downloaded).arg(totalCount));
 }
 
 void KaminecLauncher::downloadFinished()
@@ -362,7 +326,7 @@ void KaminecLauncher::on_addSaves_pb_clicked()
 
 void KaminecLauncher::on_deleteSaves_pb_clicked()
 {
-
+//	ui->saveMgr_treeView->currentIndex()
 }
 
 void KaminecLauncher::on_backupSaves_pb_clicked()
@@ -373,16 +337,18 @@ void KaminecLauncher::on_backupSaves_pb_clicked()
 void KaminecLauncher::on_autoJavaPath_pb_clicked()
 {
 	auto environment = QProcess::systemEnvironment();
-	auto PATH = environment.at(environment.indexOf(QRegExp("PATH.*")))
+	auto PATH = environment.at(environment.indexOf(QRegExp("PATH=.*")))
 						   .split(";");
 	auto index = PATH.indexOf(QRegExp(".*\\javapath"));
 	if(index==-1){
-		QMessageBox::warning(this,"Cannot find java path in environment...","Cannot find java path in environment,plaese choose it manually");
+		QMessageBox::warning(this,
+							 "Cannot find java path in environment...",
+							 "Cannot find java path in environment,plaese choose it manually");
 		return;
 	}
 	auto javaPath = PATH.at(index);
 	javaPath.replace('\\',"/");
-	ui->javaDir_le->setText(javaPath);
+	ui->javaDir_le->setText(javaPath+"/javaw.exe");
 //	qDebug()<<javaPath;
 
 }
@@ -391,14 +357,16 @@ void KaminecLauncher::startGame()
 {
 	Game *game;
 	if(ui->verify_cb->isChecked()){
-		game = new Game(this,this->getProfile(),Mode::Online,this->getAccount(),ui->isOriginalName_cb->isChecked());
+		game = new Game(this,this->getProfile(),Mode::Online,
+						this->getAccount(),ui->isOriginalName_cb->isChecked());
 	}else{
-		game = new Game(this,this->getProfile(),Mode::Offline,this->getAccount(),ui->isOriginalName_cb->isChecked());
+		game = new Game(this,this->getProfile(),Mode::Offline,
+						this->getAccount(),ui->isOriginalName_cb->isChecked());
 	}
-	game->start();
 	ui->start_pb->setText("Gaming...");
 	ui->start_pb->setDisabled(true);
 	connect(game,SIGNAL(finished(int)),this,SLOT(gameFinished()));
+	game->start();
 
 }
 
