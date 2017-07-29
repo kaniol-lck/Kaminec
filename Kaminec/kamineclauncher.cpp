@@ -41,7 +41,8 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
     ui->downloadValue_label->setVisible(false);
 
 	ui->saveMgr_treeView->setModel(SavesManager.getModel());
-	if(!QFile("./version_manifest.json").exists()){
+	if(!QFile("./version_manifest.json").exists()||
+	   QFile("./version_manifest.json").size()==0){
 		auto dm = new DownloadManager(this);
 		auto versions = FileItem(QString("version_manifest.json"),
 								 0,
