@@ -117,14 +117,14 @@ void KaminecLauncher::loadProfileJson()
         return;
     }
 
-
-    QByteArray bytes = loadfile.readAll();
+	QByteArray bytes = QString::fromLocal8Bit(loadfile.readAll()).toUtf8();
     loadfile.close();
 
     //解析json
     QJsonParseError ok;
-    QJsonDocument loadDoc = QJsonDocument::fromJson(bytes,&ok);
+	QJsonDocument loadDoc = QJsonDocument::fromJson(bytes,&ok);
     if(ok.error != QJsonParseError::NoError){
+		qDebug()<<ok.errorString();
         QMessageBox::warning(this,"Calculate Failed",R"("profile.json" may be crashed.)");
         return;
     }
@@ -135,7 +135,7 @@ void KaminecLauncher::loadProfileJson()
 
     ui->username_le->setText(loadProfile.value("username").toString());
     ui->version_cb->setCurrentText(loadProfile.value("version").toString());
-    ui->gameDir_le->setText(loadProfile.value("gameDir").toString());
+	ui->gameDir_le->setText(loadProfile.value("gameDir").toString());
     ui->javaDir_le->setText(loadProfile.value("javaDir").toString());
 
     ui->minMem_sb->setValue(loadProfile.value("minMem").toInt());
@@ -151,9 +151,9 @@ void KaminecLauncher::saveProfileJson()
 
     //生成profile的json模型
 
-    saveProfile.insert("username",ui->username_le->text());
+	saveProfile.insert("username",ui->username_le->text());
     saveProfile.insert("version",ui->version_cb->currentText());
-    saveProfile.insert("gameDir",ui->gameDir_le->text());
+	saveProfile.insert("gameDir",ui->gameDir_le->text());
     saveProfile.insert("javaDir",ui->javaDir_le->text());
 
     saveProfile.insert("minMem",ui->minMem_sb->value());

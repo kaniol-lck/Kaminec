@@ -24,12 +24,12 @@ SavesManager::SavesManager(QObject *parent) :
     model.setHeaderData(2,Qt::Horizontal,"change times");
 
     if(!savesFile.open(QIODevice::ReadOnly|QIODevice::Text)){
-        QMessageBox::warning(0,"File not exist.",R"(It's no file called "saves.json".)");
+//        QMessageBox::warning(0,"File not exist.",R"(It's no file called "saves.json".)");
         return;
     }
 
 
-    QByteArray bytes = savesFile.readAll();
+	QByteArray bytes = QString::fromLocal8Bit(savesFile.readAll()).toUtf8();
     qDebug()<<bytes;
     savesFile.close();
 
