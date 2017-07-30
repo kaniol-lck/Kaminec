@@ -11,10 +11,11 @@ class SavesManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit SavesManager(QObject *parent = nullptr);
+	explicit SavesManager(QObject *parent);
 
     QStandardItemModel* getModel();
     void addSaves();
+	void deleteSaves(int index);
     bool backup();
 
 signals:
@@ -27,7 +28,7 @@ private:
     QDir backuoDir;
     QJsonArray savesArray;
     void writeToJson();
-    bool copyRecursively(const QString &srcFilePath, const QString &tgtFilePath);
+	bool copyRecursively(const QString &srcFilePath, const QString &tgtFilePath);
 };
 
 #endif // SAVESMANAGER_H

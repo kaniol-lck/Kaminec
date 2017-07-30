@@ -62,8 +62,8 @@ QStandardItemModel *SavesManager::getModel()
 void SavesManager::addSaves()
 {
     qDebug()<<"???";
-    QString savesPath = QFileDialog::getExistingDirectory
-            (0,"Please choose your savesFile","C:/");
+	QString savesPath = QFileDialog::getExistingDirectory
+			(0,"Please choose your savesFile");
     QFile savesFile(savesPath+"/level.dat");
     qDebug()<<savesPath;
     if(savesFile.exists()){
@@ -80,7 +80,16 @@ void SavesManager::addSaves()
 
         this->writeToJson();
     }
-    this->backup();
+	this->backup();
+}
+
+void SavesManager::deleteSaves(int index)
+{
+	if(index<savesArray.size()){
+		savesArray.removeAt(index);
+		this->writeToJson();
+		model.removeRow(index);
+	}
 }
 
 bool SavesManager::backup()

@@ -58,7 +58,7 @@ private slots:
 
 private:
     Ui::KaminecLauncher *ui;
-    SavesManager SavesManager;
+	SavesManager savesManager;
     int totalCount;
     QList<QVariant> versionList;
 	bool isShowPassword = false;

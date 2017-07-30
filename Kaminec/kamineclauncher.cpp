@@ -27,7 +27,7 @@
 KaminecLauncher::KaminecLauncher(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::KaminecLauncher),
-    SavesManager(this)
+	savesManager(this)
 {
     ui->setupUi(this);
 
@@ -40,7 +40,7 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
     ui->downloadProgress_progressBar_2->setVisible(false);
     ui->downloadValue_label->setVisible(false);
 
-	ui->saveMgr_treeView->setModel(SavesManager.getModel());
+	ui->saveMgr_treeView->setModel(savesManager.getModel());
 	if(!QFile("./version_manifest.json").exists()||
 	   QFile("./version_manifest.json").size()==0){
 		auto dm = new DownloadManager(this);
@@ -322,17 +322,18 @@ void KaminecLauncher::gameFinished()
 
 void KaminecLauncher::on_addSaves_pb_clicked()
 {
-    SavesManager.addSaves();
+	savesManager.addSaves();
 }
 
 void KaminecLauncher::on_deleteSaves_pb_clicked()
 {
-//	ui->saveMgr_treeView->currentIndex()
+	auto index = ui->saveMgr_treeView->currentIndex();
+	savesManager.deleteSaves(index.row());
 }
 
 void KaminecLauncher::on_backupSaves_pb_clicked()
 {
-    SavesManager.backup();
+	savesManager.backup();
 }
 
 void KaminecLauncher::on_autoJavaPath_pb_clicked()
