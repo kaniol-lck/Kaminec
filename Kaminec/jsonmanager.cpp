@@ -81,25 +81,29 @@ QList<FileItem> JsonManager::getDownloadLibUrls()
 		return (libElem.toMap().value("downloads").toMap().contains("classifiers") &&
 				!libElem.toMap().value("downloads").toMap().value("classifiers").toMap().contains("test") &&
 				libElem.toMap().contains("natives") &&
-				libElem.toMap().value("natives").toMap().contains("windows"))?
+				libElem.toMap().value("natives").toMap().contains("windows") &&
+				libElem.toMap().value("downloads").toMap().value("artifact").toMap().contains(
+					libElem.toMap().value("natives").toMap().value("windows").toString()))?
 					libUrls<<FileItem(libElem.toMap().value("name").toString(),
 									  libElem.toMap().value("downloads").toMap().value("classifiers").toMap().value(
-										  libElem.toMap().value("natives").toMap().value("windows").toString())
+										  libElem.toMap().value("natives").toMap().value("windows").toString().replace("${arch}",QString::number(QSysInfo::WordSize)))
 									  .toMap().value("size").toInt(),
 									  libElem.toMap().value("downloads").toMap().value("classifiers").toMap().value(
-										  libElem.toMap().value("natives").toMap().value("windows").toString())
+										  libElem.toMap().value("natives").toMap().value("windows").toString().replace("${arch}",QString::number(QSysInfo::WordSize)))
 									  .toMap().value("sha1").toString(),
 									  libElem.toMap().value("downloads").toMap().value("classifiers").toMap().value(
-										  libElem.toMap().value("natives").toMap().value("windows").toString())
+										  libElem.toMap().value("natives").toMap().value("windows").toString().replace("${arch}",QString::number(QSysInfo::WordSize)))
 									  .toMap().value("path").toString(),
 									  libElem.toMap().value("downloads").toMap().value("classifiers").toMap().value(
-										  libElem.toMap().value("natives").toMap().value("windows").toString())
-									  .toMap().value("url").toString()):
-							 libUrls<<FileItem(libElem.toMap().value("name").toString(),
-											   libElem.toMap().value("downloads").toMap().value("artifact").toMap().value("size").toInt(),
-											   libElem.toMap().value("downloads").toMap().value("artifact").toMap().value("sha1").toString(),
-											   libElem.toMap().value("downloads").toMap().value("artifact").toMap().value("path").toString(),
-											   libElem.toMap().value("downloads").toMap().value("artifact").toMap().value("url").toString());
+										  libElem.toMap().value("natives").toMap().value("windows").toString().replace("${arch}",QString::number(QSysInfo::WordSize)))
+									  .toMap().value("url").toString()):(
+								 libElem.toMap().value("downloads").toMap().contains("artifact")?
+									 libUrls<<FileItem(libElem.toMap().value("name").toString(),
+													   libElem.toMap().value("downloads").toMap().value("artifact").toMap().value("size").toInt(),
+													   libElem.toMap().value("downloads").toMap().value("artifact").toMap().value("sha1").toString(),
+													   libElem.toMap().value("downloads").toMap().value("artifact").toMap().value("path").toString(),
+													   libElem.toMap().value("downloads").toMap().value("artifact").toMap().value("url").toString()):
+									 libUrls);
     });
 }
 

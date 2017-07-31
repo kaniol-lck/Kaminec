@@ -44,16 +44,6 @@ int Game::start()
     //       <<"args="<<startcode
     //      <<"Time elapsed:"<<time<<"ms.";
 
-	QFile logs("logs.txt");
-	logs.open(QIODevice::WriteOnly | QIODevice::Text);
-
-	QTextStream out(&logs);
-	out<<"java path:"<<gameProfile.javaDir<<endl;
-	out<<"game arguments:";
-	for(auto& i:startcode)out<<i<<" ";
-	out<<endl;
-	out<<"game directory:"<<gameProfile.gameDir<<endl;
-	out<<"Time used:"<<time<<"ms";
 
 	//textTime.txt
 	QFile ttf("timeTest.txt");
@@ -66,9 +56,13 @@ int Game::start()
 	if(gameMode == Mode::Online){
 		auto auth = new Auth(this,gameAccount);
 		if(auth->check()){
-			startcode.replace(startcode.indexOf("${auth_uuid}"),auth->getUuid());
-			startcode.replace(startcode.indexOf("${auth_access_token}"),auth->getAccessToken());
-			startcode.replace(startcode.indexOf("Legacy"),"mojang");
+			int index;
+			if((index = startcode.indexOf("${auth_uuid}")) != -1)
+				startcode.replace(index,auth->getUuid());
+			if((index = startcode.indexOf("${auth_access_token}")) != -1)
+				startcode.replace(index,auth->getAccessToken());
+			if((index = startcode.indexOf("Legacy")) != -1)
+				startcode.replace(index,"mojang");
 			if(mAutoName){
 				startcode.replace(startcode.indexOf(gameProfile.username),auth->getPlayerName());
 			}
@@ -84,6 +78,18 @@ int Game::start()
 
     connect(gameProcess,SIGNAL(finished(int)),this,SIGNAL(finished(int)));
 
+///////////////////////////////////////////////////////////////////
+	QFile logs("logs.txt");
+	logs.open(QIODevice::WriteOnly | QIODevice::Text);
+
+	QTextStream out(&logs);
+	out<<"java path:"<<gameProfile.javaDir<<endl;
+	out<<"game arguments:";
+	for(auto& i:startcode)out<<i<<" ";
+	out<<endl;
+	out<<"game directory:"<<gameProfile.gameDir<<endl;
+	out<<"Time used:"<<time<<"ms";
+
     return 0;
 }
 
@@ -92,7 +98,7 @@ QStringList Game::genStartcode()
     QStringList startcode;
     startcode<<this->genJVMargs()
              <<this->genLibpath()
-			 <<this->genGameargs()
+			 <<this->genGameArgs()
             ;
     return startcode;
 }
@@ -132,34 +138,41 @@ QStringList Game::genLibpath()
     return libargs;
 }
 
-QStringList Game::genGameargs()
+QStringList Game::genGameArgs()
 {
     auto MCArgs = gameJson.getMCArgs();
 
-    MCArgs.replace(MCArgs.indexOf("${auth_player_name}"),gameProfile.username);
-    MCArgs.replace(MCArgs.indexOf("${version_name}"),gameProfile.version);
-    MCArgs.replace(MCArgs.indexOf("${game_directory}"),gameProfile.gameDir);
-    MCArgs.replace(MCArgs.indexOf("${assets_root}"),QString("%1/assets").arg(gameProfile.gameDir));
-	MCArgs.replace(MCArgs.indexOf("${assets_index_name}"),gameJson.getAssetIndex());
-	//MCArgs.replace(MCArgs.indexOf("${auth_uuid}"),"bf500b0b7dcc94d0f803cc980f2b4d3f");
-	//MCArgs.replace(MCArgs.indexOf("${auth_access_token}"),"bf500b0b7dcc94d0f803cc980f2b4d3f");
-	MCArgs.replace(MCArgs.indexOf("${user_type}"),"Legacy");
+	int index;
 
-    MCArgs.replace(MCArgs.indexOf("${version_type}"),"Kaminec Launcher");
-    MCArgs<<QString("--height")<<QString::number(gameProfile.height)
-          <<QString("--width")<<QString::number(gameProfile.width);
+	index = MCArgs.indexOf("${auth_player_name}");
+	if(index != -1)
+		MCArgs.replace(index,gameProfile.username);
+	index = MCArgs.indexOf("${version_name}");
+	if(index != -1)
+		MCArgs.replace(index,gameProfile.version);
+	index = MCArgs.indexOf("${game_directory}");
+	if(index != -1)
+		MCArgs.replace(index,gameProfile.gameDir);
+	index = MCArgs.indexOf("${assets_root}");
+	if(index != -1)
+		MCArgs.replace(index,QString("%1/assets").arg(gameProfile.gameDir));
+	index = MCArgs.indexOf("${assets_index_name}");
+	if(index != -1)
+		MCArgs.replace(index,gameJson.getAssetIndex());
+	index = MCArgs.indexOf("${user_type}");
+	if(index != -1)
+		MCArgs.replace(index,"Legacy");
+	index = MCArgs.indexOf("${version_type}");
+	if(index != -1)
+		MCArgs.replace(index,"Kaminec Launcher");
+	index = MCArgs.indexOf("${user_properties}");
+	if(index != -1)
+		MCArgs.replace(index,"{}");
+
+	MCArgs<<QString("--height")<<QString::number(gameProfile.height)
+		  <<QString("--width")<<QString::number(gameProfile.width);
     return QStringList(gameJson.getMCMainClass()+MCArgs);
 }
-
-
-#include <QtNetwork/QNetworkRequest>
-
-QStringList Game::checkSession()
-{
-
-    return QStringList();
-}
-
 
 
 int Game::extractNatives(QString nativesDir)

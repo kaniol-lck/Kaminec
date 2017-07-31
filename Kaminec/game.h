@@ -21,8 +21,7 @@ public:
 
     QStringList genJVMargs();
     QStringList genLibpath();
-    QStringList genGameargs();
-    QStringList checkSession();
+	QStringList genGameArgs();
 
     int extractNatives(QString nativesDir);
 private:
