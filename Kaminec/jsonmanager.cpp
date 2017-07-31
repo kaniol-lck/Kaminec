@@ -78,59 +78,28 @@ QList<FileItem> JsonManager::getDownloadLibUrls()
 {
     return std::accumulate(libList.begin(),libList.end(),QList<FileItem>(),
                            [](QList<FileItem> libUrls,QVariant libElem){
-        return libElem
-                .toMap().value("downloads")
-                .toMap().contains("classifiers")?
-                    libUrls<<FileItem(libElem
-                              .toMap().value("name")
-                              .toString(),
-                                      libElem
-                              .toMap().value("downloads")
-                              .toMap().value("classifiers")
-                              .toMap().value("natives-windows")
-                              .toMap().value("size")
-                              .toInt(),
-                                      libElem
-                              .toMap().value("downloads")
-                              .toMap().value("classifiers")
-                              .toMap().value("natives-windows")
-                              .toMap().value("sha1")
-                              .toString(),
-                                       libElem
-                              .toMap().value("downloads")
-                              .toMap().value("classifiers")
-                              .toMap().value("natives-windows")
-                              .toMap().value("path")
-                              .toString(),
-                                       libElem
-                              .toMap().value("downloads")
-                              .toMap().value("classifiers")
-                              .toMap().value("natives-windows")
-                              .toMap().value("url")
-                              .toUrl()):
-                    libUrls<<FileItem(libElem
-                              .toMap().value("name")
-                              .toString(),
-                                      libElem
-                              .toMap().value("downloads")
-                              .toMap().value("artifact")
-                              .toMap().value("size")
-                              .toInt(),
-                                      libElem
-                              .toMap().value("downloads")
-                              .toMap().value("artifact")
-                              .toMap().value("sha1")
-                              .toString(),
-                                       libElem
-                              .toMap().value("downloads")
-                              .toMap().value("artifact")
-                              .toMap().value("path")
-                              .toString(),
-                                       libElem
-                              .toMap().value("downloads")
-                              .toMap().value("artifact")
-                              .toMap().value("url")
-                              .toUrl());
+		return (libElem.toMap().value("downloads").toMap().contains("classifiers") &&
+				!libElem.toMap().value("downloads").toMap().value("classifiers").toMap().contains("test") &&
+				libElem.toMap().contains("natives") &&
+				libElem.toMap().value("natives").toMap().contains("windows"))?
+					libUrls<<FileItem(libElem.toMap().value("name").toString(),
+									  libElem.toMap().value("downloads").toMap().value("classifiers").toMap().value(
+										  libElem.toMap().value("natives").toMap().value("windows").toString())
+									  .toMap().value("size").toInt(),
+									  libElem.toMap().value("downloads").toMap().value("classifiers").toMap().value(
+										  libElem.toMap().value("natives").toMap().value("windows").toString())
+									  .toMap().value("sha1").toString(),
+									  libElem.toMap().value("downloads").toMap().value("classifiers").toMap().value(
+										  libElem.toMap().value("natives").toMap().value("windows").toString())
+									  .toMap().value("path").toString(),
+									  libElem.toMap().value("downloads").toMap().value("classifiers").toMap().value(
+										  libElem.toMap().value("natives").toMap().value("windows").toString())
+									  .toMap().value("url").toString()):
+							 libUrls<<FileItem(libElem.toMap().value("name").toString(),
+											   libElem.toMap().value("downloads").toMap().value("artifact").toMap().value("size").toInt(),
+											   libElem.toMap().value("downloads").toMap().value("artifact").toMap().value("sha1").toString(),
+											   libElem.toMap().value("downloads").toMap().value("artifact").toMap().value("path").toString(),
+											   libElem.toMap().value("downloads").toMap().value("artifact").toMap().value("url").toString());
     });
 }
 
