@@ -82,7 +82,7 @@ QList<FileItem> JsonManager::getDownloadLibUrls()
 				!libElem.toMap().value("downloads").toMap().value("classifiers").toMap().contains("test") &&
 				libElem.toMap().contains("natives") &&
 				libElem.toMap().value("natives").toMap().contains("windows") &&
-				libElem.toMap().value("downloads").toMap().value("artifact").toMap().contains(
+				libElem.toMap().value("downloads").toMap().value("classifiers").toMap().contains(
 					libElem.toMap().value("natives").toMap().value("windows").toString()))?
 					libUrls<<FileItem(libElem.toMap().value("name").toString(),
 									  libElem.toMap().value("downloads").toMap().value("classifiers").toMap().value(

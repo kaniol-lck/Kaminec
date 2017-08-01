@@ -30,6 +30,7 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 	savesManager(this)
 {
     ui->setupUi(this);
+	this->loadProfileJson();
 
 	ui->isOriginalName_cb->setChecked(true);
 	ui->verifyBox->setVisible(false);
@@ -74,13 +75,17 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 
     auto jsonMap = jsonDoc.toVariant().toMap();
     versionList = jsonMap.value("versions").toList();
-    ui->version_cb->addItems(std::accumulate(versionList.begin(),versionList.end(),QStringList(),
-                                             [](QStringList versionNameList,QVariant versionElem){
-                                 return versionNameList<<versionElem
-                                        .toMap().value("id").toString();
+	ui->version_cb->addItems(std::accumulate(versionList.begin(),versionList.end(),QStringList(),
+											 [this](QStringList versionNameList,QVariant versionElem){
+								 return versionNameList<<(versionElem
+								 .toMap().value("id").toString() +
+								 (QFile(QString("%1/versions/%2/%2.jar")
+								 .arg(ui->gameDir_le->text())
+								 .arg(versionElem.toMap().value("id").toString()))
+								 .exists()?"(Downloaded)":""));
                              }));
 
-    this->loadProfileJson();
+	this->loadProfileJson();
 }
 
 KaminecLauncher::~KaminecLauncher()
@@ -135,7 +140,11 @@ void KaminecLauncher::loadProfileJson()
     //解析profile的json模型
 
     ui->username_le->setText(loadProfile.value("username").toString());
-    ui->version_cb->setCurrentText(loadProfile.value("version").toString());
+	ui->version_cb->setCurrentText(loadProfile.value("version").toString() +
+								   (QFile(QString("%1/versions/%2/%2.jar")
+								   .arg(ui->gameDir_le->text())
+								   .arg(loadProfile.value("version").toString()))
+								   .exists()?"(Downloaded)":""));
 	ui->gameDir_le->setText(loadProfile.value("gameDir").toString());
     ui->javaDir_le->setText(loadProfile.value("javaDir").toString());
 

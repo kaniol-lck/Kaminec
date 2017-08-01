@@ -26,6 +26,12 @@ void DownloadManagerPlus::append(const FileItem &item)
     if(item.mSize==0)
         info.at(2)->setText(QString("unkonwn"));
 
+	QFileInfo fileInfo(item.mPath);
+	if(fileInfo.exists() &&
+	   (fileInfo.size() != 0) &&
+	   (fileInfo.size() == item.mSize))
+		return;
+
     downloadQueue.enqueue(item.getDownloadInfo());
     model.appendRow(info);
     itemList.append(info);
