@@ -3,22 +3,24 @@
 
 #include <QPair>
 #include <QFile>
+#include <QSettings>
 #include <QMessageBox>
+#include <QStandardPaths>
 #include <QByteArray>
 #include <algorithm>
 #include <QDebug>
 
 
-JsonManager::JsonManager(QObject *parent, QString gamePath, QString version):
+JsonManager::JsonManager(QObject *parent, QString version):
     QObject(parent),
-    jsonDownload(new DownloadManagerPlus(this)),
-    gameDir(gamePath)
+	jsonDownload(new DownloadManagerPlus(this)),
+	corePath(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)).toString())
 {
-    QFile jsonFile(gamePath+QString("/versions/%1/%1.json").arg(version));
+	QFile jsonFile(corePath+QString("/versions/%1/%1.json").arg(version));
 
     if(!jsonFile.exists())qDebug()<<"jsonfile file does not exist";
     if(!jsonFile.open(QIODevice::ReadOnly | QIODevice::Text)){
-        qDebug()<<"Open failed:"<<gamePath+QString("/versions/%1/%1.json").arg(version);
+		qDebug()<<"Open failed:"<<corePath+QString("/versions/%1/%1.json").arg(version);
         QMessageBox::about(0,"Not find json file","Json file NOT find,The program will terminate.");
     }
     qDebug()<<"jsonfile("<<version<<".json) file opened:"<<jsonFile.fileName();
@@ -115,7 +117,7 @@ QList<FileItem> JsonManager::getDownloadAssertUrls()
     QUrl assertUrl=jsonMap.value("assetIndex")
                       .toMap().value("url").toUrl();
 
-    QString filename = gameDir+QString("/assets/indexes/%1.json").arg(getAssetIndex());
+	QString filename = corePath+QString("/assets/indexes/%1.json").arg(getAssetIndex());
     jsonDownload->append(FileItem(QString(getAssetIndex()+".json"),
                                   0,
                                   QString(),
@@ -186,9 +188,11 @@ QString JsonManager::getAssetIndex()
             .toString();
 }
 
-QUrl JsonManager::getDownloadClientUrl()
+FileItem JsonManager::getDownloadClientUrl()
 {
-    return jsonMap.value("downloads").toMap()
-                  .value("client").toMap()
-                  .value("url").toString();
+	return FileItem(jsonMap.value("id").toString()+".jar",
+					jsonMap.value("downloads").toMap().value("client").toMap().value("size").toInt(),
+					jsonMap.value("downloads").toMap().value("client").toMap().value("sha1").toString(),
+					corePath+QString("/versions/%1/%1.jar").arg(jsonMap.value("id").toString()),
+					jsonMap.value("downloads").toMap().value("client").toMap().value("url").toString());
 }

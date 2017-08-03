@@ -1,6 +1,7 @@
 #include "kamineclauncher.h"
 #include "ui_kamineclauncher.h"
 
+#include "preference.h"
 #include "downloadmanager.h"
 #include "downloadmanagerplus.h"
 #include "JsonManager.h"
@@ -16,6 +17,8 @@
 #include <QFile>
 #include <QDir>
 #include <QUrl>
+#include <QSettings>
+#include <QStandardPaths>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QJsonObject>
@@ -27,14 +30,10 @@
 KaminecLauncher::KaminecLauncher(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::KaminecLauncher),
-	savesManager(this)
+	savesManager(this),
+	corePath(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)).toString())
 {
-    ui->setupUi(this);
-	this->loadProfileJson();
-
-	ui->isOriginalName_cb->setChecked(true);
-	ui->verifyBox->setVisible(false);
-	ui->password_le->setEchoMode(QLineEdit::Password);
+	ui->setupUi(this);
 
     ui->downloadProgress_label->setVisible(false);
     ui->downloadProgress_progressBar->setVisible(false);
@@ -54,6 +53,7 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 		dm->waitForFinished();
 	}
 
+	qDebug()<<"???";
     //加载版本
     QFile jsonFile("./version_manifest.json");
 
@@ -96,63 +96,21 @@ KaminecLauncher::~KaminecLauncher()
 //获取当前选择的profile
 inline const Profile KaminecLauncher::getProfile()
 {
-	return Profile{
-				ui->username_le->text(),
-				ui->version_cb->currentText(),
-				QDir(ui->gameDir_le->text()).absolutePath(),
-				QDir(ui->javaDir_le->text()).absolutePath(),
-
-				ui->minMem_sb->value(),
-				ui->maxMem_sb->value(),
-
-				ui->width_sb->value(),
-				ui->height_sb->value()
-	};
-}
-
-QPair<QString, QString> KaminecLauncher::getAccount()
-{
-	return qMakePair(ui->email_le->text(),ui->password_le->text());
+	return Profile::fromJson().value(ui->profileSelect_cb->currentText());//!!!!!!!
 }
 
 void KaminecLauncher::loadProfileJson()
 {
-    QFile loadfile("profile.json");
-    if(!loadfile.open(QIODevice::ReadOnly|QIODevice::Text)){
-        QMessageBox::warning(this,"File not exist.",R"(It's no file called "profile.json".)");
-        return;
-    }
+	auto profiles = Profile::fromJson();
+	for(auto profile:profiles){
+		ui->profileSelect_cb->addItem(profile.mName);
+	}
 
-	QByteArray bytes = QString::fromLocal8Bit(loadfile.readAll()).toUtf8();
-    loadfile.close();
+	auto selectedProfile = profiles.value(Profile::getSelectedProfile());
+	ui->profileSelect_cb->setCurrentText(selectedProfile.mName);
+	ui->version_cb->setCurrentText(selectedProfile.mLastVersionId);
+	ui->gameDir_le->setText(selectedProfile.mGameDir);
 
-    //解析json
-    QJsonParseError ok;
-	QJsonDocument loadDoc = QJsonDocument::fromJson(bytes,&ok);
-    if(ok.error != QJsonParseError::NoError){
-		qDebug()<<ok.errorString();
-        QMessageBox::warning(this,"Calculate Failed",R"("profile.json" may be crashed.)");
-        return;
-    }
-
-    QJsonObject loadProfile = loadDoc.object();
-
-    //解析profile的json模型
-
-    ui->username_le->setText(loadProfile.value("username").toString());
-	ui->version_cb->setCurrentText(loadProfile.value("version").toString() +
-								   (QFile(QString("%1/versions/%2/%2.jar")
-								   .arg(ui->gameDir_le->text())
-								   .arg(loadProfile.value("version").toString()))
-								   .exists()?"(Downloaded)":""));
-	ui->gameDir_le->setText(loadProfile.value("gameDir").toString());
-    ui->javaDir_le->setText(loadProfile.value("javaDir").toString());
-
-    ui->minMem_sb->setValue(loadProfile.value("minMem").toInt());
-    ui->maxMem_sb->setValue(loadProfile.value("maxMem").toInt());
-
-    ui->width_sb->setValue(loadProfile.value("width").toInt());
-    ui->height_sb->setValue(loadProfile.value("height").toInt());
 }
 
 void KaminecLauncher::saveProfileJson()
@@ -161,16 +119,10 @@ void KaminecLauncher::saveProfileJson()
 
     //生成profile的json模型
 
-	saveProfile.insert("username",ui->username_le->text());
-    saveProfile.insert("version",ui->version_cb->currentText());
+	saveProfile.insert("version",ui->version_cb->currentText().replace("(Downloaded)",""));
 	saveProfile.insert("gameDir",ui->gameDir_le->text());
-    saveProfile.insert("javaDir",ui->javaDir_le->text());
 
-    saveProfile.insert("minMem",ui->minMem_sb->value());
-    saveProfile.insert("maxMem",ui->maxMem_sb->value());
 
-    saveProfile.insert("width",ui->width_sb->value());
-    saveProfile.insert("height",ui->height_sb->value());
 
 
     QJsonDocument saveDoc;
@@ -186,7 +138,7 @@ void KaminecLauncher::saveProfileJson()
 
     QTextStream output(&savefile);
     output<<bytes;
-    savefile.close();
+	savefile.close();
 }
 
 int KaminecLauncher::download()
@@ -204,32 +156,26 @@ int KaminecLauncher::download()
     ui->downloadValue_label->setVisible(true);
 
 	qDebug()<<"???"<<QString("%1/versions/%2/%2.json")
-			  .arg(ui->gameDir_le->text()).arg(ui->version_cb->currentText());
+			  .arg(corePath).arg(ui->version_cb->currentText());
 
     auto fileItem = FileItem(QString("%1.json").arg(ui->version_cb->currentText()),
                              0,
                              QString("NULL"),
 							 QString("%1/versions/%2/%2.json")
-								 .arg(ui->gameDir_le->text()).arg(ui->version_cb->currentText()),
+								 .arg(corePath).arg(ui->version_cb->currentText()),
                              versionList.at(ui->version_cb->currentIndex()).toMap().value("url").toUrl());
     dm->append(fileItem);
     dm->waitForFinished();
 
-    JsonManager jm(this,ui->gameDir_le->text(),ui->version_cb->currentText());
+	JsonManager jm(this,ui->version_cb->currentText());
 
-    fileItem = FileItem(QString("%1.jar").arg(ui->version_cb->currentText()),
-                        0,
-                        QString("NULL"),
-						QString("%1/versions/%2/%2.jar")
-							.arg(ui->gameDir_le->text()).arg(ui->version_cb->currentText()),
-                        jm.getDownloadClientUrl());
-    qDebug()<<jm.getDownloadClientUrl();
+	fileItem = jm.getDownloadClientUrl();
 	dmp->append(fileItem);
 
 
     auto downloadLibUrls = jm.getDownloadLibUrls();
     for(auto& i:downloadLibUrls){
-        i.mPath.prepend(ui->gameDir_le->text()+"/libraries/");
+		i.mPath.prepend(corePath+"/libraries/");
         //qDebug()<<i.name;
     }
 
@@ -239,7 +185,7 @@ int KaminecLauncher::download()
     auto downloadAssertUrls = jm.getDownloadAssertUrls();
     //qDebug()<<"after";
     for(auto& i:downloadAssertUrls){
-        i.mPath.prepend(ui->gameDir_le->text()+"/assets/objects/");
+		i.mPath.prepend(corePath+"/assets/objects/");
         //qDebug()<<i.name;
     }
 	dmp->append(downloadAssertUrls);
@@ -262,24 +208,6 @@ int KaminecLauncher::download()
     return 0;
 }
 
-//选择游戏目录
-void KaminecLauncher::on_fileDlg1_pb_clicked()
-{
-	auto gamePath = QFileDialog::getExistingDirectory(this,
-													  "Choose game directory...");
-	if(gamePath!="")
-		ui->gameDir_le->setText(gamePath);
-}
-
-//选择javaw.exe路径
-void KaminecLauncher::on_fileDlg2_pb_clicked()
-{
-	auto javaPath = QFileDialog::getOpenFileName(this,
-												 "Choose javaw,exe...",
-												 "C:/","javaw(javaw.exe)");
-	if(javaPath!="")
-		ui->javaDir_le->setText(javaPath);
-}
 
 //保存profile文件
 void KaminecLauncher::on_save_pb_clicked()
@@ -345,34 +273,13 @@ void KaminecLauncher::on_backupSaves_pb_clicked()
 	savesManager.backup();
 }
 
-void KaminecLauncher::on_autoJavaPath_pb_clicked()
-{
-	auto environment = QProcess::systemEnvironment();
-	auto PATH = environment.at(environment.indexOf(QRegExp("PATH=.*")))
-						   .split(";");
-	auto index = PATH.indexOf(QRegExp(".*\\javapath"));
-	if(index==-1){
-		QMessageBox::warning(this,
-							 "Cannot find java path in environment...",
-							 "Cannot find java path in environment,plaese choose it manually");
-		return;
-	}
-	auto javaPath = PATH.at(index);
-	javaPath.replace('\\',"/");
-	ui->javaDir_le->setText(javaPath+"/javaw.exe");
-//	qDebug()<<javaPath;
-
-}
-
 void KaminecLauncher::startGame()
 {
 	Game *game;
-	if(ui->verify_cb->isChecked()){
-		game = new Game(this,this->getProfile(),Mode::Online,
-						this->getAccount(),ui->isOriginalName_cb->isChecked());
+	if(QSettings().value("isVerified").toBool()){
+		game = new Game(this,this->getProfile(),Mode::Online);
 	}else{
-		game = new Game(this,this->getProfile(),Mode::Offline,
-						this->getAccount(),ui->isOriginalName_cb->isChecked());
+		game = new Game(this,this->getProfile(),Mode::Offline);
 	}
 	ui->start_pb->setText("Gaming...");
 	ui->start_pb->setDisabled(true);
@@ -381,24 +288,42 @@ void KaminecLauncher::startGame()
 
 }
 
-void KaminecLauncher::on_showPassword_pb_clicked()
+void KaminecLauncher::on_action_preference_triggered()
 {
-	if(isShowPassword){
-		ui->password_le->setEchoMode(QLineEdit::Password);
-		ui->showPassword_pb->setText("Show password");
-		isShowPassword = !isShowPassword;
-	}else{
-		ui->password_le->setEchoMode(QLineEdit::Normal);
-		ui->showPassword_pb->setText("Hide passeord");
-		isShowPassword = !isShowPassword;
-	}
+	auto preference = new Preference(this);
+	preference->show();
 }
 
-void KaminecLauncher::on_verify_cb_stateChanged(int arg1)
+void KaminecLauncher::on_profileSelect_cb_currentIndexChanged(const QString &arg1)
 {
-	if(arg1){
-		ui->verifyBox->setVisible(true);
-	}else{
-		ui->verifyBox->setVisible(false);
+	Profile::setSelectedProfile(arg1);
+	qDebug()<<"arg1:"<<arg1;
+
+	auto profiles = Profile::fromJson();
+
+	auto selectedProfile = profiles.value(arg1);
+	ui->profileSelect_cb->setCurrentText(selectedProfile.mName);
+	ui->version_cb->setCurrentText(selectedProfile.mLastVersionId);
+	ui->gameDir_le->setText(selectedProfile.mGameDir);
+}
+
+void KaminecLauncher::on_saveProfile_pb_clicked()
+{
+	Profile::saveProfile(Profile(ui->profileSelect_cb->currentText(),
+								 ui->version_cb->currentText(),
+								 ui->gameDir_le->text()));
+}
+
+void KaminecLauncher::on_gameDir_showPb_clicked()
+{
+	auto gameDir = QFileDialog::getExistingDirectory(this,"Please choose the game directory.(the upper directory)");
+	if(gameDir!=""){
+		ui->gameDir_le->setText(gameDir + "/.minecraft");
 	}
+	return;
+}
+
+void KaminecLauncher::on_newProfile_pb_clicked()
+{
+//    auto
 }

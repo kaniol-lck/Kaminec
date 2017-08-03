@@ -7,23 +7,19 @@
 struct Profile
 {
     Profile()=default;
-    explicit Profile(QString un,
-                     QString v,
-                     QString gd,
-                     QString jd,
-                     int mn,
-                     int mx,
-                     int w,
-                     int h);
+	explicit Profile(QString name,
+					 QString lastVersionId,
+					 QString gameDir);
 
-    QString username;
-    QString version;
-    QString gameDir;
-    QString javaDir;
-    int minMem;
-    int maxMem;
-    int width;
-    int height;
+	QString mName;
+	QString mLastVersionId;
+	QString mGameDir;
+
+	static QMap<QString, Profile> fromJson();
+	static QString getSelectedProfile();
+	static void setSelectedProfile(QString selectedProfile);
+	static void saveProfile(const Profile& profile);
+	static void newProfile();
 };
 
 #endif // PROFILE_H

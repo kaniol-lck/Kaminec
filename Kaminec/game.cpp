@@ -8,6 +8,8 @@
 #include <QTime>
 #include <QUuid>
 #include <QDebug>
+#include <QSettings>
+#include <QStandardPaths>
 #include <QProcess>
 #include <QStringList>
 #include <QFile>
@@ -16,19 +18,18 @@
 #include <algorithm>
 #include <QMessageBox>
 
-Game::Game(QObject *parent, Profile gp, Mode gm, QPair<QString, QString> account,bool autoName):
+Game::Game(QObject *parent, Profile gp, Mode gm):
     QObject(parent),
     gameProfile(gp),
 	gameMode(gm),
-    gameJson(parent,gameProfile.gameDir,gameProfile.version),
+	gameJson(parent,gameProfile.mLastVersionId),
 	gameProcess(new QProcess(this)),
-	gameAccount(account),
-	mAutoName(autoName)
+	corePath(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)).toString())
 {}
 
 int Game::start()
 {
-	if(!QFile(gameProfile.javaDir).exists()){
+	if(!QFile(QSettings().value("javaPath").toString()).exists()){
 		QMessageBox::warning(0,"Java path error",
 							 "javaw.exe does not exist,plaese rechoose!");
 		emit finished(0);
@@ -52,9 +53,10 @@ int Game::start()
 	QTextStream out2(&ttf);
 	out2<<time<<endl;
 ///////////////////////////////////////////////////////////////////
-	this->extractNatives(gameProfile.gameDir+"/natives");
+	this->extractNatives(corePath + "/natives");
 	if(gameMode == Mode::Online){
-		auto auth = new Auth(this,gameAccount);
+		auto auth = new Auth(this,qMakePair(QSettings().value("email").toString(),
+											QSettings().value("password").toString()));
 		if(auth->check()){
 			int index;
 			if((index = startcode.indexOf("${auth_uuid}")) != -1)
@@ -63,8 +65,8 @@ int Game::start()
 				startcode.replace(index,auth->getAccessToken());
 			if((index = startcode.indexOf("Legacy")) != -1)
 				startcode.replace(index,"mojang");
-			if(mAutoName){
-				startcode.replace(startcode.indexOf(gameProfile.username),auth->getPlayerName());
+			if(QSettings().value("autoName").toBool()){
+				startcode.replace(startcode.indexOf(QSettings().value("username").toString()),auth->getPlayerName());
 			}
 		}else{
 			emit finished(0);
@@ -73,7 +75,7 @@ int Game::start()
 	}
 
 	gameProcess->start(
-				gameProfile.javaDir,
+				QSettings().value("javaPath").toString(),
 				startcode);
 
     connect(gameProcess,SIGNAL(finished(int)),this,SIGNAL(finished(int)));
@@ -83,11 +85,11 @@ int Game::start()
 	logs.open(QIODevice::WriteOnly | QIODevice::Text);
 
 	QTextStream out(&logs);
-	out<<"java path:"<<gameProfile.javaDir<<endl;
+	out<<"java path:"<<QSettings().value("javaPath").toString()<<endl;
 	out<<"game arguments:";
 	for(auto& i:startcode)out<<i<<" ";
 	out<<endl;
-	out<<"game directory:"<<gameProfile.gameDir<<endl;
+	out<<"game directory:"<<gameProfile.mGameDir<<endl;
 	out<<"Time used:"<<time<<"ms";
 
     return 0;
@@ -111,9 +113,9 @@ QStringList Game::genJVMargs()
         "-XX:+UseG1GC",
         "-XX:-UseAdaptiveSizePolicy",
         "-XX:-OmitStackTraceInFastThrow",
-        QString("-Xmn%1m").arg(gameProfile.minMem),
-        QString("-Xmx%1m").arg(gameProfile.maxMem),
-        QString("-Djava.library.path=%1").arg(gameProfile.gameDir+"/natives"),
+		QString("-Xmn%1m").arg(QSettings().value("minMem").toString()),
+		QString("-Xmx%1m").arg(QSettings().value("minMem").toString()),
+		QString("-Djava.library.path=%1").arg(corePath + "/natives"),
         "-Dfml.ignoreInvalidMinecraftCertificates=true",
         "-Dfml.ignorePatchDiscrepancies=true"
     };
@@ -129,11 +131,12 @@ QStringList Game::genLibpath()
     libargs<<"-cp"
            <<std::accumulate(libfileList.begin(),libfileList.end(),QString(""),
                              [=](QString filenames,QString singleFile){
-             return (filenames+=gameProfile.gameDir+"/libraries/"+singleFile+";");
+			 return (filenames+=corePath +
+								"/libraries/"+singleFile+";");
     })
-             +gameProfile.gameDir
+			 +corePath
              +QString("/versions/%1/%1.jar")
-             .arg(gameProfile.version);
+			 .arg(gameProfile.mLastVersionId);
 
     return libargs;
 }
@@ -146,16 +149,16 @@ QStringList Game::genGameArgs()
 
 	index = MCArgs.indexOf("${auth_player_name}");
 	if(index != -1)
-		MCArgs.replace(index,gameProfile.username);
+		MCArgs.replace(index,QSettings().value("playerName").toString());
 	index = MCArgs.indexOf("${version_name}");
 	if(index != -1)
-		MCArgs.replace(index,gameProfile.version);
+		MCArgs.replace(index,gameProfile.mLastVersionId);
 	index = MCArgs.indexOf("${game_directory}");
 	if(index != -1)
-		MCArgs.replace(index,gameProfile.gameDir);
+		MCArgs.replace(index,gameProfile.mGameDir);
 	index = MCArgs.indexOf("${assets_root}");
 	if(index != -1)
-		MCArgs.replace(index,QString("%1/assets").arg(gameProfile.gameDir));
+		MCArgs.replace(index,QString("%1/assets").arg(corePath));
 	index = MCArgs.indexOf("${assets_index_name}");
 	if(index != -1)
 		MCArgs.replace(index,gameJson.getAssetIndex());
@@ -169,8 +172,8 @@ QStringList Game::genGameArgs()
 	if(index != -1)
 		MCArgs.replace(index,"{}");
 
-	MCArgs<<QString("--height")<<QString::number(gameProfile.height)
-		  <<QString("--width")<<QString::number(gameProfile.width);
+	MCArgs<<QString("--height")<<QSettings().value("height").toString()
+		  <<QString("--width")<<QSettings().value("width").toString();
     return QStringList(gameJson.getMCMainClass()+MCArgs);
 }
 
@@ -184,7 +187,7 @@ int Game::extractNatives(QString nativesDir)
 
     for(auto& extractfile:extractfileList){
 
-        QString filename = gameProfile.gameDir
+		QString filename = corePath
                 +"/libraries/"
                 + extractfile;
         qDebug()<<"filename:"<<filename;

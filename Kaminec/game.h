@@ -13,7 +13,7 @@ class Game: public QObject
 {
     Q_OBJECT
 public:
-	Game(QObject *parent, Profile gp, Mode gm, QPair<QString,QString> account, bool autoName);
+	Game(QObject *parent, Profile gp, Mode gm);
 
     int start();
 
@@ -28,9 +28,8 @@ private:
     Profile gameProfile;
 	Mode gameMode;
     JsonManager gameJson;
-    QProcess *gameProcess;
-	QPair<QString,QString> gameAccount;
-	bool mAutoName;
+	QProcess *gameProcess;
+	QString corePath;
 signals:
     void finished(int);
 

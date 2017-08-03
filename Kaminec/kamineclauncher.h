@@ -18,16 +18,19 @@ public:
     explicit KaminecLauncher(QWidget *parent = 0);
     ~KaminecLauncher();
 
-    const Profile getProfile();
-	QPair<QString,QString> getAccount();
+	const Profile getProfile();
+
     void loadProfileJson();
+
     void saveProfileJson();
+
+	void getCurrentVersionSelect();
+
     int download();
+
+	void startGame();
+
 private slots:
-    void on_fileDlg1_pb_clicked();
-
-    void on_fileDlg2_pb_clicked();
-
     void on_save_pb_clicked();
 
     void on_load_pb_clicked();
@@ -48,13 +51,15 @@ private slots:
 
 	void on_backupSaves_pb_clicked();
 
-	void on_autoJavaPath_pb_clicked();
+	void on_action_preference_triggered();
 
-	void startGame();
+	void on_profileSelect_cb_currentIndexChanged(const QString &arg1);
 
-	void on_showPassword_pb_clicked();
+	void on_saveProfile_pb_clicked();
 
-	void on_verify_cb_stateChanged(int arg1);
+	void on_gameDir_showPb_clicked();
+
+	void on_newProfile_pb_clicked();
 
 private:
     Ui::KaminecLauncher *ui;
@@ -62,6 +67,7 @@ private:
     int totalCount;
     QList<QVariant> versionList;
 	bool isShowPassword = false;
+	QString corePath;
 };
 
 #endif // KAMINECLAUNCHER_H

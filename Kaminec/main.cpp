@@ -1,10 +1,11 @@
 #include "kamineclauncher.h"
+
 #include <QApplication>
-#include "jsonmanager.h"
-#include <QDebug>
 
 int main(int argc, char *argv[])
 {
+	QCoreApplication::setOrganizationName("Kaniol");
+	QCoreApplication::setApplicationName("KaminecLauncher");
     QApplication a(argc, argv);
     KaminecLauncher w;
     w.show();

@@ -16,7 +16,7 @@ class JsonManager : public QObject
 {
     Q_OBJECT
 public:
-    JsonManager(QObject *parent,QString gamePath, QString version);
+	JsonManager(QObject *parent, QString version);
 
     QStringList                   getLibfileList();
     QStringList                   getExtractfileList();
@@ -25,14 +25,14 @@ public:
     QStringList                   getMCArgs();
     QStringList                   getMCMainClass();
     QString                       getAssetIndex();
-    QUrl                          getDownloadClientUrl();
+	FileItem getDownloadClientUrl();
 
 private:
     QJsonDocument jsonDoc;
     QVariantMap jsonMap;
     QList<QVariant> libList;
     DownloadManagerPlus *jsonDownload;
-    QString gameDir;
+	QString corePath;
 };
 
 #endif // JSONMANAGER_H
