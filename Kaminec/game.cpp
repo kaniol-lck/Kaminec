@@ -66,7 +66,7 @@ int Game::start()
 			if((index = startcode.indexOf("Legacy")) != -1)
 				startcode.replace(index,"mojang");
 			if(QSettings().value("autoName").toBool()){
-				startcode.replace(startcode.indexOf(QSettings().value("username").toString()),auth->getPlayerName());
+				startcode.replace(startcode.indexOf(QSettings().value("playerName").toString()),auth->getPlayerName());
 			}
 		}else{
 			emit finished(0);

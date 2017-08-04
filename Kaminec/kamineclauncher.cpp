@@ -266,7 +266,7 @@ void KaminecLauncher::on_backupSaves_pb_clicked()
 void KaminecLauncher::startGame()
 {
 	Game *game;
-	if(QSettings().value("isVerified").toBool()){
+	if(ui->isVerified_cb->isChecked()){
 		game = new Game(this,this->getProfile(),Mode::Online);
 	}else{
 		game = new Game(this,this->getProfile(),Mode::Offline);

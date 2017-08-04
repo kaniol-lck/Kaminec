@@ -25,8 +25,12 @@ private slots:
 
 	void on_buttonBox_accepted();
 
+	void on_showPassword_pb_clicked();
+
 private:
 	Ui::Preference *ui;
+	bool showPassword = false;
+	QString notRealPassword = "It's not real password";
 };
 
 #endif // PREFERENCE_H

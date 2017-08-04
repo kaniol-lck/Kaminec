@@ -14,12 +14,15 @@ Preference::Preference(QWidget *parent) :
 	ui(new Ui::Preference)
 {
 	ui->setupUi(this);
+
+	ui->password_le->setEchoMode(QLineEdit::Password);
+
 	QSettings settings;
 
 	ui->playerName_le->setText(settings.value("playerName","Steve").toString());
 	ui->autoName_cb->setChecked(settings.value("autoName",true).toBool());
 	ui->email_le->setText(settings.value("email","").toString());
-	ui->password_le->setText(settings.value("password","").toString());
+	ui->password_le->setText(notRealPassword);
 
 	ui->corePath_le->setText(settings.value("corePath",
 											QStandardPaths::writableLocation(
@@ -79,7 +82,11 @@ void Preference::on_buttonBox_accepted()
 	settings.setValue("playerName",ui->playerName_le->text());
 	settings.setValue("autoName",ui->autoName_cb->isChecked());
 	settings.setValue("email",ui->email_le->text());
-	settings.setValue("password",ui->password_le->text());
+
+	auto password = ui->password_le->text();
+	if(password != notRealPassword){
+		settings.setValue("password",password);
+	}
 
 	settings.setValue("corePath",ui->corePath_le->text());
 	settings.setValue("width",ui->width_sb->value());
@@ -91,4 +98,17 @@ void Preference::on_buttonBox_accepted()
 	settings.setValue("javaArg",ui->javaArg_te->toPlainText());
 
 	settings.sync();
+}
+
+void Preference::on_showPassword_pb_clicked()
+{
+	if(showPassword){
+		showPassword = false;
+		ui->password_le->setEchoMode(QLineEdit::Password);
+		ui->showPassword_pb->setText("&Show Password");
+	}else{
+		showPassword = true;
+		ui->password_le->setEchoMode(QLineEdit::Normal);
+		ui->showPassword_pb->setText("&Hide Password");
+	}
 }
