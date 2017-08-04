@@ -108,6 +108,9 @@ void KaminecLauncher::loadProfileJson()
 
 	auto selectedProfile = profiles.value(Profile::getSelectedProfile());
 	ui->profileSelect_cb->setCurrentText(selectedProfile.mName);
+	if(ui->version_cb->findText(selectedProfile.mLastVersionId)==-1){
+		ui->version_cb->addItem(selectedProfile.mLastVersionId);
+	}
 	ui->version_cb->setCurrentText(selectedProfile.mLastVersionId);
 	ui->gameDir_le->setText(selectedProfile.mGameDir);
 
@@ -209,19 +212,6 @@ int KaminecLauncher::download()
 }
 
 
-//保存profile文件
-void KaminecLauncher::on_save_pb_clicked()
-{
-    this->saveProfileJson();
-}
-
-//载入profile文件
-void KaminecLauncher::on_load_pb_clicked()
-{
-    this->loadProfileJson();
-}
-
-
 void KaminecLauncher::on_start_pb_clicked()
 {
 	this->startGame();
@@ -303,6 +293,9 @@ void KaminecLauncher::on_profileSelect_cb_currentIndexChanged(const QString &arg
 
 	auto selectedProfile = profiles.value(arg1);
 	ui->profileSelect_cb->setCurrentText(selectedProfile.mName);
+	if(ui->version_cb->findText(selectedProfile.mLastVersionId)==-1){
+		ui->version_cb->addItem(selectedProfile.mLastVersionId);
+	}
 	ui->version_cb->setCurrentText(selectedProfile.mLastVersionId);
 	ui->gameDir_le->setText(selectedProfile.mGameDir);
 }

@@ -43,18 +43,35 @@ JsonManager::JsonManager(QObject *parent, QString version):
 
 QStringList JsonManager::getLibfileList()
 {
-    return std::accumulate(libList.begin(),libList.end(),QStringList(),
-                           [](QStringList libfileList,QVariant libElem){
-        return libElem
-                .toMap().value("downloads")
-                .toMap().contains("artifact")?
-                    (libfileList<<libElem
-                            .toMap().value("downloads")
-                            .toMap().value("artifact")
-                            .toMap().value("path")
-                            .toString()):
-                    libfileList;
-    });
+	QStringList fileList;
+	if(jsonMap.contains("inheritsFrom")){
+		auto inheritedJson = new JsonManager(this,jsonMap.value("inheritsFrom").toString());
+		fileList<<inheritedJson->getLibfileList();
+	}else {
+		fileList<<corePath + QString("/versions/%1/%1.jar")
+					 .arg(jsonMap.value("id").toString());
+	}
+
+	fileList<<std::accumulate(libList.begin(),libList.end(),QStringList(),
+									[this](QStringList libfileList,QVariant libElem){
+				  if(libElem.toMap().contains("downloads") &&
+					 libElem.toMap().value("downloads").toMap().contains("artifact")){
+					  libfileList<<libElem.toMap().value("downloads")
+								   .toMap().value("artifact")
+								   .toMap().value("path")
+								   .toString().prepend(corePath + "/libraries/");
+				  }else if (libElem.toMap().contains("name")) {
+					 auto name = libElem.toMap().value("name").toString().split(":");
+					 auto filename = QString(name.at(0)).replace('.','/') + "/" +
+									 name.at(1) + "/" +
+									 name.at(2) + "/" +
+									 name.at(1) + "-" +
+									 name.at(2) + ".jar";
+					 libfileList<<filename.prepend(corePath + "/libraries/");
+				 }
+				 return libfileList;
+			 });
+	return fileList;
 }
 
 
@@ -184,8 +201,13 @@ QStringList JsonManager::getMCMainClass()
 
 QString JsonManager::getAssetIndex()
 {
-    return jsonMap.value("assets")
-            .toString();
+	if(jsonMap.contains("inheritsFrom")){
+		auto inheritedJson = new JsonManager(this,jsonMap.value("inheritsFrom").toString());
+		return inheritedJson->getAssetIndex();
+	}else {
+		return jsonMap.value("assets")
+				.toString();
+	}
 }
 
 FileItem JsonManager::getDownloadClientUrl()

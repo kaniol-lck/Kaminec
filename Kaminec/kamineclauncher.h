@@ -31,9 +31,6 @@ public:
 	void startGame();
 
 private slots:
-    void on_save_pb_clicked();
-
-    void on_load_pb_clicked();
 
     void on_start_pb_clicked();
 

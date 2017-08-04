@@ -60,7 +60,7 @@ void Preference::on_corePath_showPb_clicked()
 	auto corePath = QFileDialog::getExistingDirectory(0, "Please choose the upper directory,we will automaticly create \".minecraft\" folder",
 													  ui->corePath_le->text());
 	if(corePath!="")
-		ui->corePath_le->setText(corePath+"/.mineacraft");
+		ui->corePath_le->setText(corePath+"/.minecraft");
 }
 
 void Preference::on_javaPath_showPb_clicked()

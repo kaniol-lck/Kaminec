@@ -114,7 +114,7 @@ QStringList Game::genJVMargs()
         "-XX:-UseAdaptiveSizePolicy",
         "-XX:-OmitStackTraceInFastThrow",
 		QString("-Xmn%1m").arg(QSettings().value("minMem").toString()),
-		QString("-Xmx%1m").arg(QSettings().value("minMem").toString()),
+		QString("-Xmx%1m").arg(QSettings().value("maxMem").toString()),
 		QString("-Djava.library.path=%1").arg(corePath + "/natives"),
         "-Dfml.ignoreInvalidMinecraftCertificates=true",
         "-Dfml.ignorePatchDiscrepancies=true"
@@ -126,19 +126,13 @@ QStringList Game::genLibpath()
 {
     QStringList libargs;
 
-    auto libfileList =gameJson.getLibfileList();
+	QStringList libfileList =gameJson.getLibfileList();
 
-    libargs<<"-cp"
-           <<std::accumulate(libfileList.begin(),libfileList.end(),QString(""),
-                             [=](QString filenames,QString singleFile){
-			 return (filenames+=corePath +
-								"/libraries/"+singleFile+";");
-    })
-			 +corePath
-             +QString("/versions/%1/%1.jar")
-			 .arg(gameProfile.mLastVersionId);
+	libargs<<"-cp";
 
-    return libargs;
+	libargs<<libfileList.join(";");
+
+	return libargs;
 }
 
 QStringList Game::genGameArgs()
