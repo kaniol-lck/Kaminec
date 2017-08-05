@@ -5,6 +5,7 @@
 #include "downloadmanager.h"
 #include "downloadmanagerplus.h"
 #include "JsonManager.h"
+#include "assetmanager.h"
 #include "gamemode.h"
 #include "game.h"
 #include "fileitem.h"
@@ -179,19 +180,16 @@ int KaminecLauncher::download()
     auto downloadLibUrls = jm.getDownloadLibUrls();
     for(auto& i:downloadLibUrls){
 		i.mPath.prepend(corePath+"/libraries/");
-        //qDebug()<<i.name;
     }
 
 	dmp->append(downloadLibUrls);
 
-    //qDebug()<<"before";
-    auto downloadAssertUrls = jm.getDownloadAssertUrls();
-    //qDebug()<<"after";
-    for(auto& i:downloadAssertUrls){
-		i.mPath.prepend(corePath+"/assets/objects/");
-        //qDebug()<<i.name;
-    }
-	dmp->append(downloadAssertUrls);
+	dm->append(jm.getDownloadAssetFileUrl());
+	dm->waitForFinished();
+
+	AssetManager assetManager(this,jm.getAssetIndex());
+	auto downloadAssetUrls = assetManager.getDownloadAssetUrls();
+	dmp->append(downloadAssetUrls);
 
 	qDebug()<<dmp->getTotalCount();
 
@@ -199,9 +197,6 @@ int KaminecLauncher::download()
     ui->downloadValue_label->setText(QString("0/%1").arg(totalCount));
 	ui->downloadProgress_progressBar->setMaximum(dmp->getTotalCount());
 	ui->downloadProgress_progressBar_2->setMaximum(dmp->getTotalCount());
-
-    //QStandardItemModel model;
-    //ui->download_treeView->setModel(model);
 
 	connect(dmp,SIGNAL(downloadedCountChanged(int)),this,SLOT(updateDownloadCount(int)));
 	connect(dmp,SIGNAL(downloadedCountChanged(int)),ui->downloadProgress_progressBar,SLOT(setValue(int)));

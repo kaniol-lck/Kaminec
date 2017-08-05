@@ -20,8 +20,8 @@ public:
 
     QStringList                   getLibfileList();
     QStringList                   getExtractfileList();
-    QList<FileItem>               getDownloadLibUrls();
-    QList<FileItem>               getDownloadAssertUrls();
+	QList<FileItem>               getDownloadLibUrls();
+	FileItem					  getDownloadAssetFileUrl();
     QStringList                   getMCArgs();
     QStringList                   getMCMainClass();
     QString                       getAssetIndex();

@@ -25,8 +25,7 @@ JsonManager::JsonManager(QObject *parent, QString version):
     }
     qDebug()<<"jsonfile("<<version<<".json) file opened:"<<jsonFile.fileName();
 
-    QByteArray jsonByte;
-	qDebug()<<QString(jsonByte);
+	QByteArray jsonByte;
     jsonByte.resize(jsonFile.bytesAvailable());
     jsonByte = jsonFile.readAll();
     jsonFile.close();
@@ -123,68 +122,19 @@ QList<FileItem> JsonManager::getDownloadLibUrls()
 													   libElem.toMap().value("downloads").toMap().value("artifact").toMap().value("path").toString(),
 													   libElem.toMap().value("downloads").toMap().value("artifact").toMap().value("url").toString()):
 									 libUrls);
-    });
+	});
 }
 
-#include "downloadmanager.h"
-#include "downloadmanagerplus.h"
-
-QList<FileItem> JsonManager::getDownloadAssertUrls()
+FileItem JsonManager::getDownloadAssetFileUrl()
 {
-    QUrl assertUrl=jsonMap.value("assetIndex")
-                      .toMap().value("url").toUrl();
+	QString filename =getAssetIndex() + ".json";
+	int size = jsonMap.value("assetIndex").toMap().value("size").toInt();
+	QString sha1 = jsonMap.value("assetIndex").toMap().value("sha1").toString();
+	QString path = corePath + "/assets/indexes/"  + filename;
+	QUrl url = jsonMap.value("assetIndex").toMap().value("url").toUrl();
 
-	QString filename = corePath+QString("/assets/indexes/%1.json").arg(getAssetIndex());
-    jsonDownload->append(FileItem(QString(getAssetIndex()+".json"),
-                                  0,
-                                  QString(),
-                                  filename,
-                                  assertUrl));
-    jsonDownload->waitForFinished();
-    //try{
-    qDebug()<<filename;
-    QFile f(filename);//!
-
-    QByteArray assertByte;
-
-    if(!f.exists())qDebug()<<"jsonfile(1.10.json) file does not exist";
-    if(!f.open(QIODevice::ReadOnly | QIODevice::Text))qDebug()<<"Open failed";
-    qDebug()<<"jsonfile(1.10.json) file opened!!!";
-    assertByte.resize(f.bytesAvailable());
-    assertByte = f.readAll();
-    f.close();
-
-    QJsonParseError ok;
-    auto assertDoc = QJsonDocument::fromJson(assertByte,&ok);
-    if(ok.error != QJsonParseError::NoError){qDebug()<<"AssertJson failed."<<endl<<ok.error;}
-
-    auto objectMap = assertDoc.toVariant().toMap().value("objects").toMap();
-
-    QList<FileItem> downloadAssertUrls;
-
-    for(auto it=objectMap.begin();it!=objectMap.end();it++){
-        QString name = it.key();
-        QString hash = it.value().toMap().value("hash").toString();
-        QString path = QString("%1/%2").arg(hash.left(2),hash);
-        QUrl url = "http://resources.download.minecraft.net/"+path;
-        downloadAssertUrls<<FileItem(name,
-                                     it.value().toMap().value("size").toInt(),
-                                     "NULL",
-                                     path,
-                                     url);
-    }
-
-    //qDebug()<<"ha?";
-    //这个地方不知道为什么“downloadAssertUrls”放循环里正常，外边访问就不对
-    //for(auto& i:downloadAssertUrls)
-    //    qDebug()<<i.name;
-    return downloadAssertUrls;
-    //}catch(...){
-    //        qDebug()<<"exception";
-    //        throw;
-    //}
+	return FileItem(filename, size, sha1, path, url);
 }
-
 
 
 QStringList JsonManager::getMCArgs()
