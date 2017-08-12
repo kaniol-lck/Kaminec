@@ -21,10 +21,10 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+    <item row="1" column="0">
      <widget class="QTabWidget" name="moduleSwitch">
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="startment">
        <attribute name="title">
@@ -274,39 +274,15 @@
           </item>
          </layout>
         </item>
-        <item row="2" column="0">
-         <layout class="QHBoxLayout" name="horizontalLayout_13">
-          <item>
-           <widget class="QLabel" name="downloadProgress_label">
-            <property name="text">
-             <string>download progress:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QProgressBar" name="downloadProgress_progressBar">
-            <property name="value">
-             <number>0</number>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="3" column="0">
-         <layout class="QHBoxLayout" name="horizontalLayout_4">
-          <item>
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>Game Download</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_6">
+        <item row="1" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
           <item>
            <widget class="QPushButton" name="download_pb">
             <property name="text">
@@ -315,19 +291,27 @@
            </widget>
           </item>
           <item>
-           <spacer name="horizontalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
+           <layout class="QHBoxLayout" name="horizontalLayout_13">
+            <item>
+             <widget class="QLabel" name="downloadProgress_label">
+              <property name="text">
+               <string>download progress:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QProgressBar" name="downloadProgress_progressBar">
+              <property name="value">
+               <number>0</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
+        </item>
+        <item row="0" column="0">
+         <widget class="QTreeView" name="versionsList_treeView"/>
         </item>
        </layout>
       </widget>
@@ -443,7 +427,6 @@
   <tabstop>version_cb</tabstop>
   <tabstop>gameDir_le</tabstop>
   <tabstop>gameDir_showPb</tabstop>
-  <tabstop>download_pb</tabstop>
   <tabstop>download_treeView</tabstop>
   <tabstop>saveMgr_treeView</tabstop>
   <tabstop>addSaves_pb</tabstop>

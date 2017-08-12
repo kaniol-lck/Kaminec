@@ -36,6 +36,7 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 {
 	ui->setupUi(this);
 
+	ui->versionsList_treeView->setModel(gameDownload.getVersionsModel());
     ui->downloadProgress_label->setVisible(false);
     ui->downloadProgress_progressBar->setVisible(false);
     ui->downloadProgress_progressBar_2->setVisible(false);
@@ -54,7 +55,6 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 		dm->waitForFinished();
 	}
 
-	qDebug()<<"???";
     //加载版本
     QFile jsonFile("./version_manifest.json");
 
@@ -167,7 +167,7 @@ int KaminecLauncher::download()
                              QString("NULL"),
 							 QString("%1/versions/%2/%2.json")
 								 .arg(corePath).arg(ui->version_cb->currentText()),
-                             versionList.at(ui->version_cb->currentIndex()).toMap().value("url").toUrl());
+							 versionList.at(ui->version_cb->currentIndex()).toMap().value("url").toUrl());//!!!!!!!!!!!1
     dm->append(fileItem);
     dm->waitForFinished();
 
@@ -212,11 +212,6 @@ void KaminecLauncher::on_start_pb_clicked()
 	this->startGame();
 }
 
-
-void KaminecLauncher::on_download_pb_clicked()
-{
-    this->download();
-}
 
 void KaminecLauncher::updateDownloadCount(int downloaded)
 {
@@ -314,4 +309,26 @@ void KaminecLauncher::on_gameDir_showPb_clicked()
 void KaminecLauncher::on_newProfile_pb_clicked()
 {
 //    auto
+}
+
+void KaminecLauncher::on_moduleSwitch_currentChanged(int index)
+{
+	switch (index) {
+	case 2:
+		gameDownload.init();
+		break;
+	default:
+		break;
+	}
+}
+
+void KaminecLauncher::on_download_pb_clicked()
+{
+	gameDownload.download(ui->versionsList_treeView->currentIndex().row());
+
+	ui->downloadValue_label->setText(QString("0/%1").arg(gameDownload.getTotalCount()));
+	ui->downloadProgress_progressBar->setMaximum(gameDownload.getTotalCount());
+	ui->downloadProgress_progressBar_2->setMaximum(gameDownload.getTotalCount());
+	connect(&gameDownload,SIGNAL(downloadedCountChanged(int)),ui->downloadProgress_progressBar,SLOT(setValue(int)));
+	connect(&gameDownload,SIGNAL(downloadedCountChanged(int)),ui->downloadProgress_progressBar_2,SLOT(setValue(int)));
 }

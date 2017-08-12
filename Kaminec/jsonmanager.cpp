@@ -94,8 +94,25 @@ QStringList JsonManager::getExtractfileList()
 
 QList<FileItem> JsonManager::getDownloadLibUrls()
 {
-    return std::accumulate(libList.begin(),libList.end(),QList<FileItem>(),
-                           [](QList<FileItem> libUrls,QVariant libElem){
+	QList<FileItem> downloadLibUrls;
+	if(jsonMap.contains("inheritsFrom")){
+		auto inheritedJson = new JsonManager(this,jsonMap.value("inheritsFrom").toString());
+		downloadLibUrls<<inheritedJson->getDownloadLibUrls();
+	}
+	return std::accumulate(libList.begin(),libList.end(),QList<FileItem>(),
+						   [this](QList<FileItem> libUrls,QVariant libElem){
+		if(jsonMap.contains("inheritsFrom") &&
+		   libElem.toMap().contains("name")){
+			auto name = libElem.toMap().value("name").toString().split(":");
+			auto filename = QString(name.at(0)).replace('.','/') + "/" +
+							name.at(1) + "/" +
+							name.at(2) + "/" +
+							name.at(1) + "-" +
+							name.at(2) + ".jar";
+			auto path = corePath + "/libraries/" +filename;
+			auto url = libElem.toMap().value("url").toString() + filename;
+			return libUrls<<FileItem(filename,0,"NULL",path,url);
+		}
 		return (libElem.toMap().value("downloads").toMap().contains("classifiers") &&
 				!libElem.toMap().value("downloads").toMap().value("classifiers").toMap().contains("test") &&
 				libElem.toMap().contains("natives") &&

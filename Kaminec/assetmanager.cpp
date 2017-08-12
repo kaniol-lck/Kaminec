@@ -43,7 +43,7 @@ QList<FileItem> AssetManager::getDownloadAssetUrls()
 		QString hash = it.value().toObject().value("hash").toString();
 		QString path = QString("%1/%2").arg(hash.left(2),hash);
 		QUrl url = "http://resources.download.minecraft.net/" + path;
-		path.prepend(corePath + "/");
+		path.prepend(corePath + "/assets/objects/");
 
 		FileItem downloadAssetUrl(name,size,"NULL",path,url);
 		downloadAssetUrls<<downloadAssetUrl;

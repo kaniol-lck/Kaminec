@@ -37,7 +37,8 @@ SOURCES += main.cpp\
     auth.cpp \
     preference.cpp \
     profilemanager.cpp \
-    assetmanager.cpp
+    assetmanager.cpp \
+    gamedownload.cpp
 
 HEADERS  += kamineclauncher.h \
             profile.h \
@@ -52,7 +53,8 @@ HEADERS  += kamineclauncher.h \
     auth.h \
     preference.h \
     profilemanager.h \
-    assetmanager.h
+    assetmanager.h \
+    gamedownload.h
 
 FORMS    += kamineclauncher.ui \
     preference.ui

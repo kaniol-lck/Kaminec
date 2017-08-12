@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 #include "profile.h"
+#include "gamedownload.h"
 #include "savesmanager.h"
 
 namespace Ui {
@@ -34,8 +35,6 @@ private slots:
 
     void on_start_pb_clicked();
 
-    void on_download_pb_clicked();
-
     void updateDownloadCount(int);
 
     void gameFinished();
@@ -58,6 +57,10 @@ private slots:
 
 	void on_newProfile_pb_clicked();
 
+	void on_moduleSwitch_currentChanged(int index);
+
+	void on_download_pb_clicked();
+
 private:
     Ui::KaminecLauncher *ui;
 	SavesManager savesManager;
@@ -65,6 +68,7 @@ private:
     QList<QVariant> versionList;
 	bool isShowPassword = false;
 	QString corePath;
+	GameDownload gameDownload;
 };
 
 #endif // KAMINECLAUNCHER_H
