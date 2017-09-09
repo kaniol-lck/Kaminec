@@ -34,116 +34,51 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 	savesManager(this),
 	corePath(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)).toString())
 {
+	//setup ui
 	ui->setupUi(this);
 
+	//init ui
 	ui->versionsList_treeView->setModel(gameDownload.getVersionsModel());
     ui->downloadProgress_label->setVisible(false);
     ui->downloadProgress_progressBar->setVisible(false);
     ui->downloadProgress_progressBar_2->setVisible(false);
     ui->downloadValue_label->setVisible(false);
-
 	ui->saveMgr_treeView->setModel(savesManager.getModel());
-	if(!QFile("./version_manifest.json").exists()||
-	   QFile("./version_manifest.json").size()==0){
-		auto dm = new DownloadManager(this);
-		auto versions = FileItem(QString("version_manifest.json"),
-								 0,
-								 QString("NULL"),
-								 QString("./version_manifest.json"),
-								 QUrl("https://launchermeta.mojang.com/mc/game/version_manifest.json"));
-		dm->append(versions);
-		dm->waitForFinished();
+
+	//load exsit versions
+	QDir dir(corePath + "/versions");
+	if(dir.exists())
+	{
+		dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
+		QFileInfoList list = dir.entryInfoList();
+		for(auto i : list)
+			ui->version_cb->addItem(i.fileName());
 	}
 
-    //加载版本
-    QFile jsonFile("./version_manifest.json");
+	//load last used version
+	auto index = ui->version_cb->findText(QSettings().value("lastUsedVersion").toString());
+	qDebug()<<QSettings().value("lastUsedVersion").toString();
+	if(index != -1)
+		ui->version_cb->setCurrentIndex(index);
 
-    if(!jsonFile.exists())qDebug()<<"jsonfile file does not exist";
-    if(!jsonFile.open(QIODevice::ReadOnly | QIODevice::Text)){
-        qDebug()<<"Open failed";
-        QMessageBox::about(0,"Not find json file","Json file NOT find,The program will terminate.");
-    }
-    qDebug()<<"versionfile.json file opened";
-
-    QByteArray jsonByte;
-    jsonByte.resize(jsonFile.bytesAvailable());
-    jsonByte = jsonFile.readAll();
-    jsonFile.close();
-
-    QJsonParseError ok;
-    auto jsonDoc = QJsonDocument::fromJson(jsonByte,&ok);
-    if(ok.error != QJsonParseError::NoError){qDebug()<<"Json failed."<<endl<<ok.error;}
-
-    auto jsonMap = jsonDoc.toVariant().toMap();
-    versionList = jsonMap.value("versions").toList();
-	ui->version_cb->addItems(std::accumulate(versionList.begin(),versionList.end(),QStringList(),
-											 [this](QStringList versionNameList,QVariant versionElem){
-								 return versionNameList<<(versionElem
-								 .toMap().value("id").toString() +
-								 (QFile(QString("%1/versions/%2/%2.jar")
-								 .arg(ui->gameDir_le->text())
-								 .arg(versionElem.toMap().value("id").toString()))
-								 .exists()?"(Downloaded)":""));
-                             }));
-
-	this->loadProfileJson();
+	//load gameDir
+	ui->gameDir_le->setText(QSettings().value("gameDir").toString());
 }
 
 KaminecLauncher::~KaminecLauncher()
 {
+	//delete ui
     delete ui;
 }
 
-//获取当前选择的profile
+//get current profile
 inline const Profile KaminecLauncher::getProfile()
 {
-	return Profile::fromJson().value(ui->profileSelect_cb->currentText());//!!!!!!!
+	return Profile(QSettings().value("name").toString(),
+				   ui->version_cb->currentText(),
+				   ui->gameDir_le->text());
 }
 
-void KaminecLauncher::loadProfileJson()
-{
-	auto profiles = Profile::fromJson();
-	for(auto profile:profiles){
-		ui->profileSelect_cb->addItem(profile.mName);
-	}
-
-	auto selectedProfile = profiles.value(Profile::getSelectedProfile());
-	ui->profileSelect_cb->setCurrentText(selectedProfile.mName);
-	if(ui->version_cb->findText(selectedProfile.mLastVersionId)==-1){
-		ui->version_cb->addItem(selectedProfile.mLastVersionId);
-	}
-	ui->version_cb->setCurrentText(selectedProfile.mLastVersionId);
-	ui->gameDir_le->setText(selectedProfile.mGameDir);
-
-}
-
-void KaminecLauncher::saveProfileJson()
-{
-    QJsonObject saveProfile;
-
-    //生成profile的json模型
-
-	saveProfile.insert("version",ui->version_cb->currentText().replace("(Downloaded)",""));
-	saveProfile.insert("gameDir",ui->gameDir_le->text());
-
-
-
-
-    QJsonDocument saveDoc;
-    saveDoc.setObject(saveProfile);
-
-    QByteArray bytes = saveDoc.toJson(QJsonDocument::Compact);
-
-    qDebug()<<bytes;
-
-    //生成profile的json文档
-    QFile savefile("profile.json");
-    savefile.open(QIODevice::WriteOnly|QIODevice::Text);
-
-    QTextStream output(&savefile);
-    output<<bytes;
-	savefile.close();
-}
 
 int KaminecLauncher::download()
 {
@@ -274,41 +209,17 @@ void KaminecLauncher::on_action_preference_triggered()
 	preference->show();
 }
 
-void KaminecLauncher::on_profileSelect_cb_currentIndexChanged(const QString &arg1)
-{
-	Profile::setSelectedProfile(arg1);
-	qDebug()<<"arg1:"<<arg1;
-
-	auto profiles = Profile::fromJson();
-
-	auto selectedProfile = profiles.value(arg1);
-	ui->profileSelect_cb->setCurrentText(selectedProfile.mName);
-	if(ui->version_cb->findText(selectedProfile.mLastVersionId)==-1){
-		ui->version_cb->addItem(selectedProfile.mLastVersionId);
-	}
-	ui->version_cb->setCurrentText(selectedProfile.mLastVersionId);
-	ui->gameDir_le->setText(selectedProfile.mGameDir);
-}
-
-void KaminecLauncher::on_saveProfile_pb_clicked()
-{
-	Profile::saveProfile(Profile(ui->profileSelect_cb->currentText(),
-								 ui->version_cb->currentText(),
-								 ui->gameDir_le->text()));
-}
 
 void KaminecLauncher::on_gameDir_showPb_clicked()
 {
-	auto gameDir = QFileDialog::getExistingDirectory(this,"Please choose the game directory.(the upper directory)");
+	auto gameDir = QFileDialog::getExistingDirectory(this,"Please choose the game directory.");
 	if(gameDir!=""){
-		ui->gameDir_le->setText(gameDir + "/.minecraft");
+		if(gameDir.endsWith("/.minecraft"))
+			ui->gameDir_le->setText(gameDir);
+		else
+			ui->gameDir_le->setText(gameDir + "/.minecraft");
 	}
 	return;
-}
-
-void KaminecLauncher::on_newProfile_pb_clicked()
-{
-//    auto
 }
 
 void KaminecLauncher::on_moduleSwitch_currentChanged(int index)
@@ -326,6 +237,7 @@ void KaminecLauncher::on_download_pb_clicked()
 {
 	gameDownload.download(ui->versionsList_treeView->currentIndex().row());
 
+	ui->download_treeView->setModel(gameDownload.getVersionsModel());
 	ui->downloadValue_label->setText(QString("0/%1").arg(gameDownload.getTotalCount()));
 	ui->downloadProgress_progressBar->setMaximum(gameDownload.getTotalCount());
 	ui->downloadProgress_progressBar_2->setMaximum(gameDownload.getTotalCount());

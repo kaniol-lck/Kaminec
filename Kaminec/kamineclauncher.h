@@ -49,13 +49,7 @@ private slots:
 
 	void on_action_preference_triggered();
 
-	void on_profileSelect_cb_currentIndexChanged(const QString &arg1);
-
-	void on_saveProfile_pb_clicked();
-
 	void on_gameDir_showPb_clicked();
-
-	void on_newProfile_pb_clicked();
 
 	void on_moduleSwitch_currentChanged(int index);
 

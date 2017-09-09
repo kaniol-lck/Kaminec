@@ -36,23 +36,17 @@ int Game::start()
 		return 0;
 	}
 ///////////////////////////////////////////////////////////////////
-    //auto gameProcess = new QProcess;
     QTime t;
     auto startcode = this->genStartcode();
     auto time =t.elapsed();
 
-    //qDebug()<<"java="<<gameProfile.javaDir<<endl
-    //       <<"args="<<startcode
-    //      <<"Time elapsed:"<<time<<"ms.";
-
-
-	//textTime.txt
+	//testTime.txt
 	QFile ttf("timeTest.txt");
 	ttf.open(QIODevice::WriteOnly | QIODevice::Text | QFile::Append);
 
 	QTextStream out2(&ttf);
 	out2<<time<<endl;
-///////////////////////////////////////////////////////////////////
+/***********************I*am*a*cute*divider*******************************/
 	this->extractNatives(corePath + "/natives");
 	if(gameMode == Mode::Online){
 		auto auth = new Auth(this,qMakePair(QSettings().value("email").toString(),
@@ -80,7 +74,10 @@ int Game::start()
 
     connect(gameProcess,SIGNAL(finished(int)),this,SIGNAL(finished(int)));
 
-///////////////////////////////////////////////////////////////////
+	QSettings().setValue("lastUsedVersion", gameProfile.mLastVersionId);
+	QSettings().setValue("gameDir", gameProfile.mGameDir);
+
+/***********************I*am*a*cute*divider*******************************/
 	QFile logs("logs.txt");
 	logs.open(QIODevice::WriteOnly | QIODevice::Text);
 

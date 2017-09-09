@@ -26,6 +26,15 @@ GameDownload::GameDownload(QObject *parent) :
 void GameDownload::init()
 {
 	if(!inited){
+		inited = true;
+
+		model.setColumnCount(5);
+		model.setHeaderData(0,Qt::Horizontal,"id");
+		model.setHeaderData(1,Qt::Horizontal,"type");
+		model.setHeaderData(2,Qt::Horizontal,"time");
+		model.setHeaderData(3,Qt::Horizontal,"releaseTime");
+		model.setHeaderData(4,Qt::Horizontal,"url");
+
 		tempVersionsFile.open();
 		tempVersionsFile.close();
 		downloadManagerPlus->append(FileItem(QString("version_manifest.json"),

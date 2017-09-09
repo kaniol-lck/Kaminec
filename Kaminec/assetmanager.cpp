@@ -10,9 +10,9 @@
 
 AssetManager::AssetManager(QObject *parent, QString assetIndex) :
 	QObject(parent),
-	corePath(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)).toString())
+	corePath(QSettings().value("corePath", QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)).toString())
 {
-	QFile assetFile(corePath+QString("/assets/indexes/%1.json").arg(assetIndex));
+	QFile assetFile(corePath + QString("/assets/indexes/%1.json").arg(assetIndex));
 
 	if(!assetFile.exists())qDebug()<<"asset file does not exist.";
 	if(!assetFile.open(QIODevice::ReadOnly | QIODevice::Text)){
@@ -26,7 +26,7 @@ AssetManager::AssetManager(QObject *parent, QString assetIndex) :
 	assetFile.close();
 
 	QJsonParseError ok;
-	auto assetDoc = QJsonDocument::fromJson(assetBytes,&ok);
+	auto assetDoc = QJsonDocument::fromJson(assetBytes, &ok);
 	if(ok.error != QJsonParseError::NoError)qDebug()<<"asset json failed:"<<ok.error;
 
 	asset = assetDoc.object();
@@ -41,11 +41,11 @@ QList<FileItem> AssetManager::getDownloadAssetUrls()
 		QString name = it.key();
 		int size = it.value().toObject().value("size").toInt();
 		QString hash = it.value().toObject().value("hash").toString();
-		QString path = QString("%1/%2").arg(hash.left(2),hash);
+		QString path = QString("%1/%2").arg(hash.left(2), hash);
 		QUrl url = "http://resources.download.minecraft.net/" + path;
 		path.prepend(corePath + "/assets/objects/");
 
-		FileItem downloadAssetUrl(name,size,"NULL",path,url);
+		FileItem downloadAssetUrl(name, size, "NULL", path, url);
 		downloadAssetUrls<<downloadAssetUrl;
 	}
 	return downloadAssetUrls;
