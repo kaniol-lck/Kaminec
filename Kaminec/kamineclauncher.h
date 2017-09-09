@@ -62,7 +62,7 @@ private:
     QList<QVariant> versionList;
 	bool isShowPassword = false;
 	QString corePath;
-	GameDownload gameDownload;
+	GameDownload *gameDownload;
 };
 
 #endif // KAMINECLAUNCHER_H

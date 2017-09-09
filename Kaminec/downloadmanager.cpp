@@ -52,7 +52,7 @@ void DownloadManager::append(const QList<QPair<QUrl, QString> > &urlList)
 int DownloadManager::append(const FileItem &item)
 {
     QFileInfo fileInfo(item.mPath);
-    if(fileInfo.exists()&&fileInfo.size()==item.mSize){
+	if(fileInfo.exists() && fileInfo.size() != 0){
         emit finished();
         return 1;
     }

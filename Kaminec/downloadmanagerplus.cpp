@@ -28,8 +28,7 @@ void DownloadManagerPlus::append(const FileItem &item)
 
 	QFileInfo fileInfo(item.mPath);
 	if(fileInfo.exists() &&
-	   (fileInfo.size() != 0) &&
-	   (fileInfo.size() == item.mSize))
+	   (fileInfo.size() != 0))
 		return;
 
     downloadQueue.enqueue(item.getDownloadInfo());

@@ -32,13 +32,14 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::KaminecLauncher),
 	savesManager(this),
+	gameDownload(new GameDownload(this)),
 	corePath(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)).toString())
 {
 	//setup ui
 	ui->setupUi(this);
 
 	//init ui
-	ui->versionsList_treeView->setModel(gameDownload.getVersionsModel());
+	ui->versionsList_treeView->setModel(gameDownload->getVersionsModel());
     ui->downloadProgress_label->setVisible(false);
     ui->downloadProgress_progressBar->setVisible(false);
     ui->downloadProgress_progressBar_2->setVisible(false);
@@ -225,8 +226,8 @@ void KaminecLauncher::on_gameDir_showPb_clicked()
 void KaminecLauncher::on_moduleSwitch_currentChanged(int index)
 {
 	switch (index) {
-	case 2:
-		gameDownload.init();
+	case 1:
+		gameDownload->init();
 		break;
 	default:
 		break;
@@ -235,12 +236,21 @@ void KaminecLauncher::on_moduleSwitch_currentChanged(int index)
 
 void KaminecLauncher::on_download_pb_clicked()
 {
-	gameDownload.download(ui->versionsList_treeView->currentIndex().row());
+	//disable this pushbutton to avoid reclick
+	ui->download_pb->setText("Downloading...");
+	ui->download_pb->setDisabled(true);
 
-	ui->download_treeView->setModel(gameDownload.getVersionsModel());
-	ui->downloadValue_label->setText(QString("0/%1").arg(gameDownload.getTotalCount()));
-	ui->downloadProgress_progressBar->setMaximum(gameDownload.getTotalCount());
-	ui->downloadProgress_progressBar_2->setMaximum(gameDownload.getTotalCount());
-	connect(&gameDownload,SIGNAL(downloadedCountChanged(int)),ui->downloadProgress_progressBar,SLOT(setValue(int)));
-	connect(&gameDownload,SIGNAL(downloadedCountChanged(int)),ui->downloadProgress_progressBar_2,SLOT(setValue(int)));
+	//start download game
+	gameDownload->download(ui->versionsList_treeView->currentIndex().row());
+
+	//some settings during download
+	ui->download_treeView->setModel(gameDownload->getDownloadModel());
+	ui->downloadValue_label->setText(QString("0/%1").arg(gameDownload->getTotalCount()));
+	ui->downloadProgress_progressBar->setMaximum(gameDownload->getTotalCount());
+	ui->downloadProgress_progressBar_2->setMaximum(gameDownload->getTotalCount());
+
+	//signals/slots during download and afer download
+	connect(gameDownload, SIGNAL(downloadedCountChanged(int)),ui->downloadProgress_progressBar,SLOT(setValue(int)));
+	connect(gameDownload, SIGNAL(downloadedCountChanged(int)),ui->downloadProgress_progressBar_2,SLOT(setValue(int)));
+	connect(gameDownload, SIGNAL(finished()),this,SLOT(downloadFinished()));
 }

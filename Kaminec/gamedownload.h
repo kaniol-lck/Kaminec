@@ -18,6 +18,7 @@ public:
 	void init();
 
 	QStandardItemModel* getVersionsModel();
+	QStandardItemModel* getDownloadModel();
 
 	int getTotalCount();
 

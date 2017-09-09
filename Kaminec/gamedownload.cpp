@@ -78,6 +78,11 @@ QStandardItemModel *GameDownload::getVersionsModel()
 	return &model;
 }
 
+QStandardItemModel *GameDownload::getDownloadModel()
+{
+	return downloadManagerPlus->getModel();
+}
+
 int GameDownload::getTotalCount()
 {
 	return totalCount;
@@ -117,8 +122,6 @@ void GameDownload::download(int index)
 
 	connect(downloadManagerPlus,SIGNAL(downloadedCountChanged(int)),this,SIGNAL(downloadedCountChanged(int)));
 	connect(downloadManagerPlus,SIGNAL(finished()),this,SIGNAL(finished()));
-
-	downloadManagerPlus->waitForFinished();
 
 	return;
 }
