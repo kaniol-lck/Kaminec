@@ -13,12 +13,14 @@ class Auth : public QObject
 	Q_OBJECT
 public:
 	explicit Auth(QObject *parent,QPair<QString,QString> account);
+	explicit Auth(QObject *parent);
 
 	QString getPlayerName();
 	QString getUuid();
 	QString getAccessToken();
 
 	bool check();
+	bool refresh();
 
 signals:
 
@@ -34,6 +36,7 @@ private:
 	QString playerName;
 	QString uuid;
 	QString accessToken;
+	QString clientToken;
 };
 
 #endif // AUTH_H
