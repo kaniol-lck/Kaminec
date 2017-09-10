@@ -72,85 +72,25 @@ KaminecLauncher::~KaminecLauncher()
     delete ui;
 }
 
-//get current profile
 inline const Profile KaminecLauncher::getProfile()
 {
+	//get current profile
 	return Profile(QSettings().value("name").toString(),
 				   ui->version_cb->currentText(),
 				   ui->gameDir_le->text());
 }
 
 
-int KaminecLauncher::download()
-{
-
-	auto dm = new DownloadManager(this);
-	auto dmp = new DownloadManagerPlus(this);
-
-	ui->download_treeView->setModel(dmp->getModel());
-    ui->download_pb->setText("Downloading...");
-    ui->download_pb->setDisabled(true);
-    ui->downloadProgress_label->setVisible(true);
-    ui->downloadProgress_progressBar->setVisible(true);
-    ui->downloadProgress_progressBar_2->setVisible(true);
-    ui->downloadValue_label->setVisible(true);
-
-	qDebug()<<"???"<<QString("%1/versions/%2/%2.json")
-			  .arg(corePath).arg(ui->version_cb->currentText());
-
-    auto fileItem = FileItem(QString("%1.json").arg(ui->version_cb->currentText()),
-                             0,
-                             QString("NULL"),
-							 QString("%1/versions/%2/%2.json")
-								 .arg(corePath).arg(ui->version_cb->currentText()),
-							 versionList.at(ui->version_cb->currentIndex()).toMap().value("url").toUrl());//!!!!!!!!!!!1
-    dm->append(fileItem);
-    dm->waitForFinished();
-
-	JsonManager jm(this,ui->version_cb->currentText());
-
-	fileItem = jm.getDownloadClientUrl();
-	dmp->append(fileItem);
-
-
-    auto downloadLibUrls = jm.getDownloadLibUrls();
-    for(auto& i:downloadLibUrls){
-		i.mPath.prepend(corePath+"/libraries/");
-    }
-
-	dmp->append(downloadLibUrls);
-
-	dm->append(jm.getDownloadAssetFileUrl());
-	dm->waitForFinished();
-
-	AssetManager assetManager(this,jm.getAssetIndex());
-	auto downloadAssetUrls = assetManager.getDownloadAssetUrls();
-	dmp->append(downloadAssetUrls);
-
-	qDebug()<<dmp->getTotalCount();
-
-	totalCount = dmp->getTotalCount();
-    ui->downloadValue_label->setText(QString("0/%1").arg(totalCount));
-	ui->downloadProgress_progressBar->setMaximum(dmp->getTotalCount());
-	ui->downloadProgress_progressBar_2->setMaximum(dmp->getTotalCount());
-
-	connect(dmp,SIGNAL(downloadedCountChanged(int)),this,SLOT(updateDownloadCount(int)));
-	connect(dmp,SIGNAL(downloadedCountChanged(int)),ui->downloadProgress_progressBar,SLOT(setValue(int)));
-	connect(dmp,SIGNAL(downloadedCountChanged(int)),ui->downloadProgress_progressBar_2,SLOT(setValue(int)));
-	connect(dmp,SIGNAL(finished()),this,SLOT(downloadFinished()));
-	dmp->waitForFinished();
-    return 0;
-}
-
-
 void KaminecLauncher::on_start_pb_clicked()
 {
+	//start game
 	this->startGame();
 }
 
 
 void KaminecLauncher::updateDownloadCount(int downloaded)
 {
+	//update the number in label
     qDebug()<<"changed:"<<downloaded;
 	ui->downloadValue_label->setText(QString("%1/%2")
 									 .arg(downloaded).arg(totalCount));
@@ -158,6 +98,7 @@ void KaminecLauncher::updateDownloadCount(int downloaded)
 
 void KaminecLauncher::downloadFinished()
 {
+	//slot after download
     ui->download_pb->setText("&Download");
     ui->download_pb->setEnabled(true);
     ui->downloadProgress_label->setVisible(false);
@@ -168,6 +109,7 @@ void KaminecLauncher::downloadFinished()
 
 void KaminecLauncher::gameFinished()
 {
+	//slot after playing
     qDebug()<<"finished";
     ui->start_pb->setText("&Start");
     ui->start_pb->setEnabled(true);
@@ -175,38 +117,49 @@ void KaminecLauncher::gameFinished()
 
 void KaminecLauncher::on_addSaves_pb_clicked()
 {
+	//add saves
 	savesManager.addSaves();
 }
 
 void KaminecLauncher::on_deleteSaves_pb_clicked()
 {
+	//delete saves
 	auto index = ui->saveMgr_treeView->currentIndex();
 	savesManager.deleteSaves(index.row());
 }
 
 void KaminecLauncher::on_backupSaves_pb_clicked()
 {
+	//backup saves
 	savesManager.backup();
 }
 
 void KaminecLauncher::startGame()
 {
+	//declare a Game instance for launch
 	Game *game;
+
+	//judge online or offline
 	if(ui->isVerified_cb->isChecked()){
 		game = new Game(this,this->getProfile(),Mode::Online);
 	}else{
 		game = new Game(this,this->getProfile(),Mode::Offline);
 	}
+
+	//ui during gaming
 	ui->start_pb->setText("Gaming...");
 	ui->start_pb->setDisabled(true);
 	connect(game,SIGNAL(finished(int)),this,SLOT(gameFinished()));
-	game->start();
 
+	//start
+	game->start();
 }
 
 void KaminecLauncher::on_action_preference_triggered()
 {
-	auto preference = new Preference(this);
+	//create preference windows
+	auto preference =
+			new Preference(this);
 	preference->show();
 }
 
