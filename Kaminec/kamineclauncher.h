@@ -59,8 +59,7 @@ private:
     Ui::KaminecLauncher *ui;
 	SavesManager savesManager;
     int totalCount;
-    QList<QVariant> versionList;
-	bool isShowPassword = false;
+	QList<QVariant> versionList;
 	QString corePath;
 	GameDownload *gameDownload;
 };

@@ -31,10 +31,12 @@ void DownloadManagerPlus::append(const FileItem &item)
 	   (fileInfo.size() != 0))
 		return;
 
+	mutex.lock();
     downloadQueue.enqueue(item.getDownloadInfo());
     model.appendRow(info);
     itemList.append(info);
     ++totalCount;
+	mutex.unlock();
 
     startDownload();
 }
@@ -95,7 +97,8 @@ void DownloadManagerPlus::startNextDownload(int index)
     qDebug()<<"downloader "<<index<<" finished,next";
 	++downloadedCount;
 	emit downloadedCountChanged(downloadedCount);
-    if(downloadQueue.empty()){
+
+	if(downloadQueue.empty()){
         bool d = false;
         for(auto downloader: downloaderPool){
             if(downloader->isDownload()){
@@ -108,9 +111,11 @@ void DownloadManagerPlus::startNextDownload(int index)
             emit finished();
         }
         return;
-    }
+	}
 
+	mutex.lock();
     downloaderPool.at(index)->start(itemList.takeFirst(),downloadQueue.dequeue());
+	mutex.unlock();
 }
 
 void DownloadManagerPlus::singleFinished(int /*index*/)

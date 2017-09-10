@@ -244,6 +244,7 @@ void KaminecLauncher::on_download_pb_clicked()
 	gameDownload->download(ui->versionsList_treeView->currentIndex().row());
 
 	//some settings during download
+	qDebug()<<"set";
 	ui->download_treeView->setModel(gameDownload->getDownloadModel());
 	ui->downloadValue_label->setText(QString("0/%1").arg(gameDownload->getTotalCount()));
 	ui->downloadProgress_progressBar->setMaximum(gameDownload->getTotalCount());

@@ -6,6 +6,7 @@
 
 #include <QList>
 #include <QQueue>
+#include <QMutex>
 #include <QStandardItemModel>
 
 #include <QObject>
@@ -49,7 +50,8 @@ private:
     QList<QList<QStandardItem*>> itemList;
     QList<SingleDownload*> downloaderPool;
 
-	static const int downloadNumber = 8;
+	static const int downloadNumber = 16;
+	QMutex mutex;
 };
 
 #endif // DOWNLOADMANAGERPLUS_H
