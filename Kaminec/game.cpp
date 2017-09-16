@@ -170,9 +170,6 @@ QStringList Game::genGameArgs()
 
 int Game::extractNatives(QString nativesDir)
 {
-    QDir nd(nativesDir);
-    if(nd.entryList().size()==12) return 1;//检查是否已存在natives
-
     auto extractfileList =gameJson.getExtractfileList();
 
     for(auto& extractfile:extractfileList){
@@ -188,9 +185,10 @@ int Game::extractNatives(QString nativesDir)
         }
         else{
             QStringList unzipargs;
-            unzipargs<< "x"
-                     << filename
-                     <<"-o"+nativesDir+"/";
+			unzipargs<< "x"
+					 << filename
+					 <<"-o"+nativesDir+"/"
+					<<"-aos";
 			QProcess::startDetached("7za",unzipargs);
         }
 
