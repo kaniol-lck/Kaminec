@@ -38,7 +38,8 @@ SOURCES += main.cpp\
     preference.cpp \
     profilemanager.cpp \
     assetmanager.cpp \
-    gamedownload.cpp
+    gamedownload.cpp \
+    validatedialog.cpp
 
 HEADERS  += kamineclauncher.h \
             profile.h \
@@ -54,7 +55,9 @@ HEADERS  += kamineclauncher.h \
     preference.h \
     profilemanager.h \
     assetmanager.h \
-    gamedownload.h
+    gamedownload.h \
+    validatedialog.h
 
 FORMS    += kamineclauncher.ui \
-    preference.ui
+    preference.ui \
+    validatedialog.ui

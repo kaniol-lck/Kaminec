@@ -1,5 +1,6 @@
 #include "preference.h"
 #include "ui_preference.h"
+#include "validatedialog.h"
 
 #include <QStringList>
 #include <QProcess>
@@ -15,14 +16,11 @@ Preference::Preference(QWidget *parent) :
 {
 	ui->setupUi(this);
 
-	ui->password_le->setEchoMode(QLineEdit::Password);
 
 	QSettings settings;
 
 	ui->playerName_le->setText(settings.value("playerName","Steve").toString());
 	ui->autoName_cb->setChecked(settings.value("autoName",true).toBool());
-	ui->email_le->setText(settings.value("email","").toString());
-	ui->password_le->setText(notRealPassword);
 
 	ui->corePath_le->setText(settings.value("corePath",
 											QStandardPaths::writableLocation(
@@ -35,6 +33,9 @@ Preference::Preference(QWidget *parent) :
 	ui->maxMem_sb->setValue(settings.value("maxMem",1024).toInt());
 	ui->javaArg_te->setText(settings.value("javaArg","").toString());
 
+	if(settings.value("isLogged",false).toBool()){
+		ui->logName_label->setText("Logged account:" + settings.value("email").toString());
+	}
 }
 
 Preference::~Preference()
@@ -81,12 +82,6 @@ void Preference::on_buttonBox_accepted()
 
 	settings.setValue("playerName",ui->playerName_le->text());
 	settings.setValue("autoName",ui->autoName_cb->isChecked());
-	settings.setValue("email",ui->email_le->text());
-
-	auto password = ui->password_le->text();
-	if(password != notRealPassword){
-		settings.setValue("password",password);
-	}
 
 	settings.setValue("corePath",ui->corePath_le->text());
 	settings.setValue("width",ui->width_sb->value());
@@ -100,15 +95,16 @@ void Preference::on_buttonBox_accepted()
 	settings.sync();
 }
 
-void Preference::on_showPassword_pb_clicked()
+void Preference::on_login_pb_clicked()
 {
-	if(showPassword){
-		showPassword = false;
-		ui->password_le->setEchoMode(QLineEdit::Password);
-		ui->showPassword_pb->setText("&Show Password");
-	}else{
-		showPassword = true;
-		ui->password_le->setEchoMode(QLineEdit::Normal);
-		ui->showPassword_pb->setText("&Hide Password");
-	}
+	auto validateDialog = new ValidateDialog(this);
+
+	connect(validateDialog, SIGNAL(login(QString)), this, SLOT(logChanged(QString)));
+
+	validateDialog->show();
+}
+
+void Preference::logChanged(QString email)
+{
+	ui->logName_label->setText("Logged account:" + email);
 }

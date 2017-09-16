@@ -19,7 +19,7 @@
      <property name="title">
       <string>user settings</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_6">
+     <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_7">
         <item>
@@ -45,51 +45,20 @@
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_9">
+       <layout class="QHBoxLayout" name="horizontalLayout_8">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_3">
-          <item alignment="Qt::AlignHCenter">
-           <widget class="QLabel" name="email_label">
-            <property name="text">
-             <string>E-mail:</string>
-            </property>
-            <property name="buddy">
-             <cstring>email_le</cstring>
-            </property>
-           </widget>
-          </item>
-          <item alignment="Qt::AlignHCenter">
-           <widget class="QLabel" name="password_label">
-            <property name="text">
-             <string>password:</string>
-            </property>
-            <property name="buddy">
-             <cstring>password_le</cstring>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <widget class="QLabel" name="logName_label">
+          <property name="text">
+           <string>You have not logged in.</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_5">
-          <item>
-           <widget class="QLineEdit" name="email_le"/>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_8">
-            <item>
-             <widget class="QLineEdit" name="password_le"/>
-            </item>
-            <item>
-             <widget class="QPushButton" name="showPassword_pb">
-              <property name="text">
-               <string>&amp;Show password</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
+         <widget class="QPushButton" name="login_pb">
+          <property name="text">
+           <string>&amp;Log in</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -396,9 +365,6 @@
  <tabstops>
   <tabstop>playerName_le</tabstop>
   <tabstop>autoName_cb</tabstop>
-  <tabstop>email_le</tabstop>
-  <tabstop>password_le</tabstop>
-  <tabstop>showPassword_pb</tabstop>
   <tabstop>corePath_le</tabstop>
   <tabstop>corePath_showPb</tabstop>
   <tabstop>width_sb</tabstop>

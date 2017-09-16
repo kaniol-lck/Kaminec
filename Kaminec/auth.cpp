@@ -47,7 +47,7 @@ bool Auth::check()
 	request.setUrl(QUrl("https://authserver.mojang.com/authenticate"));
 	request.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
 
-	QString data_str = R"({"agent":{"name":"Minecraft","version":1},"username":"%1","password":"%2"})";
+	QString data_str = R"({"agent":{"name":"Minecraft","version":1},"requestUser": false,"username":"%1","password":"%2"})";
 	data_str = data_str.arg(mUsername).arg(mPassword);
 	QByteArray data = data_str.toUtf8();
 	qDebug()<<data;
@@ -65,6 +65,7 @@ bool Auth::check()
 
 bool Auth::refresh()
 {
+	//refresh your authentication
 	qDebug()<<"refreshing your accessToken..";
 	auto manager = new QNetworkAccessManager(this);
 	QNetworkRequest request;

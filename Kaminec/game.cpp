@@ -49,20 +49,8 @@ int Game::start()
 /***********************I*am*a*cute*divider*******************************/
 	this->extractNatives(corePath + "/natives");
 	if(gameMode == Mode::Online){
-		auto auth = new Auth(this,qMakePair(QSettings().value("email").toString(),
-											QSettings().value("password").toString()));
+		auto auth = new Auth(this);
 		if(auth->refresh()){
-			int index;
-			if((index = startcode.indexOf("${auth_uuid}")) != -1)
-				startcode.replace(index,auth->getUuid());
-			if((index = startcode.indexOf("${auth_access_token}")) != -1)
-				startcode.replace(index,auth->getAccessToken());
-			if((index = startcode.indexOf("Legacy")) != -1)
-				startcode.replace(index,"mojang");
-			if(QSettings().value("autoName").toBool()){
-				startcode.replace(startcode.indexOf(QSettings().value("playerName").toString()),auth->getPlayerName());
-			}
-		}else if(auth->check()){
 			int index;
 			if((index = startcode.indexOf("${auth_uuid}")) != -1)
 				startcode.replace(index,auth->getUuid());

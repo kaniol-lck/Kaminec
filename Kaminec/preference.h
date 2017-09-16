@@ -25,8 +25,9 @@ private slots:
 
 	void on_buttonBox_accepted();
 
-	void on_showPassword_pb_clicked();
+	void on_login_pb_clicked();
 
+	void logChanged(QString email);
 private:
 	Ui::Preference *ui;
 	bool showPassword = false;
