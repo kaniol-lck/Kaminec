@@ -21,6 +21,7 @@ public:
 
 	bool check();
 	bool refresh();
+	bool invalidate();
 
 signals:
 

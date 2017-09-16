@@ -46,7 +46,7 @@ void ValidateDialog::on_buttonBox_accepted()
 	if(auth->check()){
 		QSettings().setValue("email", ui->email_le->text());
 		QSettings().setValue("isLogged",true);
-		emit login(auth->getPlayerName());
+		emit login(ui->email_le->text());
 		this->accept();
 	}
 	else

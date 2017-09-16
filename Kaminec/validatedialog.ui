@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>266</width>
-    <height>152</height>
+    <width>280</width>
+    <height>177</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -107,6 +107,11 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>email_le</tabstop>
+  <tabstop>password_le</tabstop>
+  <tabstop>showPassword_pb</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -116,12 +121,12 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>257</x>
+     <y>167</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
-     <y>274</y>
+     <y>176</y>
     </hint>
    </hints>
   </connection>
@@ -132,12 +137,12 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>270</x>
+     <y>167</y>
     </hint>
     <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
+     <x>279</x>
+     <y>176</y>
     </hint>
    </hints>
   </connection>

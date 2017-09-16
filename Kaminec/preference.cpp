@@ -1,6 +1,7 @@
 #include "preference.h"
 #include "ui_preference.h"
 #include "validatedialog.h"
+#include "auth.h"
 
 #include <QStringList>
 #include <QProcess>
@@ -34,7 +35,8 @@ Preference::Preference(QWidget *parent) :
 	ui->javaArg_te->setText(settings.value("javaArg","").toString());
 
 	if(settings.value("isLogged",false).toBool()){
-		ui->logName_label->setText("Logged account:" + settings.value("email").toString());
+		ui->logName_label->setText("Logon account:" + settings.value("email").toString());
+		ui->login_pb->setText("&Log out");
 	}
 }
 
@@ -97,14 +99,23 @@ void Preference::on_buttonBox_accepted()
 
 void Preference::on_login_pb_clicked()
 {
-	auto validateDialog = new ValidateDialog(this);
+	if(QSettings().value("isLogged",false).toBool()){
+		auto auth = new Auth(this);
+		auth->invalidate();
 
-	connect(validateDialog, SIGNAL(login(QString)), this, SLOT(logChanged(QString)));
+		ui->logName_label->setText("You have not logged in.");
+		ui->login_pb->setText("&Log in");
+	}else {
+		auto validateDialog = new ValidateDialog(this);
 
-	validateDialog->show();
+		connect(validateDialog, SIGNAL(login(QString)), this, SLOT(logChanged(QString)));
+
+		validateDialog->show();
+	}
 }
 
 void Preference::logChanged(QString email)
 {
-	ui->logName_label->setText("Logged account:" + email);
+	ui->logName_label->setText("Logon account:" + email);
+	ui->login_pb->setText("&Log out");
 }

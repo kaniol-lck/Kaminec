@@ -18,7 +18,8 @@ Auth::Auth(QObject *parent, QPair<QString,QString> account) :
 
 }
 
-Auth::Auth(QObject *parent)
+Auth::Auth(QObject *parent) :
+	QObject(parent)
 {
 
 }
@@ -89,6 +90,32 @@ bool Auth::refresh()
 	return success;
 }
 
+bool Auth::invalidate()
+{
+	//invalidate your authentication
+	qDebug()<<"invalidating your accessToken..";
+	auto manager = new QNetworkAccessManager(this);
+	QNetworkRequest request;
+
+	request.setUrl(QUrl("https://authserver.mojang.com/invalidate"));
+	request.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
+
+	QString data_str = R"({"accessToken":"%1","clientToken":"%2"})";
+	data_str = data_str.arg(QSettings().value("accessToken").toString())
+			   .arg(QSettings().value("clientToken").toString());
+	QByteArray data = data_str.toUtf8();
+	qDebug()<<data;
+
+	QEventLoop eventloop;
+	connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
+	connect(manager,SIGNAL(finished(QNetworkReply*)),&eventloop,SLOT(quit()));
+
+	manager->post(request,data);
+	eventloop.exec();
+
+	return success;
+}
+
 void Auth::replyFinished(QNetworkReply *reply)
 {
 	auto statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
@@ -96,12 +123,13 @@ void Auth::replyFinished(QNetworkReply *reply)
 	QByteArray data = reply->readAll();
 	qDebug() << data;
 
-	QJsonParseError ok;
-	auto doc = QJsonDocument::fromJson(data,&ok);
-	if(ok.error != QJsonParseError::NoError){qDebug()<<"AuthJson failed."<<endl<<ok.error;}
-
-	if(statusCode==200){
+	if(statusCode == 200){
 		success = true;
+
+		QJsonParseError ok;
+		auto doc = QJsonDocument::fromJson(data,&ok);
+		if(ok.error != QJsonParseError::NoError){qDebug()<<"AuthJson failed."<<endl<<ok.error;}
+
 		uuid = doc.toVariant().toMap().value("selectedProfile")
 			   .toMap().value("id").toString();
 		accessToken = doc.toVariant().toMap().value("accessToken").toString();
@@ -112,7 +140,19 @@ void Auth::replyFinished(QNetworkReply *reply)
 		QSettings().setValue("accessToken", accessToken);
 		QSettings().setValue("clientToken",clientToken);
 		qDebug()<<"Welcome:"<<playerName;
+	}else if(statusCode == 204){
+		success = true;
+
+		QSettings().remove("accessToken");
+		QSettings().remove("clientToken");
+		QSettings().remove("email");
+
+		QSettings().setValue("isLogged",false);
 	}else{
+		QJsonParseError ok;
+		auto doc = QJsonDocument::fromJson(data,&ok);
+		if(ok.error != QJsonParseError::NoError){qDebug()<<"AuthJson failed."<<endl<<ok.error;}
+
 		qDebug()<<"statusCode:"<<statusCode;
 		QMessageBox::warning(0,
 							 doc.toVariant().toMap().value("error").toString(),

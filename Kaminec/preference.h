@@ -30,8 +30,6 @@ private slots:
 	void logChanged(QString email);
 private:
 	Ui::Preference *ui;
-	bool showPassword = false;
-	QString notRealPassword = "It's not real password";
 };
 
 #endif // PREFERENCE_H
