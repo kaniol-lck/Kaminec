@@ -188,9 +188,10 @@ int Game::extractNatives(QString nativesDir)
         }
         else{
             QStringList unzipargs;
-            unzipargs<< "x"
-                     << filename
-                     <<"-o"+nativesDir+"/";
+			unzipargs<< "x"
+					 << filename
+					 <<"-o"+nativesDir+"/"
+					<<"-aos";
 			QProcess::startDetached("7za",unzipargs);
         }
 
