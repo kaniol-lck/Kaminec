@@ -10,7 +10,7 @@
 
 AssetManager::AssetManager(QObject *parent, QString assetIndex) :
 	QObject(parent),
-	corePath(QSettings().value("corePath", QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)).toString())
+	corePath(QSettings().value("corePath", QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString())
 {
 	QFile assetFile(corePath + QString("/assets/indexes/%1.json").arg(assetIndex));
 

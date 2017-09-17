@@ -25,7 +25,7 @@ Preference::Preference(QWidget *parent) :
 
 	ui->corePath_le->setText(settings.value("corePath",
 											QStandardPaths::writableLocation(
-												QStandardPaths::AppConfigLocation)).toString());
+												QStandardPaths::AppDataLocation) + "/.minecraft").toString());
 	ui->width_sb->setValue(settings.value("width",854).toInt());
 	ui->height_sb->setValue(settings.value("height",480).toInt());
 

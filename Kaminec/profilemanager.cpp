@@ -12,7 +12,7 @@
 
 ProfileManager::ProfileManager(QObject *parent) : QObject(parent)
 {
-	QString corePath = QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/.minecraft").toString();
+	QString corePath = QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString();
 	if(!QDir(corePath).exists()){
 		QDir().mkpath(corePath);
 	}
@@ -42,9 +42,31 @@ ProfileManager::ProfileManager(QObject *parent) : QObject(parent)
 	loadfile.close();
 
 	QJsonParseError ok;
-	profilesMgrDoc = QJsonDocument::fromJson(bytes,&ok).object();
+	profilesMgrObj = QJsonDocument::fromJson(bytes,&ok).object();
 	if(ok.error != QJsonParseError::NoError){
 		qDebug()<<ok.errorString();
 		qDebug()<<R"("launcher_profiles.json" may be crashed.)";
 	}
+}
+
+bool ProfileManager::checkVersion(QString version)
+{
+	return profilesMgrObj.value("profiles").toVariant().toMap().contains("auto-version-" + version);
+}
+
+void ProfileManager::addVersion(QString version, QString gamePath)
+{
+	QString corePath = QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString();
+	QFile loadfile(corePath + "/launcher_profiles.json");
+	QJsonObject profile;
+	profile.insert("name","auto-version-" + version);
+	profile.insert("lastVersionId", version);
+	profile.insert("gameDir", gamePath);
+
+	profilesMgrObj.value("profiles").toVariant().toMap().insert(
+				profilesMgrObj.value("profiles").toVariant().toMap().constEnd(),"auto-version-" + version ,profile);
+
+	QTextStream out(&loadfile);
+	auto bytes = QJsonDocument(profilesMgrObj).toJson();
+	out<<bytes;
 }

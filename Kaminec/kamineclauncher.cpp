@@ -33,7 +33,7 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
     ui(new Ui::KaminecLauncher),
 	savesManager(this),
 	gameDownload(new GameDownload(this)),
-	corePath(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)).toString())
+	corePath(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString())
 {
 	//setup ui
 	ui->setupUi(this);
@@ -46,14 +46,17 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
     ui->downloadValue_label->setVisible(false);
 	ui->saveMgr_treeView->setModel(savesManager.getModel());
 
-	//load exsit versions
+	//load exsit versions and check laucher_profiles.json
 	QDir dir(corePath + "/versions");
 	if(dir.exists())
 	{
 		dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
 		QFileInfoList list = dir.entryInfoList();
-		for(auto i : list)
+		for(auto i : list){
 			ui->version_cb->addItem(i.fileName());
+			if(!profileManager.checkVersion(i.fileName()))
+				profileManager.addVersion(i.fileName(), corePath);
+		}
 	}
 
 	//load last used version

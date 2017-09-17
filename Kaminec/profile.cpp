@@ -20,7 +20,7 @@ Profile::Profile(QString name,
 
 QMap<QString,Profile> Profile::fromJson()
 {
-	QString corePath = QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/.minecraft").toString();
+	QString corePath = QSettings().value("corePath", QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString();
 	if(!QDir(corePath).exists()){
 		QDir().mkpath(corePath);
 	}
@@ -71,7 +71,7 @@ QMap<QString,Profile> Profile::fromJson()
 
 QString Profile::getSelectedProfile()
 {
-	QFile loadfile(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)).toString() +
+	QFile loadfile(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString() +
 				   "/launcher_profiles.json");
 
 	if(!loadfile.open(QIODevice::ReadOnly|QIODevice::Text)){
@@ -97,7 +97,7 @@ QString Profile::getSelectedProfile()
 
 void Profile::setSelectedProfile(QString selectedProfile)
 {
-	QFile loadfile(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)).toString() +
+	QFile loadfile(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString() +
 				   "/launcher_profiles.json");
 
 	if(!loadfile.open(QIODevice::ReadOnly|QIODevice::Text)){
@@ -134,7 +134,7 @@ void Profile::setSelectedProfile(QString selectedProfile)
 
 void Profile::saveProfile(const Profile &profile)
 {
-	QFile loadfile(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)).toString() +
+	QFile loadfile(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString() +
 				   "/launcher_profiles.json");
 
 	if(!loadfile.open(QIODevice::ReadOnly|QIODevice::Text)){
@@ -179,7 +179,7 @@ void Profile::saveProfile(const Profile &profile)
 
 void Profile::newProfile()
 {
-	QFile loadfile(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)).toString() +
+	QFile loadfile(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString() +
 				   "/launcher_profiles.json");
 
 	if(!loadfile.open(QIODevice::ReadOnly|QIODevice::Text)){

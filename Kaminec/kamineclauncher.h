@@ -6,6 +6,7 @@
 #include "profile.h"
 #include "gamedownload.h"
 #include "savesmanager.h"
+#include "profilemanager.h"
 
 namespace Ui {
 class KaminecLauncher;
@@ -62,6 +63,7 @@ private:
 	QList<QVariant> versionList;
 	QString corePath;
 	GameDownload *gameDownload;
+	ProfileManager profileManager;
 };
 
 #endif // KAMINECLAUNCHER_H

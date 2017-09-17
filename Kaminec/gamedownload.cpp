@@ -16,7 +16,7 @@
 
 GameDownload::GameDownload(QObject *parent) :
 	QObject(parent),
-	corePath(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)).toString()),
+	corePath(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString()),
 	tempFileName(QDir::tempPath() + "/" +
 				 QCoreApplication::applicationName() +"_XXXXXX.json"),
 	singleDownloader(new DownloadManager(this)),
@@ -100,7 +100,7 @@ void GameDownload::download(int index)
 									 versionList.at(index).toMap().value("url").toUrl()));
 	singleDownloader->waitForFinished();
 
-	downloadJson = new JsonManager(this,version);
+	downloadJson = new JsonManager(this, version);
 
 	downloadManagerPlus->append(downloadJson->getDownloadClientUrl());
 

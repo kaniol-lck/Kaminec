@@ -14,7 +14,7 @@
 JsonManager::JsonManager(QObject *parent, QString version):
     QObject(parent),
 	jsonDownload(new DownloadManagerPlus(this)),
-	corePath(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)).toString())
+	corePath(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString())
 {
 	QFile jsonFile(corePath+QString("/versions/%1/%1.json").arg(version));
 
@@ -43,13 +43,6 @@ JsonManager::JsonManager(QObject *parent, QString version):
 QStringList JsonManager::getLibfileList()
 {
 	QStringList fileList;
-	if(jsonMap.contains("inheritsFrom")){
-		auto inheritedJson = new JsonManager(this,jsonMap.value("inheritsFrom").toString());
-		fileList<<inheritedJson->getLibfileList();
-	}else {
-		fileList<<corePath + QString("/versions/%1/%1.jar")
-					 .arg(jsonMap.value("id").toString());
-	}
 
 	fileList<<std::accumulate(libList.begin(),libList.end(),QStringList(),
 									[this](QStringList libfileList,QVariant libElem){
@@ -70,6 +63,15 @@ QStringList JsonManager::getLibfileList()
 				 }
 				 return libfileList;
 			 });
+
+	if(jsonMap.contains("inheritsFrom")){
+		auto inheritedJson = new JsonManager(this,jsonMap.value("inheritsFrom").toString());
+		fileList<<inheritedJson->getLibfileList();
+	}else {
+		fileList<<corePath + QString("/versions/%1/%1.jar")
+					 .arg(jsonMap.value("id").toString());
+	}
+
 	return fileList;
 }
 

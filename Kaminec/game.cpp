@@ -24,7 +24,7 @@ Game::Game(QObject *parent, Profile gp, Mode gm):
 	gameMode(gm),
 	gameJson(parent,gameProfile.mLastVersionId),
 	gameProcess(new QProcess(this)),
-	corePath(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)).toString())
+	corePath(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString())
 {}
 
 int Game::start()
@@ -67,7 +67,7 @@ int Game::start()
 		}
 	}
 
-	gameProcess->start(
+	gameProcess->execute(
 				QSettings().value("javaPath").toString(),
 				startcode);
 

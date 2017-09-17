@@ -10,12 +10,15 @@ class ProfileManager : public QObject
 public:
 	explicit ProfileManager(QObject *parent = nullptr);
 
+	bool checkVersion(QString version);
+	void addVersion(QString version, QString gamePath);
+
 signals:
 
 public slots:
 
 private:
-	QJsonObject profilesMgrDoc;
+	QJsonObject profilesMgrObj;
 };
 
 #endif // PROFILEMANAGER_H

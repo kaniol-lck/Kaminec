@@ -89,7 +89,7 @@ int DownloadManager::append(QList<FileItem> &itemList)
 #include <QEventLoop>
 int DownloadManager::waitForFinished()
 {
-    QEventLoop eventLoop(this);
+	QEventLoop eventLoop;
     connect(this,SIGNAL(finished()),&eventLoop,SLOT(quit()));
     eventLoop.exec();
     if(!downloadQueue.empty()){
