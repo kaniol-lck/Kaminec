@@ -1,6 +1,6 @@
 # Kaminec Launcher
 
-version:**beta v0.4.1**
+version:**beta v0.4.2**
 
 > *This is a launcher of Minecraft called Kaminec.*
 >

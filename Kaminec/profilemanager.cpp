@@ -58,13 +58,20 @@ void ProfileManager::addVersion(QString version, QString gamePath)
 {
 	QString corePath = QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString();
 	QFile loadfile(corePath + "/launcher_profiles.json");
+
 	QJsonObject profile;
+	QJsonObject profiles = profilesMgrObj.value("profiles").toObject();
+
 	profile.insert("name","auto-version-" + version);
 	profile.insert("lastVersionId", version);
 	profile.insert("gameDir", gamePath);
 
-	profilesMgrObj.value("profiles").toVariant().toMap().insert(
-				profilesMgrObj.value("profiles").toVariant().toMap().constEnd(),"auto-version-" + version ,profile);
+	profiles.insert("auto-version-" + version, profile);
+	profilesMgrObj.insert("profiles", profiles);
+
+	if(!loadfile.open(QIODevice::ReadWrite|QIODevice::Text)){
+		qDebug()<<R"("launcher_profiles.json" opened error.)";
+	}
 
 	QTextStream out(&loadfile);
 	auto bytes = QJsonDocument(profilesMgrObj).toJson();
