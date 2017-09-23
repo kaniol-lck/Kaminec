@@ -61,9 +61,9 @@ private:
 	SavesManager savesManager;
     int totalCount;
 	QList<QVariant> versionList;
-	QString corePath;
 	GameDownload *gameDownload;
 	ProfileManager profileManager;
+	QString corePath;
 };
 
 #endif // KAMINECLAUNCHER_H
