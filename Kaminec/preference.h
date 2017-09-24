@@ -28,6 +28,7 @@ private slots:
 	void on_login_pb_clicked();
 
 	void logChanged(QString email);
+
 private:
 	Ui::Preference *ui;
 };

@@ -40,7 +40,7 @@ private slots:
 
     void gameFinished();
 
-    void downloadFinished();
+	void downloadFinished();
 
     void on_addSaves_pb_clicked();
 
@@ -55,6 +55,9 @@ private slots:
 	void on_moduleSwitch_currentChanged(int index);
 
 	void on_download_pb_clicked();
+
+private:
+	void loadVersions();
 
 private:
     Ui::KaminecLauncher *ui;

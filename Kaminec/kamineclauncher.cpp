@@ -46,24 +46,7 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
     ui->downloadValue_label->setVisible(false);
 	ui->saveMgr_treeView->setModel(savesManager.getModel());
 
-	//load exsit versions and check laucher_profiles.json
-	QDir dir(corePath + "/versions");
-	if(dir.exists())
-	{
-		dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
-		QFileInfoList list = dir.entryInfoList();
-		for(auto i : list){
-			ui->version_cb->addItem(i.fileName());
-			if(!profileManager.checkVersion(i.fileName()))
-				profileManager.addVersion(i.fileName(), corePath);
-		}
-	}
-
-	//load last used version
-	auto index = ui->version_cb->findText(QSettings().value("lastUsedVersion").toString());
-	qDebug()<<QSettings().value("lastUsedVersion").toString();
-	if(index != -1)
-		ui->version_cb->setCurrentIndex(index);
+	this->loadVersions();
 
 	//load gameDir
 	ui->gameDir_le->setText(QSettings().value("gameDir").toString());
@@ -107,7 +90,11 @@ void KaminecLauncher::downloadFinished()
     ui->downloadProgress_label->setVisible(false);
     ui->downloadProgress_progressBar->setVisible(false);
     ui->downloadProgress_progressBar_2->setVisible(false);
-    ui->downloadValue_label->setVisible(false);
+	ui->downloadValue_label->setVisible(false);
+
+	//update version select
+	ui->version_cb->clear();
+	this->loadVersions();
 }
 
 void KaminecLauncher::gameFinished()
@@ -163,6 +150,7 @@ void KaminecLauncher::on_action_preference_triggered()
 	//create preference windows
 	auto preference =
 			new Preference(this);
+//	connect(this)
 	preference->show();
 }
 
@@ -196,11 +184,7 @@ void KaminecLauncher::on_download_pb_clicked()
 	ui->download_pb->setText("Downloading...");
 	ui->download_pb->setDisabled(true);
 
-	//start download game
-	gameDownload->download(ui->versionsList_treeView->currentIndex().row());
-
 	//some settings during download
-	qDebug()<<"set";
 	ui->download_treeView->setModel(gameDownload->getDownloadModel());
 	ui->downloadValue_label->setText(QString("0/%1").arg(gameDownload->getTotalCount()));
 	ui->downloadProgress_progressBar->setMaximum(gameDownload->getTotalCount());
@@ -210,4 +194,29 @@ void KaminecLauncher::on_download_pb_clicked()
 	connect(gameDownload, SIGNAL(downloadedCountChanged(int)),ui->downloadProgress_progressBar,SLOT(setValue(int)));
 	connect(gameDownload, SIGNAL(downloadedCountChanged(int)),ui->downloadProgress_progressBar_2,SLOT(setValue(int)));
 	connect(gameDownload, SIGNAL(finished()),this,SLOT(downloadFinished()));
+	//start download game
+	gameDownload->download(ui->versionsList_treeView->currentIndex().row());
+
+}
+
+void KaminecLauncher::loadVersions()
+{
+	//load exsit versions and check laucher_profiles.json
+	QDir dir(corePath + "/versions");
+	if(dir.exists())
+	{
+		dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
+		QFileInfoList list = dir.entryInfoList();
+		for(auto i : list){
+			ui->version_cb->addItem(i.fileName());
+			if(!profileManager.checkVersion(i.fileName()))
+				profileManager.addVersion(i.fileName(), corePath);
+		}
+	}
+
+	//load last used version
+	auto index = ui->version_cb->findText(QSettings().value("lastUsedVersion").toString());
+	qDebug()<<QSettings().value("lastUsedVersion").toString();
+	if(index != -1)
+		ui->version_cb->setCurrentIndex(index);
 }
