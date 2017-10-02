@@ -19,10 +19,19 @@
   <property name="windowTitle">
    <string>KaminecLauncher</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <widget class="QWidget" name="centralWidget">
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="0">
+    <item row="0" column="0">
      <widget class="QTabWidget" name="moduleSwitch">
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
@@ -36,7 +45,7 @@
           <x>9</x>
           <y>9</y>
           <width>298</width>
-          <height>56</height>
+          <height>57</height>
          </rect>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -127,7 +136,7 @@
           <x>9</x>
           <y>184</y>
           <width>185</width>
-          <height>22</height>
+          <height>25</height>
          </rect>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_3">

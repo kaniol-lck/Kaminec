@@ -32,6 +32,8 @@ public:
 
 	void startGame();
 
+	void resizeEvent(QResizeEvent *);
+
 private slots:
 
     void on_start_pb_clicked();
@@ -58,6 +60,8 @@ private slots:
 
 private:
 	void loadVersions();
+
+	void setBackGround();
 
 private:
     Ui::KaminecLauncher *ui;

@@ -61,3 +61,6 @@ HEADERS  += kamineclauncher.h \
 FORMS    += kamineclauncher.ui \
     preference.ui \
     validatedialog.ui
+
+RESOURCES += \
+    background.qrc

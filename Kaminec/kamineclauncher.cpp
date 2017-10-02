@@ -45,6 +45,7 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
     ui->downloadProgress_progressBar_2->setVisible(false);
     ui->downloadValue_label->setVisible(false);
 	ui->saveMgr_treeView->setModel(savesManager.getModel());
+	ui->moduleSwitch->setStyleSheet("QTabWidget:pane {border-top:0px solid #e8f3f9;background:  transparent; }");
 
 	this->loadVersions();
 
@@ -219,4 +220,17 @@ void KaminecLauncher::loadVersions()
 	qDebug()<<QSettings().value("lastUsedVersion").toString();
 	if(index != -1)
 		ui->version_cb->setCurrentIndex(index);
+}
+
+void KaminecLauncher::setBackGround()
+{
+	QPixmap pixmap = QPixmap(":/main/res/background.png").scaled(this->size());
+	QPalette palette(this->palette());
+	palette.setBrush(QPalette::Background, QBrush(pixmap));
+	this->setPalette(palette);
+}
+
+void KaminecLauncher::resizeEvent(QResizeEvent *)
+{
+	setBackGround();
 }
