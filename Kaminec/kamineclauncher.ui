@@ -110,6 +110,9 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
             </widget>
            </item>
            <item>
@@ -119,6 +122,9 @@
              </item>
              <item>
               <widget class="QPushButton" name="gameDir_showPb">
+               <property name="styleSheet">
+                <string notr="true"/>
+               </property>
                <property name="text">
                 <string>...</string>
                </property>
@@ -198,7 +204,11 @@
          </layout>
         </item>
         <item row="0" column="0">
-         <widget class="QTreeView" name="versionsList_treeView"/>
+         <widget class="QTreeView" name="versionsList_treeView">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgba(255, 255, 255, 100);</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -228,7 +238,11 @@
          </widget>
         </item>
         <item row="0" column="0" colspan="2">
-         <widget class="QTreeView" name="download_treeView"/>
+         <widget class="QTreeView" name="download_treeView">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgba(255, 255, 255, 100);</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -263,7 +277,11 @@
          </layout>
         </item>
         <item row="0" column="0">
-         <widget class="QTreeView" name="saveMgr_treeView"/>
+         <widget class="QTreeView" name="saveMgr_treeView">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgba(255, 255, 255, 100);</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

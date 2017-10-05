@@ -45,8 +45,10 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
     ui->downloadProgress_progressBar_2->setVisible(false);
     ui->downloadValue_label->setVisible(false);
 	ui->saveMgr_treeView->setModel(savesManager.getModel());
-	ui->moduleSwitch->setStyleSheet("QTabWidget:pane {border-top:0px solid #e8f3f9;background:  transparent; }");
-
+	ui->moduleSwitch->setStyleSheet("QTabWidget::pane {border-top:0px solid #e8f3f9;background:  transparent; }\
+									QTabBar::tab {min-width:100px;color: white;border: 0px solid;border-top-left-radius: 0px;border-top-right-radius: 0px;padding:3px;}\
+									QTabBar::tab:!selected {color: gray; margin-top: 5px; background-color: rgb(255,255,255,200)} \
+									QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(255,255,255,255)}");
 	this->loadVersions();
 
 	//load gameDir
