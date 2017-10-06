@@ -151,15 +151,14 @@ void KaminecLauncher::startGame()
 void KaminecLauncher::on_action_preference_triggered()
 {
 	//create preference windows
-	auto preference =
-			new Preference(this);
-//	connect(this)
+	auto preference = new Preference(this);
 	preference->show();
 }
 
 
 void KaminecLauncher::on_gameDir_showPb_clicked()
 {
+	//ask for game directory
 	auto gameDir = QFileDialog::getExistingDirectory(this,"Please choose the game directory.");
 	if(gameDir!=""){
 		if(gameDir.endsWith("/.minecraft"))
@@ -172,6 +171,8 @@ void KaminecLauncher::on_gameDir_showPb_clicked()
 
 void KaminecLauncher::on_moduleSwitch_currentChanged(int index)
 {
+	//if you click the page of game download,
+	//download game version list
 	switch (index) {
 	case 1:
 		gameDownload->init();
@@ -226,6 +227,7 @@ void KaminecLauncher::loadVersions()
 
 void KaminecLauncher::setBackGround()
 {
+	//set backGround
 	QPixmap pixmap = QPixmap(":/main/res/background.png").scaled(this->size());
 	QPalette palette(this->palette());
 	palette.setBrush(QPalette::Background, QBrush(pixmap));
@@ -234,5 +236,6 @@ void KaminecLauncher::setBackGround()
 
 void KaminecLauncher::resizeEvent(QResizeEvent *)
 {
+	//reset background when resize this window
 	setBackGround();
 }

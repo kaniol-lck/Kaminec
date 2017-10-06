@@ -15,11 +15,12 @@ Preference::Preference(QWidget *parent) :
 	QDialog(parent),
 	ui(new Ui::Preference)
 {
+	setWindowFlags(Qt::Dialog);
 	ui->setupUi(this);
 
 
 	QSettings settings;
-
+	//load exsit preference
 	ui->playerName_le->setText(settings.value("playerName","Steve").toString());
 	ui->autoName_cb->setChecked(settings.value("autoName",true).toBool());
 
@@ -34,8 +35,9 @@ Preference::Preference(QWidget *parent) :
 	ui->maxMem_sb->setValue(settings.value("maxMem",1024).toInt());
 	ui->javaArg_te->setText(settings.value("javaArg","").toString());
 
+	//check if you logged in
 	if(settings.value("isLogged",false).toBool()){
-		ui->logName_label->setText("Logon account:" + settings.value("email").toString());
+		ui->logName_label->setText("Logon account:" + settings.value("email","").toString());
 		ui->login_pb->setText("&Log out");
 	}
 }
