@@ -47,7 +47,7 @@ int Game::start()
 	QTextStream out2(&ttf);
 	out2<<time<<endl;
 /***********************I*am*a*cute*divider*******************************/
-	this->extractNatives(corePath + "/natives");
+	this->extractNatives();
 	if(gameMode == Mode::Online){
 		auto auth = new Auth(this);
 		if(auth->refresh()){
@@ -72,6 +72,7 @@ int Game::start()
 				startcode);
 
     connect(gameProcess,SIGNAL(finished(int)),this,SIGNAL(finished(int)));
+	connect(gameProcess,SIGNAL(finished(int)),this,SLOT(deleteNatives()));
 
 	QSettings().setValue("lastUsedVersion", gameProfile.mLastVersionId);
 	QSettings().setValue("gameDir", gameProfile.mGameDir);
@@ -168,8 +169,10 @@ QStringList Game::genGameArgs()
 }
 
 
-int Game::extractNatives(QString nativesDir)
+int Game::extractNatives()
 {
+	QString nativesDir = corePath + "/natives";
+	QDir().mkpath(nativesDir);
     auto extractfileList =gameJson.getExtractfileList();
 
     for(auto& extractfile:extractfileList){
@@ -183,7 +186,7 @@ int Game::extractNatives(QString nativesDir)
             qDebug()<<"Extract file not found.";
             return -1;
         }
-        else{
+		else{
             QStringList unzipargs;
 			unzipargs<< "x"
 					 << filename
@@ -193,5 +196,32 @@ int Game::extractNatives(QString nativesDir)
         }
 
     }
-    return 0;
+	return 0;
+}
+
+bool Game::deleteDirectory(const QString &path)
+{
+	if (path.isEmpty())
+		return false;
+
+	QDir dir(path);
+	if(!dir.exists())
+		return true;
+
+	dir.setFilter(QDir::AllEntries | QDir::NoDotAndDotDot);
+	QFileInfoList fileList = dir.entryInfoList();
+	foreach (QFileInfo fi, fileList)
+	{
+		if (fi.isFile())
+			fi.dir().remove(fi.fileName());
+		else
+			deleteDirectory(fi.absoluteFilePath());
+	}
+	return dir.rmpath(dir.absolutePath());
+}
+
+void Game::deleteNatives()
+{
+	QString nativesDir = corePath + "/natives";
+	qDebug()<<deleteDirectory(nativesDir);
 }

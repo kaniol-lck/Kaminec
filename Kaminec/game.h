@@ -23,8 +23,10 @@ public:
     QStringList genLibpath();
 	QStringList genGameArgs();
 
-    int extractNatives(QString nativesDir);
+	int extractNatives();
 private:
+	static bool deleteDirectory(const QString &path);
+
     Profile gameProfile;
 	Mode gameMode;
     JsonManager gameJson;
@@ -33,6 +35,8 @@ private:
 signals:
     void finished(int);
 
+public slots:
+	void deleteNatives();
 };
 
 #endif // GAME_H
