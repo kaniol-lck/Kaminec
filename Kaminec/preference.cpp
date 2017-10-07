@@ -30,7 +30,7 @@ Preference::Preference(QWidget *parent) :
 	ui->width_sb->setValue(settings.value("width",854).toInt());
 	ui->height_sb->setValue(settings.value("height",480).toInt());
 
-	ui->javaPath_le->setText(settings.value("javaPath",getAutoJavaPath()).toString());
+	ui->javaPath_le->setText(settings.value("javaPath","").toString());
 	ui->minMem_sb->setValue(settings.value("minMem",1024).toInt());
 	ui->maxMem_sb->setValue(settings.value("maxMem",1024).toInt());
 	ui->javaArg_te->setText(settings.value("javaArg","").toString());
@@ -40,6 +40,10 @@ Preference::Preference(QWidget *parent) :
 		ui->logName_label->setText("Logon account:" + settings.value("email","").toString());
 		ui->login_pb->setText("&Log out");
 	}
+
+	//check if you point out javaPath
+	if(ui->javaPath_le->text() == "")
+		ui->javaPath_le->setText(getAutoJavaPath());
 }
 
 Preference::~Preference()
