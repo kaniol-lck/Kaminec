@@ -79,7 +79,8 @@ QStringList JsonManager::getLibfileList()
 
 QStringList JsonManager::getExtractfileList()
 {
-    return std::accumulate(libList.begin(),libList.end(),QStringList(),
+	QStringList fileList;
+	fileList<<std::accumulate(libList.begin(),libList.end(),QStringList(),
                            [](QStringList libfileList,QVariant libElem){
         return libElem.toMap().contains("extract")?
                     (libfileList<<libElem
@@ -89,7 +90,13 @@ QStringList JsonManager::getExtractfileList()
                             .toMap().value("path")
                             .toString()):
                     libfileList;
-    });
+	});
+	if(jsonMap.contains("inheritsFrom")){
+		auto inheritedJson = new JsonManager(this,jsonMap.value("inheritsFrom").toString());
+		fileList<<inheritedJson->getExtractfileList();
+	}
+
+	return fileList;
 }
 
 
