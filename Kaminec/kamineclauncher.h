@@ -58,6 +58,8 @@ private slots:
 
 	void on_download_pb_clicked();
 
+	void updateVersionSelect();
+
 private:
 	void loadVersions();
 

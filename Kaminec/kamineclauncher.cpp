@@ -96,8 +96,7 @@ void KaminecLauncher::downloadFinished()
 	ui->downloadValue_label->setVisible(false);
 
 	//update version select
-	ui->version_cb->clear();
-	this->loadVersions();
+	this->updateVersionSelect();
 }
 
 void KaminecLauncher::gameFinished()
@@ -153,6 +152,8 @@ void KaminecLauncher::on_action_preference_triggered()
 	//create preference windows
 	auto preference = new Preference(this);
 	preference->show();
+
+	connect(preference,SIGNAL(accepted()),this,SLOT(updateVersionSelect()));
 }
 
 
@@ -232,6 +233,13 @@ void KaminecLauncher::setBackGround()
 	QPalette palette(this->palette());
 	palette.setBrush(QPalette::Background, QBrush(pixmap));
 	this->setPalette(palette);
+}
+
+void KaminecLauncher::updateVersionSelect()
+{
+	ui->version_cb->clear();
+	corePath = QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString();
+	this->loadVersions();
 }
 
 void KaminecLauncher::resizeEvent(QResizeEvent *)
