@@ -9,6 +9,7 @@
 #include "gamemode.h"
 #include "game.h"
 #include "fileitem.h"
+#include "modsmanager.h"
 
 #include <algorithm>
 #include <QTime>
@@ -31,7 +32,8 @@
 KaminecLauncher::KaminecLauncher(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::KaminecLauncher),
-	savesManager(this),
+	savesManager(new SavesManager(this)),
+	modsManager(new ModsManager(this)),
 	gameDownload(new GameDownload(this)),
 	corePath(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString())
 {
@@ -39,12 +41,12 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 	ui->setupUi(this);
 
 	//init ui
-	ui->versionsList_treeView->setModel(gameDownload->getVersionsModel());
+	ui->modsMgr_treeView->setModel(modsManager->getModel());
     ui->downloadProgress_label->setVisible(false);
     ui->downloadProgress_progressBar->setVisible(false);
     ui->downloadProgress_progressBar_2->setVisible(false);
     ui->downloadValue_label->setVisible(false);
-	ui->saveMgr_treeView->setModel(savesManager.getModel());
+	ui->saveMgr_treeView->setModel(savesManager->getModel());
 	ui->moduleSwitch->setStyleSheet("QTabWidget::pane {border-top:0px solid #e8f3f9;background:  transparent; }\
 									QTabBar::tab {min-width:100px;color: white;border: 0px solid;border-top-left-radius: 0px;border-top-right-radius: 0px;padding:3px;}\
 									QTabBar::tab:!selected {color: gray; margin-top: 5px; background-color: rgb(255,255,255,200)} \
@@ -53,6 +55,9 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 
 	//load gameDir
 	ui->gameDir_le->setText(QSettings().value("gameDir").toString());
+
+	modsManager->setGameDir(ui->gameDir_le->text());
+	ui->versionsList_treeView->setModel(gameDownload->getVersionsModel());
 }
 
 KaminecLauncher::~KaminecLauncher()
@@ -110,20 +115,20 @@ void KaminecLauncher::gameFinished()
 void KaminecLauncher::on_addSaves_pb_clicked()
 {
 	//add saves
-	savesManager.addSaves();
+	savesManager->addSaves();
 }
 
 void KaminecLauncher::on_deleteSaves_pb_clicked()
 {
 	//delete saves
 	auto index = ui->saveMgr_treeView->currentIndex();
-	savesManager.deleteSaves(index.row());
+	savesManager->deleteSaves(index.row());
 }
 
 void KaminecLauncher::on_backupSaves_pb_clicked()
 {
 	//backup saves
-	savesManager.backup();
+	savesManager->backup();
 }
 
 void KaminecLauncher::startGame()

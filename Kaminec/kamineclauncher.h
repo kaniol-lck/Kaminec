@@ -7,6 +7,7 @@
 #include "gamedownload.h"
 #include "savesmanager.h"
 #include "profilemanager.h"
+#include "modsmanager.h"
 
 namespace Ui {
 class KaminecLauncher;
@@ -67,7 +68,8 @@ private:
 
 private:
     Ui::KaminecLauncher *ui;
-	SavesManager savesManager;
+	SavesManager *savesManager;
+	ModsManager *modsManager;
     int totalCount;
 	QList<QVariant> versionList;
 	GameDownload *gameDownload;
