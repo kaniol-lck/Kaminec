@@ -6,10 +6,6 @@
 
 ModsManager::ModsManager(QObject *parent) : QObject(parent)
 {
-	model.setColumnCount(3);
-	model.setHeaderData(0,Qt::Horizontal,"used");
-	model.setHeaderData(1,Qt::Horizontal,"mod name");
-	model.setHeaderData(2,Qt::Horizontal,"mod path");
 
 }
 
@@ -34,6 +30,11 @@ void ModsManager::refresh()
 	QStringList fileNames = modsDir.entryList(QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden);
 
 	model.clear();
+	model.setColumnCount(3);
+	model.setHeaderData(0,Qt::Horizontal,"used");
+	model.setHeaderData(1,Qt::Horizontal,"mod name");
+	model.setHeaderData(2,Qt::Horizontal,"mod path");
+
 	for(const auto& fileName : fileNames){
 		if(!fileName.endsWith(".jar")) continue;
 
