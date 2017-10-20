@@ -143,6 +143,9 @@ void KaminecLauncher::startGame()
 		game = new Game(this,this->getProfile(),Mode::Offline);
 	}
 
+	//prepare mods
+	modsManager->start();
+
 	//ui during gaming
 	ui->start_pb->setText("Gaming...");
 	ui->start_pb->setDisabled(true);

@@ -18,13 +18,18 @@ public:
 
 	void refresh();
 
+	void start();
+
 signals:
 
 public slots:
 
 private:
 	QStandardItemModel model;
-	QDir modsDir;
+	QDir usedModsDir;
+	QDir unusedModsDir;
+
+	static bool move(const QString &srcFilePath, const QString &tgtFilePath);
 };
 
 #endif // MODSMANAGER_H
