@@ -16,6 +16,13 @@ DownloadManagerPlus::DownloadManagerPlus(QObject *parent) : QObject(parent)
     model.setHeaderData(3,Qt::Horizontal,"sha1");
     model.setHeaderData(4,Qt::Horizontal,"path");
     model.setHeaderData(5,Qt::Horizontal,"url");
+
+
+	//for each downloader
+	for(int index = 0; index != downloadNumber; index++){
+		connect(downloaderPool.at(index),SIGNAL(finished(int)),SLOT(startNextDownload(int)));
+		//once downloader finished and start next download
+	}
 }
 
 void DownloadManagerPlus::append(const FileItem &item)
@@ -54,11 +61,8 @@ void DownloadManagerPlus::startDownload()
 		//if downloader is not downloading and download queue is not empty
         if(!downloaderPool.at(index)->isDownload()&&!downloadQueue.empty()){
 			//add a task to the free downloader
-            downloaderPool.at(index)->start(itemList.takeFirst(),downloadQueue.dequeue());
-			//once downloader finished and start next download
-            connect(downloaderPool.at(index),SIGNAL(finished(int)),SLOT(startNextDownload(int)));
-//            connect(downloaderPool.at(index),SIGNAL(finished(int)),SLOT(singleFinished(int)));
-        }
+			downloaderPool.at(index)->start(itemList.takeFirst(),downloadQueue.dequeue());
+		}
     }
 }
 

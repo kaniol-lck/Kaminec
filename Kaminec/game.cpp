@@ -67,12 +67,12 @@ int Game::start()
 		}
 	}
 
-	gameProcess->start(
+	gameProcess->execute(
 				QSettings().value("javaPath").toString(),
 				startcode);
 
     connect(gameProcess,SIGNAL(finished(int)),this,SIGNAL(finished(int)));
-	connect(gameProcess,SIGNAL(finished(int)),this,SLOT(deleteNatives()));
+//	connect(gameProcess,SIGNAL(finished(int)),this,SLOT(deleteNatives()));
 
 	QSettings().setValue("lastUsedVersion", gameProfile.mLastVersionId);
 	QSettings().setValue("gameDir", gameProfile.mGameDir);
@@ -114,7 +114,7 @@ QStringList Game::genJVMargs()
 		QString("-Xmx%1m").arg(QSettings().value("maxMem").toString()),
 		QString("-Djava.library.path=%1").arg(corePath + "/natives"),
         "-Dfml.ignoreInvalidMinecraftCertificates=true",
-        "-Dfml.ignorePatchDiscrepancies=true"
+		"-Dfml.ignorePatchDiscrepancies=true"
     };
 }
 
@@ -134,7 +134,8 @@ QStringList Game::genLibpath()
 
 QStringList Game::genGameArgs()
 {
-    auto MCArgs = gameJson.getMCArgs();
+	auto MCArgs = gameJson.getMCArgs();
+	qDebug()<<MCArgs;
 
 	int index;
 

@@ -46,7 +46,16 @@ QStringList JsonManager::getLibfileList()
 
 	fileList<<std::accumulate(libList.begin(),libList.end(),QStringList(),
 									[this](QStringList libfileList,QVariant libElem){
-				  if(libElem.toMap().contains("downloads") &&
+
+				  if(libElem.toMap().contains("extract")) return libfileList;
+				  /*if(libElem.toMap().value("downloads").toMap().contains("classifiers") &&
+					 libElem.toMap().value("downloads").toMap().value("classifiers").toMap().contains("natives-windows")){
+					   libfileList<<libElem.toMap().value("downloads")
+										   .toMap().value("classifiers")
+										   .toMap().value("natives-windows")
+										   .toMap().value("path")
+										   .toString().prepend(corePath + "/libraries/");
+				  }else */if(libElem.toMap().contains("downloads") &&
 					 libElem.toMap().value("downloads").toMap().contains("artifact")){
 					  libfileList<<libElem.toMap().value("downloads")
 								   .toMap().value("artifact")
@@ -82,14 +91,22 @@ QStringList JsonManager::getExtractfileList()
 	QStringList fileList;
 	fileList<<std::accumulate(libList.begin(),libList.end(),QStringList(),
                            [](QStringList libfileList,QVariant libElem){
-        return libElem.toMap().contains("extract")?
-                    (libfileList<<libElem
-                            .toMap().value("downloads")
-                            .toMap().value("classifiers")
-                            .toMap().value("natives-windows")
-                            .toMap().value("path")
-                            .toString()):
-                    libfileList;
+		return libElem.toMap().contains("natives")?
+				  (libElem.toMap().value("downloads")
+						  .toMap().value("classifiers")
+						  .toMap().contains("natives-windows")?
+					   (libfileList<<libElem
+							.toMap().value("downloads")
+							.toMap().value("classifiers")
+							.toMap().value("natives-windows")
+							.toMap().value("path")
+							.toString()):
+					   (libfileList<<libElem
+							.toMap().value("downloads")
+							.toMap().value("artifact")
+							.toMap().value("path")
+							.toString())):
+					libfileList;
 	});
 	if(jsonMap.contains("inheritsFrom")){
 		auto inheritedJson = new JsonManager(this,jsonMap.value("inheritsFrom").toString());
@@ -165,7 +182,11 @@ FileItem JsonManager::getDownloadAssetFileUrl()
 
 QStringList JsonManager::getMCArgs()
 {
-    return jsonMap.value("minecraftArguments").toString().split(" ");
+	return jsonMap.contains("minecraftArguments")?
+				jsonMap.value("minecraftArguments").toString().split(" "):
+				jsonMap.contains("arguments")?
+					jsonMap.value("arguments").toMap().value("game").toStringList():
+					QStringList();
 }
 
 
