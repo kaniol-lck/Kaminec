@@ -67,7 +67,7 @@ int Game::start()
 		}
 	}
 
-	gameProcess->execute(
+	gameProcess->start(
 				QSettings().value("javaPath").toString(),
 				startcode);
 
