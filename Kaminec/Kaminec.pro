@@ -58,7 +58,8 @@ HEADERS  += kamineclauncher.h \
     assetmanager.h \
     gamedownload.h \
     validatedialog.h \
-    modsmanager.h
+    modsmanager.h \
+    utility.h
 
 FORMS    += kamineclauncher.ui \
     preference.ui \

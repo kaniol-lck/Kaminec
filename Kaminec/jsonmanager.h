@@ -29,7 +29,7 @@ public:
 
 private:
     QJsonDocument jsonDoc;
-    QVariantMap jsonMap;
+	QVariant jsonContent;
     QList<QVariant> libList;
     DownloadManagerPlus *jsonDownload;
 	QString corePath;
