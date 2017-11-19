@@ -25,7 +25,10 @@ Game::Game(QObject *parent, Profile gp, Mode gm):
 	gameJson(parent,gameProfile.mLastVersionId),
 	gameProcess(new QProcess(this)),
 	corePath(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString())
-{}
+{
+	connect(gameProcess,SIGNAL(finished(int)),this,SIGNAL(finished(int)));
+	connect(gameProcess,SIGNAL(finished(int)),this,SLOT(deleteNatives()));
+}
 
 int Game::start()
 {
@@ -71,8 +74,6 @@ int Game::start()
 				QSettings().value("javaPath").toString(),
 				startcode);
 
-    connect(gameProcess,SIGNAL(finished(int)),this,SIGNAL(finished(int)));
-//	connect(gameProcess,SIGNAL(finished(int)),this,SLOT(deleteNatives()));
 
 	QSettings().setValue("lastUsedVersion", gameProfile.mLastVersionId);
 	QSettings().setValue("gameDir", gameProfile.mGameDir);
