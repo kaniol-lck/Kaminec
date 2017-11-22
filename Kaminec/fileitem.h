@@ -20,6 +20,8 @@ struct FileItem
 
     FileItem(QPair<QUrl,QString> urlBind);
 
+	static FileItem fromJson(const QString &name, const QVariant &variant);
+
     QList<QStandardItem *> getInfoList() const;
     QPair<QUrl,QString> getDownloadInfo() const;
 

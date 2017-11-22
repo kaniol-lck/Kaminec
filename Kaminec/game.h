@@ -19,9 +19,10 @@ public:
 
     QStringList genStartcode();
 
-    QStringList genJVMargs();
-    QStringList genLibpath();
+	QStringList genJVMArgs();
 	QStringList genGameArgs();
+
+	QString genLibpath();
 
 	int extractNatives();
 private:

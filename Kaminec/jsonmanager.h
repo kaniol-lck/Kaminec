@@ -24,8 +24,9 @@ public:
 	FileItem					  getDownloadAssetFileUrl();
     QStringList                   getMCArgs();
     QStringList                   getMCMainClass();
+	QStringList                   getJVMArgs();
     QString                       getAssetIndex();
-	FileItem getDownloadClientUrl();
+	FileItem                      getDownloadClientUrl();
 
 private:
     QJsonDocument jsonDoc;

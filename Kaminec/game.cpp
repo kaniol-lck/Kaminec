@@ -49,7 +49,7 @@ int Game::start()
 
 	QTextStream out2(&ttf);
 	out2<<time<<endl;
-/***********************I*am*a*cute*divider*******************************/
+	/*start codes below*/
 	this->extractNatives();
 	if(gameMode == Mode::Online){
 		auto auth = new Auth(this);
@@ -78,14 +78,14 @@ int Game::start()
 	QSettings().setValue("lastUsedVersion", gameProfile.mLastVersionId);
 	QSettings().setValue("gameDir", gameProfile.mGameDir);
 
-/***********************I*am*a*cute*divider*******************************/
+	/*finish logs below*/
 	QFile logs("logs.txt");
 	logs.open(QIODevice::WriteOnly | QIODevice::Text);
 
 	QTextStream out(&logs);
 	out<<"java path:"<<QSettings().value("javaPath").toString()<<endl;
 	out<<"game arguments:";
-	for(auto& i:startcode)out<<i<<" ";
+	for(auto& i:startcode)out<<i<<"[sep]";
 	out<<endl;
 	out<<"game directory:"<<gameProfile.mGameDir<<endl;
 	out<<"Time used:"<<time<<"ms";
@@ -96,78 +96,66 @@ int Game::start()
 QStringList Game::genStartcode()
 {
     QStringList startcode;
-    startcode<<this->genJVMargs()
-             <<this->genLibpath()
+	startcode<<this->genJVMArgs()
 			 <<this->genGameArgs()
             ;
     return startcode;
 }
 
-QStringList Game::genJVMargs()
+QStringList Game::genJVMArgs()
 {
-    return QStringList
-    {
-        "-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump",
-        "-XX:+UseG1GC",
-        "-XX:-UseAdaptiveSizePolicy",
-        "-XX:-OmitStackTraceInFastThrow",
-		QString("-Xmn%1m").arg(QSettings().value("minMem").toString()),
-		QString("-Xmx%1m").arg(QSettings().value("maxMem").toString()),
-		QString("-Djava.library.path=%1").arg(corePath + "/natives"),
-        "-Dfml.ignoreInvalidMinecraftCertificates=true",
-		"-Dfml.ignorePatchDiscrepancies=true"
-    };
+	auto JVMArgs = QStringList{
+			  "-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump",
+			  "-XX:+UseG1GC",
+			  "-XX:-UseAdaptiveSizePolicy",
+			  "-XX:-OmitStackTraceInFastThrow",
+			  QString("-Djava.library.path=%1").arg(corePath + "/natives"),
+			  "-Dfml.ignoreInvalidMinecraftCertificates=true",
+			  "-Dfml.ignorePatchDiscrepancies=true",
+			  "-cp"
+		};
+
+	JVMArgs.append(this->genLibpath());
+
+	JVMArgs<<QString("-Xmn%1m").arg(QSettings().value("minMem").toString());
+	JVMArgs<<QString("-Xmx%1m").arg(QSettings().value("maxMem").toString());
+
+	return JVMArgs;
 }
 
 
-QStringList Game::genLibpath()
+QString Game::genLibpath()
 {
-    QStringList libargs;
+	auto libfileList =gameJson.getLibfileList();
 
-	QStringList libfileList =gameJson.getLibfileList();
+	auto libArgs = libfileList.join(";");
 
-	libargs<<"-cp";
-
-	libargs<<libfileList.join(";");
-
-	return libargs;
+	return libArgs;
 }
 
 QStringList Game::genGameArgs()
 {
 	auto MCArgs = gameJson.getMCArgs();
-	qDebug()<<MCArgs;
 
-	int index;
+	QMap<QString, QString> replace_list = {
+		{"${auth_player_name}", QSettings().value("playerName").toString()},
+		{"${version_name}", gameProfile.mLastVersionId},
+		{"${game_directory}", gameProfile.mGameDir},
+		{"${assets_root}", QString("%1/assets").arg(corePath)},
+		{"${assets_index_name}", gameJson.getAssetIndex()},
+		{"${user_type}", "Legacy"},
+		{"${version_type}", "Kaminec Launcher"},
+		{"${user_properties}", "{}"},
+	};
 
-	index = MCArgs.indexOf("${auth_player_name}");
-	if(index != -1)
-		MCArgs.replace(index,QSettings().value("playerName").toString());
-	index = MCArgs.indexOf("${version_name}");
-	if(index != -1)
-		MCArgs.replace(index,gameProfile.mLastVersionId);
-	index = MCArgs.indexOf("${game_directory}");
-	if(index != -1)
-		MCArgs.replace(index,gameProfile.mGameDir);
-	index = MCArgs.indexOf("${assets_root}");
-	if(index != -1)
-		MCArgs.replace(index,QString("%1/assets").arg(corePath));
-	index = MCArgs.indexOf("${assets_index_name}");
-	if(index != -1)
-		MCArgs.replace(index,gameJson.getAssetIndex());
-	index = MCArgs.indexOf("${user_type}");
-	if(index != -1)
-		MCArgs.replace(index,"Legacy");
-	index = MCArgs.indexOf("${version_type}");
-	if(index != -1)
-		MCArgs.replace(index,"Kaminec Launcher");
-	index = MCArgs.indexOf("${user_properties}");
-	if(index != -1)
-		MCArgs.replace(index,"{}");
+	for(auto& str : MCArgs){
+		if(replace_list.contains(str))
+			str = replace_list.value(str);
+	}
 
 	MCArgs<<QString("--height")<<QSettings().value("height").toString()
 		  <<QString("--width")<<QSettings().value("width").toString();
-    return QStringList(gameJson.getMCMainClass()+MCArgs);
+	return QStringList(gameJson.getMCMainClass() + MCArgs);
 }
 
 
@@ -181,9 +169,9 @@ int Game::extractNatives()
 
 		QString filename = corePath
                 +"/libraries/"
-                + extractfile;
-        qDebug()<<"filename:"<<filename;
+				+ extractfile;
         QFile ef(filename);
+		qDebug()<<filename;
         if(!ef.exists()){
             qDebug()<<"Extract file not found.";
             return -1;
@@ -225,5 +213,4 @@ bool Game::deleteDirectory(const QString &path)
 void Game::deleteNatives()
 {
 	QString nativesDir = corePath + "/natives";
-	qDebug()<<deleteDirectory(nativesDir);
 }

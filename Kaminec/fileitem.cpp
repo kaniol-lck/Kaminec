@@ -5,6 +5,8 @@
 #include <QPair>
 #include <QList>
 #include <QFileInfo>
+#include <QVariant>
+#include <QMap>
 
 FileItem::FileItem(QString name,
                    int size,
@@ -31,8 +33,18 @@ FileItem::FileItem(QPair<QUrl, QString> urlBind):
              0,
              "NULL",
              urlBind.second,
-             urlBind.first)
+			 urlBind.first)
 {}
+
+FileItem FileItem::fromJson(const QString& name, const QVariant& variant)
+{
+	auto map = variant.toMap();
+	return FileItem(name,
+					map.value("size").toInt(),
+					map.value("sha1").toString(),
+					map.value("path").toString(),
+					map.value("url").toString());
+}
 
 QList<QStandardItem *> FileItem::getInfoList() const
 {

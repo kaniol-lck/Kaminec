@@ -11,7 +11,6 @@
 #include <algorithm>
 #include <QDebug>
 
-
 JsonManager::JsonManager(QObject *parent, QString version):
     QObject(parent),
 	jsonDownload(new DownloadManagerPlus(this)),
@@ -39,26 +38,19 @@ JsonManager::JsonManager(QObject *parent, QString version):
 	libList = jsonContent.toMap().value("libraries").toList();
 }
 
-
-
 QStringList JsonManager::getLibfileList()
 {
 	QStringList fileList;
 
 	fileList<<std::accumulate(libList.begin(), libList.end(), QStringList(),
 							  [this](QStringList libfileList, QVariant libElem){
-			  if(libElem.toMap().contains("extract")) return libfileList;
+			  if(libElem.toMap().contains("natives")) return libfileList;
 			  if(libElem.toMap().contains("downloads") &&
 				 libElem.toMap().value("downloads").toMap().contains("artifact")){
 				  libfileList<<value(libElem, "downloads", "artifact", "path")
 							   .toString().prepend(corePath + "/libraries/");
 			  }else if (libElem.toMap().contains("name")) {
-				  auto name = libElem.toMap().value("name").toString().split(":");
-				  auto filename = QString(name.at(0)).replace('.','/') + "/" +
-								  name.at(1) + "/" +
-								  name.at(2) + "/" +
-								  name.at(1) + "-" +
-								  name.at(2) + ".jar";
+				  auto filename = genFilename(libElem.toMap().value("name").toString());
 				  libfileList<<filename.prepend(corePath + "/libraries/");
 			  }
 				 return libfileList;
@@ -74,14 +66,13 @@ QStringList JsonManager::getLibfileList()
 	return fileList;
 }
 
-
-
 QStringList JsonManager::getExtractfileList()
 {
 	QStringList fileList;
 	fileList<<std::accumulate(libList.begin(), libList.end(), QStringList(),
 						   [](QStringList libfileList, QVariant libElem){
-		return libElem.toMap().contains("natives")?
+		return libElem.toMap().contains("natives") &&
+			  libElem.toMap().value("natives").toMap().contains("windows")?
 				  (value(libElem, "downloads", "classifiers").toMap().contains("natives-windows")?
 					   libfileList<< value(libElem, "downloads", "classifiers", "natives-windows", "path").toString():
 					   libfileList<< value(libElem, "downloads", "artifact", "path").toString()):
@@ -95,8 +86,6 @@ QStringList JsonManager::getExtractfileList()
 	return fileList;
 }
 
-
-
 QList<FileItem> JsonManager::getDownloadLibUrls()
 {
 	QList<FileItem> downloadLibUrls;
@@ -104,17 +93,12 @@ QList<FileItem> JsonManager::getDownloadLibUrls()
 		auto inheritedJson = new JsonManager(this, jsonContent.toMap().value("inheritsFrom").toString());
 		downloadLibUrls<< inheritedJson->getDownloadLibUrls();
 	}
-	//!!!!!!
+
 	return std::accumulate(libList.begin(), libList.end(), QList<FileItem>(),
 						   [this](QList<FileItem> libUrls, QVariant libElem){
 		if(jsonContent.toMap().contains("inheritsFrom") &&
 		   libElem.toMap().contains("name")){
-			auto name = libElem.toMap().value("name").toString().split(":");
-			auto filename = QString(name.at(0)).replace('.','/') + "/" +
-							name.at(1) + "/" +
-							name.at(2) + "/" +
-							name.at(1) + "-" +
-							name.at(2) + ".jar";
+			auto filename = genFilename(libElem.toMap().value("name").toString());
 			auto path = corePath + "/libraries/"  + filename;
 			auto url = libElem.toMap().value("url").toString() + filename;
 			return libUrls<< FileItem(filename, 0, "NULL", path, url);
@@ -125,26 +109,14 @@ QList<FileItem> JsonManager::getDownloadLibUrls()
 				libElem.toMap().value("natives").toMap().contains("windows") &&
 				value(libElem, "downloads", "classifiers").toMap().contains(
 					value(libElem, "natives", "windows").toString()))?
-					libUrls<< FileItem(libElem.toMap().value("name").toString(),
-									   value(libElem, "downloads", "classifiers",
-											value(libElem, "natives", "windows").toString().replace("${arch}",QString::number(QSysInfo::WordSize)),
-											"size").toInt(),
-									   value(libElem, "downloads", "classifiers",
-											value(libElem, "natives", "windows").toString().replace("${arch}",QString::number(QSysInfo::WordSize)),
-											"sha1").toString(),
-									   value(libElem, "downloads", "classifiers",
-											value(libElem, "natives", "windows").toString().replace("${arch}",QString::number(QSysInfo::WordSize)),
-											"path").toString(),
-									   value(libElem, "downloads", "classifiers",
-											 value(libElem, "natives", "windows").toString().replace("${arch}",QString::number(QSysInfo::WordSize)),
-											 "url").toString()):(
-								 libElem.toMap().value("downloads").toMap().contains("artifact")?
-									 libUrls<< FileItem(value(libElem, "name").toString(),
-														value(libElem, "downloads", "artifact", "size").toInt(),
-														value(libElem, "downloads", "artifact", "sha1").toString(),
-														value(libElem, "downloads", "artifact", "path").toString(),
-														value(libElem, "downloads", "artifact", "url").toString()):
-									 libUrls);
+					libUrls<< FileItem::fromJson(libElem.toMap().value("name").toString(),
+												 value(libElem, "downloads", "classifiers",
+													   value(libElem, "natives", "windows")
+													   .toString().replace("${arch}", QString::number(QSysInfo::WordSize)))):(
+								  libElem.toMap().value("downloads").toMap().contains("artifact")?
+									  libUrls<< FileItem::fromJson(value(libElem, "name").toString(),
+																   value(libElem, "downloads", "artifact")):
+									  libUrls);
 	});
 }
 
@@ -159,7 +131,6 @@ FileItem JsonManager::getDownloadAssetFileUrl()
 	return FileItem(filename, size, sha1, path, url);
 }
 
-
 QStringList JsonManager::getMCArgs()
 {
 	return jsonContent.toMap().contains("minecraftArguments")?
@@ -169,11 +140,17 @@ QStringList JsonManager::getMCArgs()
 					QStringList();
 }
 
-
-
 QStringList JsonManager::getMCMainClass()
 {
 	return jsonContent.toMap().value("mainClass").toStringList();
+}
+
+QStringList JsonManager::getJVMArgs()
+{
+	/*This function uses ONLY in version above 1.13*/
+	return jsonContent.toMap().contains("arguments")?
+				value(jsonContent, "arguments", "jvm").toStringList():
+				QStringList();
 }
 
 QString JsonManager::getAssetIndex()
@@ -194,4 +171,3 @@ FileItem JsonManager::getDownloadClientUrl()
 					corePath + QString("/versions/%1/%1.jar").arg(jsonContent.toMap().value("id").toString()),
 					value(jsonContent, "downloads", "client", "url").toString());
 }
-
