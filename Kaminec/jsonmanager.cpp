@@ -73,9 +73,11 @@ QStringList JsonManager::getExtractfileList()
 						   [](QStringList libfileList, QVariant libElem){
 		return libElem.toMap().contains("natives") &&
 			  libElem.toMap().value("natives").toMap().contains("windows")?
-				  (value(libElem, "downloads", "classifiers").toMap().contains("natives-windows")?
-					   libfileList<< value(libElem, "downloads", "classifiers", "natives-windows", "path").toString():
-					   libfileList<< value(libElem, "downloads", "artifact", "path").toString()):
+//				  (value(libElem, "downloads", "classifiers").toMap().contains("natives-windows")?
+					   libfileList<< value(libElem, "downloads", "classifiers",
+										   value(libElem, "natives", "windows")
+										   .toString().replace("${arch}", QString::number(QSysInfo::WordSize)), "path").toString():
+//					   libfileList<< value(libElem, "downloads", "artifact", "path").toString()):
 					libfileList;
 	});
 	if(jsonContent.toMap().contains("inheritsFrom")){

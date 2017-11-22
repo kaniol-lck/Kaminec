@@ -28,7 +28,6 @@ SOURCES += main.cpp\
            kamineclauncher.cpp \
            profile.cpp \
            jsonmanager.cpp \
-           downloadmanager.cpp \
            game.cpp \
            fileitem.cpp \
            savesmanager.cpp \
@@ -46,7 +45,6 @@ HEADERS  += kamineclauncher.h \
             profile.h \
             gamemode.h \
             jsonmanager.h \
-            downloadmanager.h \
             game.h \
             fileitem.h \
             savesmanager.h \

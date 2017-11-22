@@ -36,7 +36,6 @@ private:
 	QStandardItemModel model;
 	QString tempFileName;
 	QTemporaryFile tempVersionsFile;
-	DownloadManager *singleDownloader;
 	DownloadManagerPlus *downloadManagerPlus;
 	JsonManager *downloadJson;
 	AssetManager *downloadAsset;
