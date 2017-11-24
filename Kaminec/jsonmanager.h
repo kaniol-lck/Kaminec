@@ -2,7 +2,6 @@
 #define JSONMANAGER_H
 
 #include "fileitem.h"
-#include "downloadmanager.h"
 #include "downloadmanagerplus.h"
 
 #include <QJsonDocument>
@@ -22,11 +21,12 @@ public:
     QStringList                   getExtractfileList();
 	QList<FileItem>               getDownloadLibUrls();
 	FileItem					  getDownloadAssetFileUrl();
-    QStringList                   getMCArgs();
-    QStringList                   getMCMainClass();
+	QStringList                   getGameArgs();
+	QStringList                   getGameMainClass();
 	QStringList                   getJVMArgs();
     QString                       getAssetIndex();
 	FileItem                      getDownloadClientUrl();
+	QStringList                   getVersionChain();
 
 private:
     QJsonDocument jsonDoc;

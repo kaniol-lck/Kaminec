@@ -2,7 +2,6 @@
 #include "ui_kamineclauncher.h"
 
 #include "preference.h"
-#include "downloadmanager.h"
 #include "downloadmanagerplus.h"
 #include "JsonManager.h"
 #include "assetmanager.h"

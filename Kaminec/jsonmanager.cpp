@@ -133,7 +133,7 @@ FileItem JsonManager::getDownloadAssetFileUrl()
 	return FileItem(filename, size, sha1, path, url);
 }
 
-QStringList JsonManager::getMCArgs()
+QStringList JsonManager::getGameArgs()
 {
 	return jsonContent.toMap().contains("minecraftArguments")?
 				jsonContent.toMap().value("minecraftArguments").toString().split(" "):
@@ -142,7 +142,7 @@ QStringList JsonManager::getMCArgs()
 					QStringList();
 }
 
-QStringList JsonManager::getMCMainClass()
+QStringList JsonManager::getGameMainClass()
 {
 	return jsonContent.toMap().value("mainClass").toStringList();
 }
@@ -172,4 +172,15 @@ FileItem JsonManager::getDownloadClientUrl()
 					value(jsonContent, "downloads", "client", "sha1").toString(),
 					corePath + QString("/versions/%1/%1.jar").arg(jsonContent.toMap().value("id").toString()),
 					value(jsonContent, "downloads", "client", "url").toString());
+}
+
+QStringList JsonManager::getVersionChain()
+{
+	if(jsonContent.toMap().contains("inheritsFrom")){
+		auto inheritedJson = new JsonManager(this, jsonContent.toMap().value("inheritsFrom").toString());
+		return jsonContent.toMap().value("id").toStringList() +
+				inheritedJson->getVersionChain();
+	} else{
+		return jsonContent.toMap().value("id").toStringList();
+	}
 }

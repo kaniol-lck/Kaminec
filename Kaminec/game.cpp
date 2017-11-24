@@ -1,8 +1,8 @@
 #include "game.h"
 #include "gamemode.h"
 #include "profile.h"
-#include "downloadmanager.h"
 #include "auth.h"
+#include "logger.h"
 
 #include <QDir>
 #include <QTime>
@@ -17,6 +17,7 @@
 #include <QTextStream>
 #include <algorithm>
 #include <QMessageBox>
+#include <QCoreApplication>
 
 Game::Game(QObject *parent, Profile gp, Mode gm):
     QObject(parent),
@@ -24,7 +25,8 @@ Game::Game(QObject *parent, Profile gp, Mode gm):
 	gameMode(gm),
 	gameJson(parent,gameProfile.mLastVersionId),
 	gameProcess(new QProcess(this)),
-	corePath(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString())
+	corePath(QSettings().value("corePath", QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString()),
+	gameLogger(new Logger(this, corePath + "/laucher_log/log.txt"))
 {
 	connect(gameProcess,SIGNAL(finished(int)),this,SIGNAL(finished(int)));
 	connect(gameProcess,SIGNAL(finished(int)),this,SLOT(deleteNatives()));
@@ -39,16 +41,12 @@ int Game::start()
 		return 0;
 	}
 ///////////////////////////////////////////////////////////////////
-    QTime t;
+	gameLogger->startGenStartcode();
     auto startcode = this->genStartcode();
-    auto time =t.elapsed();
+	gameLogger->fisishGenStartcode();
 
-	//testTime.txt
-	QFile ttf("timeTest.txt");
-	ttf.open(QIODevice::WriteOnly | QIODevice::Text | QFile::Append);
+	gameLogger->setVersionChain(gameJson.getVersionChain());
 
-	QTextStream out2(&ttf);
-	out2<<time<<endl;
 	/*start codes below*/
 	this->extractNatives();
 	if(gameMode == Mode::Online){
@@ -74,21 +72,22 @@ int Game::start()
 				QSettings().value("javaPath").toString(),
 				startcode);
 
+	gameLogger->writeToFile();
 
 	QSettings().setValue("lastUsedVersion", gameProfile.mLastVersionId);
 	QSettings().setValue("gameDir", gameProfile.mGameDir);
 
-	/*finish logs below*/
-	QFile logs("logs.txt");
-	logs.open(QIODevice::WriteOnly | QIODevice::Text);
+//	/*finish logs below*/
+//	QFile logs("logs.txt");
+//	logs.open(QIODevice::WriteOnly | QIODevice::Text);
 
-	QTextStream out(&logs);
-	out<<"java path:"<<QSettings().value("javaPath").toString()<<endl;
-	out<<"game arguments:";
-	for(auto& i:startcode)out<<i<<"[sep]";
-	out<<endl;
-	out<<"game directory:"<<gameProfile.mGameDir<<endl;
-	out<<"Time used:"<<time<<"ms";
+//	QTextStream out(&logs);
+//	out<<"java path:"<<QSettings().value("javaPath").toString()<<endl;
+//	out<<"game arguments:";
+//	for(auto& i:startcode)out<<i<<"[sep]";
+//	out<<endl;
+//	out<<"game directory:"<<gameProfile.mGameDir<<endl;
+//	out<<"Time used:"<<time<<"ms";
 
     return 0;
 }
@@ -120,6 +119,8 @@ QStringList Game::genJVMArgs()
 	JVMArgs<<QString("-Xmn%1m").arg(QSettings().value("minMem").toString());
 	JVMArgs<<QString("-Xmx%1m").arg(QSettings().value("maxMem").toString());
 
+	gameLogger->setJVMArgs(JVMArgs);
+
 	return JVMArgs;
 }
 
@@ -128,6 +129,8 @@ QString Game::genLibpath()
 {
 	auto libfileList =gameJson.getLibfileList();
 
+	gameLogger->setClassPaths(libfileList);
+
 	auto libArgs = libfileList.join(";");
 
 	return libArgs;
@@ -135,7 +138,7 @@ QString Game::genLibpath()
 
 QStringList Game::genGameArgs()
 {
-	auto MCArgs = gameJson.getMCArgs();
+	auto gameArgs = gameJson.getGameArgs();
 
 	QMap<QString, QString> replace_list = {
 		{"${auth_player_name}", QSettings().value("playerName").toString()},
@@ -148,14 +151,20 @@ QStringList Game::genGameArgs()
 		{"${user_properties}", "{}"},
 	};
 
-	for(auto& str : MCArgs){
+	for(auto& str : gameArgs){
 		if(replace_list.contains(str))
 			str = replace_list.value(str);
 	}
 
-	MCArgs<<QString("--height")<<QSettings().value("height").toString()
+	gameArgs<<QString("--height")<<QSettings().value("height").toString()
 		  <<QString("--width")<<QSettings().value("width").toString();
-	return QStringList(gameJson.getMCMainClass() + MCArgs);
+
+	auto gameMainClass = gameJson.getGameMainClass();
+
+	gameLogger->setGameMainClass(gameMainClass.join(""));
+	gameLogger->setGameArgs(gameArgs);
+
+	return QStringList(gameMainClass + gameArgs);
 }
 
 
@@ -163,29 +172,32 @@ int Game::extractNatives()
 {
 	QString nativesDir = corePath + "/natives";
 	QDir().mkpath(nativesDir);
-    auto extractfileList =gameJson.getExtractfileList();
+	gameLogger->setNativesPath(nativesDir);
 
-    for(auto& extractfile:extractfileList){
+	auto extractfileList = gameJson.getExtractfileList();
 
-		QString filename = corePath
-                +"/libraries/"
-				+ extractfile;
-        QFile ef(filename);
-		qDebug()<<filename;
-        if(!ef.exists()){
-            qDebug()<<"Extract file not found.";
-            return -1;
-        }
-		else{
-            QStringList unzipargs;
-			unzipargs<< "x"
-					 << filename
-					 <<"-o"+nativesDir+"/"
-					<<"-aos";
-			QProcess::startDetached("7za",unzipargs);
-        }
+	for(auto& extractfile : extractfileList)
+		extractfile.prepend(corePath + "/libraries/");
 
-    }
+	gameLogger->setExtractFiles(extractfileList);
+
+	for(auto& extractfile : extractfileList)
+	{
+		QFile ef(extractfile);
+		qDebug() << extractfile;
+		if(!ef.exists()){
+			qDebug() << "Extract file not found.";
+			return -1;
+		} else{
+			QStringList unzipargs;
+			unzipargs << "x"
+					  << extractfile
+					  << "-o" + nativesDir + "/"
+					  << "-aos";
+			QProcess::startDetached("7za", unzipargs);
+		}
+	}
+
 	return 0;
 }
 

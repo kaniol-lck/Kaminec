@@ -1,7 +1,6 @@
 #include "gamedownload.h"
 
 #include "fileitem.h"
-#include "downloadmanager.h"
 #include "downloadmanagerplus.h"
 #include "JsonManager.h"
 #include "assetmanager.h"

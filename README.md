@@ -1,6 +1,6 @@
 # Kaminec Launcher
 
-version:**beta v0.5.1**
+version:**beta v0.5.2**
 
 > *This is a launcher of Minecraft called Kaminec.*
 >
@@ -22,4 +22,5 @@ You can find this project on GitHub:[kaniol-lck/Kaminec](www.github.com/kaniol-l
 - Saves Manager(auto backup)
 - Mods Manager
 - Account manage
+- Logger
 

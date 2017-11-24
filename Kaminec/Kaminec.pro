@@ -39,7 +39,8 @@ SOURCES += main.cpp\
     assetmanager.cpp \
     gamedownload.cpp \
     validatedialog.cpp \
-    modsmanager.cpp
+    modsmanager.cpp \
+    logger.cpp
 
 HEADERS  += kamineclauncher.h \
             profile.h \
@@ -57,7 +58,8 @@ HEADERS  += kamineclauncher.h \
     gamedownload.h \
     validatedialog.h \
     modsmanager.h \
-    utility.h
+    utility.h \
+    logger.h
 
 FORMS    += kamineclauncher.ui \
     preference.ui \

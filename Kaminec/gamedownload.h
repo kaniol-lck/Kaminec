@@ -3,7 +3,6 @@
 
 #include "JsonManager.h"
 #include "assetmanager.h"
-#include "downloadmanager.h"
 #include "downloadmanagerplus.h"
 
 #include <QObject>

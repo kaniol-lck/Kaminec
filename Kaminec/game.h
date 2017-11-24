@@ -8,6 +8,7 @@
 #include "profile.h"
 #include "gamemode.h"
 #include "jsonmanager.h"
+#include "logger.h"
 
 class Game: public QObject
 {
@@ -33,6 +34,7 @@ private:
     JsonManager gameJson;
 	QProcess *gameProcess;
 	QString corePath;
+	Logger *gameLogger;
 signals:
     void finished(int);
 
