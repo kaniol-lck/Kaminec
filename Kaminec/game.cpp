@@ -72,23 +72,10 @@ int Game::start()
 				QSettings().value("javaPath").toString(),
 				startcode);
 
-	gameLogger->writeToFile();
-
 	QSettings().setValue("lastUsedVersion", gameProfile.mLastVersionId);
 	QSettings().setValue("gameDir", gameProfile.mGameDir);
 
-//	/*finish logs below*/
-//	QFile logs("logs.txt");
-//	logs.open(QIODevice::WriteOnly | QIODevice::Text);
-
-//	QTextStream out(&logs);
-//	out<<"java path:"<<QSettings().value("javaPath").toString()<<endl;
-//	out<<"game arguments:";
-//	for(auto& i:startcode)out<<i<<"[sep]";
-//	out<<endl;
-//	out<<"game directory:"<<gameProfile.mGameDir<<endl;
-//	out<<"Time used:"<<time<<"ms";
-
+	gameLogger->writeToFile();
     return 0;
 }
 
