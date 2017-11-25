@@ -54,6 +54,7 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 
 	//load gameDir
 	ui->gameDir_le->setText(QSettings().value("gameDir").toString());
+	ui->isVerified_cb->setChecked(QSettings().value("isOnline", false).toBool());
 
 	modsManager->setGameDir(ui->gameDir_le->text());
 	ui->versionsList_treeView->setModel(gameDownload->getVersionsModel());

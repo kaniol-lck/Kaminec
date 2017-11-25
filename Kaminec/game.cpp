@@ -74,6 +74,7 @@ int Game::start()
 
 	QSettings().setValue("lastUsedVersion", gameProfile.mLastVersionId);
 	QSettings().setValue("gameDir", gameProfile.mGameDir);
+	QSettings().setValue("isOnline", gameMode == Mode::Online);
 
 	gameLogger->writeToFile();
     return 0;

@@ -149,7 +149,7 @@
          <item>
           <widget class="QCheckBox" name="isVerified_cb">
            <property name="text">
-            <string>I'm verified</string>
+            <string>online</string>
            </property>
           </widget>
          </item>
