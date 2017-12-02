@@ -26,10 +26,10 @@ Game::Game(QObject *parent, Profile gp, Mode gm):
 	gameJson(parent,gameProfile.mLastVersionId),
 	gameProcess(new QProcess(this)),
 	corePath(QSettings().value("corePath", QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString()),
-	gameLogger(new Logger(this, corePath + "/laucher_log/log.txt"))
+	gameLogger(new Logger(this, corePath + "/launcher_log/log.txt"))
 {
-	connect(gameProcess,SIGNAL(finished(int)),this,SIGNAL(finished(int)));
-	connect(gameProcess,SIGNAL(finished(int)),this,SLOT(deleteNatives()));
+	connect(gameProcess, SIGNAL(finished(int)), this, SIGNAL(finished(int)));
+	connect(gameProcess, SIGNAL(finished(int)), this, SLOT(deleteNatives()));
 }
 
 int Game::start()

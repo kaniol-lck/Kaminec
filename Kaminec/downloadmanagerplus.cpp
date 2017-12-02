@@ -39,7 +39,7 @@ void DownloadManagerPlus::append(const FileItem &item)
 		return;
 
 	mutex.lock();
-    downloadQueue.enqueue(item.getDownloadInfo());
+	downloadQueue.enqueue(item);
     model.appendRow(info);
     itemList.append(info);
     ++totalCount;

@@ -16,14 +16,13 @@ struct FileItem
                       QString sha1,
                       QString path,
                       QUrl url);
-    explicit FileItem(QUrl u, QString p);
+	explicit FileItem(QUrl url, QString path);
 
     FileItem(QPair<QUrl,QString> urlBind);
 
 	static FileItem fromJson(const QString &name, const QVariant &variant);
 
     QList<QStandardItem *> getInfoList() const;
-    QPair<QUrl,QString> getDownloadInfo() const;
 
     QString mName;
     int   mSize;

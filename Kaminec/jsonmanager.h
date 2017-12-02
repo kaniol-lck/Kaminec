@@ -17,16 +17,16 @@ class JsonManager : public QObject
 public:
 	JsonManager(QObject *parent, QString version);
 
-    QStringList                   getLibfileList();
-    QStringList                   getExtractfileList();
-	QList<FileItem>               getDownloadLibUrls();
-	FileItem					  getDownloadAssetFileUrl();
-	QStringList                   getGameArgs();
-	QStringList                   getGameMainClass();
-	QStringList                   getJVMArgs();
-    QString                       getAssetIndex();
-	FileItem                      getDownloadClientUrl();
-	QStringList                   getVersionChain();
+	QStringList     getLibfileList();
+	QStringList     getExtractfileList();
+	QList<FileItem> getDownloadLibUrls();
+	FileItem		getDownloadAssetFileUrl();
+	QStringList     getGameArgs();
+	QStringList     getGameMainClass();
+	QStringList     getJVMArgs();
+	QString         getAssetIndex();
+	FileItem        getDownloadClientUrl();
+	QStringList     getVersionChain();
 
 private:
     QJsonDocument jsonDoc;

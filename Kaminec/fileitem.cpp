@@ -20,21 +20,14 @@ FileItem::FileItem(QString name,
     mUrl(url)
 {}
 
-FileItem::FileItem(QUrl u, QString p):
-    FileItem(QFileInfo(p).fileName(),
+FileItem::FileItem(QUrl url, QString path):
+	FileItem(QFileInfo(path).fileName(),
              0,
              "NULL",
-             p,
-             u)
+			 path,
+			 url)
 {}
 
-FileItem::FileItem(QPair<QUrl, QString> urlBind):
-    FileItem(QFileInfo(urlBind.second).fileName(),
-             0,
-             "NULL",
-             urlBind.second,
-			 urlBind.first)
-{}
 
 FileItem FileItem::fromJson(const QString& name, const QVariant& variant)
 {
@@ -56,9 +49,4 @@ QList<QStandardItem *> FileItem::getInfoList() const
         new QStandardItem(mPath),
         new QStandardItem(mUrl.toString())
     };
-}
-
-QPair<QUrl, QString> FileItem::getDownloadInfo() const
-{
-    return qMakePair(mUrl,mPath);
 }
