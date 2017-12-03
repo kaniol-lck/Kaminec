@@ -40,7 +40,7 @@ private:
 	QStringList m_extractFiles;
 
 	int startCode_use;
-	int game_use;
+	int game_use = 0;
 
 	QTime genStartCodeTime;
 	QTime gameTime;

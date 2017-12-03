@@ -45,14 +45,14 @@ QStringList JsonManager::getLibfileList()
 	fileList<<std::accumulate(libList.begin(), libList.end(), QStringList(),
 							  [this](QStringList libfileList, QVariant libElem){
 			  if(libElem.toMap().contains("natives")) return libfileList;
-			  if(libElem.toMap().contains("downloads") &&
-				 libElem.toMap().value("downloads").toMap().contains("artifact")){
-				  libfileList<<value(libElem, "downloads", "artifact", "path")
-							   .toString().prepend(corePath + "/libraries/");
-			  }else if (libElem.toMap().contains("name")) {
+//			  if(libElem.toMap().contains("downloads") &&
+//				 libElem.toMap().value("downloads").toMap().contains("artifact")){
+//				  libfileList<<value(libElem, "downloads", "artifact", "path")
+//							   .toString().prepend(corePath + "/libraries/");
+//			  }else if (libElem.toMap().contains("name")) {
 				  auto filename = genFilename(libElem.toMap().value("name").toString());
 				  libfileList<<filename.prepend(corePath + "/libraries/");
-			  }
+			  //}
 				 return libfileList;
 			 });
 
