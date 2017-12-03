@@ -213,4 +213,5 @@ bool Game::deleteDirectory(const QString &path)
 void Game::deleteNatives()
 {
 	QString nativesDir = corePath + "/natives";
+	this->deleteDirectory(nativesDir);
 }
