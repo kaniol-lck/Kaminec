@@ -19,8 +19,9 @@ public:
 	QString getUuid();
 	QString getAccessToken();
 
-	bool check();
+	bool authenticate();
 	bool refresh();
+	bool validate();
 	bool invalidate();
 
 signals:
@@ -29,6 +30,15 @@ public slots:
 	void replyFinished(QNetworkReply*reply);
 
 private:
+	static QNetworkRequest makeRequest(const QString &endpoint);
+	void post(const QNetworkRequest& request, const QByteArray& data);
+
+	static QString YggdrasilServer;
+	static QString authenticateStyle;
+	static QString tokenStyle;
+
+	QNetworkAccessManager manager;
+
 	bool success = false;
 
 	QString mUsername;

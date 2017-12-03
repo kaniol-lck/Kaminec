@@ -18,8 +18,6 @@ struct FileItem
                       QUrl url);
 	explicit FileItem(QUrl url, QString path);
 
-    FileItem(QPair<QUrl,QString> urlBind);
-
 	static FileItem fromJson(const QString &name, const QVariant &variant);
 
     QList<QStandardItem *> getInfoList() const;

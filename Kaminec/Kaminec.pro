@@ -40,7 +40,8 @@ SOURCES += main.cpp\
     gamedownload.cpp \
     validatedialog.cpp \
     modsmanager.cpp \
-    logger.cpp
+    logger.cpp \
+    utility.cpp
 
 HEADERS  += kamineclauncher.h \
             profile.h \

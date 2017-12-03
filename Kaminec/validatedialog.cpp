@@ -43,7 +43,7 @@ void ValidateDialog::on_buttonBox_accepted()
 	auto auth = new Auth(this, qMakePair(ui->email_le->text(),
 									 ui->password_le->text()));
 
-	if(auth->check()){
+	if(auth->authenticate()){
 		QSettings().setValue("email", ui->email_le->text());
 		QSettings().setValue("isLogged",true);
 		emit login(ui->email_le->text());

@@ -28,7 +28,6 @@ FileItem::FileItem(QUrl url, QString path):
 			 url)
 {}
 
-
 FileItem FileItem::fromJson(const QString& name, const QVariant& variant)
 {
 	auto map = variant.toMap();

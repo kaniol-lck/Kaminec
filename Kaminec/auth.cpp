@@ -1,4 +1,5 @@
 #include "auth.h"
+#include "utility.h"
 #include <QJsonDocument>
 #include <QEventLoop>
 #include <QMessageBox>
@@ -10,12 +11,16 @@
 #include <QDebug>
 #include <QUrl>
 
+QString Auth::YggdrasilServer = "https://authserver.mojang.com";
+QString Auth::authenticateStyle = R"({"agent":{"name":"Minecraft","version":1},"requestUser": false,"username":"%1","password":"%2"})";
+QString Auth::tokenStyle = R"({"accessToken":"%1","clientToken":"%2"})";
+
 Auth::Auth(QObject *parent, QPair<QString,QString> account) :
 	QObject(parent),
 	mUsername(account.first),
 	mPassword(account.second)
 {
-
+	connect(&manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
 }
 
 Auth::Auth(QObject *parent) :
@@ -39,80 +44,38 @@ QString Auth::getAccessToken()
 	return accessToken;
 }
 
-bool Auth::check()
+bool Auth::authenticate()
 {
-	qDebug()<<"checking your accessToken..";
-	auto manager = new QNetworkAccessManager(this);
-	QNetworkRequest request;
+	QByteArray data = authenticateStyle.arg(mUsername).arg(mPassword).toUtf8();
 
-	request.setUrl(QUrl("https://authserver.mojang.com/authenticate"));
-	request.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
-
-	QString data_str = R"({"agent":{"name":"Minecraft","version":1},"requestUser": false,"username":"%1","password":"%2"})";
-	data_str = data_str.arg(mUsername).arg(mPassword);
-	QByteArray data = data_str.toUtf8();
-	qDebug()<<data;
-
-	QEventLoop eventloop;
-	connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
-	connect(manager,SIGNAL(finished(QNetworkReply*)),&eventloop,SLOT(quit()));
-
-	//post check request
-	manager->post(request,data);
-	eventloop.exec();
-
+	this->post(makeRequest("/authenticate"), data);
 	return success;
 }
 
 bool Auth::refresh()
 {
-	//refresh your authentication
-	qDebug()<<"refreshing your accessToken..";
-	auto manager = new QNetworkAccessManager(this);
-	QNetworkRequest request;
+	QByteArray data = tokenStyle.arg(QSettings().value("accessToken").toString())
+					  .arg(QSettings().value("clientToken").toString()).toUtf8();
 
-	request.setUrl(QUrl("https://authserver.mojang.com/refresh"));
-	request.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
+	this->post(makeRequest("/refresh"), data);
+	return success;
+}
 
-	QString data_str = R"({"accessToken":"%1","clientToken":"%2"})";
-	data_str = data_str.arg(QSettings().value("accessToken").toString())
-			   .arg(QSettings().value("clientToken").toString());
-	QByteArray data = data_str.toUtf8();
-	qDebug()<<data;
+bool Auth::validate()
+{
+	QByteArray data = tokenStyle.arg(QSettings().value("accessToken").toString())
+					  .arg(QSettings().value("clientToken").toString()).toUtf8();
 
-	QEventLoop eventloop;
-	connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
-	connect(manager,SIGNAL(finished(QNetworkReply*)),&eventloop,SLOT(quit()));
-
-	manager->post(request,data);
-	eventloop.exec();
-
+	this->post(makeRequest("/validate"), data);
 	return success;
 }
 
 bool Auth::invalidate()
 {
-	//invalidate your authentication
-	qDebug()<<"invalidating your accessToken..";
-	auto manager = new QNetworkAccessManager(this);
-	QNetworkRequest request;
+	QByteArray data = tokenStyle.arg(QSettings().value("accessToken").toString())
+					  .arg(QSettings().value("clientToken").toString()).toUtf8();
 
-	request.setUrl(QUrl("https://authserver.mojang.com/invalidate"));
-	request.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
-
-	QString data_str = R"({"accessToken":"%1","clientToken":"%2"})";
-	data_str = data_str.arg(QSettings().value("accessToken").toString())
-			   .arg(QSettings().value("clientToken").toString());
-	QByteArray data = data_str.toUtf8();
-	qDebug()<<data;
-
-	QEventLoop eventloop;
-	connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
-	connect(manager,SIGNAL(finished(QNetworkReply*)),&eventloop,SLOT(quit()));
-
-	manager->post(request,data);
-	eventloop.exec();
-
+	this->post(makeRequest("/invalidate"), data);
 	return success;
 }
 
@@ -132,13 +95,12 @@ void Auth::replyFinished(QNetworkReply *reply)
 
 		uuid = doc.toVariant().toMap().value("selectedProfile")
 			   .toMap().value("id").toString();
-		accessToken = doc.toVariant().toMap().value("accessToken").toString();
-		clientToken = doc.toVariant().toMap().value("clientToken").toString();
-		playerName = doc.toVariant().toMap().value("selectedProfile")
-					 .toMap().value("name").toString();
+		accessToken = value(doc.toVariant(), "accessToken").toString();
+		clientToken = value(doc.toVariant(), "clientToken").toString();
+		playerName = value(doc.toVariant(), "selectedProfile", "name").toString();
 
 		QSettings().setValue("accessToken", accessToken);
-		QSettings().setValue("clientToken",clientToken);
+		QSettings().setValue("clientToken", clientToken);
 		qDebug()<<"Welcome:"<<playerName;
 	}else if(statusCode == 204){
 		success = true;
@@ -155,7 +117,28 @@ void Auth::replyFinished(QNetworkReply *reply)
 
 		qDebug()<<"statusCode:"<<statusCode;
 		QMessageBox::warning(0,
-							 doc.toVariant().toMap().value("error").toString(),
-							 doc.toVariant().toMap().value("errorMessage").toString());
+							 value(doc.toVariant(), "error").toString(),
+							 value(doc.toVariant(), "errorMessage").toString());
 	}
+}
+
+QNetworkRequest Auth::makeRequest(const QString& endpoint)
+{
+	QNetworkRequest request;
+
+	request.setUrl(QUrl(YggdrasilServer + endpoint));
+	request.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
+
+	return request;
+}
+
+void Auth::post(const QNetworkRequest &request, const QByteArray &data)
+{
+	QEventLoop eventloop;
+	connect(&manager,SIGNAL(finished(QNetworkReply*)),&eventloop,SLOT(quit()));
+
+	manager.post(request, data);
+	eventloop.exec();
+	disconnect(&manager,SIGNAL(finished(QNetworkReply*)),&eventloop,SLOT(quit()));
+
 }
