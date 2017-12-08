@@ -25,46 +25,46 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += main.cpp\
-           kamineclauncher.cpp \
-           profile.cpp \
-           jsonmanager.cpp \
-           game.cpp \
-           fileitem.cpp \
-           savesmanager.cpp \
-    downloadmanagerplus.cpp \
-    singledownload.cpp \
-    auth.cpp \
-    preference.cpp \
-    profilemanager.cpp \
-    assetmanager.cpp \
-    gamedownload.cpp \
-    validatedialog.cpp \
-    modsmanager.cpp \
-    logger.cpp \
-    utility.cpp
+           UI/kamineclauncher.cpp \
+           messager/profile.cpp \
+           core/jsonmanager.cpp \
+           core/game.cpp \
+           messager/fileitem.cpp \
+           LAminec/savesmanager.cpp \
+    downloader/downloadmanagerplus.cpp \
+    downloader/singledownload.cpp \
+    core/auth.cpp \
+    UI/preference.cpp \
+    LAminec/profilemanager.cpp \
+    core/assetmanager.cpp \
+    downloader/gamedownload.cpp \
+    UI/validatedialog.cpp \
+    LAminec/modsmanager.cpp \
+    assistance/logger.cpp \
+    assistance/utility.cpp
 
-HEADERS  += kamineclauncher.h \
-            profile.h \
-            gamemode.h \
-            jsonmanager.h \
-            game.h \
-            fileitem.h \
-            savesmanager.h \
-    downloadmanagerplus.h \
-    singledownload.h \
-    auth.h \
-    preference.h \
-    profilemanager.h \
-    assetmanager.h \
-    gamedownload.h \
-    validatedialog.h \
-    modsmanager.h \
-    utility.h \
-    logger.h
+HEADERS  += UI/kamineclauncher.h \
+            messager/profile.h \
+            core/gamemode.h \
+            core/jsonmanager.h \
+            core/game.h \
+            messager/fileitem.h \
+            LAminec/savesmanager.h \
+    downloader/downloadmanagerplus.h \
+    downloader/singledownload.h \
+    core/auth.h \
+    UI/preference.h \
+    LAminec/profilemanager.h \
+    core/assetmanager.h \
+    downloader/gamedownload.h \
+    UI/validatedialog.h \
+    LAminec/modsmanager.h \
+    assistance/utility.h \
+    assistance/logger.h
 
-FORMS    += kamineclauncher.ui \
-    preference.ui \
-    validatedialog.ui
+FORMS    += UI/kamineclauncher.ui \
+    UI/preference.ui \
+    UI/validatedialog.ui
 
 RESOURCES += \
     background.qrc
