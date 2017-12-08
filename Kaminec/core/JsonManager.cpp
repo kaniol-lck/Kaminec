@@ -1,6 +1,6 @@
 #include "JsonManager.h"
-#include "fileitem.h"
-#include "utility.h"
+#include "messager/fileitem.h"
+#include "assistance/utility.h"
 
 #include <QPair>
 #include <QFile>

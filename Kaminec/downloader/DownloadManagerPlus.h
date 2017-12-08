@@ -1,8 +1,8 @@
 #ifndef DOWNLOADMANAGERPLUS_H
 #define DOWNLOADMANAGERPLUS_H
 
-#include "fileitem.h"
-#include "singledownload.h"
+#include "messager/fileitem.h"
+#include "downloader/singledownload.h"
 
 #include <QList>
 #include <QQueue>

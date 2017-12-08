@@ -5,10 +5,10 @@
 #include <QString>
 #include <QProcess>
 
-#include "profile.h"
-#include "gamemode.h"
-#include "jsonmanager.h"
-#include "logger.h"
+#include "messager/profile.h"
+#include "core/gamemode.h"
+#include "core/jsonmanager.h"
+#include "assistance/logger.h"
 
 class Game: public QObject
 {

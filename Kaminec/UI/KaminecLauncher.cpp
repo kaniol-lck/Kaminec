@@ -2,13 +2,11 @@
 #include "ui_kamineclauncher.h"
 
 #include "preference.h"
-#include "downloadmanagerplus.h"
-#include "JsonManager.h"
-#include "assetmanager.h"
-#include "gamemode.h"
-#include "game.h"
-#include "fileitem.h"
-#include "modsmanager.h"
+#include "downloader/downloadmanagerplus.h"
+#include "core/gamemode.h"
+#include "core/game.h"
+#include "LAminec/modsmanager.h"
+#include "LAminec/savesmanager.h"
 
 #include <algorithm>
 #include <QTime>

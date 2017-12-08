@@ -1,8 +1,9 @@
 #include "game.h"
-#include "gamemode.h"
-#include "profile.h"
-#include "auth.h"
-#include "logger.h"
+#include "core/gamemode.h"
+#include "core/JsonManager.h"
+#include "core/auth.h"
+#include "messager/profile.h"
+#include "assistance/logger.h"
 
 #include <QDir>
 #include <QTime>

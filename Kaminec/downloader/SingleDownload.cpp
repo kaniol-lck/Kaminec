@@ -1,5 +1,5 @@
 #include "singledownload.h"
-#include "fileitem.h"
+#include "messager/fileitem.h"
 
 #include <QDir>
 #include <QFile>

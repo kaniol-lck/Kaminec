@@ -1,5 +1,5 @@
 #include "auth.h"
-#include "utility.h"
+#include "assistance/utility.h"
 #include <QJsonDocument>
 #include <QEventLoop>
 #include <QMessageBox>

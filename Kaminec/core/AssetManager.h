@@ -1,7 +1,7 @@
 #ifndef ASSETMANAGER_H
 #define ASSETMANAGER_H
 
-#include "fileitem.h"
+#include "messager/fileitem.h"
 
 #include <QObject>
 #include <QList>

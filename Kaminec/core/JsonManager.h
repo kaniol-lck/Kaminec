@@ -1,8 +1,8 @@
 #ifndef JSONMANAGER_H
 #define JSONMANAGER_H
 
-#include "fileitem.h"
-#include "downloadmanagerplus.h"
+#include "messager/fileitem.h"
+#include "downloader/downloadmanagerplus.h"
 
 #include <QJsonDocument>
 #include <QVariantMap>

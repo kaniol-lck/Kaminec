@@ -1,5 +1,5 @@
 #include "profilemanager.h"
-#include "profile.h"
+#include "messager/profile.h"
 
 #include <QJsonDocument>
 #include <QJsonObject>

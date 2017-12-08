@@ -1,9 +1,9 @@
 #include "gamedownload.h"
 
-#include "fileitem.h"
-#include "downloadmanagerplus.h"
-#include "JsonManager.h"
-#include "assetmanager.h"
+#include "messager/fileitem.h"
+#include "downloader/downloadmanagerplus.h"
+#include "core/JsonManager.h"
+#include "core/assetmanager.h"
 
 #include <QDebug>
 #include <QSettings>
