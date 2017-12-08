@@ -67,4 +67,4 @@ FORMS    += UI/kamineclauncher.ui \
     UI/validatedialog.ui
 
 RESOURCES += \
-    background.qrc
+	resources/background.qrc
