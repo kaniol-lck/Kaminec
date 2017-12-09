@@ -6,7 +6,7 @@
 #include <QProcess>
 
 #include "messager/profile.h"
-#include "core/gamemode.h"
+#include "core/Auth.h"
 #include "core/jsonmanager.h"
 #include "assistance/logger.h"
 
@@ -14,7 +14,7 @@ class Game: public QObject
 {
     Q_OBJECT
 public:
-	Game(QObject *parent, Profile gp, Mode gm);
+	Game(QObject *parent, Profile profile, Auth *auth);
 
     int start();
 
@@ -30,7 +30,7 @@ private:
 	static bool deleteDirectory(const QString &path);
 
     Profile gameProfile;
-	Mode gameMode;
+	Auth *gameAuth;
     JsonManager gameJson;
 	QProcess *gameProcess;
 	QString corePath;

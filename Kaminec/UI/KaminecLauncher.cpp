@@ -131,18 +131,15 @@ void KaminecLauncher::on_backupSaves_pb_clicked()
 
 void KaminecLauncher::startGame()
 {
-	//declare a Game instance for launch
-	Game *game;
-
-	//judge online or offline
-	if(ui->isVerified_cb->isChecked()){
-		game = new Game(this,this->getProfile(),Mode::Online);
-	}else{
-		game = new Game(this,this->getProfile(),Mode::Offline);
-	}
+	//declare a Auth for game
+	auto auth = new Auth(this,
+						 ui->isVerified_cb->isChecked()?Mode::Online:Mode::Offline);
 
 	//prepare mods
 	modsManager->start();
+
+	//init game
+	auto game = new Game(this, this->getProfile(), auth);
 
 	//ui during gaming
 	ui->start_pb->setText("Gaming...");

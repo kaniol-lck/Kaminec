@@ -1,6 +1,8 @@
 #ifndef AUTH_H
 #define AUTH_H
 
+#include "Gamemode.h"
+
 #include <QObject>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
@@ -12,7 +14,8 @@ class Auth : public QObject
 {
 	Q_OBJECT
 public:
-	explicit Auth(QObject *parent,QPair<QString,QString> account);
+	explicit Auth(QObject *parent, QPair<QString,QString> account);
+	explicit Auth(QObject *parent, Mode mode);
 	explicit Auth(QObject *parent);
 
 	QString getPlayerName();
@@ -23,6 +26,8 @@ public:
 	bool refresh();
 	bool validate();
 	bool invalidate();
+
+	Mode getMode() const;
 
 signals:
 
@@ -40,6 +45,8 @@ private:
 	QNetworkAccessManager manager;
 
 	bool success = false;
+
+	Mode authMode;
 
 	QString mUsername;
 	QString mPassword;

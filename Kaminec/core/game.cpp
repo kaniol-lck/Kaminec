@@ -20,10 +20,10 @@
 #include <QMessageBox>
 #include <QCoreApplication>
 
-Game::Game(QObject *parent, Profile gp, Mode gm):
+Game::Game(QObject *parent, Profile profile, Auth *auth):
     QObject(parent),
-    gameProfile(gp),
-	gameMode(gm),
+	gameProfile(profile),
+	gameAuth(auth),
 	gameJson(parent,gameProfile.mLastVersionId),
 	gameProcess(new QProcess(this)),
 	corePath(QSettings().value("corePath", QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString()),
@@ -50,32 +50,13 @@ int Game::start()
 
 	/*start codes below*/
 	this->extractNatives();
-	if(gameMode == Mode::Online){
-		auto auth = new Auth(this);
-		if(auth->refresh()){
-			int index;
-			if((index = startcode.indexOf("${auth_uuid}")) != -1)
-				startcode.replace(index,auth->getUuid());
-			if((index = startcode.indexOf("${auth_access_token}")) != -1)
-				startcode.replace(index,auth->getAccessToken());
-			if((index = startcode.indexOf("Legacy")) != -1)
-				startcode.replace(index,"mojang");
-			if(QSettings().value("autoName").toBool()){
-				startcode.replace(startcode.indexOf(QSettings().value("playerName").toString()),auth->getPlayerName());
-			}
-		}else {
-			emit finished(0);
-			return 0;
-		}
-	}
-
 	gameProcess->start(
 				QSettings().value("javaPath").toString(),
 				startcode);
 
 	QSettings().setValue("lastUsedVersion", gameProfile.mLastVersionId);
 	QSettings().setValue("gameDir", gameProfile.mGameDir);
-	QSettings().setValue("isOnline", gameMode == Mode::Online);
+	QSettings().setValue("isOnline", gameAuth->getMode() == Mode::Online);
 
 	gameLogger->writeToFile();
     return 0;
@@ -139,6 +120,14 @@ QStringList Game::genGameArgs()
 		{"${version_type}", "Kaminec Launcher"},
 		{"${user_properties}", "{}"},
 	};
+
+	if(gameAuth->getMode() == Mode::Online && gameAuth->refresh()){
+		replace_list.insert("${auth_uuid}", gameAuth->getUuid());
+		replace_list.insert("${auth_access_token}", gameAuth->getAccessToken());
+		replace_list.insert("${user_type}", "mojang");
+	} else{//gameAuth.getMode() == Mode::Offline
+		replace_list.insert("${user_type}", "Legacy");
+	}
 
 	for(auto& str : gameArgs){
 		if(replace_list.contains(str))

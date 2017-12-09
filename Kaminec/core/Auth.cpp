@@ -1,5 +1,6 @@
 #include "auth.h"
 #include "assistance/utility.h"
+#include "Gamemode.h"
 #include <QJsonDocument>
 #include <QEventLoop>
 #include <QMessageBox>
@@ -19,6 +20,13 @@ Auth::Auth(QObject *parent, QPair<QString,QString> account) :
 	QObject(parent),
 	mUsername(account.first),
 	mPassword(account.second)
+{
+	connect(&manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
+}
+
+Auth::Auth(QObject *parent, Mode mode) :
+	QObject(parent),
+	authMode(mode)
 {
 	connect(&manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(replyFinished(QNetworkReply*)));
 }
@@ -99,17 +107,15 @@ void Auth::replyFinished(QNetworkReply *reply)
 		clientToken = value(doc.toVariant(), "clientToken").toString();
 		playerName = value(doc.toVariant(), "selectedProfile", "name").toString();
 
+		QSettings().setValue("uuid", uuid);
 		QSettings().setValue("accessToken", accessToken);
 		QSettings().setValue("clientToken", clientToken);
 		qDebug()<<"Welcome:"<<playerName;
 	}else if(statusCode == 204){
 		success = true;
-
-		QSettings().remove("accessToken");
-		QSettings().remove("clientToken");
-		QSettings().remove("email");
-
-		QSettings().setValue("isLogged",false);
+		uuid = QSettings().value("uuid").toString();
+		accessToken = QSettings().value("accessToken").toString();
+		playerName = QSettings().value("playerName").toString();
 	}else{
 		QJsonParseError ok;
 		auto doc = QJsonDocument::fromJson(data,&ok);
@@ -141,4 +147,9 @@ void Auth::post(const QNetworkRequest &request, const QByteArray &data)
 	eventloop.exec();
 	disconnect(&manager,SIGNAL(finished(QNetworkReply*)),&eventloop,SLOT(quit()));
 
+}
+
+Mode Auth::getMode() const
+{
+	return authMode;
 }

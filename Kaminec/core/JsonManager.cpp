@@ -45,14 +45,8 @@ QStringList JsonManager::getLibfileList()
 	fileList<<std::accumulate(libList.begin(), libList.end(), QStringList(),
 							  [this](QStringList libfileList, QVariant libElem){
 			  if(libElem.toMap().contains("natives")) return libfileList;
-//			  if(libElem.toMap().contains("downloads") &&
-//				 libElem.toMap().value("downloads").toMap().contains("artifact")){
-//				  libfileList<<value(libElem, "downloads", "artifact", "path")
-//							   .toString().prepend(corePath + "/libraries/");
-//			  }else if (libElem.toMap().contains("name")) {
 				  auto filename = genFilename(libElem.toMap().value("name").toString());
 				  libfileList<<filename.prepend(corePath + "/libraries/");
-			  //}
 				 return libfileList;
 			 });
 
@@ -73,11 +67,9 @@ QStringList JsonManager::getExtractfileList()
 						   [](QStringList libfileList, QVariant libElem){
 		return libElem.toMap().contains("natives") &&
 			  libElem.toMap().value("natives").toMap().contains("windows")?
-//				  (value(libElem, "downloads", "classifiers").toMap().contains("natives-windows")?
 					   libfileList<< value(libElem, "downloads", "classifiers",
 										   value(libElem, "natives", "windows")
 										   .toString().replace("${arch}", QString::number(QSysInfo::WordSize)), "path").toString():
-//					   libfileList<< value(libElem, "downloads", "artifact", "path").toString()):
 					libfileList;
 	});
 	if(jsonContent.toMap().contains("inheritsFrom")){
