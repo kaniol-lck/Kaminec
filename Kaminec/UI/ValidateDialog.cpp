@@ -1,6 +1,6 @@
 #include "validatedialog.h"
 #include "ui_validatedialog.h"
-#include "auth.h"
+#include "core/Auth.h"
 
 #include <QSettings>
 

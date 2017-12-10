@@ -1,8 +1,7 @@
 #include "preference.h"
 #include "ui_preference.h"
-#include "validatedialog.h"
-#include "auth.h"
-
+#include "UI/ValidateDialog.h"
+#include "core/Auth.h"
 #include <QStringList>
 #include <QProcess>
 #include <QSettings>
