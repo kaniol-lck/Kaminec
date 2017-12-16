@@ -1,6 +1,8 @@
 #ifndef PREFERENCE_H
 #define PREFERENCE_H
 
+#include "LAminec/ActiveAuth.h"
+
 #include <QDialog>
 
 namespace Ui {
@@ -12,7 +14,7 @@ class Preference : public QDialog
 	Q_OBJECT
 
 public:
-	explicit Preference(QWidget *parent = 0);
+	explicit Preference(QWidget *parent, ActiveAuth *auth);
 	~Preference();
 
 private:
@@ -31,6 +33,8 @@ private slots:
 
 private:
 	Ui::Preference *ui;
+
+	ActiveAuth *activeAuth;
 };
 
 #endif // PREFERENCE_H

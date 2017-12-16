@@ -41,7 +41,10 @@ SOURCES += main.cpp\
     UI/validatedialog.cpp \
     LAminec/modsmanager.cpp \
     assistance/logger.cpp \
-    assistance/utility.cpp
+    assistance/utility.cpp \
+    core/GenericAuth.cpp \
+    core/LaunchAuth.cpp \
+    LAminec/ActiveAuth.cpp
 
 HEADERS  += UI/kamineclauncher.h \
             messager/profile.h \
@@ -60,7 +63,10 @@ HEADERS  += UI/kamineclauncher.h \
     UI/validatedialog.h \
     LAminec/modsmanager.h \
     assistance/utility.h \
-    assistance/logger.h
+    assistance/logger.h \
+    core/GenericAuth.h \
+    core/LaunchAuth.h \
+    LAminec/ActiveAuth.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preference.ui \

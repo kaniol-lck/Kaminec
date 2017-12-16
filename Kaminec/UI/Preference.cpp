@@ -1,7 +1,7 @@
 #include "preference.h"
 #include "ui_preference.h"
 #include "UI/ValidateDialog.h"
-#include "core/Auth.h"
+#include "LAminec/ActiveAuth.h"
 #include <QStringList>
 #include <QProcess>
 #include <QSettings>
@@ -10,9 +10,10 @@
 #include <QStandardPaths>
 #include <QDebug>
 
-Preference::Preference(QWidget *parent) :
+Preference::Preference(QWidget *parent, ActiveAuth *auth) :
 	QDialog(parent),
-	ui(new Ui::Preference)
+	ui(new Ui::Preference),
+	activeAuth(auth)
 {
 	setWindowFlags(Qt::Dialog);
 	ui->setupUi(this);
@@ -20,23 +21,23 @@ Preference::Preference(QWidget *parent) :
 
 	QSettings settings;
 	//load exsit preference
-	ui->playerName_le->setText(settings.value("playerName","Steve").toString());
-	ui->autoName_cb->setChecked(settings.value("autoName",true).toBool());
+	ui->playerName_le->setText(settings.value("playerName", "Steve").toString());
+	ui->autoName_cb->setChecked(settings.value("autoName", true).toBool());
 
 	ui->corePath_le->setText(settings.value("corePath",
 											QStandardPaths::writableLocation(
 												QStandardPaths::AppDataLocation) + "/.minecraft").toString());
-	ui->width_sb->setValue(settings.value("width",854).toInt());
-	ui->height_sb->setValue(settings.value("height",480).toInt());
+	ui->width_sb->setValue(settings.value("width", 854).toInt());
+	ui->height_sb->setValue(settings.value("height", 480).toInt());
 
-	ui->javaPath_le->setText(settings.value("javaPath","").toString());
-	ui->minMem_sb->setValue(settings.value("minMem",1024).toInt());
-	ui->maxMem_sb->setValue(settings.value("maxMem",1024).toInt());
-	ui->javaArg_te->setText(settings.value("javaArg","").toString());
+	ui->javaPath_le->setText(settings.value("javaPath", "").toString());
+	ui->minMem_sb->setValue(settings.value("minMem", 1024).toInt());
+	ui->maxMem_sb->setValue(settings.value("maxMem", 1024).toInt());
+	ui->javaArg_te->setText(settings.value("javaArg", "").toString());
 
 	//check if you logged in
-	if(settings.value("isLogged",false).toBool()){
-		ui->logName_label->setText("Logon account:" + settings.value("email","").toString());
+	if(settings.value("isLogged", false).toBool()){
+		ui->logName_label->setText("Logon account:" + settings.value("email", "").toString());
 		ui->login_pb->setText("&Log out");
 	}
 
@@ -53,8 +54,7 @@ Preference::~Preference()
 QString Preference::getAutoJavaPath()
 {
 	auto environment = QProcess::systemEnvironment();
-	auto PATH = environment.at(environment.indexOf(QRegExp("PATH=.*")))
-						   .split(";");
+	auto PATH = environment.at(environment.indexOf(QRegExp("PATH=.*"))).split(";");
 	auto index = PATH.indexOf(QRegExp(".*\\javapath"));
 	if(index==-1){
 		return QString();
@@ -91,31 +91,31 @@ void Preference::on_buttonBox_accepted()
 {
 	QSettings settings;
 
-	settings.setValue("playerName",ui->playerName_le->text());
-	settings.setValue("autoName",ui->autoName_cb->isChecked());
+	settings.setValue("playerName", ui->playerName_le->text());
+	settings.setValue("autoName", ui->autoName_cb->isChecked());
 
-	settings.setValue("corePath",ui->corePath_le->text());
-	settings.setValue("width",ui->width_sb->value());
-	settings.setValue("height",ui->height_sb->value());
+	settings.setValue("corePath", ui->corePath_le->text());
+	settings.setValue("width", ui->width_sb->value());
+	settings.setValue("height", ui->height_sb->value());
 
-	settings.setValue("javaPath",ui->javaPath_le->text());
-	settings.setValue("minMem",ui->minMem_sb->value());
-	settings.setValue("maxMem",ui->maxMem_sb->value());
-	settings.setValue("javaArg",ui->javaArg_te->toPlainText());
+	settings.setValue("javaPath", ui->javaPath_le->text());
+	settings.setValue("minMem", ui->minMem_sb->value());
+	settings.setValue("maxMem", ui->maxMem_sb->value());
+	settings.setValue("javaArg", ui->javaArg_te->toPlainText());
 
 	settings.sync();
 }
 
 void Preference::on_login_pb_clicked()
 {
-	if(QSettings().value("isLogged",false).toBool()){
-		auto auth = new Auth(this);
-		auth->invalidate();
+	if(QSettings().value("isLogged", false).toBool()){
+		activeAuth->invalidate();
 
+		QSettings().setValue("isLogged", false);
 		ui->logName_label->setText("You have not logged in.");
 		ui->login_pb->setText("&Log in");
 	}else {
-		auto validateDialog = new ValidateDialog(this);
+		auto validateDialog = new ValidateDialog(this, activeAuth);
 
 		connect(validateDialog, SIGNAL(login(QString)), this, SLOT(logChanged(QString)));
 
