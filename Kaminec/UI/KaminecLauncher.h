@@ -5,6 +5,7 @@
 
 #include "messager/profile.h"
 #include "downloader/gamedownload.h"
+#include "LAminec/ActiveAuth.h"
 #include "LAminec/savesmanager.h"
 #include "LAminec/profilemanager.h"
 #include "LAminec/modsmanager.h"
@@ -68,6 +69,7 @@ private:
 
 private:
     Ui::KaminecLauncher *ui;
+	ActiveAuth *activeAuth;
 	SavesManager *savesManager;
 	ModsManager *modsManager;
     int totalCount;

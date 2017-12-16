@@ -1,12 +1,13 @@
 #include "validatedialog.h"
 #include "ui_validatedialog.h"
-#include "core/Auth.h"
+#include "LAminec/ActiveAuth.h"
 
 #include <QSettings>
 
-ValidateDialog::ValidateDialog(QWidget *parent) :
+ValidateDialog::ValidateDialog(QWidget *parent, ActiveAuth *auth) :
 	QDialog(parent),
-	ui(new Ui::ValidateDialog)
+	ui(new Ui::ValidateDialog),
+	activeAuth(auth)
 {
 	ui->setupUi(this);
 
@@ -26,7 +27,6 @@ ValidateDialog::~ValidateDialog()
 
 void ValidateDialog::on_showPassword_pb_clicked()
 {
-
 	if(showPassword){
 		showPassword = false;
 		ui->password_le->setEchoMode(QLineEdit::Password);
@@ -40,13 +40,11 @@ void ValidateDialog::on_showPassword_pb_clicked()
 
 void ValidateDialog::on_buttonBox_accepted()
 {
-	auto auth = new Auth(this, qMakePair(ui->email_le->text(),
-									 ui->password_le->text()));
-
-	if(auth->authenticate()){
+	if(activeAuth->authenticate(ui->email_le->text(),
+						  ui->password_le->text())){
 		QSettings().setValue("email", ui->email_le->text());
-		QSettings().setValue("isLogged",true);
-		emit login(ui->email_le->text());
+		QSettings().setValue("isLogged", true);
+		emit login(QSettings().value("id").toString());
 		this->accept();
 	}
 	else

@@ -29,6 +29,7 @@
 KaminecLauncher::KaminecLauncher(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::KaminecLauncher),
+	activeAuth(new ActiveAuth(this)),
 	savesManager(new SavesManager(this)),
 	modsManager(new ModsManager(this)),
 	gameDownload(new GameDownload(this)),
@@ -153,7 +154,7 @@ void KaminecLauncher::startGame()
 void KaminecLauncher::on_action_preference_triggered()
 {
 	//create preference windows
-	auto preference = new Preference(this);
+	auto preference = new Preference(this, activeAuth);
 	preference->show();
 
 	connect(preference,SIGNAL(accepted()),this,SLOT(updateVersionSelect()));
