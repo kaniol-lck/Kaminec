@@ -33,7 +33,6 @@ SOURCES += main.cpp\
            LAminec/savesmanager.cpp \
     downloader/downloadmanagerplus.cpp \
     downloader/singledownload.cpp \
-    core/auth.cpp \
     UI/preference.cpp \
     LAminec/profilemanager.cpp \
     core/assetmanager.cpp \
@@ -55,7 +54,6 @@ HEADERS  += UI/kamineclauncher.h \
             LAminec/savesmanager.h \
     downloader/downloadmanagerplus.h \
     downloader/singledownload.h \
-    core/auth.h \
     UI/preference.h \
     LAminec/profilemanager.h \
     core/assetmanager.h \

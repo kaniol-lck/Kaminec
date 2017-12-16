@@ -57,7 +57,7 @@ void GenericAuth::authenticateFinished(QNetworkReply *reply) const
 	}
 }
 
-void GenericAuth::validateFinished(QNetworkReply *reply)
+void GenericAuth::validateFinished(QNetworkReply *reply) const
 {
 	auto statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 	if(statusCode == 204){
@@ -67,7 +67,7 @@ void GenericAuth::validateFinished(QNetworkReply *reply)
 	}
 }
 
-void GenericAuth::refreshFinished(QNetworkReply *reply)
+void GenericAuth::refreshFinished(QNetworkReply *reply) const
 {
 	auto statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
@@ -102,12 +102,12 @@ void GenericAuth::refreshFinished(QNetworkReply *reply)
 	}
 }
 
-void GenericAuth::signoutFinished(QNetworkReply */*reply*/)
+void GenericAuth::signoutFinished(QNetworkReply */*reply*/) const
 {
 
 }
 
-void GenericAuth::invalidateFinished(QNetworkReply *reply)
+void GenericAuth::invalidateFinished(QNetworkReply *reply) const
 {
 	auto statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 	if(statusCode == 204){

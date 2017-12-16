@@ -23,8 +23,8 @@ bool ActiveAuth::authenticate(QString username, QString password) const
 
 bool ActiveAuth::refresh() const
 {
-	QByteArray data = tokenStyle.arg(QSettings().value("accessToken").toString())
-					  .arg(QSettings().value("clientToken").toString()).toUtf8();
+	QByteArray data = tokenStyle.arg(settings.value("accessToken").toString())
+					  .arg(settings.value("clientToken").toString()).toUtf8();
 
 	this->sendRequest(Refresh, data);
 	return success;
@@ -32,8 +32,8 @@ bool ActiveAuth::refresh() const
 
 bool ActiveAuth::invalidate() const
 {
-	QByteArray data = tokenStyle.arg(QSettings().value("accessToken").toString())
-					  .arg(QSettings().value("clientToken").toString()).toUtf8();
+	QByteArray data = tokenStyle.arg(settings.value("accessToken").toString())
+					  .arg(settings.value("clientToken").toString()).toUtf8();
 
 	this->sendRequest(Invalidate, data);
 	return success;

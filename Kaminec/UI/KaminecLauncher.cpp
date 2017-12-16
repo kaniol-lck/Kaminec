@@ -133,8 +133,10 @@ void KaminecLauncher::on_backupSaves_pb_clicked()
 void KaminecLauncher::startGame()
 {
 	//declare a Auth for game
-	auto auth = new Auth(this,
-						 ui->isVerified_cb->isChecked()?Mode::Online:Mode::Offline);
+	auto auth = new LaunchAuth(this,
+						 ui->isVerified_cb->isChecked()?
+								   Mode::Online :
+								   Mode::Offline);
 
 	//prepare mods
 	modsManager->start();

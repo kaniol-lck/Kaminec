@@ -3,6 +3,8 @@
 
 #include "core/GenericAuth.h"
 
+#include <QSettings>
+
 class ActiveAuth final: public GenericAuth
 {
 public:
@@ -14,6 +16,7 @@ public:
 	bool invalidate() const;
 
 private:
+	QSettings settings;
 };
 
 #endif // ACTIVEAUTH_H

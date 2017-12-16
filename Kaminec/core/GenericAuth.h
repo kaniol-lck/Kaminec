@@ -17,10 +17,10 @@ signals:
 
 public slots:
 	void authenticateFinished(QNetworkReply *reply) const;
-	void validateFinished(QNetworkReply *reply);
-	void refreshFinished(QNetworkReply *reply);
-	void signoutFinished(QNetworkReply *reply);
-	void invalidateFinished(QNetworkReply *reply);
+	void validateFinished(QNetworkReply *reply) const;
+	void refreshFinished(QNetworkReply *reply) const;
+	void signoutFinished(QNetworkReply *reply) const;
+	void invalidateFinished(QNetworkReply *reply) const;
 
 private:
 	mutable QNetworkAccessManager manager;

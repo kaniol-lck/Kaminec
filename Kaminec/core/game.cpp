@@ -20,7 +20,7 @@
 #include <QMessageBox>
 #include <QCoreApplication>
 
-Game::Game(QObject *parent, Profile profile, Auth *auth):
+Game::Game(QObject *parent, Profile profile, LaunchAuth *auth):
     QObject(parent),
 	gameProfile(profile),
 	gameAuth(auth),
@@ -56,7 +56,7 @@ int Game::start()
 
 	QSettings().setValue("lastUsedVersion", gameProfile.mLastVersionId);
 	QSettings().setValue("gameDir", gameProfile.mGameDir);
-	QSettings().setValue("isOnline", gameAuth->getMode() == Mode::Online);
+	QSettings().setValue("isOnline", gameAuth->getAuthMode() == Mode::Online);
 
 	gameLogger->writeToFile();
     return 0;
@@ -115,19 +115,13 @@ QStringList Game::genGameArgs()
 		{"${version_name}", gameProfile.mLastVersionId},
 		{"${game_directory}", gameProfile.mGameDir},
 		{"${assets_root}", QString("%1/assets").arg(corePath)},
+		{"${auth_uuid}", gameAuth->getAuthUuid()},
+		{"${auth_access_token}", gameAuth->getAuthAccessToken()},
+		{"${user_type}", gameAuth->getUserType()},
 		{"${assets_index_name}", gameJson.getAssetIndex()},
-		{"${user_type}", "Legacy"},
 		{"${version_type}", "Kaminec Launcher"},
 		{"${user_properties}", "{}"},
 	};
-
-	if(gameAuth->getMode() == Mode::Online && gameAuth->refresh()){
-		replace_list.insert("${auth_uuid}", gameAuth->getUuid());
-		replace_list.insert("${auth_access_token}", gameAuth->getAccessToken());
-		replace_list.insert("${user_type}", "mojang");
-	} else{//gameAuth.getMode() == Mode::Offline
-		replace_list.insert("${user_type}", "Legacy");
-	}
 
 	for(auto& str : gameArgs){
 		if(replace_list.contains(str))
