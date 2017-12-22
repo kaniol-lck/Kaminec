@@ -72,3 +72,5 @@ FORMS    += UI/kamineclauncher.ui \
 
 RESOURCES += \
 	resources/background.qrc
+
+RC_FILE = resources/icon.rc

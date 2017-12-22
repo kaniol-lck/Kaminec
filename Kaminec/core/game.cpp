@@ -1,7 +1,6 @@
 #include "game.h"
 #include "core/gamemode.h"
 #include "core/JsonManager.h"
-#include "core/auth.h"
 #include "messager/profile.h"
 #include "assistance/logger.h"
 
