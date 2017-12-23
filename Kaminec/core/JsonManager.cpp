@@ -1,6 +1,7 @@
 #include "JsonManager.h"
 #include "messager/fileitem.h"
 #include "assistance/utility.h"
+#include "assistance/systeminfo.h"
 
 #include <QPair>
 #include <QFile>
@@ -66,10 +67,10 @@ QStringList JsonManager::getExtractfileList()
 	fileList<<std::accumulate(libList.begin(), libList.end(), QStringList(),
 						   [](QStringList libfileList, QVariant libElem){
 		return libElem.toMap().contains("natives") &&
-			  libElem.toMap().value("natives").toMap().contains("windows")?
+			  libElem.toMap().value("natives").toMap().contains(systemName())?
 					   libfileList<< value(libElem, "downloads", "classifiers",
-										   value(libElem, "natives", "windows")
-										   .toString().replace("${arch}", QString::number(QSysInfo::WordSize)), "path").toString():
+										   value(libElem, "natives", systemName())
+										   .toString().replace("${arch}", QString::number(sysWordSize())), "path").toString():
 					libfileList;
 	});
 	if(jsonContent.toMap().contains("inheritsFrom")){
@@ -100,13 +101,13 @@ QList<FileItem> JsonManager::getDownloadLibUrls()
 		return (libElem.toMap().value("downloads").toMap().contains("classifiers") &&
 				!value(libElem, "downloads", "classifiers").toMap().contains("test") &&
 				libElem.toMap().contains("natives") &&
-				libElem.toMap().value("natives").toMap().contains("windows") &&
+				libElem.toMap().value("natives").toMap().contains(systemName()) &&
 				value(libElem, "downloads", "classifiers").toMap().contains(
-					value(libElem, "natives", "windows").toString()))?
+					value(libElem, "natives", systemName()).toString()))?
 					libUrls<< FileItem::fromJson(libElem.toMap().value("name").toString(),
 												 value(libElem, "downloads", "classifiers",
-													   value(libElem, "natives", "windows")
-													   .toString().replace("${arch}", QString::number(QSysInfo::WordSize)))):(
+													   value(libElem, "natives", systemName())
+													   .toString().replace("${arch}", QString::number(sysWordSize())))):(
 								  libElem.toMap().value("downloads").toMap().contains("artifact")?
 									  libUrls<< FileItem::fromJson(value(libElem, "name").toString(),
 																   value(libElem, "downloads", "artifact")):

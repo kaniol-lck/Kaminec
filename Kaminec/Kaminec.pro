@@ -64,7 +64,8 @@ HEADERS  += UI/kamineclauncher.h \
     assistance/logger.h \
     core/GenericAuth.h \
     core/LaunchAuth.h \
-    LAminec/ActiveAuth.h
+    LAminec/ActiveAuth.h \
+    assistance/systeminfo.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preference.ui \
