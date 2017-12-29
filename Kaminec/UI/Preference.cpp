@@ -33,7 +33,7 @@ Preference::Preference(QWidget *parent, ActiveAuth *auth) :
 	ui->javaPath_le->setText(settings.value("javaPath", "").toString());
 	ui->minMem_sb->setValue(settings.value("minMem", 1024).toInt());
 	ui->maxMem_sb->setValue(settings.value("maxMem", 1024).toInt());
-	ui->javaArg_te->setText(settings.value("javaArg", "").toString());
+	ui->javaArg_te->setText(settings.value("javaArg", "").toString().replace("\\n","\n"));
 
 	//check if you logged in
 	if(settings.value("isLogged", false).toBool()){
@@ -101,7 +101,7 @@ void Preference::on_buttonBox_accepted()
 	settings.setValue("javaPath", ui->javaPath_le->text());
 	settings.setValue("minMem", ui->minMem_sb->value());
 	settings.setValue("maxMem", ui->maxMem_sb->value());
-	settings.setValue("javaArg", ui->javaArg_te->toPlainText());
+	settings.setValue("javaArg", ui->javaArg_te->toPlainText().replace("\n","\\n"));
 
 	settings.sync();
 }
