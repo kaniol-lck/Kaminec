@@ -172,21 +172,23 @@ void Preference::on_fullScreen_checkBox_stateChanged(int arg1)
 
 void Preference::on_more_pb_clicked()
 {
-	ui->versionPath_label->setVisible(!customPath);
-	ui->versionPath_le->setVisible(!customPath);
-	ui->versionPath_showPb->setVisible(!customPath);
-	ui->libPath_label->setVisible(!customPath);
-	ui->libPath_le->setVisible(!customPath);
-	ui->libPath_showPb->setVisible(!customPath);
-	ui->assetPath_label->setVisible(!customPath);
-	ui->assetPath_le->setVisible(!customPath);
-	ui->assetPath_showPb->setVisible(!customPath);
-	ui->indexesPath_label->setVisible(!customPath);
-	ui->indexesPath_le->setVisible(!customPath);
-	ui->indexesPath_showPb->setVisible(!customPath);
-	ui->objectsPath_label->setVisible(!customPath);
-	ui->objectsPath_le->setVisible(!customPath);
-	ui->objectsPath_showPb->setVisible(!customPath);
-
 	customPath = !customPath;
+
+	ui->versionPath_label->setVisible(customPath);
+	ui->versionPath_le->setVisible(customPath);
+	ui->versionPath_showPb->setVisible(customPath);
+	ui->libPath_label->setVisible(customPath);
+	ui->libPath_le->setVisible(customPath);
+	ui->libPath_showPb->setVisible(customPath);
+	ui->assetPath_label->setVisible(customPath);
+	ui->assetPath_le->setVisible(customPath);
+	ui->assetPath_showPb->setVisible(customPath);
+	ui->indexesPath_label->setVisible(customPath);
+	ui->indexesPath_le->setVisible(customPath);
+	ui->indexesPath_showPb->setVisible(customPath);
+	ui->objectsPath_label->setVisible(customPath);
+	ui->objectsPath_le->setVisible(customPath);
+	ui->objectsPath_showPb->setVisible(customPath);
+
+	ui->more_pb->setText(customPath?"Fold":"More");
 }
