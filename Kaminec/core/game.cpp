@@ -127,8 +127,12 @@ QStringList Game::genGameArgs()
 			str = replace_list.value(str);
 	}
 
-	gameArgs<<QString("--height")<<QSettings().value("height").toString()
-		  <<QString("--width")<<QSettings().value("width").toString();
+	if(QSettings().value("fullScreen", false).toBool()){
+		gameArgs<<QString("--fullscreen");
+	} else{
+		gameArgs<<QString("--height")<<QSettings().value("height").toString()
+			   <<QString("--width")<<QSettings().value("width").toString();
+	}
 
 	auto gameMainClass = gameJson.getGameMainClass();
 

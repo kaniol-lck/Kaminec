@@ -18,15 +18,32 @@ Preference::Preference(QWidget *parent, ActiveAuth *auth) :
 	setWindowFlags(Qt::Dialog);
 	ui->setupUi(this);
 
+	ui->versionPath_label->setVisible(false);
+	ui->versionPath_le->setVisible(false);
+	ui->versionPath_showPb->setVisible(false);
+	ui->libPath_label->setVisible(false);
+	ui->libPath_le->setVisible(false);
+	ui->libPath_showPb->setVisible(false);
+	ui->assetPath_label->setVisible(false);
+	ui->assetPath_le->setVisible(false);
+	ui->assetPath_showPb->setVisible(false);
+	ui->indexesPath_label->setVisible(false);
+	ui->indexesPath_le->setVisible(false);
+	ui->indexesPath_showPb->setVisible(false);
+	ui->objectsPath_label->setVisible(false);
+	ui->objectsPath_le->setVisible(false);
+	ui->objectsPath_showPb->setVisible(false);
 
 	QSettings settings;
 	//load exsit preference
 	ui->playerName_le->setText(settings.value("playerName", "Steve").toString());
-	ui->autoName_cb->setChecked(settings.value("autoName", true).toBool());
+	ui->autoName_cb->setChecked(settings.value("autoName", false).toBool());
 
 	ui->corePath_le->setText(settings.value("corePath",
 											QStandardPaths::writableLocation(
 												QStandardPaths::AppDataLocation) + "/.minecraft").toString());
+
+	ui->fullScreen_checkBox->setChecked(settings.value("fullScreen", false).toBool());
 	ui->width_sb->setValue(settings.value("width", 854).toInt());
 	ui->height_sb->setValue(settings.value("height", 480).toInt());
 
@@ -95,6 +112,8 @@ void Preference::on_buttonBox_accepted()
 	settings.setValue("autoName", ui->autoName_cb->isChecked());
 
 	settings.setValue("corePath", ui->corePath_le->text());
+
+	settings.setValue("fullScreen", ui->fullScreen_checkBox->isChecked());
 	settings.setValue("width", ui->width_sb->value());
 	settings.setValue("height", ui->height_sb->value());
 
@@ -127,4 +146,47 @@ void Preference::logChanged(QString email)
 {
 	ui->logName_label->setText("Logon account:" + email);
 	ui->login_pb->setText("&Log out");
+}
+
+void Preference::on_autoName_cb_stateChanged(int arg1)
+{
+	if(arg1 == Qt::Checked){
+		ui->playerName_le->setText(QSettings().value("id").toString());
+		ui->playerName_le->setEnabled(false);
+	} else /*arg1 == Qt::Unchecked*/{
+		ui->playerName_le->setText(QSettings().value("playerName").toString());
+		ui->playerName_le->setEnabled(true);
+	}
+}
+
+void Preference::on_fullScreen_checkBox_stateChanged(int arg1)
+{
+	if(arg1 == Qt::Checked){
+		ui->width_sb->setEnabled(false);
+		ui->height_sb->setEnabled(false);
+	} else /*arg1 == Qt::Unchecked*/{
+		ui->width_sb->setEnabled(true);
+		ui->height_sb->setEnabled(true);
+	}
+}
+
+void Preference::on_more_pb_clicked()
+{
+	ui->versionPath_label->setVisible(!customPath);
+	ui->versionPath_le->setVisible(!customPath);
+	ui->versionPath_showPb->setVisible(!customPath);
+	ui->libPath_label->setVisible(!customPath);
+	ui->libPath_le->setVisible(!customPath);
+	ui->libPath_showPb->setVisible(!customPath);
+	ui->assetPath_label->setVisible(!customPath);
+	ui->assetPath_le->setVisible(!customPath);
+	ui->assetPath_showPb->setVisible(!customPath);
+	ui->indexesPath_label->setVisible(!customPath);
+	ui->indexesPath_le->setVisible(!customPath);
+	ui->indexesPath_showPb->setVisible(!customPath);
+	ui->objectsPath_label->setVisible(!customPath);
+	ui->objectsPath_le->setVisible(!customPath);
+	ui->objectsPath_showPb->setVisible(!customPath);
+
+	customPath = !customPath;
 }

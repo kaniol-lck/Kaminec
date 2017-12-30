@@ -31,10 +31,17 @@ private slots:
 
 	void logChanged(QString email);
 
+	void on_autoName_cb_stateChanged(int arg1);
+
+	void on_fullScreen_checkBox_stateChanged(int arg1);
+
+	void on_more_pb_clicked();
+
 private:
 	Ui::Preference *ui;
 
 	ActiveAuth *activeAuth;
+	bool customPath = false;
 };
 
 #endif // PREFERENCE_H

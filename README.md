@@ -1,6 +1,6 @@
 # Kaminec Launcher
 
-version:**beta v0.6.0**
+version:**beta v0.6.1**
 
 > *This is a launcher of Minecraft called Kaminec.*
 >
@@ -16,6 +16,7 @@ You can find this project on GitHub:[kaniol-lck/Kaminec](www.github.com/kaniol-l
 ## Functionality Table
 
 - Basic launch arguments  generate
+- Custom Path choose
 - Json Manager
 - Profile Manager(background)
 - Download manager(MultiTask)
