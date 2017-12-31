@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>422</width>
-    <height>503</height>
+    <width>460</width>
+    <height>546</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,7 +29,7 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -312,88 +312,8 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
          <property name="title">
           <string>path settings:</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout_7">
-          <item row="8" column="1">
-           <widget class="QLineEdit" name="objectsPath_le">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0">
-           <widget class="QLabel" name="assetsPath_label">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>core assets path:</string>
-            </property>
-            <property name="buddy">
-             <cstring>corePath_le</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="1">
-           <widget class="QLineEdit" name="indexesPath_le">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="libsPath_label">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>libraries path:</string>
-            </property>
-            <property name="buddy">
-             <cstring>corePath_le</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="2">
-           <widget class="QPushButton" name="libsPath_showPb">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Show...</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="corePath_label">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>core game path:</string>
-            </property>
-            <property name="buddy">
-             <cstring>corePath_le</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <widget class="QPushButton" name="corePath_showPb">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Show...</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0" colspan="2">
-           <widget class="QCheckBox" name="defaultPath_checkBox">
-            <property name="text">
-             <string>default relative path settings</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="2">
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="8" column="2">
            <widget class="QPushButton" name="assetsPath_showPb">
             <property name="enabled">
              <bool>true</bool>
@@ -410,85 +330,15 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
             </property>
            </widget>
           </item>
+          <item row="0" column="0" colspan="2">
+           <widget class="QCheckBox" name="defaultPath_checkBox">
+            <property name="text">
+             <string>default relative path settings</string>
+            </property>
+           </widget>
+          </item>
           <item row="1" column="1">
            <widget class="QLineEdit" name="corePath_le">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="1">
-           <widget class="QLineEdit" name="assetsPath_le">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="0">
-           <widget class="QLabel" name="indexesPath_label">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>asset indexes path:</string>
-            </property>
-            <property name="buddy">
-             <cstring>corePath_le</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="2">
-           <widget class="QPushButton" name="indexesPath_showPb">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Show...</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QLineEdit" name="libsPath_le">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="2">
-           <widget class="QPushButton" name="objectsPath_showPb">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Show...</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="0">
-           <widget class="QLabel" name="objectsPath_label">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>asset objects path:</string>
-            </property>
-            <property name="buddy">
-             <cstring>corePath_le</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="2">
-           <widget class="QPushButton" name="versionsPath_showPb">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Show...</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QLineEdit" name="versionsPath_le">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -507,7 +357,94 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
             </property>
            </widget>
           </item>
-          <item row="9" column="0" colspan="3">
+          <item row="4" column="0">
+           <widget class="QLabel" name="libsPath_label">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>libraries path:</string>
+            </property>
+            <property name="buddy">
+             <cstring>corePath_le</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="corePath_label">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>core game path:</string>
+            </property>
+            <property name="buddy">
+             <cstring>corePath_le</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLineEdit" name="libsPath_le">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QLineEdit" name="nativesPath_le">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="2">
+           <widget class="QPushButton" name="nativesPath_showPb">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>Show...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="versionsPath_le">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QPushButton" name="versionsPath_showPb">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>Show...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QPushButton" name="corePath_showPb">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>Show...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="2">
+           <widget class="QPushButton" name="indexesPath_showPb">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>Show...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="0" colspan="3">
            <widget class="QTextBrowser" name="customPathHelper_tb">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Ignored">
@@ -532,6 +469,99 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;core game path:&amp;lt;core&amp;gt;&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;   assets path:&amp;lt;assets&amp;gt;&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;  laucher path:&amp;lt;launcher&amp;gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="0">
+           <widget class="QLabel" name="objectsPath_label">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>asset objects path:</string>
+            </property>
+            <property name="buddy">
+             <cstring>corePath_le</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="1">
+           <widget class="QLineEdit" name="objectsPath_le">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="2">
+           <widget class="QPushButton" name="objectsPath_showPb">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>Show...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="2">
+           <widget class="QPushButton" name="libsPath_showPb">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>Show...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="1">
+           <widget class="QLineEdit" name="indexesPath_le">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="0">
+           <widget class="QLabel" name="indexesPath_label">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>asset indexes path:</string>
+            </property>
+            <property name="buddy">
+             <cstring>corePath_le</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QLineEdit" name="assetsPath_le">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="0">
+           <widget class="QLabel" name="assetsPath_label">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>core assets path:</string>
+            </property>
+            <property name="buddy">
+             <cstring>corePath_le</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="nativesPath_label">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>natives path:</string>
+            </property>
+            <property name="buddy">
+             <cstring>corePath_le</cstring>
             </property>
            </widget>
           </item>

@@ -11,6 +11,7 @@ public:
 	static QString launcherPath();
 	static QString corePath();
 	static QString libsPath();
+	static QString nativesPath();
 	static QString versionsPath();
 	static QString assetsPath();
 	static QString indexesPath();

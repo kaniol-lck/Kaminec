@@ -26,6 +26,9 @@ Preference::Preference(QWidget *parent, ActiveAuth *auth) :
 	ui->libsPath_label->setVisible(false);
 	ui->libsPath_le->setVisible(false);
 	ui->libsPath_showPb->setVisible(false);
+	ui->nativesPath_label->setVisible(false);
+	ui->nativesPath_le->setVisible(false);
+	ui->nativesPath_showPb->setVisible(false);
 	ui->assetsPath_label->setVisible(false);
 	ui->assetsPath_le->setVisible(false);
 	ui->assetsPath_showPb->setVisible(false);
@@ -46,6 +49,7 @@ Preference::Preference(QWidget *parent, ActiveAuth *auth) :
 	ui->corePath_le->setText(Path::corePath());
 	ui->versionsPath_le->setText(settings.value("versionsPath", "<core>/versions").toString());
 	ui->libsPath_le->setText(settings.value("libsPath", "<core>/libraries").toString());
+	ui->nativesPath_le->setText(settings.value("nativesPath", "<core>/natives").toString());
 	ui->assetsPath_le->setText(settings.value("assetsPath", "<core>/assets").toString());
 	ui->indexesPath_le->setText(settings.value("indexesPath", "<assets>/indexes").toString());
 	ui->objectsPath_le->setText(settings.value("objectsPath", "<assets>/objects").toString());
@@ -119,6 +123,7 @@ void Preference::on_buttonBox_accepted()
 	settings.setValue("corePath", ui->corePath_le->text());
 	settings.setValue("versionsPath", ui->versionsPath_le->text());
 	settings.setValue("libsPath", ui->libsPath_le->text());
+	settings.setValue("nativesPath", ui->libsPath_le->text());
 	settings.setValue("assetsPath", ui->assetsPath_le->text());
 	settings.setValue("indexesPath", ui->indexesPath_le->text());
 	settings.setValue("objectsPath", ui->objectsPath_le->text());
@@ -188,6 +193,9 @@ void Preference::on_more_pb_clicked()
 	ui->libsPath_label->setVisible(customPath);
 	ui->libsPath_le->setVisible(customPath);
 	ui->libsPath_showPb->setVisible(customPath);
+	ui->nativesPath_label->setVisible(customPath);
+	ui->nativesPath_le->setVisible(customPath);
+	ui->nativesPath_showPb->setVisible(customPath);
 	ui->assetsPath_label->setVisible(customPath);
 	ui->assetsPath_le->setVisible(customPath);
 	ui->assetsPath_showPb->setVisible(customPath);

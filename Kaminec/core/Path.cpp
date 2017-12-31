@@ -32,6 +32,13 @@ QString Path::libsPath()
 	return path;
 }
 
+QString Path::nativesPath()
+{
+	auto path = QSettings().value("nativesPath", corePath() + "/natives").toString();
+	replaceCore(path);
+	return path;
+}
+
 QString Path::versionsPath()
 {
 	auto path = QSettings().value("versionsPath", corePath() + "/versions").toString();

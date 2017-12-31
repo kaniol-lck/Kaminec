@@ -146,7 +146,7 @@ QStringList Game::genGameArgs()
 
 int Game::extractNatives()
 {
-	QString nativesDir = corePath + "/natives";
+	QString nativesDir = Path::nativesPath();
 	QDir().mkpath(nativesDir);
 	gameLogger->setNativesPath(nativesDir);
 
@@ -200,6 +200,5 @@ bool Game::deleteDirectory(const QString &path)
 
 void Game::deleteNatives()
 {
-	QString nativesDir = corePath + "/natives";
-	this->deleteDirectory(nativesDir);
+	this->deleteDirectory(Path::nativesPath());
 }
