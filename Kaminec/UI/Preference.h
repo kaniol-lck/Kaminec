@@ -40,6 +40,8 @@ private slots:
 private:
 	Ui::Preference *ui;
 
+	QSettings settings;
+
 	ActiveAuth *activeAuth;
 	bool customPath = false;
 };

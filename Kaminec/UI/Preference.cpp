@@ -1,3 +1,4 @@
+#include "core/Path.h"
 #include "preference.h"
 #include "ui_preference.h"
 #include "UI/ValidateDialog.h"
@@ -18,30 +19,35 @@ Preference::Preference(QWidget *parent, ActiveAuth *auth) :
 	setWindowFlags(Qt::Dialog);
 	ui->setupUi(this);
 
-	ui->versionPath_label->setVisible(false);
-	ui->versionPath_le->setVisible(false);
-	ui->versionPath_showPb->setVisible(false);
-	ui->libPath_label->setVisible(false);
-	ui->libPath_le->setVisible(false);
-	ui->libPath_showPb->setVisible(false);
-	ui->assetPath_label->setVisible(false);
-	ui->assetPath_le->setVisible(false);
-	ui->assetPath_showPb->setVisible(false);
+	ui->versionsPath_label->setVisible(false);
+	ui->versionsPath_le->setVisible(false);
+	ui->versionsPath_showPb->setVisible(false);
+	ui->libsPath_label->setVisible(false);
+	ui->libsPath_le->setVisible(false);
+	ui->libsPath_showPb->setVisible(false);
+	ui->assetsPath_label->setVisible(false);
+	ui->assetsPath_le->setVisible(false);
+	ui->assetsPath_showPb->setVisible(false);
 	ui->indexesPath_label->setVisible(false);
 	ui->indexesPath_le->setVisible(false);
 	ui->indexesPath_showPb->setVisible(false);
 	ui->objectsPath_label->setVisible(false);
 	ui->objectsPath_le->setVisible(false);
 	ui->objectsPath_showPb->setVisible(false);
+	ui->customPathHelper_tb->setVisible(false);
+
 
 	QSettings settings;
 	//load exsit preference
 	ui->playerName_le->setText(settings.value("playerName", "Steve").toString());
 	ui->autoName_cb->setChecked(settings.value("autoName", false).toBool());
 
-	ui->corePath_le->setText(settings.value("corePath",
-											QStandardPaths::writableLocation(
-												QStandardPaths::AppDataLocation) + "/.minecraft").toString());
+	ui->corePath_le->setText(Path::corePath());
+	ui->versionsPath_le->setText(settings.value("versionsPath", "<core>/versions").toString());
+	ui->libsPath_le->setText(settings.value("libsPath", "<core>/libraries").toString());
+	ui->assetsPath_le->setText(settings.value("assetsPath", "<core>/assets").toString());
+	ui->indexesPath_le->setText(settings.value("indexesPath", "<assets>/indexes").toString());
+	ui->objectsPath_le->setText(settings.value("objectsPath", "<assets>/objects").toString());
 
 	ui->fullScreen_checkBox->setChecked(settings.value("fullScreen", false).toBool());
 	ui->width_sb->setValue(settings.value("width", 854).toInt());
@@ -106,12 +112,15 @@ void Preference::on_javaPath_showPb_clicked()
 
 void Preference::on_buttonBox_accepted()
 {
-	QSettings settings;
-
 	settings.setValue("playerName", ui->playerName_le->text());
 	settings.setValue("autoName", ui->autoName_cb->isChecked());
 
 	settings.setValue("corePath", ui->corePath_le->text());
+	settings.setValue("versionsPath", ui->versionsPath_le->text());
+	settings.setValue("libsPath", ui->libsPath_le->text());
+	settings.setValue("assetsPath", ui->assetsPath_le->text());
+	settings.setValue("indexesPath", ui->indexesPath_le->text());
+	settings.setValue("objectsPath", ui->objectsPath_le->text());
 
 	settings.setValue("fullScreen", ui->fullScreen_checkBox->isChecked());
 	settings.setValue("width", ui->width_sb->value());
@@ -121,16 +130,14 @@ void Preference::on_buttonBox_accepted()
 	settings.setValue("minMem", ui->minMem_sb->value());
 	settings.setValue("maxMem", ui->maxMem_sb->value());
 	settings.setValue("javaArg", ui->javaArg_te->toPlainText().replace("\n","\\n"));
-
-	settings.sync();
 }
 
 void Preference::on_login_pb_clicked()
 {
-	if(QSettings().value("isLogged", false).toBool()){
+	if(settings.value("isLogged", false).toBool()){
 		activeAuth->invalidate();
 
-		QSettings().setValue("isLogged", false);
+		settings.setValue("isLogged", false);
 		ui->logName_label->setText("You have not logged in.");
 		ui->login_pb->setText("&Log in");
 	}else {
@@ -151,10 +158,10 @@ void Preference::logChanged(QString email)
 void Preference::on_autoName_cb_stateChanged(int arg1)
 {
 	if(arg1 == Qt::Checked){
-		ui->playerName_le->setText(QSettings().value("id").toString());
+		ui->playerName_le->setText(settings.value("id").toString());
 		ui->playerName_le->setEnabled(false);
 	} else /*arg1 == Qt::Unchecked*/{
-		ui->playerName_le->setText(QSettings().value("playerName").toString());
+		ui->playerName_le->setText(settings.value("playerName").toString());
 		ui->playerName_le->setEnabled(true);
 	}
 }
@@ -174,21 +181,22 @@ void Preference::on_more_pb_clicked()
 {
 	customPath = !customPath;
 
-	ui->versionPath_label->setVisible(customPath);
-	ui->versionPath_le->setVisible(customPath);
-	ui->versionPath_showPb->setVisible(customPath);
-	ui->libPath_label->setVisible(customPath);
-	ui->libPath_le->setVisible(customPath);
-	ui->libPath_showPb->setVisible(customPath);
-	ui->assetPath_label->setVisible(customPath);
-	ui->assetPath_le->setVisible(customPath);
-	ui->assetPath_showPb->setVisible(customPath);
+	ui->versionsPath_label->setVisible(customPath);
+	ui->versionsPath_le->setVisible(customPath);
+	ui->versionsPath_showPb->setVisible(customPath);
+	ui->libsPath_label->setVisible(customPath);
+	ui->libsPath_le->setVisible(customPath);
+	ui->libsPath_showPb->setVisible(customPath);
+	ui->assetsPath_label->setVisible(customPath);
+	ui->assetsPath_le->setVisible(customPath);
+	ui->assetsPath_showPb->setVisible(customPath);
 	ui->indexesPath_label->setVisible(customPath);
 	ui->indexesPath_le->setVisible(customPath);
 	ui->indexesPath_showPb->setVisible(customPath);
 	ui->objectsPath_label->setVisible(customPath);
 	ui->objectsPath_le->setVisible(customPath);
 	ui->objectsPath_showPb->setVisible(customPath);
+	ui->customPathHelper_tb->setVisible(customPath);
 
 	ui->more_pb->setText(customPath?"Fold":"More");
 }

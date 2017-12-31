@@ -43,7 +43,8 @@ SOURCES += main.cpp\
     assistance/utility.cpp \
     core/GenericAuth.cpp \
     core/LaunchAuth.cpp \
-    LAminec/ActiveAuth.cpp
+    LAminec/ActiveAuth.cpp \
+    core/Path.cpp
 
 HEADERS  += UI/kamineclauncher.h \
             messager/profile.h \
@@ -65,7 +66,8 @@ HEADERS  += UI/kamineclauncher.h \
     core/GenericAuth.h \
     core/LaunchAuth.h \
     LAminec/ActiveAuth.h \
-    assistance/systeminfo.h
+    assistance/systeminfo.h \
+    core/Path.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preference.ui \
