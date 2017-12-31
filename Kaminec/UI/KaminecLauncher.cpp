@@ -1,12 +1,13 @@
 #include "kamineclauncher.h"
 #include "ui_kamineclauncher.h"
 
-#include "preference.h"
-#include "downloader/downloadmanagerplus.h"
+#include "UI/Preference.h"
+#include "core/Path.h"
 #include "core/gamemode.h"
 #include "core/game.h"
 #include "LAminec/modsmanager.h"
 #include "LAminec/savesmanager.h"
+#include "downloader/downloadmanagerplus.h"
 
 #include <algorithm>
 #include <QTime>
@@ -33,7 +34,7 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 	savesManager(new SavesManager(this)),
 	modsManager(new ModsManager(this)),
 	gameDownload(new GameDownload(this)),
-	corePath(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString())
+	corePath(Path::corePath())
 {
 	//setup ui
 	ui->setupUi(this);
@@ -210,7 +211,7 @@ void KaminecLauncher::on_download_pb_clicked()
 void KaminecLauncher::loadVersions()
 {
 	//load exsit versions and check laucher_profiles.json
-	QDir dir(corePath + "/versions");
+	QDir dir(Path::versionsPath());
 	if(dir.exists())
 	{
 		dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
@@ -241,7 +242,7 @@ void KaminecLauncher::setBackGround()
 void KaminecLauncher::updateVersionSelect()
 {
 	ui->version_cb->clear();
-	corePath = QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString();
+	corePath = Path::corePath();
 	this->loadVersions();
 }
 

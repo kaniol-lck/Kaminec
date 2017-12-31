@@ -20,11 +20,11 @@ public:
 	QStringList     getLibfileList();
 	QStringList     getExtractfileList();
 	QList<FileItem> getDownloadLibUrls();
-	FileItem		getDownloadAssetFileUrl();
+	FileItem		getDownloadAssetsFileUrl();
 	QStringList     getGameArgs();
 	QStringList     getGameMainClass();
 	QStringList     getJVMArgs();
-	QString         getAssetIndex();
+	QString         getAssetsIndex();
 	FileItem        getDownloadClientUrl();
 	QStringList     getVersionChain();
 

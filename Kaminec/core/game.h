@@ -5,9 +5,9 @@
 #include <QString>
 #include <QProcess>
 
-#include "messager/profile.h"
 #include "core/LaunchAuth.h"
 #include "core/jsonmanager.h"
+#include "messager/profile.h"
 #include "assistance/logger.h"
 
 class Game: public QObject

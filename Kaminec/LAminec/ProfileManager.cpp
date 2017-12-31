@@ -1,4 +1,5 @@
 #include "profilemanager.h"
+#include "core/Path.h"
 #include "messager/profile.h"
 
 #include <QJsonDocument>
@@ -12,7 +13,7 @@
 
 ProfileManager::ProfileManager(QObject *parent) : QObject(parent)
 {
-	QString corePath = QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString();
+	QString corePath = Path::corePath();
 	if(!QDir(corePath).exists()){
 		QDir().mkpath(corePath);
 	}
@@ -56,7 +57,7 @@ bool ProfileManager::checkVersion(QString version)
 
 void ProfileManager::addVersion(QString version, QString gamePath)
 {
-	QString corePath = QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString();
+	QString corePath = Path::corePath();
 	QFile loadfile(corePath + "/launcher_profiles.json");
 
 	QJsonObject profile;

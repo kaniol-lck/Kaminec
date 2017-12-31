@@ -4,11 +4,11 @@
 #include <QMainWindow>
 
 #include "messager/profile.h"
-#include "downloader/gamedownload.h"
 #include "LAminec/ActiveAuth.h"
 #include "LAminec/savesmanager.h"
 #include "LAminec/profilemanager.h"
 #include "LAminec/modsmanager.h"
+#include "downloader/gamedownload.h"
 
 namespace Ui {
 class KaminecLauncher;

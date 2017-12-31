@@ -1,9 +1,10 @@
 #include "gamedownload.h"
 
+#include "core/Path.h"
+#include "core/JsonManager.h"
+#include "core/AssetsManager.h"
 #include "messager/fileitem.h"
 #include "downloader/downloadmanagerplus.h"
-#include "core/JsonManager.h"
-#include "core/assetmanager.h"
 
 #include <QDebug>
 #include <QSettings>
@@ -15,7 +16,7 @@
 
 GameDownload::GameDownload(QObject *parent) :
 	QObject(parent),
-	corePath(QSettings().value("corePath",QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString()),
+	corePath(Path::corePath()),
 	tempFileName(QDir::tempPath() + "/" +
 				 QCoreApplication::applicationName() +"_XXXXXX.json"),
 	downloadManagerPlus(new DownloadManagerPlus(this))
@@ -93,8 +94,8 @@ void GameDownload::download(int index)
 	downloadManagerPlus->append(FileItem(version + ".json",
 									 0,
 									 "NULL",
-									 QString("%1/versions/%2/%2.json")
-									 .arg(corePath).arg(version),
+									 QString("%1/%2/%2.json")
+									 .arg(Path::versionsPath()).arg(version),
 									 versionList.at(index).toMap().value("url").toUrl()));
 	downloadManagerPlus->waitForFinished();
 
@@ -104,16 +105,16 @@ void GameDownload::download(int index)
 
 	auto downloadLibUrls = downloadJson->getDownloadLibUrls();
 	for(auto& i:downloadLibUrls){
-		i.mPath.prepend(corePath+"/libraries/");
+		i.mPath.prepend(Path::libsPath()+"/");
 	}
 
 	downloadManagerPlus->append(downloadLibUrls);
 
-	downloadManagerPlus->append(downloadJson->getDownloadAssetFileUrl());
+	downloadManagerPlus->append(downloadJson->getDownloadAssetsFileUrl());
 	downloadManagerPlus->waitForFinished();
 
-	downloadAsset = new AssetManager(this,downloadJson->getAssetIndex());
-	auto downloadAssetUrls = downloadAsset->getDownloadAssetUrls();
+	downloadAsset = new AssetsManager(this,downloadJson->getAssetsIndex());
+	auto downloadAssetUrls = downloadAsset->getDownloadAssetsUrls();
 	downloadManagerPlus->append(downloadAssetUrls);
 
 	totalCount = downloadManagerPlus->getTotalCount();

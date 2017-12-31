@@ -33,7 +33,6 @@ SavesManager::SavesManager(QObject *parent) :
     qDebug()<<bytes;
     savesFile.close();
 
-    //解析json
     QJsonParseError ok;
     QJsonDocument loadDoc = QJsonDocument::fromJson(bytes,&ok);
     if(ok.error != QJsonParseError::NoError){
@@ -97,8 +96,6 @@ bool SavesManager::backup()
     for(int i=0;i!=savesArray.size();++i){
         QFileInfo savesInfo(savesArray.at(i).toObject().value("path").toString()+"/level.dat");
 
-        //qDebug()<<"now:"<<double(savesInfo.lastModified().toMSecsSinceEpoch());
-        //qDebug()<<"last:"<<savesArray.at(i).toObject().value("lastModified").toDouble();
         if(double(savesInfo.lastModified().toMSecsSinceEpoch())==
                 savesArray.at(i).toObject().value("lastModified").toDouble()){
             qDebug()<<"Not Modified";

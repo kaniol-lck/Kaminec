@@ -1,4 +1,5 @@
 #include "JsonManager.h"
+#include "core/Path.h"
 #include "messager/fileitem.h"
 #include "assistance/utility.h"
 #include "assistance/systeminfo.h"
@@ -15,13 +16,13 @@
 JsonManager::JsonManager(QObject *parent, QString version):
     QObject(parent),
 	jsonDownload(new DownloadManagerPlus(this)),
-	corePath(QSettings().value("corePath", QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString())
+	corePath(Path::corePath())
 {
-	QFile jsonFile(corePath + QString("/versions/%1/%1.json").arg(version));
+	QFile jsonFile(Path::versionsPath() + QString("/%1/%1.json").arg(version));
 
 	if(!jsonFile.exists())qDebug()<< "jsonfile file does not exist";
     if(!jsonFile.open(QIODevice::ReadOnly | QIODevice::Text)){
-		qDebug()<< "Open failed:" << corePath + QString("/versions/%1/%1.json").arg(version);
+		qDebug()<< "Open failed:" << jsonFile.fileName();
 		QMessageBox::about(0, "Not find json file", "Json file NOT find,The program will terminate.");
     }
 	qDebug()<< "jsonfile(" <<version<< ".json) file opened:" << jsonFile.fileName();
@@ -47,7 +48,7 @@ QStringList JsonManager::getLibfileList()
 							  [this](QStringList libfileList, QVariant libElem){
 			  if(libElem.toMap().contains("natives")) return libfileList;
 				  auto filename = genFilename(libElem.toMap().value("name").toString());
-				  libfileList<<filename.prepend(corePath + "/libraries/");
+				  libfileList<<filename.prepend(Path::libsPath() + "/");
 				 return libfileList;
 			 });
 
@@ -55,7 +56,7 @@ QStringList JsonManager::getLibfileList()
 		auto inheritedJson = new JsonManager(this, jsonContent.toMap().value("inheritsFrom").toString());
 		fileList<< inheritedJson->getLibfileList();
 	}else {
-		fileList<< corePath + QString("/versions/%1/%1.jar").arg(jsonContent.toMap().value("id").toString());
+		fileList<< Path::versionsPath() + QString("/%1/%1.jar").arg(jsonContent.toMap().value("id").toString());
 	}
 
 	return fileList;
@@ -94,7 +95,7 @@ QList<FileItem> JsonManager::getDownloadLibUrls()
 		if(jsonContent.toMap().contains("inheritsFrom") &&
 		   libElem.toMap().contains("name")){
 			auto filename = genFilename(libElem.toMap().value("name").toString());
-			auto path = corePath + "/libraries/"  + filename;
+			auto path = Path::libsPath() + "/"  + filename;
 			auto url = libElem.toMap().value("url").toString() + filename;
 			return libUrls<< FileItem(filename, 0, "NULL", path, url);
 		}
@@ -115,12 +116,12 @@ QList<FileItem> JsonManager::getDownloadLibUrls()
 	});
 }
 
-FileItem JsonManager::getDownloadAssetFileUrl()
+FileItem JsonManager::getDownloadAssetsFileUrl()
 {
-	QString filename = getAssetIndex() + ".json";
+	QString filename = getAssetsIndex() + ".json";
 	int size = value(jsonContent, "assetIndex", "size").toInt();
 	QString sha1 = value(jsonContent, "assetIndex", "sha1").toString();
-	QString path = corePath + "/assets/indexes/"  + filename;
+	QString path = Path::indexesPath() + "/"  + filename;
 	QUrl url = value(jsonContent, "assetIndex", "url").toUrl();
 
 	return FileItem(filename, size, sha1, path, url);
@@ -148,11 +149,11 @@ QStringList JsonManager::getJVMArgs()
 				QStringList();
 }
 
-QString JsonManager::getAssetIndex()
+QString JsonManager::getAssetsIndex()
 {
 	if(jsonContent.toMap().contains("inheritsFrom")){
 		auto inheritedJson = new JsonManager(this, jsonContent.toMap().value("inheritsFrom").toString());
-		return inheritedJson->getAssetIndex();
+		return inheritedJson->getAssetsIndex();
 	}else {
 		return jsonContent.toMap().value("assets").toString();
 	}
@@ -163,7 +164,7 @@ FileItem JsonManager::getDownloadClientUrl()
 	return FileItem(jsonContent.toMap().value("id").toString()+".jar",
 					value(jsonContent, "downloads", "client", "size").toInt(),
 					value(jsonContent, "downloads", "client", "sha1").toString(),
-					corePath + QString("/versions/%1/%1.jar").arg(jsonContent.toMap().value("id").toString()),
+					Path::versionsPath() + QString("/%1/%1.jar").arg(jsonContent.toMap().value("id").toString()),
 					value(jsonContent, "downloads", "client", "url").toString());
 }
 

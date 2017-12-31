@@ -4,12 +4,11 @@
 #include <QFileInfo>
 #include <QStandardPaths>
 #include <QSettings>
-
-QSettings Path::settings{};
+#include <QDebug>
 
 QString Path::JavaPath()
 {
-	QFileInfo path(settings.value("javaPath").toString());
+	QFileInfo path(QSettings().value("javaPath").toString());
 	if(!path.exists()){
 		throw QString("Java not exist.");
 	}
@@ -23,40 +22,40 @@ QString Path::launcherPath()
 
 QString Path::corePath()
 {
-	return settings.value("corePath", QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/.minecraft").toString();
+	return QSettings().value("corePath", QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/.minecraft").toString();
 }
 
 QString Path::libsPath()
 {
-	auto path = settings.value("libsPath", corePath() + "/libraries").toString();
+	auto path = QSettings().value("libsPath", corePath() + "/libraries").toString();
 	replaceCore(path);
 	return path;
 }
 
 QString Path::versionsPath()
 {
-	auto path = settings.value("versionsPath", corePath() + "/versions").toString();
+	auto path = QSettings().value("versionsPath", corePath() + "/versions").toString();
 	replaceCore(path);
 	return path;
 }
 
 QString Path::assetsPath()
 {
-	auto path = settings.value("assetsPath", corePath() + "/assets").toString();
+	auto path = QSettings().value("assetsPath", corePath() + "/assets").toString();
 	replaceCore(path);
 	return path;
 }
 
 QString Path::indexesPath()
 {
-	auto path = settings.value("indexesPath", assetsPath() + "/indexes").toString();
+	auto path = QSettings().value("indexesPath", assetsPath() + "/indexes").toString();
 	replaceAll(path);
 	return path;
 }
 
 QString Path::objectsPath()
 {
-	auto path = settings.value("objectsPath", assetsPath() + "/objects").toString();
+	auto path = QSettings().value("objectsPath", assetsPath() + "/objects").toString();
 	replaceAll(path);
 	return path;
 }

@@ -1,8 +1,9 @@
-#include "core/Path.h"
 #include "preference.h"
+#include "core/Path.h"
 #include "ui_preference.h"
 #include "UI/ValidateDialog.h"
 #include "LAminec/ActiveAuth.h"
+
 #include <QStringList>
 #include <QProcess>
 #include <QSettings>

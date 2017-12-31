@@ -7,20 +7,21 @@
 #include <QList>
 #include <QJsonObject>
 
-class AssetManager : public QObject
+class AssetsManager : public QObject
 {
 	Q_OBJECT
 public:
-	explicit AssetManager(QObject *parent, QString assertIndex);
+	explicit AssetsManager(QObject *parent, QString assetsIndex);
 
-	QList<FileItem> getDownloadAssetUrls();
+	QList<FileItem> getDownloadAssetsUrls();
 
 signals:
 
 public slots:
 
 private:
-	QJsonObject asset;
+	static QString resourcesDownload;
+	QJsonObject assets;
 	QString corePath;
 };
 

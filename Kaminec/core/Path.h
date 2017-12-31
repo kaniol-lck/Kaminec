@@ -6,7 +6,6 @@
 
 class Path {
 public:
-	Path() = delete;
 
 	static QString JavaPath();
 	static QString launcherPath();
@@ -21,7 +20,6 @@ private:
 	static void replaceLauncher(QString& path);
 	static void replaceCore(QString& path);
 	static void replaceAll(QString& path);
-	static QSettings settings;
 };
 
 #endif // PATH_H

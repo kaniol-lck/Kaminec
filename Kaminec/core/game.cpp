@@ -1,4 +1,5 @@
 #include "game.h"
+#include "core/Path.h"
 #include "core/gamemode.h"
 #include "core/JsonManager.h"
 #include "messager/profile.h"
@@ -25,7 +26,7 @@ Game::Game(QObject *parent, Profile profile, LaunchAuth *auth):
 	gameAuth(auth),
 	gameJson(parent,gameProfile.mLastVersionId),
 	gameProcess(new QProcess(this)),
-	corePath(QSettings().value("corePath", QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).toString()),
+	corePath(Path::corePath()),
 	gameLogger(new Logger(this, corePath + "/launcher_log/log.txt"))
 {
 	connect(gameProcess, SIGNAL(finished(int)), this, SIGNAL(finished(int)));
@@ -117,7 +118,7 @@ QStringList Game::genGameArgs()
 		{"${auth_uuid}", gameAuth->getAuthUuid()},
 		{"${auth_access_token}", gameAuth->getAuthAccessToken()},
 		{"${user_type}", gameAuth->getUserType()},
-		{"${assets_index_name}", gameJson.getAssetIndex()},
+		{"${assets_index_name}", gameJson.getAssetsIndex()},
 		{"${version_type}", "Kaminec Launcher"},
 		{"${user_properties}", "{}"},
 	};
@@ -152,7 +153,7 @@ int Game::extractNatives()
 	auto extractfileList = gameJson.getExtractfileList();
 
 	for(auto& extractfile : extractfileList)
-		extractfile.prepend(corePath + "/libraries/");
+		extractfile.prepend(Path::libsPath() + "/");
 
 	gameLogger->setExtractFiles(extractfileList);
 

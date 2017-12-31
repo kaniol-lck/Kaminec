@@ -2,7 +2,7 @@
 #define GAMEDOWNLOAD_H
 
 #include "core/JsonManager.h"
-#include "core/assetmanager.h"
+#include "core/AssetsManager.h"
 #include "downloader/downloadmanagerplus.h"
 
 #include <QObject>
@@ -37,7 +37,7 @@ private:
 	QTemporaryFile tempVersionsFile;
 	DownloadManagerPlus *downloadManagerPlus;
 	JsonManager *downloadJson;
-	AssetManager *downloadAsset;
+	AssetsManager *downloadAsset;
 	QVariantList versionList;
 	int totalCount;
 };
