@@ -22,47 +22,47 @@ QString Path::launcherPath()
 
 QString Path::corePath()
 {
-	return QSettings().value("corePath", QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/.minecraft").toString();
+	return QSettings().value("path/corePath", QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/.minecraft").toString();
 }
 
 QString Path::libsPath()
 {
-	auto path = QSettings().value("libsPath", corePath() + "/libraries").toString();
+	auto path = QSettings().value("path/libsPath", corePath() + "/libraries").toString();
 	replaceCore(path);
 	return path;
 }
 
 QString Path::nativesPath()
 {
-	auto path = QSettings().value("nativesPath", corePath() + "/natives").toString();
+	auto path = QSettings().value("path/nativesPath", corePath() + "/natives").toString();
 	replaceCore(path);
 	return path;
 }
 
 QString Path::versionsPath()
 {
-	auto path = QSettings().value("versionsPath", corePath() + "/versions").toString();
+	auto path = QSettings().value("path/versionsPath", corePath() + "/versions").toString();
 	replaceCore(path);
 	return path;
 }
 
 QString Path::assetsPath()
 {
-	auto path = QSettings().value("assetsPath", corePath() + "/assets").toString();
+	auto path = QSettings().value("path/assetsPath", corePath() + "/assets").toString();
 	replaceCore(path);
 	return path;
 }
 
 QString Path::indexesPath()
 {
-	auto path = QSettings().value("indexesPath", assetsPath() + "/indexes").toString();
+	auto path = QSettings().value("path/indexesPath", assetsPath() + "/indexes").toString();
 	replaceAll(path);
 	return path;
 }
 
 QString Path::objectsPath()
 {
-	auto path = QSettings().value("objectsPath", assetsPath() + "/objects").toString();
+	auto path = QSettings().value("path/objectsPath", assetsPath() + "/objects").toString();
 	replaceAll(path);
 	return path;
 }

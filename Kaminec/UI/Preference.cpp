@@ -47,12 +47,12 @@ Preference::Preference(QWidget *parent, ActiveAuth *auth) :
 	ui->autoName_cb->setChecked(settings.value("autoName", false).toBool());
 
 	ui->corePath_le->setText(Path::corePath());
-	ui->versionsPath_le->setText(settings.value("versionsPath", "<core>/versions").toString());
-	ui->libsPath_le->setText(settings.value("libsPath", "<core>/libraries").toString());
-	ui->nativesPath_le->setText(settings.value("nativesPath", "<core>/natives").toString());
-	ui->assetsPath_le->setText(settings.value("assetsPath", "<core>/assets").toString());
-	ui->indexesPath_le->setText(settings.value("indexesPath", "<assets>/indexes").toString());
-	ui->objectsPath_le->setText(settings.value("objectsPath", "<assets>/objects").toString());
+	ui->versionsPath_le->setText(settings.value("path/versionsPath", "<core>/versions").toString());
+	ui->libsPath_le->setText(settings.value("path/libsPath", "<core>/libraries").toString());
+	ui->nativesPath_le->setText(settings.value("path/nativesPath", "<core>/natives").toString());
+	ui->assetsPath_le->setText(settings.value("path/assetsPath", "<core>/assets").toString());
+	ui->indexesPath_le->setText(settings.value("path/indexesPath", "<assets>/indexes").toString());
+	ui->objectsPath_le->setText(settings.value("path/objectsPath", "<assets>/objects").toString());
 
 	ui->fullScreen_checkBox->setChecked(settings.value("fullScreen", false).toBool());
 	ui->width_sb->setValue(settings.value("width", 854).toInt());
@@ -120,13 +120,13 @@ void Preference::on_buttonBox_accepted()
 	settings.setValue("playerName", ui->playerName_le->text());
 	settings.setValue("autoName", ui->autoName_cb->isChecked());
 
-	settings.setValue("corePath", ui->corePath_le->text());
-	settings.setValue("versionsPath", ui->versionsPath_le->text());
-	settings.setValue("libsPath", ui->libsPath_le->text());
-	settings.setValue("nativesPath", ui->libsPath_le->text());
-	settings.setValue("assetsPath", ui->assetsPath_le->text());
-	settings.setValue("indexesPath", ui->indexesPath_le->text());
-	settings.setValue("objectsPath", ui->objectsPath_le->text());
+	settings.setValue("path/corePath", ui->corePath_le->text());
+	settings.setValue("path/versionsPath", ui->versionsPath_le->text());
+	settings.setValue("path/libsPath", ui->libsPath_le->text());
+	settings.setValue("path/nativesPath", ui->libsPath_le->text());
+	settings.setValue("path/assetsPath", ui->assetsPath_le->text());
+	settings.setValue("path/indexesPath", ui->indexesPath_le->text());
+	settings.setValue("path/objectsPath", ui->objectsPath_le->text());
 
 	settings.setValue("fullScreen", ui->fullScreen_checkBox->isChecked());
 	settings.setValue("width", ui->width_sb->value());
