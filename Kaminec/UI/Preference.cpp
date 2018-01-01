@@ -123,7 +123,7 @@ void Preference::on_buttonBox_accepted()
 	settings.setValue("path/corePath", ui->corePath_le->text());
 	settings.setValue("path/versionsPath", ui->versionsPath_le->text());
 	settings.setValue("path/libsPath", ui->libsPath_le->text());
-	settings.setValue("path/nativesPath", ui->libsPath_le->text());
+	settings.setValue("path/nativesPath", ui->nativesPath_le->text());
 	settings.setValue("path/assetsPath", ui->assetsPath_le->text());
 	settings.setValue("path/indexesPath", ui->indexesPath_le->text());
 	settings.setValue("path/objectsPath", ui->objectsPath_le->text());

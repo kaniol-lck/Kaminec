@@ -78,7 +78,7 @@ QStringList Game::genJVMArgs()
 			  "-XX:+UseG1GC",
 			  "-XX:-UseAdaptiveSizePolicy",
 			  "-XX:-OmitStackTraceInFastThrow",
-			  QString("-Djava.library.path=%1").arg(corePath + "/natives"),
+			  QString("-Djava.library.path=%1").arg(Path::nativesPath()),
 			  "-Dfml.ignoreInvalidMinecraftCertificates=true",
 			  "-Dfml.ignorePatchDiscrepancies=true",
 			  "-cp"
