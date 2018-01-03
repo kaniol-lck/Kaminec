@@ -114,7 +114,7 @@ QStringList Game::genGameArgs()
 		{"${auth_player_name}", QSettings().value("playerName").toString()},
 		{"${version_name}", gameProfile.mLastVersionId},
 		{"${game_directory}", gameProfile.mGameDir},
-		{"${assets_root}", QString("%1/assets").arg(corePath)},
+		{"${assets_root}", Path::assetsPath()},
 		{"${auth_uuid}", gameAuth->getAuthUuid()},
 		{"${auth_access_token}", gameAuth->getAuthAccessToken()},
 		{"${user_type}", gameAuth->getUserType()},
