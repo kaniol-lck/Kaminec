@@ -5,6 +5,7 @@
 #include <QString>
 #include <QProcess>
 
+#include "core/GameJson.h"
 #include "core/LaunchAuth.h"
 #include "core/jsonmanager.h"
 #include "messager/profile.h"
@@ -31,7 +32,7 @@ private:
 
     Profile gameProfile;
 	LaunchAuth *gameAuth;
-    JsonManager gameJson;
+	JsonManager gameJson;
 	QProcess *gameProcess;
 	QString corePath;
 	Logger *gameLogger;

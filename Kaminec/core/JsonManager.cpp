@@ -68,9 +68,9 @@ QStringList JsonManager::getExtractfileList()
 	fileList<<std::accumulate(libList.begin(), libList.end(), QStringList(),
 						   [](QStringList libfileList, QVariant libElem){
 		return libElem.toMap().contains("natives") &&
-			  libElem.toMap().value("natives").toMap().contains(systemName())?
+			  libElem.toMap().value("natives").toMap().contains(sysName())?
 					   libfileList<< value(libElem, "downloads", "classifiers",
-										   value(libElem, "natives", systemName())
+										   value(libElem, "natives", sysName())
 										   .toString().replace("${arch}", QString::number(sysWordSize())), "path").toString():
 					libfileList;
 	});
@@ -102,12 +102,12 @@ QList<FileItem> JsonManager::getDownloadLibUrls()
 		return (libElem.toMap().value("downloads").toMap().contains("classifiers") &&
 				!value(libElem, "downloads", "classifiers").toMap().contains("test") &&
 				libElem.toMap().contains("natives") &&
-				libElem.toMap().value("natives").toMap().contains(systemName()) &&
+				libElem.toMap().value("natives").toMap().contains(sysName()) &&
 				value(libElem, "downloads", "classifiers").toMap().contains(
-					value(libElem, "natives", systemName()).toString()))?
+					value(libElem, "natives", sysName()).toString()))?
 					libUrls<< FileItem::fromJson(libElem.toMap().value("name").toString(),
 												 value(libElem, "downloads", "classifiers",
-													   value(libElem, "natives", systemName())
+													   value(libElem, "natives", sysName())
 													   .toString().replace("${arch}", QString::number(sysWordSize())))):(
 								  libElem.toMap().value("downloads").toMap().contains("artifact")?
 									  libUrls<< FileItem::fromJson(value(libElem, "name").toString(),

@@ -1,6 +1,7 @@
 #include "game.h"
 #include "core/Path.h"
 #include "core/gamemode.h"
+#include "core/GameJson.h"
 #include "core/JsonManager.h"
 #include "messager/profile.h"
 #include "assistance/logger.h"
@@ -44,6 +45,7 @@ int Game::start()
 ///////////////////////////////////////////////////////////////////
 	gameLogger->startGenStartcode();
     auto startcode = this->genStartcode();
+
 	gameLogger->fisishGenStartcode();
 
 	gameLogger->setVersionChain(gameJson.getVersionChain());

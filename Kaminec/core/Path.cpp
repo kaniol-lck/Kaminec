@@ -67,6 +67,12 @@ QString Path::objectsPath()
 	return path;
 }
 
+QString Path::getJsonPath(const QString& version)
+{
+	return QString("%1/%2/%2.json")
+			.arg(versionsPath(), version);
+}
+
 void Path::replaceLauncher(QString &path)
 {
 	path.replace("<launcher>", launcherPath());

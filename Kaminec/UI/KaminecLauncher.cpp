@@ -5,6 +5,7 @@
 #include "core/Path.h"
 #include "core/gamemode.h"
 #include "core/game.h"
+#include "core/NewGame.h"
 #include "LAminec/modsmanager.h"
 #include "LAminec/savesmanager.h"
 #include "downloader/downloadmanagerplus.h"
@@ -140,7 +141,7 @@ void KaminecLauncher::startGame()
 	modsManager->start();
 
 	//init game
-	auto game = new Game(this, this->getProfile(), auth);
+	auto game = new NewGame(this, this->getProfile(), auth);
 
 	//ui during gaming
 	ui->start_pb->setText("Gaming...");

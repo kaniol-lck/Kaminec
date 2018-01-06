@@ -44,7 +44,12 @@ SOURCES += main.cpp\
     core/LaunchAuth.cpp \
     LAminec/ActiveAuth.cpp \
     core/Path.cpp \
-    core/AssetsManager.cpp
+    core/AssetsManager.cpp \
+    core/Library.cpp \
+    core/Ruler.cpp \
+    core/GameJson.cpp \
+    core/Arguements.cpp \
+    core/NewGame.cpp
 
 HEADERS  += UI/kamineclauncher.h \
             messager/profile.h \
@@ -67,7 +72,12 @@ HEADERS  += UI/kamineclauncher.h \
     LAminec/ActiveAuth.h \
     assistance/systeminfo.h \
     core/Path.h \
-    core/AssetsManager.h
+    core/AssetsManager.h \
+    core/Library.h \
+    core/Ruler.h \
+    core/GameJson.h \
+    core/Arguements.h \
+    core/NewGame.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preference.ui \

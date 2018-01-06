@@ -17,6 +17,8 @@ public:
 	static QString indexesPath();
 	static QString objectsPath();
 
+	static QString getJsonPath(const QString &version);
+
 private:
 	static void replaceLauncher(QString& path);
 	static void replaceCore(QString& path);
