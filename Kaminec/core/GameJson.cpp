@@ -98,5 +98,8 @@ Arguements GameJson::getGameArguements() const
 
 QString GameJson::getAssetsIndex() const
 {
-	return assetsIndex;
+	if(inheritsFromJson)
+		return inheritsFromJson->getAssetsIndex();
+	else
+		return assetsIndex;
 }
