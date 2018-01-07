@@ -2,6 +2,7 @@
 
 #include "core/Path.h"
 #include "core/Arguements.h"
+#include "assistance/utility.h"
 
 #include <QDir>
 #include <QSettings>
@@ -21,16 +22,20 @@ void NewGame::start()
 {
 	auto startcode = getStartcode();
 
-	qDebug()<<startcode;
-
-	this->extractNatives();
+	extractNatives();
 
 	gameProcess->start(Path::JavaPath(),
 					   startcode);
 
+	//these setting is foolish, migrate it later
 	QSettings().setValue("lastUsedVersion", gameProfile.mLastVersionId);
 	QSettings().setValue("gameDir", gameProfile.mGameDir);
 	QSettings().setValue("isOnline", launchAuth->getAuthMode() == Mode::Online);
+
+	//forward finished infomation
+	connect(gameProcess, SIGNAL(finished(int)), this, SIGNAL(finished(int)));
+	//delete natives after playing
+	connect(gameProcess, SIGNAL(finished(int)), this, SLOT(deleteNatives()));
 
 }
 
@@ -128,5 +133,5 @@ void NewGame::extractNatives()
 
 void NewGame::deleteNatives()
 {
-
+	deleteDirectory(Path::nativesPath());
 }

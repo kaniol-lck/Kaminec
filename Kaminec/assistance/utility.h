@@ -17,4 +17,7 @@ inline QVariant value(const Container& c, const  QString& s, const list&... Args
 }
 
 QString genFilename(const QString& name);
+
+bool deleteDirectory(const QString &path);
+
 #endif // UTILITY_H
