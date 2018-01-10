@@ -1,7 +1,7 @@
 #include "NewGame.h"
 
 #include "core/Path.h"
-#include "core/Arguements.h"
+#include "core/Arguments.h"
 #include "assistance/utility.h"
 
 #include <QDir>
@@ -42,14 +42,14 @@ void NewGame::start()
 QStringList NewGame::getStartcode()
 {
 	QStringList startcode;
-	startcode << getJVMArguements();
+	startcode << getJVMArguments();
 	startcode << gameJson.getMainClass();
-	startcode << getGameArguements();
+	startcode << getGameArguments();
 
 	return startcode;
 }
 
-QStringList NewGame::getJVMArguements()
+QStringList NewGame::getJVMArguments()
 {
 	auto JVMArgs = QStringList{
 			  "-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump",
@@ -70,9 +70,9 @@ QStringList NewGame::getJVMArguements()
 	return JVMArgs;
 }
 
-QStringList NewGame::getGameArguements()
+QStringList NewGame::getGameArguments()
 {
-	auto gameArguements = gameJson.getGameArguements();
+	auto gameArguments = gameJson.getGameArguments();
 
 	QMap<QString, QString> replace_list = {
 		{"${auth_player_name}", QSettings().value("playerName").toString()},
@@ -88,10 +88,10 @@ QStringList NewGame::getGameArguements()
 	};
 
 	for(auto it = replace_list.begin(); it != replace_list.end(); it++){
-		gameArguements.replace(it.key(), it.value());
+		gameArguments.replace(it.key(), it.value());
 	}
 
-	return gameArguements.toStringList();
+	return gameArguments.toStringList();
 }
 
 QString NewGame::getClassPaths()

@@ -2,7 +2,7 @@
 #define GAMEJSON_H
 
 #include "core/Library.h"
-#include "core/Arguements.h"
+#include "core/Arguments.h"
 
 #include <memory>
 #include <QList>
@@ -21,7 +21,7 @@ public:
 
 	QString getMainClass() const;
 
-	Arguements getGameArguements() const;
+	Arguments getGameArguments() const;
 
 	QString getAssetsIndex() const;
 
@@ -37,7 +37,7 @@ private:
 	QString jarName;
 
 	QString mainClass;
-	Arguements gameArguements;
+	Arguments gameArguments;
 	QString assetsIndex;
 };
 

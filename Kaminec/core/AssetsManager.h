@@ -1,5 +1,5 @@
-#ifndef ASSETMANAGER_H
-#define ASSETMANAGER_H
+#ifndef ASSETSMANAGER_H
+#define ASSETSMANAGER_H
 
 #include "messager/fileitem.h"
 
@@ -25,4 +25,4 @@ private:
 	QString corePath;
 };
 
-#endif // ASSETMANAGER_H
+#endif // ASSETSMANAGER_H

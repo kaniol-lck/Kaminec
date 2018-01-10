@@ -259,7 +259,7 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
                </sizepolicy>
               </property>
               <property name="text">
-               <string>extra Java arguement:</string>
+               <string>extra Java argument:</string>
               </property>
               <property name="buddy">
                <cstring>javaArg_te</cstring>

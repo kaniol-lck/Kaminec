@@ -76,8 +76,8 @@ void Logger::writeToFile()
 	out << "natives path:" << m_nativePath << endl;
 	out << "class paths:" << m_classPaths.join("\n") << endl;
 	out << "game main class:" << m_gameMainClass << endl;
-	out << "game arguements:" << m_gameArgs.join("\n") << endl;
-	out << "JVM arguements:" << m_JVMArgs.join("\n") << endl;
+	out << "game arguments:" << m_gameArgs.join("\n") << endl;
+	out << "JVM arguments:" << m_JVMArgs.join("\n") << endl;
 	out << "extract files:" << m_extractFiles.join("\n") << endl;
 	out << "generate startcode time:" << QString::number(startCode_use) << "ms" << endl;
 	out << "play game time:" << QString::number(game_use) << "ms" << endl;

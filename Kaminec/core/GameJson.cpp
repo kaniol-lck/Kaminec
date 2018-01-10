@@ -41,7 +41,7 @@ GameJson::GameJson(QString version)
 	} else{
 		jarName = versionIndex.first;
 	}
-	gameArguements = Arguements(value(jsonVar, "minecraftArguments").toString());
+	gameArguments = Arguments(value(jsonVar, "minecraftArguments").toString());
 
 	assetsIndex = value(jsonVar, "assets").toString();
 
@@ -91,9 +91,9 @@ QString GameJson::getMainClass() const
 	return mainClass;
 }
 
-Arguements GameJson::getGameArguements() const
+Arguments GameJson::getGameArguments() const
 {
-	return gameArguements;
+	return gameArguments;
 }
 
 QString GameJson::getAssetsIndex() const

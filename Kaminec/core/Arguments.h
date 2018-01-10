@@ -1,14 +1,14 @@
-#ifndef ARGUEMENTS_H
-#define ARGUEMENTS_H
+#ifndef ARGUMENTS_H
+#define ARGUMENTS_H
 
 #include <QList>
 #include <QString>
 
-class Arguements
+class Arguments
 {
 public:
-	Arguements() = default;
-	Arguements(QString arguements);
+	Arguments() = default;
+	Arguments(QString arguments);
 
 	void replace(const QString& before, const QString& after);
 
@@ -23,4 +23,4 @@ private:
 	QList<QStringList> options;
 };
 
-#endif // ARGUEMENTS_H
+#endif // ARGUMENTS_H

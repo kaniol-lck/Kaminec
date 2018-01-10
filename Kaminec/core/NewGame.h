@@ -20,8 +20,8 @@ public:
 
 	QStringList getStartcode();
 
-	QStringList getJVMArguements();
-	QStringList getGameArguements();
+	QStringList getJVMArguments();
+	QStringList getGameArguments();
 
 	QString getClassPaths();
 
