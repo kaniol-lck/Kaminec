@@ -1,7 +1,7 @@
 #ifndef LAUNCHAUTH_H
 #define LAUNCHAUTH_H
 
-#include "core/GenericAuth.h"
+#include "core/auth/GenericAuth.h"
 #include "core/Gamemode.h"
 
 #include <QSettings>

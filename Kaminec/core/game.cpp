@@ -1,8 +1,8 @@
 #include "game.h"
 #include "core/Path.h"
 #include "core/gamemode.h"
-#include "core/GameJson.h"
-#include "core/JsonManager.h"
+#include "core/json/GameJson.h"
+#include "core/json/JsonManager.h"
 #include "messager/profile.h"
 #include "assistance/logger.h"
 

@@ -27,7 +27,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
            UI/kamineclauncher.cpp \
            messager/profile.cpp \
-           core/jsonmanager.cpp \
+		   core/json/jsonmanager.cpp \
            core/game.cpp \
            messager/fileitem.cpp \
            LAminec/savesmanager.cpp \
@@ -40,21 +40,21 @@ SOURCES += main.cpp\
     LAminec/modsmanager.cpp \
     assistance/logger.cpp \
     assistance/utility.cpp \
-    core/GenericAuth.cpp \
-    core/LaunchAuth.cpp \
+	core/auth/GenericAuth.cpp \
+	core/auth/LaunchAuth.cpp \
     LAminec/ActiveAuth.cpp \
     core/Path.cpp \
-    core/AssetsManager.cpp \
-    core/Library.cpp \
+	core/json/AssetsManager.cpp \
+	core/json/Library.cpp \
     core/Ruler.cpp \
-    core/GameJson.cpp \
+	core/json/GameJson.cpp \
     core/NewGame.cpp \
     core/Arguments.cpp
 
 HEADERS  += UI/kamineclauncher.h \
             messager/profile.h \
             core/gamemode.h \
-            core/jsonmanager.h \
+			core/json/jsonmanager.h \
             core/game.h \
             messager/fileitem.h \
             LAminec/savesmanager.h \
@@ -67,15 +67,15 @@ HEADERS  += UI/kamineclauncher.h \
     LAminec/modsmanager.h \
     assistance/utility.h \
     assistance/logger.h \
-    core/GenericAuth.h \
-    core/LaunchAuth.h \
+	core/auth/GenericAuth.h \
+	core/auth/LaunchAuth.h \
     LAminec/ActiveAuth.h \
     assistance/systeminfo.h \
     core/Path.h \
-    core/AssetsManager.h \
-    core/Library.h \
+	core/json/AssetsManager.h \
+	core/json/Library.h \
     core/Ruler.h \
-    core/GameJson.h \
+	core/json/GameJson.h \
     core/NewGame.h \
     core/Arguments.h
 

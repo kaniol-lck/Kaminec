@@ -4,9 +4,9 @@
 #include <QObject>
 #include <QProcess>
 
-#include "core/GameJson.h"
-#include "core/LaunchAuth.h"
-#include "core/GameJson.h"
+#include "core/json/GameJson.h"
+#include "core/auth/LaunchAuth.h"
+#include "core/json/GameJson.h"
 #include "messager/profile.h"
 #include "assistance/logger.h"
 

@@ -1,8 +1,8 @@
 #ifndef GAMEDOWNLOAD_H
 #define GAMEDOWNLOAD_H
 
-#include "core/JsonManager.h"
-#include "core/AssetsManager.h"
+#include "core/json/JsonManager.h"
+#include "core/json/AssetsManager.h"
 #include "downloader/downloadmanagerplus.h"
 
 #include <QObject>

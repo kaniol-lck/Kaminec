@@ -1,7 +1,7 @@
 #ifndef GAMEJSON_H
 #define GAMEJSON_H
 
-#include "core/Library.h"
+#include "core/json/Library.h"
 #include "core/Arguments.h"
 
 #include <memory>

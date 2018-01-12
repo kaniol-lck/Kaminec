@@ -1,7 +1,7 @@
 #ifndef ACTIVEAUTH_H
 #define ACTIVEAUTH_H
 
-#include "core/GenericAuth.h"
+#include "core/auth/GenericAuth.h"
 
 #include <QSettings>
 

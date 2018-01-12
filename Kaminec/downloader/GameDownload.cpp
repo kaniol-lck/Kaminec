@@ -1,8 +1,8 @@
 #include "gamedownload.h"
 
 #include "core/Path.h"
-#include "core/JsonManager.h"
-#include "core/AssetsManager.h"
+#include "core/json/JsonManager.h"
+#include "core/json/AssetsManager.h"
 #include "messager/fileitem.h"
 #include "downloader/downloadmanagerplus.h"
 
