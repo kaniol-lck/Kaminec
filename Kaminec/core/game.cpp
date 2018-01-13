@@ -1,7 +1,7 @@
 #include "game.h"
 #include "core/Path.h"
 #include "core/gamemode.h"
-#include "core/json/GameJson.h"
+#include "core/json/JsonKit.h"
 #include "core/json/JsonManager.h"
 #include "messager/profile.h"
 #include "assistance/logger.h"

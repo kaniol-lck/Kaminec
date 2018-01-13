@@ -5,7 +5,7 @@
 #include <QString>
 #include <QProcess>
 
-#include "core/json/GameJson.h"
+#include "core/json/JsonKit.h"
 #include "core/auth/LaunchAuth.h"
 #include "core/json/JsonManager.h"
 #include "messager/profile.h"

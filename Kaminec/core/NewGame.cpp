@@ -12,7 +12,7 @@ NewGame::NewGame(QObject *parent, Profile profile, LaunchAuth *auth) :
 	QObject(parent),
 	gameProfile(profile),
 	launchAuth(auth),
-	gameJson(gameProfile.mLastVersionId),
+	launchJson(gameProfile.mLastVersionId),
 	gameProcess(new QProcess(this))
 {
 
@@ -43,7 +43,7 @@ QStringList NewGame::getStartcode()
 {
 	QStringList startcode;
 	startcode << getJVMArguments();
-	startcode << gameJson.getMainClass();
+	startcode << launchJson.getMainClass();
 	startcode << getGameArguments();
 
 	return startcode;
@@ -72,7 +72,7 @@ QStringList NewGame::getJVMArguments()
 
 QStringList NewGame::getGameArguments()
 {
-	auto gameArguments = gameJson.getGameArguments();
+	auto gameArguments = launchJson.getGameArguments();
 
 	QMap<QString, QString> replace_list = {
 		{"${auth_player_name}", QSettings().value("playerName").toString()},
@@ -82,7 +82,7 @@ QStringList NewGame::getGameArguments()
 		{"${auth_uuid}", launchAuth->getAuthUuid()},
 		{"${auth_access_token}", launchAuth->getAuthAccessToken()},
 		{"${user_type}", launchAuth->getUserType()},
-		{"${assets_index_name}", gameJson.getAssetsIndex()},
+		{"${assets_index_name}", launchJson.getAssetsIndexId()},
 		{"${version_type}", "Kaminec Launcher"},
 		{"${user_properties}", "{}"},
 	};
@@ -96,8 +96,8 @@ QStringList NewGame::getGameArguments()
 
 QString NewGame::getClassPaths()
 {
-	auto libraryPaths = gameJson.getLibraryPaths();
-	auto gameJarPath = gameJson.getGameJarPath();
+	auto libraryPaths = launchJson.getLibraryPaths();
+	auto gameJarPath = launchJson.getGameJarPath();
 
 	for(auto& libraryPath : libraryPaths)
 		libraryPath.prepend(Path::libsPath() + "/");
@@ -115,7 +115,7 @@ void NewGame::extractNatives()
 {
 	QDir().mkdir(Path::nativesPath());
 
-	auto extractList = gameJson.getExtractPaths();
+	auto extractList = launchJson.getExtractPaths();
 
 	for(auto extractName : extractList){
 		auto extractPath = Path::libsPath() + "/" + extractName;
