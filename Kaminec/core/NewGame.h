@@ -33,10 +33,10 @@ public slots:
 	void deleteNatives();
 
 private:
-	Profile gameProfile;
-	LaunchAuth *launchAuth;
-	LaunchJson launchJson;
-	QProcess *gameProcess;
+	Profile gameProfile_;
+	LaunchAuth *launchAuth_;
+	LaunchJson launchJson_;
+	QProcess *gameProcess_;
 };
 
 #endif // NEWGAME_H

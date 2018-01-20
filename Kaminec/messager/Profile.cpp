@@ -13,7 +13,7 @@
 Profile::Profile(QString name,
 				 QString lastVersionId,
 				 QString gameDir):
-	mName(name),
-	mLastVersionId(lastVersionId),
-	mGameDir(gameDir)
+	name_(name),
+	lastVersionId_(lastVersionId),
+	gameDir_(gameDir)
 {}

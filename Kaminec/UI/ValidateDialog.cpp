@@ -6,43 +6,43 @@
 
 ValidateDialog::ValidateDialog(QWidget *parent, ActiveAuth *auth) :
 	QDialog(parent),
-	ui(new Ui::ValidateDialog),
-	activeAuth(auth)
+	ui_(new Ui::ValidateDialog),
+	activeAuth_(auth)
 {
-	ui->setupUi(this);
+	ui_->setupUi(this);
 
 	this->setMinimumHeight(150);
 	this->setMinimumWidth(260);
 	this->setMaximumHeight(270);
 	this->setMaximumWidth(460);
 
-	ui->password_le->setEchoMode(QLineEdit::Password);
+	ui_->password_le->setEchoMode(QLineEdit::Password);
 
 }
 
 ValidateDialog::~ValidateDialog()
 {
-	delete ui;
+	delete ui_;
 }
 
 void ValidateDialog::on_showPassword_pb_clicked()
 {
-	if(showPassword){
-		showPassword = false;
-		ui->password_le->setEchoMode(QLineEdit::Password);
-		ui->showPassword_pb->setText("&Show Password");
+	if(showPassword_){
+		showPassword_ = false;
+		ui_->password_le->setEchoMode(QLineEdit::Password);
+		ui_->showPassword_pb->setText("&Show Password");
 	}else{
-		showPassword = true;
-		ui->password_le->setEchoMode(QLineEdit::Normal);
-		ui->showPassword_pb->setText("&Hide Password");
+		showPassword_ = true;
+		ui_->password_le->setEchoMode(QLineEdit::Normal);
+		ui_->showPassword_pb->setText("&Hide Password");
 	}
 }
 
 void ValidateDialog::on_buttonBox_accepted()
 {
-	if(activeAuth->authenticate(ui->email_le->text(),
-						  ui->password_le->text())){
-		QSettings().setValue("email", ui->email_le->text());
+	if(activeAuth_->authenticate(ui_->email_le->text(),
+						  ui_->password_le->text())){
+		QSettings().setValue("email", ui_->email_le->text());
 		QSettings().setValue("isLogged", true);
 		emit login(QSettings().value("id").toString());
 		this->accept();

@@ -29,11 +29,11 @@ public:
 	QStringList     getVersionChain();
 
 private:
-    QJsonDocument jsonDoc;
-	QVariant jsonContent;
-    QList<QVariant> libList;
-    DownloadManagerPlus *jsonDownload;
-	QString corePath;
+	QJsonDocument jsonDoc_;
+	QVariant jsonContent_;
+	QList<QVariant> libList_;
+	DownloadManagerPlus *jsonDownload_;
+	QString corePath_;
 };
 
 #endif // JSONMANAGER_H

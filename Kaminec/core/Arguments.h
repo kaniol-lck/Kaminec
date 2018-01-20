@@ -20,7 +20,7 @@ public:
 	QStringList toStringList() const;
 
 private:
-	QList<QStringList> options;
+	QList<QStringList> options_;
 };
 
 #endif // ARGUMENTS_H

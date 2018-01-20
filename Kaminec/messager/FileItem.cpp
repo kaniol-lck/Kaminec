@@ -13,11 +13,11 @@ FileItem::FileItem(QString name,
                    QString sha1,
                    QString path,
                    QUrl url):
-    mName(name),
-    mSize(size),
-    mSha1(sha1),
-    mPath(path),
-    mUrl(url)
+    name_(name),
+    size_(size),
+    Sha1_(sha1),
+    path_(path),
+    url_(url)
 {}
 
 FileItem::FileItem(QUrl url, QString path):
@@ -41,11 +41,11 @@ FileItem FileItem::fromJson(const QString& name, const QVariant& variant)
 QList<QStandardItem *> FileItem::getInfoList() const
 {
     return QList<QStandardItem*>{
-        new QStandardItem(mName),
+        new QStandardItem(name_),
         new QStandardItem(),
-        new QStandardItem(QString::number(mSize)),
-        new QStandardItem(mSha1),
-        new QStandardItem(mPath),
-        new QStandardItem(mUrl.toString())
+        new QStandardItem(QString::number(size_)),
+        new QStandardItem(Sha1_),
+        new QStandardItem(path_),
+        new QStandardItem(url_.toString())
     };
 }

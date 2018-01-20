@@ -13,7 +13,7 @@ public:
 	QUrl url() const;
 
 private:
-	QVariant mGameCoreJarVariant;
+	QVariant gameCoreJarVariant_;
 };
 
 #endif // GAMECOREJAR_H

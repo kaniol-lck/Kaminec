@@ -20,9 +20,9 @@ signals:
 public slots:
 
 private:
-	static QString resourcesDownload;
-	QJsonObject assets;
-	QString corePath;
+	static QString resourcesDownload_;
+	QJsonObject assets_;
+	QString corePath_;
 };
 
 #endif // ASSETSMANAGER_H

@@ -22,11 +22,11 @@ struct FileItem
 
     QList<QStandardItem *> getInfoList() const;
 
-    QString mName;
-    int   mSize;
-    QString mSha1;
-    QString mPath;
-    QUrl    mUrl;
+	QString name_;
+	int   size_;
+	QString Sha1_;
+	QString path_;
+	QUrl    url_;
 
 };
 

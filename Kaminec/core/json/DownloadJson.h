@@ -20,7 +20,7 @@ public:
 	QString getAssetsIndexId() const;
 
 private:
-	JsonKit jsonKit;
+	JsonKit jsonKit_;
 };
 
 #endif // DOWNLOADJSON_H

@@ -32,32 +32,32 @@ public:
 	Arguments minecraftArguments() const;
 
 private:
-	QVariant jsonVariant;
+	QVariant jsonVariant_;
 
 	//the first is current version
 	//the second is whom it inherits from
-	QPair<QString, QString> mVersion;
+	QPair<QString, QString> version_;
 
-	std::shared_ptr<JsonKit> inheritedJson;
+	std::shared_ptr<JsonKit> inheritedJson_;
 
 	//all these members uses lazy fetching.
 	//coz it's not so cheap to convert
 
-	mutable std::shared_ptr<AssetIndex> mAssetIndex;
+	mutable std::shared_ptr<AssetIndex> assetIndex_;
 
-	mutable std::shared_ptr<GameCoreJar> mGameClient;
+	mutable std::shared_ptr<GameCoreJar> gameClient_;
 
-	mutable std::shared_ptr<GameCoreJar> mGameServer;
+	mutable std::shared_ptr<GameCoreJar> gameServer_;
 
-	mutable std::shared_ptr<QList<Library>> mLibraries;
+	mutable std::shared_ptr<QList<Library>> libraries_;
 
-	mutable std::shared_ptr<QString> mJarName;
+	mutable std::shared_ptr<QString> jarName_;
 
 	/*logging*/
 
-	mutable std::shared_ptr<QString> mMainClass;
+	mutable std::shared_ptr<QString> mainClass_;
 
-	mutable std::shared_ptr<Arguments> mMinecraftArguments;
+	mutable std::shared_ptr<Arguments> minecraftArguments_;
 
 };
 

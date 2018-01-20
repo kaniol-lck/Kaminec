@@ -68,15 +68,15 @@ private:
 	void setBackGround();
 
 private:
-    Ui::KaminecLauncher *ui;
-	ActiveAuth *activeAuth;
-	SavesManager *savesManager;
-	ModsManager *modsManager;
-    int totalCount;
-	QList<QVariant> versionList;
-	GameDownload *gameDownload;
-	ProfileManager profileManager;
-	QString corePath;
+	Ui::KaminecLauncher *ui_;
+	ActiveAuth *activeAuth_;
+	SavesManager *savesManager_;
+	ModsManager *modsManager_;
+	int totalCount_;
+	QList<QVariant> versionList_;
+	GameDownload *gameDownload_;
+	ProfileManager profileManager_;
+	QString corePath_;
 };
 
 #endif // KAMINECLAUNCHER_H

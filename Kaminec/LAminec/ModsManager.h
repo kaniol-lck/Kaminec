@@ -25,9 +25,9 @@ signals:
 public slots:
 
 private:
-	QStandardItemModel model;
-	QDir usedModsDir;
-	QDir unusedModsDir;
+	QStandardItemModel model_;
+	QDir usedModsDir_;
+	QDir unusedModsDir_;
 
 	static bool move(const QString &srcFilePath, const QString &tgtFilePath);
 };

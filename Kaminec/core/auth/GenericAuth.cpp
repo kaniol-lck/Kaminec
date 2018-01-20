@@ -33,7 +33,7 @@ void GenericAuth::authenticateFinished(QNetworkReply *reply) const
 
 	if(statusCode == 200){
 		//success
-		success = true;
+		success_ = true;
 
 		//parse json we've got
 		auto uuid = value(json, "selectedProfile", "id").toString();
@@ -61,9 +61,9 @@ void GenericAuth::validateFinished(QNetworkReply *reply) const
 {
 	auto statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 	if(statusCode == 204){
-		success = true;
+		success_ = true;
 	} else{
-		success = false;
+		success_ = false;
 	}
 }
 
@@ -77,7 +77,7 @@ void GenericAuth::refreshFinished(QNetworkReply *reply) const
 	if(ok.error != QJsonParseError::NoError){qDebug()<<"AuthJson failed."<<endl<<ok.error;}
 	if(statusCode == 200){
 		//success
-		success = true;
+		success_ = true;
 
 		//parse json we've got
 		auto uuid = value(json, "selectedProfile", "id").toString();
@@ -94,7 +94,7 @@ void GenericAuth::refreshFinished(QNetworkReply *reply) const
 		qDebug()<<"Welcome:"<<playerName;
 	} else{
 		//failure
-		success = false;
+		success_ = false;
 		QMessageBox::warning(0,
 							 value(json, "error").toString(),
 							 value(json, "errorMessage").toString());
@@ -111,9 +111,9 @@ void GenericAuth::invalidateFinished(QNetworkReply *reply) const
 {
 	auto statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 	if(statusCode == 204){
-		success = true;
+		success_ = true;
 	} else{
-		success = false;
+		success_ = false;
 	}
 }
 
@@ -126,46 +126,46 @@ void GenericAuth::sendRequest(const Authentication &authentication, const QByteA
 	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
 	QEventLoop eventloop;
-	connect(&manager, SIGNAL(finished(QNetworkReply*)), &eventloop, SLOT(quit()));
+	connect(&manager_, SIGNAL(finished(QNetworkReply*)), &eventloop, SLOT(quit()));
 	switch (authentication) {
 	case Authenticate:
-		connect(&manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(authenticateFinished(QNetworkReply*)));
+		connect(&manager_, SIGNAL(finished(QNetworkReply*)), this, SLOT(authenticateFinished(QNetworkReply*)));
 		break;
 	case Refresh:
-		connect(&manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(refreshFinished(QNetworkReply*)));
+		connect(&manager_, SIGNAL(finished(QNetworkReply*)), this, SLOT(refreshFinished(QNetworkReply*)));
 		break;
 	case Validate:
-		connect(&manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(validateFinished(QNetworkReply*)));
+		connect(&manager_, SIGNAL(finished(QNetworkReply*)), this, SLOT(validateFinished(QNetworkReply*)));
 		break;
 	case Signout:
-		connect(&manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(signoutFinished(QNetworkReply*)));
+		connect(&manager_, SIGNAL(finished(QNetworkReply*)), this, SLOT(signoutFinished(QNetworkReply*)));
 		break;
 	case Invalidate:
-		connect(&manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(invalidateFinished(QNetworkReply*)));
+		connect(&manager_, SIGNAL(finished(QNetworkReply*)), this, SLOT(invalidateFinished(QNetworkReply*)));
 		break;
 	default:
 		break;
 	}
-	connect(&manager,SIGNAL(finished(QNetworkReply*)),&eventloop,SLOT(quit()));
+	connect(&manager_,SIGNAL(finished(QNetworkReply*)),&eventloop,SLOT(quit()));
 
-	manager.post(request, data);
+	manager_.post(request, data);
 	eventloop.exec();
 
 	switch (authentication) {
 	case Authenticate:
-		disconnect(&manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(authenticateFinished(QNetworkReply*)));
+		disconnect(&manager_, SIGNAL(finished(QNetworkReply*)), this, SLOT(authenticateFinished(QNetworkReply*)));
 		break;
 	case Refresh:
-		disconnect(&manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(refreshFinished(QNetworkReply*)));
+		disconnect(&manager_, SIGNAL(finished(QNetworkReply*)), this, SLOT(refreshFinished(QNetworkReply*)));
 		break;
 	case Validate:
-		disconnect(&manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(validateFinished(QNetworkReply*)));
+		disconnect(&manager_, SIGNAL(finished(QNetworkReply*)), this, SLOT(validateFinished(QNetworkReply*)));
 		break;
 	case Signout:
-		disconnect(&manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(signoutFinished(QNetworkReply*)));
+		disconnect(&manager_, SIGNAL(finished(QNetworkReply*)), this, SLOT(signoutFinished(QNetworkReply*)));
 		break;
 	case Invalidate:
-		disconnect(&manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(invalidateFinished(QNetworkReply*)));
+		disconnect(&manager_, SIGNAL(finished(QNetworkReply*)), this, SLOT(invalidateFinished(QNetworkReply*)));
 		break;
 	default:
 		break;

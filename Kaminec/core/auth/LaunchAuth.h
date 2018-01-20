@@ -21,8 +21,8 @@ public:
 	Mode getAuthMode() const;
 
 private:
-	QSettings settings;
-	Mode authMode;
+	QSettings settings_;
+	Mode authMode_;
 };
 
 #endif // LAUNCHAUTH_H

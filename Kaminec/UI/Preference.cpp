@@ -14,69 +14,69 @@
 
 Preference::Preference(QWidget *parent, ActiveAuth *auth) :
 	QDialog(parent),
-	ui(new Ui::Preference),
-	activeAuth(auth)
+	ui_(new Ui::Preference),
+	activeAuth_(auth)
 {
 	setWindowFlags(Qt::Dialog);
-	ui->setupUi(this);
+	ui_->setupUi(this);
 
-	ui->versionsPath_label->setVisible(false);
-	ui->versionsPath_le->setVisible(false);
-	ui->versionsPath_showPb->setVisible(false);
-	ui->libsPath_label->setVisible(false);
-	ui->libsPath_le->setVisible(false);
-	ui->libsPath_showPb->setVisible(false);
-	ui->nativesPath_label->setVisible(false);
-	ui->nativesPath_le->setVisible(false);
-	ui->nativesPath_showPb->setVisible(false);
-	ui->assetsPath_label->setVisible(false);
-	ui->assetsPath_le->setVisible(false);
-	ui->assetsPath_showPb->setVisible(false);
-	ui->indexesPath_label->setVisible(false);
-	ui->indexesPath_le->setVisible(false);
-	ui->indexesPath_showPb->setVisible(false);
-	ui->objectsPath_label->setVisible(false);
-	ui->objectsPath_le->setVisible(false);
-	ui->objectsPath_showPb->setVisible(false);
-	ui->customPathHelper_tb->setVisible(false);
+	ui_->versionsPath_label->setVisible(false);
+	ui_->versionsPath_le->setVisible(false);
+	ui_->versionsPath_showPb->setVisible(false);
+	ui_->libsPath_label->setVisible(false);
+	ui_->libsPath_le->setVisible(false);
+	ui_->libsPath_showPb->setVisible(false);
+	ui_->nativesPath_label->setVisible(false);
+	ui_->nativesPath_le->setVisible(false);
+	ui_->nativesPath_showPb->setVisible(false);
+	ui_->assetsPath_label->setVisible(false);
+	ui_->assetsPath_le->setVisible(false);
+	ui_->assetsPath_showPb->setVisible(false);
+	ui_->indexesPath_label->setVisible(false);
+	ui_->indexesPath_le->setVisible(false);
+	ui_->indexesPath_showPb->setVisible(false);
+	ui_->objectsPath_label->setVisible(false);
+	ui_->objectsPath_le->setVisible(false);
+	ui_->objectsPath_showPb->setVisible(false);
+	ui_->customPathHelper_tb->setVisible(false);
 
 
 	QSettings settings;
 	//load exsit preference
-	ui->playerName_le->setText(settings.value("playerName", "Steve").toString());
-	ui->autoName_cb->setChecked(settings.value("autoName", false).toBool());
+	ui_->playerName_le->setText(settings.value("playerName", "Steve").toString());
+	ui_->autoName_cb->setChecked(settings.value("autoName", false).toBool());
 
-	ui->corePath_le->setText(Path::corePath());
-	ui->versionsPath_le->setText(settings.value("path/versionsPath", "<core>/versions").toString());
-	ui->libsPath_le->setText(settings.value("path/libsPath", "<core>/libraries").toString());
-	ui->nativesPath_le->setText(settings.value("path/nativesPath", "<core>/natives").toString());
-	ui->assetsPath_le->setText(settings.value("path/assetsPath", "<core>/assets").toString());
-	ui->indexesPath_le->setText(settings.value("path/indexesPath", "<assets>/indexes").toString());
-	ui->objectsPath_le->setText(settings.value("path/objectsPath", "<assets>/objects").toString());
+	ui_->corePath_le->setText(Path::corePath());
+	ui_->versionsPath_le->setText(settings.value("path/versionsPath", "<core>/versions").toString());
+	ui_->libsPath_le->setText(settings.value("path/libsPath", "<core>/libraries").toString());
+	ui_->nativesPath_le->setText(settings.value("path/nativesPath", "<core>/natives").toString());
+	ui_->assetsPath_le->setText(settings.value("path/assetsPath", "<core>/assets").toString());
+	ui_->indexesPath_le->setText(settings.value("path/indexesPath", "<assets>/indexes").toString());
+	ui_->objectsPath_le->setText(settings.value("path/objectsPath", "<assets>/objects").toString());
 
-	ui->fullScreen_checkBox->setChecked(settings.value("fullScreen", false).toBool());
-	ui->width_sb->setValue(settings.value("width", 854).toInt());
-	ui->height_sb->setValue(settings.value("height", 480).toInt());
+	ui_->fullScreen_checkBox->setChecked(settings.value("fullScreen", false).toBool());
+	ui_->width_sb->setValue(settings.value("width", 854).toInt());
+	ui_->height_sb->setValue(settings.value("height", 480).toInt());
 
-	ui->javaPath_le->setText(settings.value("javaPath", "").toString());
-	ui->minMem_sb->setValue(settings.value("minMem", 1024).toInt());
-	ui->maxMem_sb->setValue(settings.value("maxMem", 1024).toInt());
-	ui->javaArg_te->setText(settings.value("javaArg", "").toString().replace("\\n","\n"));
+	ui_->javaPath_le->setText(settings.value("javaPath", "").toString());
+	ui_->minMem_sb->setValue(settings.value("minMem", 1024).toInt());
+	ui_->maxMem_sb->setValue(settings.value("maxMem", 1024).toInt());
+	ui_->javaArg_te->setText(settings.value("javaArg", "").toString().replace("\\n","\n"));
 
 	//check if you logged in
 	if(settings.value("isLogged", false).toBool()){
-		ui->logName_label->setText("Logon account:" + settings.value("email", "").toString());
-		ui->login_pb->setText("&Log out");
+		ui_->logName_label->setText("Logon account:" + settings.value("email", "").toString());
+		ui_->login_pb->setText("&Log out");
 	}
 
 	//check if you point out javaPath
-	if(ui->javaPath_le->text() == "")
-		ui->javaPath_le->setText(getAutoJavaPath());
+	if(ui_->javaPath_le->text() == "")
+		ui_->javaPath_le->setText(getAutoJavaPath());
 }
 
 Preference::~Preference()
 {
-	delete ui;
+	delete ui_;
 }
 
 QString Preference::getAutoJavaPath()
@@ -97,12 +97,12 @@ QString Preference::getAutoJavaPath()
 void Preference::on_corePath_showPb_clicked()
 {
 	auto corePath = QFileDialog::getExistingDirectory(0, "Please choose the upper directory,we will automaticly create \".minecraft\" folder",
-													  ui->corePath_le->text());
+													  ui_->corePath_le->text());
 	if(corePath!=""){
 		if(corePath.endsWith("/.minecraft"))
-			ui->corePath_le->setText(corePath);
+			ui_->corePath_le->setText(corePath);
 		else
-			ui->corePath_le->setText(corePath + "/.minecraft");
+			ui_->corePath_le->setText(corePath + "/.minecraft");
 	}
 }
 
@@ -112,42 +112,42 @@ void Preference::on_javaPath_showPb_clicked()
 												 "Choose javaw,exe...",
 												 "C:/","javaw(javaw.exe)");
 	if(javaPath!="")
-		ui->javaPath_le->setText(javaPath);
+		ui_->javaPath_le->setText(javaPath);
 }
 
 void Preference::on_buttonBox_accepted()
 {
-	settings.setValue("playerName", ui->playerName_le->text());
-	settings.setValue("autoName", ui->autoName_cb->isChecked());
+	settings_.setValue("playerName", ui_->playerName_le->text());
+	settings_.setValue("autoName", ui_->autoName_cb->isChecked());
 
-	settings.setValue("path/corePath", ui->corePath_le->text());
-	settings.setValue("path/versionsPath", ui->versionsPath_le->text());
-	settings.setValue("path/libsPath", ui->libsPath_le->text());
-	settings.setValue("path/nativesPath", ui->nativesPath_le->text());
-	settings.setValue("path/assetsPath", ui->assetsPath_le->text());
-	settings.setValue("path/indexesPath", ui->indexesPath_le->text());
-	settings.setValue("path/objectsPath", ui->objectsPath_le->text());
+	settings_.setValue("path/corePath", ui_->corePath_le->text());
+	settings_.setValue("path/versionsPath", ui_->versionsPath_le->text());
+	settings_.setValue("path/libsPath", ui_->libsPath_le->text());
+	settings_.setValue("path/nativesPath", ui_->nativesPath_le->text());
+	settings_.setValue("path/assetsPath", ui_->assetsPath_le->text());
+	settings_.setValue("path/indexesPath", ui_->indexesPath_le->text());
+	settings_.setValue("path/objectsPath", ui_->objectsPath_le->text());
 
-	settings.setValue("fullScreen", ui->fullScreen_checkBox->isChecked());
-	settings.setValue("width", ui->width_sb->value());
-	settings.setValue("height", ui->height_sb->value());
+	settings_.setValue("fullScreen", ui_->fullScreen_checkBox->isChecked());
+	settings_.setValue("width", ui_->width_sb->value());
+	settings_.setValue("height", ui_->height_sb->value());
 
-	settings.setValue("javaPath", ui->javaPath_le->text());
-	settings.setValue("minMem", ui->minMem_sb->value());
-	settings.setValue("maxMem", ui->maxMem_sb->value());
-	settings.setValue("javaArg", ui->javaArg_te->toPlainText().replace("\n","\\n"));
+	settings_.setValue("javaPath", ui_->javaPath_le->text());
+	settings_.setValue("minMem", ui_->minMem_sb->value());
+	settings_.setValue("maxMem", ui_->maxMem_sb->value());
+	settings_.setValue("javaArg", ui_->javaArg_te->toPlainText().replace("\n","\\n"));
 }
 
 void Preference::on_login_pb_clicked()
 {
-	if(settings.value("isLogged", false).toBool()){
-		activeAuth->invalidate();
+	if(settings_.value("isLogged", false).toBool()){
+		activeAuth_->invalidate();
 
-		settings.setValue("isLogged", false);
-		ui->logName_label->setText("You have not logged in.");
-		ui->login_pb->setText("&Log in");
+		settings_.setValue("isLogged", false);
+		ui_->logName_label->setText("You have not logged in.");
+		ui_->login_pb->setText("&Log in");
 	}else {
-		auto validateDialog = new ValidateDialog(this, activeAuth);
+		auto validateDialog = new ValidateDialog(this, activeAuth_);
 
 		connect(validateDialog, SIGNAL(login(QString)), this, SLOT(logChanged(QString)));
 
@@ -157,55 +157,55 @@ void Preference::on_login_pb_clicked()
 
 void Preference::logChanged(QString email)
 {
-	ui->logName_label->setText("Logon account:" + email);
-	ui->login_pb->setText("&Log out");
+	ui_->logName_label->setText("Logon account:" + email);
+	ui_->login_pb->setText("&Log out");
 }
 
 void Preference::on_autoName_cb_stateChanged(int arg1)
 {
 	if(arg1 == Qt::Checked){
-		ui->playerName_le->setText(settings.value("id").toString());
-		ui->playerName_le->setEnabled(false);
+		ui_->playerName_le->setText(settings_.value("id").toString());
+		ui_->playerName_le->setEnabled(false);
 	} else /*arg1 == Qt::Unchecked*/{
-		ui->playerName_le->setText(settings.value("playerName").toString());
-		ui->playerName_le->setEnabled(true);
+		ui_->playerName_le->setText(settings_.value("playerName").toString());
+		ui_->playerName_le->setEnabled(true);
 	}
 }
 
 void Preference::on_fullScreen_checkBox_stateChanged(int arg1)
 {
 	if(arg1 == Qt::Checked){
-		ui->width_sb->setEnabled(false);
-		ui->height_sb->setEnabled(false);
+		ui_->width_sb->setEnabled(false);
+		ui_->height_sb->setEnabled(false);
 	} else /*arg1 == Qt::Unchecked*/{
-		ui->width_sb->setEnabled(true);
-		ui->height_sb->setEnabled(true);
+		ui_->width_sb->setEnabled(true);
+		ui_->height_sb->setEnabled(true);
 	}
 }
 
 void Preference::on_more_pb_clicked()
 {
-	customPath = !customPath;
+	customPath_ = !customPath_;
 
-	ui->versionsPath_label->setVisible(customPath);
-	ui->versionsPath_le->setVisible(customPath);
-	ui->versionsPath_showPb->setVisible(customPath);
-	ui->libsPath_label->setVisible(customPath);
-	ui->libsPath_le->setVisible(customPath);
-	ui->libsPath_showPb->setVisible(customPath);
-	ui->nativesPath_label->setVisible(customPath);
-	ui->nativesPath_le->setVisible(customPath);
-	ui->nativesPath_showPb->setVisible(customPath);
-	ui->assetsPath_label->setVisible(customPath);
-	ui->assetsPath_le->setVisible(customPath);
-	ui->assetsPath_showPb->setVisible(customPath);
-	ui->indexesPath_label->setVisible(customPath);
-	ui->indexesPath_le->setVisible(customPath);
-	ui->indexesPath_showPb->setVisible(customPath);
-	ui->objectsPath_label->setVisible(customPath);
-	ui->objectsPath_le->setVisible(customPath);
-	ui->objectsPath_showPb->setVisible(customPath);
-	ui->customPathHelper_tb->setVisible(customPath);
+	ui_->versionsPath_label->setVisible(customPath_);
+	ui_->versionsPath_le->setVisible(customPath_);
+	ui_->versionsPath_showPb->setVisible(customPath_);
+	ui_->libsPath_label->setVisible(customPath_);
+	ui_->libsPath_le->setVisible(customPath_);
+	ui_->libsPath_showPb->setVisible(customPath_);
+	ui_->nativesPath_label->setVisible(customPath_);
+	ui_->nativesPath_le->setVisible(customPath_);
+	ui_->nativesPath_showPb->setVisible(customPath_);
+	ui_->assetsPath_label->setVisible(customPath_);
+	ui_->assetsPath_le->setVisible(customPath_);
+	ui_->assetsPath_showPb->setVisible(customPath_);
+	ui_->indexesPath_label->setVisible(customPath_);
+	ui_->indexesPath_le->setVisible(customPath_);
+	ui_->indexesPath_showPb->setVisible(customPath_);
+	ui_->objectsPath_label->setVisible(customPath_);
+	ui_->objectsPath_le->setVisible(customPath_);
+	ui_->objectsPath_showPb->setVisible(customPath_);
+	ui_->customPathHelper_tb->setVisible(customPath_);
 
-	ui->more_pb->setText(customPath?"Fold":"More");
+	ui_->more_pb->setText(customPath_?"Fold":"More");
 }

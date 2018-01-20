@@ -16,7 +16,7 @@ public:
 	bool invalidate() const;
 
 private:
-	QSettings settings;
+	QSettings settings_;
 };
 
 #endif // ACTIVEAUTH_H

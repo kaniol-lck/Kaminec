@@ -24,9 +24,9 @@ public:
 	bool isNatives() const;
 	bool isAllow() const;
 private:
-	QVariant mLibraryVariant;
-	QString mName;
-	QStringList mNameList;
+	QVariant libraryVariant_;
+	QString name_;
+	QStringList nameList_;
 };
 
 #endif // LIBRARY_H

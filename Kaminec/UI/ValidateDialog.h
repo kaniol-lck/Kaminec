@@ -27,10 +27,10 @@ private slots:
 	void on_buttonBox_accepted();
 
 private:
-	Ui::ValidateDialog *ui;
+	Ui::ValidateDialog *ui_;
 
-	ActiveAuth *activeAuth;
-	bool showPassword = false;
+	ActiveAuth *activeAuth_;
+	bool showPassword_ = false;
 };
 
 #endif // VALIDATEDIALOG_H

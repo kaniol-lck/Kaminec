@@ -18,7 +18,7 @@ public:
 	int totalSize() const;
 
 private:
-	QVariant mAssetIndexVariant;
+	QVariant assetIndexVariant_;
 };
 
 #endif // ASSETINDEX_H

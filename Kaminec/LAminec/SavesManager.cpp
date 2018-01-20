@@ -15,23 +15,23 @@
 
 SavesManager::SavesManager(QObject *parent) :
     QObject(parent),
-    savesFile("./saves.json"),
-	backuoDir("./backup")
+    savesFile_("./saves.json"),
+	backuoDir_("./backup")
 {
-    model.setColumnCount(3);
-    model.setHeaderData(0,Qt::Horizontal,"saevs name");
-    model.setHeaderData(1,Qt::Horizontal,"path");
-    model.setHeaderData(2,Qt::Horizontal,"change times");
+    model_.setColumnCount(3);
+    model_.setHeaderData(0,Qt::Horizontal,"saevs name");
+    model_.setHeaderData(1,Qt::Horizontal,"path");
+    model_.setHeaderData(2,Qt::Horizontal,"change times");
 
-    if(!savesFile.open(QIODevice::ReadOnly|QIODevice::Text)){
+    if(!savesFile_.open(QIODevice::ReadOnly|QIODevice::Text)){
 //        QMessageBox::warning(0,"File not exist.",R"(It's no file called "saves.json".)");
         return;
     }
 
 
-	QByteArray bytes = QString::fromLocal8Bit(savesFile.readAll()).toUtf8();
+	QByteArray bytes = QString::fromLocal8Bit(savesFile_.readAll()).toUtf8();
     qDebug()<<bytes;
-    savesFile.close();
+    savesFile_.close();
 
     QJsonParseError ok;
     QJsonDocument loadDoc = QJsonDocument::fromJson(bytes,&ok);
@@ -41,13 +41,13 @@ SavesManager::SavesManager(QObject *parent) :
         return;
     }
 
-    savesArray = loadDoc.array();
+    savesArray_ = loadDoc.array();
 
-    for(int i=0;i!=savesArray.size();++i){
+    for(int i=0;i!=savesArray_.size();++i){
         qDebug()<<"???";
-        model.appendRow(QList<QStandardItem*>{new QStandardItem(savesArray.at(i).toObject().value("savesName").toString()),
-                                              new QStandardItem(savesArray.at(i).toObject().value("path").toString()),
-                                              new QStandardItem(QString::number(savesArray.at(i).toObject().value("changeTimes").toInt()))});
+        model_.appendRow(QList<QStandardItem*>{new QStandardItem(savesArray_.at(i).toObject().value("savesName").toString()),
+                                              new QStandardItem(savesArray_.at(i).toObject().value("path").toString()),
+                                              new QStandardItem(QString::number(savesArray_.at(i).toObject().value("changeTimes").toInt()))});
     }
 
     this->backup();
@@ -55,7 +55,7 @@ SavesManager::SavesManager(QObject *parent) :
 
 QStandardItemModel *SavesManager::getModel()
 {
-    return &model;
+    return &model_;
 }
 
 void SavesManager::addSaves()
@@ -75,7 +75,7 @@ void SavesManager::addSaves()
         fileInfo.insert("lastModified",0);
         fileInfo.insert("changeTimes",0);
 
-        savesArray.insert(savesArray.end(),fileInfo);
+        savesArray_.insert(savesArray_.end(),fileInfo);
 
         this->writeToJson();
     }
@@ -84,43 +84,43 @@ void SavesManager::addSaves()
 
 void SavesManager::deleteSaves(int index)
 {
-	if(index<savesArray.size()){
-		savesArray.removeAt(index);
+	if(index<savesArray_.size()){
+		savesArray_.removeAt(index);
 		this->writeToJson();
-		model.removeRow(index);
+		model_.removeRow(index);
 	}
 }
 
 bool SavesManager::backup()
 {
-    for(int i=0;i!=savesArray.size();++i){
-        QFileInfo savesInfo(savesArray.at(i).toObject().value("path").toString()+"/level.dat");
+    for(int i=0;i!=savesArray_.size();++i){
+        QFileInfo savesInfo(savesArray_.at(i).toObject().value("path").toString()+"/level.dat");
 
         if(double(savesInfo.lastModified().toMSecsSinceEpoch())==
-                savesArray.at(i).toObject().value("lastModified").toDouble()){
+                savesArray_.at(i).toObject().value("lastModified").toDouble()){
             qDebug()<<"Not Modified";
         }else{
-            model.removeRow(i);
-            model.appendRow(QList<QStandardItem*>{new QStandardItem(savesArray.at(i).toObject().value("savesName").toString()),
+            model_.removeRow(i);
+            model_.appendRow(QList<QStandardItem*>{new QStandardItem(savesArray_.at(i).toObject().value("savesName").toString()),
                                                   new QStandardItem(savesInfo.absolutePath()),
-                                                  new QStandardItem(QString::number(savesArray.at(i).toObject().value("changeTimes").toInt()))});
+                                                  new QStandardItem(QString::number(savesArray_.at(i).toObject().value("changeTimes").toInt()))});
             qDebug()<<"Modified";
-            QDir oldSaves(savesArray.at(i).toObject().value("path").toString());
-            backuoDir.mkdir(savesArray.at(i).toObject().value("savesName").toString());
+            QDir oldSaves(savesArray_.at(i).toObject().value("path").toString());
+            backuoDir_.mkdir(savesArray_.at(i).toObject().value("savesName").toString());
 
             this->copyRecursively(oldSaves.path(),
-                                  backuoDir.path()+QString("/%1/%1_第%2次备份")
-                                  .arg(savesArray.at(i).toObject().value("savesName").toString())
-                                  .arg(savesArray.at(i).toObject().value("changeTimes").toInt()));
+                                  backuoDir_.path()+QString("/%1/%1_第%2次备份")
+                                  .arg(savesArray_.at(i).toObject().value("savesName").toString())
+                                  .arg(savesArray_.at(i).toObject().value("changeTimes").toInt()));
 
             QJsonObject newVersionSaves;
-            newVersionSaves.insert("savesName",savesArray.at(i).toObject().value("savesName").toString());
-            newVersionSaves.insert("path",savesArray.at(i).toObject().value("path").toString());
+            newVersionSaves.insert("savesName",savesArray_.at(i).toObject().value("savesName").toString());
+            newVersionSaves.insert("path",savesArray_.at(i).toObject().value("path").toString());
             newVersionSaves.insert("lastModified",savesInfo.lastModified().toMSecsSinceEpoch());
-            newVersionSaves.insert("changeTimes",savesArray.at(i).toObject().value("changeTimes").toInt()+1);
+            newVersionSaves.insert("changeTimes",savesArray_.at(i).toObject().value("changeTimes").toInt()+1);
 
-            savesArray.removeAt(i);
-            savesArray.append(newVersionSaves);
+            savesArray_.removeAt(i);
+            savesArray_.append(newVersionSaves);
 
             this->writeToJson();
         }
@@ -131,18 +131,18 @@ bool SavesManager::backup()
 void SavesManager::writeToJson()
 {
     QJsonDocument saveDoc;
-    saveDoc.setArray(savesArray);
+    saveDoc.setArray(savesArray_);
 
     QByteArray bytes = saveDoc.toJson(QJsonDocument::Compact);
 
     qDebug()<<bytes;
 
     //生成profile的json文档
-    savesFile.open(QIODevice::WriteOnly|QIODevice::Text);
+    savesFile_.open(QIODevice::WriteOnly|QIODevice::Text);
 
-    QTextStream output(&savesFile);
+    QTextStream output(&savesFile_);
     output<<bytes;
-    savesFile.close();
+    savesFile_.close();
 }
 
 bool SavesManager::copyRecursively(const QString &srcFilePath, const QString &tgtFilePath)

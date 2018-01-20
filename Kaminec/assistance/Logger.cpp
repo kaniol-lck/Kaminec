@@ -6,79 +6,79 @@
 
 Logger::Logger(QObject *parent, QString logPath) :
 	QObject(parent),
-	logFile(logPath)
+	logFile_(logPath)
 {
 
 }
 
 void Logger::setVersionChain(const QStringList &versionChain)
 {
-	m_versionChain = versionChain;
+	versionChain_ = versionChain;
 }
 
 void Logger::setNativesPath(const QString &nativePath)
 {
-	m_nativePath = nativePath;
+	nativePath_ = nativePath;
 }
 
 void Logger::setClassPaths(const QStringList &classPaths)
 {
-	m_classPaths = classPaths;
+	classPaths_ = classPaths;
 }
 
 void Logger::setGameMainClass(const QString &GameMainClass)
 {
-	m_gameMainClass = GameMainClass;
+	gameMainClass_ = GameMainClass;
 }
 
 void Logger::setGameArgs(const QStringList &GameArgs)
 {
-	m_gameArgs = GameArgs;
+	gameArgs_ = GameArgs;
 }
 
 void Logger::setJVMArgs(const QStringList &JVMArgs)
 {
-	m_JVMArgs = JVMArgs;
+	JVMArgs_ = JVMArgs;
 }
 
 void Logger::setExtractFiles(const QStringList &extractFiles)
 {
-	m_extractFiles = extractFiles;
+	extractFiles_ = extractFiles;
 }
 
 void Logger::startGenStartcode()
 {
-	genStartCodeTime.start();
+	genStartCodeTime_.start();
 }
 
 void Logger::fisishGenStartcode()
 {
-	startCode_use = genStartCodeTime.elapsed();
+	startCode_use_ = genStartCodeTime_.elapsed();
 }
 
 void Logger::startGame()
 {
-	gameTime.start();
+	gameTime_.start();
 }
 
 void Logger::finishGame()
 {
-	game_use = gameTime.elapsed();
+	game_use_ = gameTime_.elapsed();
 }
 
 void Logger::writeToFile()
 {
-	logFile.open(QIODevice::WriteOnly | QIODevice::Text);
+	logFile_.open(QIODevice::WriteOnly | QIODevice::Text);
 
-	QTextStream out(&logFile);
+	QTextStream out(&logFile_);
 	//time
-	out << "version chain:" << m_versionChain.join(" -> ") << endl;
-	out << "natives path:" << m_nativePath << endl;
-	out << "class paths:" << m_classPaths.join("\n") << endl;
-	out << "game main class:" << m_gameMainClass << endl;
-	out << "game arguments:" << m_gameArgs.join("\n") << endl;
-	out << "JVM arguments:" << m_JVMArgs.join("\n") << endl;
-	out << "extract files:" << m_extractFiles.join("\n") << endl;
-	out << "generate startcode time:" << QString::number(startCode_use) << "ms" << endl;
-	out << "play game time:" << QString::number(game_use) << "ms" << endl;
+	out << "version chain:" << versionChain_.join(" -> ") << endl;
+	out << "natives path:" << nativePath_ << endl;
+	out << "class paths:" << classPaths_.join("\n") << endl;
+	out << "game main class:" << gameMainClass_ << endl;
+	out << "game arguments:" << gameArgs_.join("\n") << endl;
+	out << "JVM arguments:" << JVMArgs_.join("\n") << endl;
+	out << "extract files:" << extractFiles_.join("\n") << endl;
+	out << "generate startcode time:" << QString::number(startCode_use_) << "ms" << endl;
+	out << "play game time:" << QString::number(game_use_) << "ms" << endl;
 }

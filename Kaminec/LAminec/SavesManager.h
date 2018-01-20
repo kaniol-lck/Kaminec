@@ -23,10 +23,10 @@ signals:
 public slots:
 
 private:
-    QStandardItemModel model;
-    QFile savesFile;
-    QDir backuoDir;
-    QJsonArray savesArray;
+	QStandardItemModel model_;
+	QFile savesFile_;
+	QDir backuoDir_;
+	QJsonArray savesArray_;
     void writeToJson();
 	bool copyRecursively(const QString &srcFilePath, const QString &tgtFilePath);
 };

@@ -30,16 +30,16 @@ signals:
 public slots:
 
 private:
-	bool inited = false;
-	QString corePath;
-	QStandardItemModel model;
-	QString tempFileName;
-	QTemporaryFile tempVersionsFile;
-	DownloadManagerPlus *downloadManagerPlus;
-	DownloadJson *downloadJson;
-	AssetsManager *downloadAsset;
-	QVariantList versionList;
-	int totalCount;
+	bool inited_ = false;
+	QString corePath_;
+	QStandardItemModel model_;
+	QString tempFileName_;
+	QTemporaryFile tempVersionsFile_;
+	DownloadManagerPlus *downloadManagerPlus_;
+	DownloadJson *downloadJson_;
+	AssetsManager *downloadAsset_;
+	QVariantList versionList_;
+	int totalCount_;
 };
 
 #endif // GAMEDOWNLOAD_H

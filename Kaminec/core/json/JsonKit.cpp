@@ -24,89 +24,89 @@ JsonKit::JsonKit(QString version)
 	jsonFile.close();
 
 	QJsonParseError ok;
-	jsonVariant = QJsonDocument::fromJson(jsonByte, &ok).toVariant();
+	jsonVariant_ = QJsonDocument::fromJson(jsonByte, &ok).toVariant();
 	if(ok.error != QJsonParseError::NoError){/*something here*/}
 
-	mVersion = qMakePair(value(jsonVariant, "id").toString(),
-						 value(jsonVariant, "inheritsFrom").toString());
+	version_ = qMakePair(value(jsonVariant_, "id").toString(),
+						 value(jsonVariant_, "inheritsFrom").toString());
 
-	if(mVersion.second != "")
-		inheritedJson = std::make_shared<JsonKit>(mVersion.second);
+	if(version_.second != "")
+		inheritedJson_ = std::make_shared<JsonKit>(version_.second);
 }
 
 AssetIndex JsonKit::assetIndex() const
 {
-	if(!mAssetIndex){
-		if(inheritedJson)
-			mAssetIndex = std::make_shared<AssetIndex>(inheritedJson->assetIndex());
+	if(!assetIndex_){
+		if(inheritedJson_)
+			assetIndex_ = std::make_shared<AssetIndex>(inheritedJson_->assetIndex());
 		else
-			mAssetIndex = std::make_shared<AssetIndex>(value(jsonVariant, "assetIndex"));
+			assetIndex_ = std::make_shared<AssetIndex>(value(jsonVariant_, "assetIndex"));
 	}
-	return *mAssetIndex;
+	return *assetIndex_;
 }
 
 QPair<QString, QString> JsonKit::version() const
 {
-	return mVersion;
+	return version_;
 }
 
 GameCoreJar JsonKit::client() const
 {
-	if(!mGameClient){
-		if(inheritedJson)
-			mGameClient = std::make_shared<GameCoreJar>(inheritedJson->client());
+	if(!gameClient_){
+		if(inheritedJson_)
+			gameClient_ = std::make_shared<GameCoreJar>(inheritedJson_->client());
 		else
-			mGameClient = std::make_shared<GameCoreJar>(value(jsonVariant, "downloads", "client"));
+			gameClient_ = std::make_shared<GameCoreJar>(value(jsonVariant_, "downloads", "client"));
 	}
-	return *mGameClient;
+	return *gameClient_;
 }
 
 GameCoreJar JsonKit::server() const
 {
-	if(!mGameServer){
-		if(inheritedJson)
-			mGameServer = std::make_shared<GameCoreJar>(inheritedJson->server());
+	if(!gameServer_){
+		if(inheritedJson_)
+			gameServer_ = std::make_shared<GameCoreJar>(inheritedJson_->server());
 		else
-			mGameServer = std::make_shared<GameCoreJar>(value(jsonVariant, "downloads", "server"));
+			gameServer_ = std::make_shared<GameCoreJar>(value(jsonVariant_, "downloads", "server"));
 	}
-	return *mGameServer;
+	return *gameServer_;
 }
 
 QList<Library> JsonKit::libraries() const
 {
-	if(!mLibraries){
-		mLibraries = std::make_shared<QList<Library>>();
-		for(auto&& libraryVariant : value(jsonVariant, "libraries").toList())
-			mLibraries->append(Library(libraryVariant));
+	if(!libraries_){
+		libraries_ = std::make_shared<QList<Library>>();
+		for(auto&& libraryVariant : value(jsonVariant_, "libraries").toList())
+			libraries_->append(Library(libraryVariant));
 	}
-	if(inheritedJson){
-		return *mLibraries + inheritedJson->libraries();
+	if(inheritedJson_){
+		return *libraries_ + inheritedJson_->libraries();
 	}
-	return *mLibraries;
+	return *libraries_;
 }
 
 QString JsonKit::jarName() const
 {
-	if(!mJarName){
-		if(jsonVariant.toMap().contains("jar"))
-			mJarName = std::make_shared<QString>(value(jsonVariant, "jar").toString());
+	if(!jarName_){
+		if(jsonVariant_.toMap().contains("jar"))
+			jarName_ = std::make_shared<QString>(value(jsonVariant_, "jar").toString());
 		else
-			mJarName = std::make_shared<QString>(mVersion.first);
+			jarName_ = std::make_shared<QString>(version_.first);
 	}
-	return *mJarName;
+	return *jarName_;
 }
 
 QString JsonKit::mainClass() const
 {
-	if(!mMainClass)
-		mMainClass = std::make_shared<QString>(value(jsonVariant, "mainClass").toString());
-	return *mMainClass;
+	if(!mainClass_)
+		mainClass_ = std::make_shared<QString>(value(jsonVariant_, "mainClass").toString());
+	return *mainClass_;
 }
 
 Arguments JsonKit::minecraftArguments() const
 {
-	if(!mMinecraftArguments){
-		mMinecraftArguments = std::make_shared<Arguments>(value(jsonVariant, "minecraftArguments").toString());
+	if(!minecraftArguments_){
+		minecraftArguments_ = std::make_shared<Arguments>(value(jsonVariant_, "minecraftArguments").toString());
 	}
-	return *mMinecraftArguments;
+	return *minecraftArguments_;
 }

@@ -6,21 +6,21 @@
 
 DownloadManagerPlus::DownloadManagerPlus(QObject *parent) : QObject(parent)
 {
-    for(int index = 0; index!= downloadNumber;++index){
-        downloaderPool.append(new SingleDownload(this,&manager,index));
+	for(int index = 0; index!= downloadNumber_;++index){
+		downloaderPool_.append(new SingleDownload(this,&manager_,index));
     }
-    model.setColumnCount(6);
-    model.setHeaderData(0,Qt::Horizontal,"filename");
-    model.setHeaderData(1,Qt::Horizontal,"downloaded size");
-    model.setHeaderData(2,Qt::Horizontal,"total size");
-    model.setHeaderData(3,Qt::Horizontal,"sha1");
-    model.setHeaderData(4,Qt::Horizontal,"path");
-    model.setHeaderData(5,Qt::Horizontal,"url");
+	model_.setColumnCount(6);
+	model_.setHeaderData(0,Qt::Horizontal,"filename");
+	model_.setHeaderData(1,Qt::Horizontal,"downloaded size");
+	model_.setHeaderData(2,Qt::Horizontal,"total size");
+	model_.setHeaderData(3,Qt::Horizontal,"sha1");
+	model_.setHeaderData(4,Qt::Horizontal,"path");
+	model_.setHeaderData(5,Qt::Horizontal,"url");
 
 
 	//for each downloader
-	for(int index = 0; index != downloadNumber; index++){
-		connect(downloaderPool.at(index),SIGNAL(finished(int)),SLOT(startNextDownload(int)));
+	for(int index = 0; index != downloadNumber_; index++){
+		connect(downloaderPool_.at(index),SIGNAL(finished(int)),SLOT(startNextDownload(int)));
 		//once downloader finished and start next download
 	}
 }
@@ -30,18 +30,18 @@ void DownloadManagerPlus::append(const FileItem &item)
 
     auto info = item.getInfoList();
 
-    if(item.mSize==0)
+	if(item.size_==0)
         info.at(2)->setText(QString("unkonwn"));
 
-	QFileInfo fileInfo(item.mPath);
+	QFileInfo fileInfo(item.path_);
 	if(!fileInfo.exists() ||
 	   (fileInfo.size() == 0)){
-		mutex.lock();
-		downloadQueue.enqueue(item);
-		model.appendRow(info);
-		itemList.append(info);
-		++totalCount;
-		mutex.unlock();
+		mutex_.lock();
+		downloadQueue_.enqueue(item);
+		model_.appendRow(info);
+		itemList_.append(info);
+		++totalCount_;
+		mutex_.unlock();
 	}
 
     startDownload();
@@ -56,11 +56,11 @@ void DownloadManagerPlus::append(QList<FileItem> &itemList)
 void DownloadManagerPlus::startDownload()
 {
 	//for each downloader
-    for(int index = 0; index != downloadNumber; index++){
+	for(int index = 0; index != downloadNumber_; index++){
 		//if downloader is not downloading and download queue is not empty
-        if(!downloaderPool.at(index)->isDownload()&&!downloadQueue.empty()){
+		if(!downloaderPool_.at(index)->isDownload()&&!downloadQueue_.empty()){
 			//add a task to the free downloader
-			downloaderPool.at(index)->start(itemList.takeFirst(),downloadQueue.dequeue());
+			downloaderPool_.at(index)->start(itemList_.takeFirst(),downloadQueue_.dequeue());
 		}
     }
 }
@@ -70,7 +70,7 @@ int DownloadManagerPlus::waitForFinished()
     QEventLoop eventloop(this);
     connect(this,SIGNAL(finished()),&eventloop,SLOT(quit()));
     eventloop.exec();
-    if(!downloadQueue.empty()){
+	if(!downloadQueue_.empty()){
         qDebug()<<"exceptional finished.";
         return -1;
     }
@@ -79,31 +79,31 @@ int DownloadManagerPlus::waitForFinished()
 
 int DownloadManagerPlus::getDownloadedCount()
 {
-    return downloadedCount;
+	return downloadedCount_;
 }
 
 int DownloadManagerPlus::getTotalCount()
 {
-    return totalCount;
+	return totalCount_;
 }
 
 QStandardItemModel *DownloadManagerPlus::getModel()
 {
-    return &model;
+	return &model_;
 }
 
 void DownloadManagerPlus::startNextDownload(int index)
 {
-    if(model.rowCount()!=0){
+	if(model_.rowCount()!=0){
 //        model.removeRow(0);//!!!!!!!!!
     }
     qDebug()<<"downloader "<<index<<" finished,next";
-	++downloadedCount;
-	emit downloadedCountChanged(downloadedCount);
+	++downloadedCount_;
+	emit downloadedCountChanged(downloadedCount_);
 
-	if(downloadQueue.empty()){
+	if(downloadQueue_.empty()){
         bool d = false;
-        for(auto downloader: downloaderPool){
+		for(auto downloader: downloaderPool_){
             if(downloader->isDownload()){
                 d = true;
                 break;
@@ -116,9 +116,9 @@ void DownloadManagerPlus::startNextDownload(int index)
         return;
 	}
 
-	mutex.lock();
-    downloaderPool.at(index)->start(itemList.takeFirst(),downloadQueue.dequeue());
-	mutex.unlock();
+	mutex_.lock();
+	downloaderPool_.at(index)->start(itemList_.takeFirst(),downloadQueue_.dequeue());
+	mutex_.unlock();
 }
 
 void DownloadManagerPlus::singleFinished(int /*index*/)

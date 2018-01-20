@@ -30,12 +30,12 @@ public:
 private:
 	static bool deleteDirectory(const QString &path);
 
-    Profile gameProfile;
-	LaunchAuth *gameAuth;
-	JsonManager gameJson;
-	QProcess *gameProcess;
-	QString corePath;
-	Logger *gameLogger;
+	Profile gameProfile_;
+	LaunchAuth *gameAuth_;
+	JsonManager gameJson_;
+	QProcess *gameProcess_;
+	QString corePath_;
+	Logger *gameLogger_;
 signals:
     void finished(int);
 

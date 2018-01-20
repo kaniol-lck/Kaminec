@@ -18,7 +18,7 @@ signals:
 public slots:
 
 private:
-	QJsonObject profilesMgrObj;
+	QJsonObject profilesMgrObj_;
 };
 
 #endif // PROFILEMANAGER_H

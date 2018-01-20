@@ -23,7 +23,7 @@ public slots:
 	void invalidateFinished(QNetworkReply *reply) const;
 
 private:
-	mutable QNetworkAccessManager manager;
+	mutable QNetworkAccessManager manager_;
 	static const QString YggdrasilServer;
 	static const QList<QString> authList;
 
@@ -38,7 +38,7 @@ protected:
 
 	static const QString authenticateStyle;
 	static const QString tokenStyle;
-	mutable bool success = false;
+	mutable bool success_ = false;
 };
 
 #endif // GENERICAUTH_H

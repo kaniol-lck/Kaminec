@@ -11,9 +11,9 @@ struct Profile
 					 QString lastVersionId,
 					 QString gameDir);
 
-	QString mName;
-	QString mLastVersionId;
-	QString mGameDir;
+	QString name_;
+	QString lastVersionId_;
+	QString gameDir_;
 
 };
 

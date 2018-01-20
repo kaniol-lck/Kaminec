@@ -30,46 +30,46 @@
 
 KaminecLauncher::KaminecLauncher(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::KaminecLauncher),
-	activeAuth(new ActiveAuth(this)),
-	savesManager(new SavesManager(this)),
-	modsManager(new ModsManager(this)),
-	gameDownload(new GameDownload(this)),
-	corePath(Path::corePath())
+    ui_(new Ui::KaminecLauncher),
+	activeAuth_(new ActiveAuth(this)),
+	savesManager_(new SavesManager(this)),
+	modsManager_(new ModsManager(this)),
+	gameDownload_(new GameDownload(this)),
+	corePath_(Path::corePath())
 {
 	//setup ui
-	ui->setupUi(this);
+	ui_->setupUi(this);
 
 	//init ui
-	ui->modsMgr_treeView->setModel(modsManager->getModel());
-    ui->downloadProgress_label->setVisible(false);
-    ui->downloadProgress_progressBar->setVisible(false);
-    ui->downloadProgress_progressBar_2->setVisible(false);
-    ui->downloadValue_label->setVisible(false);
-	ui->saveMgr_treeView->setModel(savesManager->getModel());
+	ui_->modsMgr_treeView->setModel(modsManager_->getModel());
+    ui_->downloadProgress_label->setVisible(false);
+    ui_->downloadProgress_progressBar->setVisible(false);
+    ui_->downloadProgress_progressBar_2->setVisible(false);
+    ui_->downloadValue_label->setVisible(false);
+	ui_->saveMgr_treeView->setModel(savesManager_->getModel());
 
 	this->loadVersions();
 
 	//load gameDir
-	ui->gameDir_le->setText(QSettings().value("gameDir").toString());
-	ui->isVerified_cb->setChecked(QSettings().value("isOnline", false).toBool());
+	ui_->gameDir_le->setText(QSettings().value("gameDir").toString());
+	ui_->isVerified_cb->setChecked(QSettings().value("isOnline", false).toBool());
 
-	modsManager->setGameDir(ui->gameDir_le->text());
-	ui->versionsList_treeView->setModel(gameDownload->getVersionsModel());
+	modsManager_->setGameDir(ui_->gameDir_le->text());
+	ui_->versionsList_treeView->setModel(gameDownload_->getVersionsModel());
 }
 
 KaminecLauncher::~KaminecLauncher()
 {
 	//delete ui
-    delete ui;
+    delete ui_;
 }
 
 inline const Profile KaminecLauncher::getProfile()
 {
 	//get current profile
 	return Profile(QSettings().value("name").toString(),
-				   ui->version_cb->currentText(),
-				   ui->gameDir_le->text());
+				   ui_->version_cb->currentText(),
+				   ui_->gameDir_le->text());
 }
 
 
@@ -84,19 +84,19 @@ void KaminecLauncher::updateDownloadCount(int downloaded)
 {
 	//update the number in label
     qDebug()<<"changed:"<<downloaded;
-	ui->downloadValue_label->setText(QString("%1/%2")
-									 .arg(downloaded).arg(totalCount));
+	ui_->downloadValue_label->setText(QString("%1/%2")
+									 .arg(downloaded).arg(totalCount_));
 }
 
 void KaminecLauncher::downloadFinished()
 {
 	//slot after download
-    ui->download_pb->setText("&Download");
-    ui->download_pb->setEnabled(true);
-    ui->downloadProgress_label->setVisible(false);
-    ui->downloadProgress_progressBar->setVisible(false);
-    ui->downloadProgress_progressBar_2->setVisible(false);
-	ui->downloadValue_label->setVisible(false);
+    ui_->download_pb->setText("&Download");
+    ui_->download_pb->setEnabled(true);
+    ui_->downloadProgress_label->setVisible(false);
+    ui_->downloadProgress_progressBar->setVisible(false);
+    ui_->downloadProgress_progressBar_2->setVisible(false);
+	ui_->downloadValue_label->setVisible(false);
 
 	//update version select
 	this->updateVersionSelect();
@@ -106,46 +106,46 @@ void KaminecLauncher::gameFinished()
 {
 	//slot after playing
     qDebug()<<"finished";
-    ui->start_pb->setText("&Start");
-    ui->start_pb->setEnabled(true);
+    ui_->start_pb->setText("&Start");
+    ui_->start_pb->setEnabled(true);
 }
 
 void KaminecLauncher::on_addSaves_pb_clicked()
 {
 	//add saves
-	savesManager->addSaves();
+	savesManager_->addSaves();
 }
 
 void KaminecLauncher::on_deleteSaves_pb_clicked()
 {
 	//delete saves
-	auto index = ui->saveMgr_treeView->currentIndex();
-	savesManager->deleteSaves(index.row());
+	auto index = ui_->saveMgr_treeView->currentIndex();
+	savesManager_->deleteSaves(index.row());
 }
 
 void KaminecLauncher::on_backupSaves_pb_clicked()
 {
 	//backup saves
-	savesManager->backup();
+	savesManager_->backup();
 }
 
 void KaminecLauncher::startGame()
 {
 	//declare a Auth for game
 	auto auth = new LaunchAuth(this,
-						 ui->isVerified_cb->isChecked()?
+						 ui_->isVerified_cb->isChecked()?
 								   Mode::Online :
 								   Mode::Offline);
 
 	//prepare mods
-	modsManager->start();
+	modsManager_->start();
 
 	//init game
 	auto game = new NewGame(this, this->getProfile(), auth);
 
 	//ui during gaming
-	ui->start_pb->setText("Gaming...");
-	ui->start_pb->setDisabled(true);
+	ui_->start_pb->setText("Gaming...");
+	ui_->start_pb->setDisabled(true);
 	connect(game,SIGNAL(finished(int)),this,SLOT(gameFinished()));
 
 	//start
@@ -155,7 +155,7 @@ void KaminecLauncher::startGame()
 void KaminecLauncher::on_action_preference_triggered()
 {
 	//create preference windows
-	auto preference = new Preference(this, activeAuth);
+	auto preference = new Preference(this, activeAuth_);
 	preference->show();
 
 	connect(preference,SIGNAL(accepted()),this,SLOT(updateVersionSelect()));
@@ -168,9 +168,9 @@ void KaminecLauncher::on_gameDir_showPb_clicked()
 	auto gameDir = QFileDialog::getExistingDirectory(this,"Please choose the game directory.");
 	if(gameDir!=""){
 		if(gameDir.endsWith("/.minecraft"))
-			ui->gameDir_le->setText(gameDir);
+			ui_->gameDir_le->setText(gameDir);
 		else
-			ui->gameDir_le->setText(gameDir + "/.minecraft");
+			ui_->gameDir_le->setText(gameDir + "/.minecraft");
 	}
 	return;
 }
@@ -181,7 +181,7 @@ void KaminecLauncher::on_moduleSwitch_currentChanged(int index)
 	//download game version list
 	switch (index) {
 	case 1:
-		gameDownload->init();
+		gameDownload_->init();
 		break;
 	default:
 		break;
@@ -191,21 +191,21 @@ void KaminecLauncher::on_moduleSwitch_currentChanged(int index)
 void KaminecLauncher::on_download_pb_clicked()
 {
 	//disable this pushbutton to avoid reclick
-	ui->download_pb->setText("Downloading...");
-	ui->download_pb->setDisabled(true);
+	ui_->download_pb->setText("Downloading...");
+	ui_->download_pb->setDisabled(true);
 
 	//some settings during download
-	ui->download_treeView->setModel(gameDownload->getDownloadModel());
-	ui->downloadValue_label->setText(QString("0/%1").arg(gameDownload->getTotalCount()));
-	ui->downloadProgress_progressBar->setMaximum(gameDownload->getTotalCount());
-	ui->downloadProgress_progressBar_2->setMaximum(gameDownload->getTotalCount());
+	ui_->download_treeView->setModel(gameDownload_->getDownloadModel());
+	ui_->downloadValue_label->setText(QString("0/%1").arg(gameDownload_->getTotalCount()));
+	ui_->downloadProgress_progressBar->setMaximum(gameDownload_->getTotalCount());
+	ui_->downloadProgress_progressBar_2->setMaximum(gameDownload_->getTotalCount());
 
 	//signals/slots during download and afer download
-	connect(gameDownload, SIGNAL(downloadedCountChanged(int)),ui->downloadProgress_progressBar,SLOT(setValue(int)));
-	connect(gameDownload, SIGNAL(downloadedCountChanged(int)),ui->downloadProgress_progressBar_2,SLOT(setValue(int)));
-	connect(gameDownload, SIGNAL(finished()),this,SLOT(downloadFinished()));
+	connect(gameDownload_, SIGNAL(downloadedCountChanged(int)),ui_->downloadProgress_progressBar,SLOT(setValue(int)));
+	connect(gameDownload_, SIGNAL(downloadedCountChanged(int)),ui_->downloadProgress_progressBar_2,SLOT(setValue(int)));
+	connect(gameDownload_, SIGNAL(finished()),this,SLOT(downloadFinished()));
 	//start download game
-	gameDownload->download(ui->versionsList_treeView->currentIndex().row());
+	gameDownload_->download(ui_->versionsList_treeView->currentIndex().row());
 
 }
 
@@ -218,17 +218,17 @@ void KaminecLauncher::loadVersions()
 		dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
 		QFileInfoList list = dir.entryInfoList();
 		for(auto i : list){
-			ui->version_cb->addItem(i.fileName());
-			if(!profileManager.checkVersion(i.fileName()))
-				profileManager.addVersion(i.fileName(), corePath);
+			ui_->version_cb->addItem(i.fileName());
+			if(!profileManager_.checkVersion(i.fileName()))
+				profileManager_.addVersion(i.fileName(), corePath_);
 		}
 	}
 
 	//load last used version
-	auto index = ui->version_cb->findText(QSettings().value("lastUsedVersion").toString());
+	auto index = ui_->version_cb->findText(QSettings().value("lastUsedVersion").toString());
 	qDebug()<<QSettings().value("lastUsedVersion").toString();
 	if(index != -1)
-		ui->version_cb->setCurrentIndex(index);
+		ui_->version_cb->setCurrentIndex(index);
 }
 
 void KaminecLauncher::setBackGround()
@@ -242,8 +242,8 @@ void KaminecLauncher::setBackGround()
 
 void KaminecLauncher::updateVersionSelect()
 {
-	ui->version_cb->clear();
-	corePath = Path::corePath();
+	ui_->version_cb->clear();
+	corePath_ = Path::corePath();
 	this->loadVersions();
 }
 

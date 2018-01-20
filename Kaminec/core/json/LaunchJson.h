@@ -23,7 +23,7 @@ public:
 	QString getAssetsIndexId() const;
 
 private:
-	JsonKit jsonKit;
+	JsonKit jsonKit_;
 
 };
 

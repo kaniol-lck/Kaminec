@@ -32,13 +32,13 @@ private slots:
 public slots:
 
 private:
-    QNetworkAccessManager *pManager;
-    QNetworkReply *currentDownload;
-    QFile *output;
+	QNetworkAccessManager *manager_;
+	QNetworkReply *currentDownload_;
+	QFile *output_;
 
-    QList<QStandardItem*> mModelItem;
-    bool mIsdownload = false;
-    int mIndex;
+	QList<QStandardItem*> modelItem_;
+	bool isdownload_ = false;
+	int index_;
 };
 
 #endif // SINGLEDOWNLOAD_H

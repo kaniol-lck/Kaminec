@@ -3,7 +3,7 @@
 #include "core/Path.h"
 
 DownloadJson::DownloadJson(QString version) :
-	jsonKit(version)
+	jsonKit_(version)
 {
 
 }
@@ -12,7 +12,7 @@ QList<FileItem> DownloadJson::getLibraryFileItems() const
 {
 	QList<FileItem> libraryFileItems;
 
-	for(const auto& library : jsonKit.libraries()){
+	for(const auto& library : jsonKit_.libraries()){
 		libraryFileItems << FileItem(library.name(),
 									 library.size(),
 									 library.sha1(),
@@ -24,7 +24,7 @@ QList<FileItem> DownloadJson::getLibraryFileItems() const
 
 FileItem DownloadJson::getAssetsIndexFileItem() const
 {
-	auto assetIndex = jsonKit.assetIndex();
+	auto assetIndex = jsonKit_.assetIndex();
 	return FileItem(assetIndex.id(),
 					assetIndex.size(),
 					assetIndex.sha1(),
@@ -34,15 +34,15 @@ FileItem DownloadJson::getAssetsIndexFileItem() const
 
 FileItem DownloadJson::getClientFileItem() const
 {
-	auto client = jsonKit.client();
-	return FileItem(jsonKit.jarName(),
+	auto client = jsonKit_.client();
+	return FileItem(jsonKit_.jarName(),
 					client.size(),
 					client.sha1(),
-					QString("/%1/%1.jar").arg(jsonKit.jarName()),
+					QString("/%1/%1.jar").arg(jsonKit_.jarName()),
 					client.url());
 }
 
 QString DownloadJson::getAssetsIndexId() const
 {
-	return jsonKit.assetIndex().id();
+	return jsonKit_.assetIndex().id();
 }

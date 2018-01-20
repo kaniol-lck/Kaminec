@@ -10,10 +10,10 @@
 
 NewGame::NewGame(QObject *parent, Profile profile, LaunchAuth *auth) :
 	QObject(parent),
-	gameProfile(profile),
-	launchAuth(auth),
-	launchJson(gameProfile.mLastVersionId),
-	gameProcess(new QProcess(this))
+	gameProfile_(profile),
+	launchAuth_(auth),
+	launchJson_(gameProfile_.lastVersionId_),
+	gameProcess_(new QProcess(this))
 {
 
 }
@@ -24,18 +24,18 @@ void NewGame::start()
 
 	extractNatives();
 
-	gameProcess->start(Path::JavaPath(),
+	gameProcess_->start(Path::JavaPath(),
 					   startcode);
 
 	//these setting is foolish, migrate it later
-	QSettings().setValue("lastUsedVersion", gameProfile.mLastVersionId);
-	QSettings().setValue("gameDir", gameProfile.mGameDir);
-	QSettings().setValue("isOnline", launchAuth->getAuthMode() == Mode::Online);
+	QSettings().setValue("lastUsedVersion", gameProfile_.lastVersionId_);
+	QSettings().setValue("gameDir", gameProfile_.gameDir_);
+	QSettings().setValue("isOnline", launchAuth_->getAuthMode() == Mode::Online);
 
 	//forward finished infomation
-	connect(gameProcess, SIGNAL(finished(int)), this, SIGNAL(finished(int)));
+	connect(gameProcess_, SIGNAL(finished(int)), this, SIGNAL(finished(int)));
 	//delete natives after playing
-	connect(gameProcess, SIGNAL(finished(int)), this, SLOT(deleteNatives()));
+	connect(gameProcess_, SIGNAL(finished(int)), this, SLOT(deleteNatives()));
 
 }
 
@@ -43,7 +43,7 @@ QStringList NewGame::getStartcode()
 {
 	QStringList startcode;
 	startcode << getJVMArguments();
-	startcode << launchJson.getMainClass();
+	startcode << launchJson_.getMainClass();
 	startcode << getGameArguments();
 
 	return startcode;
@@ -72,17 +72,17 @@ QStringList NewGame::getJVMArguments()
 
 QStringList NewGame::getGameArguments()
 {
-	auto gameArguments = launchJson.getGameArguments();
+	auto gameArguments = launchJson_.getGameArguments();
 
 	QMap<QString, QString> replace_list = {
 		{"${auth_player_name}", QSettings().value("playerName").toString()},
-		{"${version_name}", gameProfile.mLastVersionId},
-		{"${game_directory}", gameProfile.mGameDir},
+		{"${version_name}", gameProfile_.lastVersionId_},
+		{"${game_directory}", gameProfile_.gameDir_},
 		{"${assets_root}", Path::assetsPath()},
-		{"${auth_uuid}", launchAuth->getAuthUuid()},
-		{"${auth_access_token}", launchAuth->getAuthAccessToken()},
-		{"${user_type}", launchAuth->getUserType()},
-		{"${assets_index_name}", launchJson.getAssetsIndexId()},
+		{"${auth_uuid}", launchAuth_->getAuthUuid()},
+		{"${auth_access_token}", launchAuth_->getAuthAccessToken()},
+		{"${user_type}", launchAuth_->getUserType()},
+		{"${assets_index_name}", launchJson_.getAssetsIndexId()},
 		{"${version_type}", "Kaminec Launcher"},
 		{"${user_properties}", "{}"},
 	};
@@ -96,8 +96,8 @@ QStringList NewGame::getGameArguments()
 
 QString NewGame::getClassPaths()
 {
-	auto libraryPaths = launchJson.getLibraryPaths();
-	auto gameJarPath = launchJson.getGameJarPath();
+	auto libraryPaths = launchJson_.getLibraryPaths();
+	auto gameJarPath = launchJson_.getGameJarPath();
 
 	for(auto& libraryPath : libraryPaths)
 		libraryPath.prepend(Path::libsPath() + "/");
@@ -115,7 +115,7 @@ void NewGame::extractNatives()
 {
 	QDir().mkdir(Path::nativesPath());
 
-	auto extractList = launchJson.getExtractPaths();
+	auto extractList = launchJson_.getExtractPaths();
 
 	for(auto extractName : extractList){
 		auto extractPath = Path::libsPath() + "/" + extractName;

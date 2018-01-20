@@ -23,15 +23,15 @@
 
 Game::Game(QObject *parent, Profile profile, LaunchAuth *auth):
     QObject(parent),
-	gameProfile(profile),
-	gameAuth(auth),
-	gameJson(parent,gameProfile.mLastVersionId),
-	gameProcess(new QProcess(this)),
-	corePath(Path::corePath()),
-	gameLogger(new Logger(this, corePath + "/launcher_log/log.txt"))
+	gameProfile_(profile),
+	gameAuth_(auth),
+	gameJson_(parent,gameProfile_.lastVersionId_),
+	gameProcess_(new QProcess(this)),
+	corePath_(Path::corePath()),
+	gameLogger_(new Logger(this, corePath_ + "/launcher_log/log.txt"))
 {
-	connect(gameProcess, SIGNAL(finished(int)), this, SIGNAL(finished(int)));
-	connect(gameProcess, SIGNAL(finished(int)), this, SLOT(deleteNatives()));
+	connect(gameProcess_, SIGNAL(finished(int)), this, SIGNAL(finished(int)));
+	connect(gameProcess_, SIGNAL(finished(int)), this, SLOT(deleteNatives()));
 }
 
 int Game::start()
@@ -43,24 +43,24 @@ int Game::start()
 		return 0;
 	}
 ///////////////////////////////////////////////////////////////////
-	gameLogger->startGenStartcode();
+	gameLogger_->startGenStartcode();
     auto startcode = this->genStartcode();
 
-	gameLogger->fisishGenStartcode();
+	gameLogger_->fisishGenStartcode();
 
-	gameLogger->setVersionChain(gameJson.getVersionChain());
+	gameLogger_->setVersionChain(gameJson_.getVersionChain());
 
 	/*start codes below*/
 	this->extractNatives();
-	gameProcess->start(
+	gameProcess_->start(
 				QSettings().value("javaPath").toString(),
 				startcode);
 
-	QSettings().setValue("lastUsedVersion", gameProfile.mLastVersionId);
-	QSettings().setValue("gameDir", gameProfile.mGameDir);
-	QSettings().setValue("isOnline", gameAuth->getAuthMode() == Mode::Online);
+	QSettings().setValue("lastUsedVersion", gameProfile_.lastVersionId_);
+	QSettings().setValue("gameDir", gameProfile_.gameDir_);
+	QSettings().setValue("isOnline", gameAuth_->getAuthMode() == Mode::Online);
 
-	gameLogger->writeToFile();
+	gameLogger_->writeToFile();
     return 0;
 }
 
@@ -91,7 +91,7 @@ QStringList Game::genJVMArgs()
 	JVMArgs<<QString("-Xmn%1m").arg(QSettings().value("minMem").toString());
 	JVMArgs<<QString("-Xmx%1m").arg(QSettings().value("maxMem").toString());
 
-	gameLogger->setJVMArgs(JVMArgs);
+	gameLogger_->setJVMArgs(JVMArgs);
 
 	return JVMArgs;
 }
@@ -99,9 +99,9 @@ QStringList Game::genJVMArgs()
 
 QString Game::genLibpath()
 {
-	auto libfileList =gameJson.getLibfileList();
+	auto libfileList =gameJson_.getLibfileList();
 
-	gameLogger->setClassPaths(libfileList);
+	gameLogger_->setClassPaths(libfileList);
 
 	auto libArgs = libfileList.join(";");
 
@@ -110,17 +110,17 @@ QString Game::genLibpath()
 
 QStringList Game::genGameArgs()
 {
-	auto gameArgs = gameJson.getGameArgs();
+	auto gameArgs = gameJson_.getGameArgs();
 
 	QMap<QString, QString> replace_list = {
 		{"${auth_player_name}", QSettings().value("playerName").toString()},
-		{"${version_name}", gameProfile.mLastVersionId},
-		{"${game_directory}", gameProfile.mGameDir},
+		{"${version_name}", gameProfile_.lastVersionId_},
+		{"${game_directory}", gameProfile_.gameDir_},
 		{"${assets_root}", Path::assetsPath()},
-		{"${auth_uuid}", gameAuth->getAuthUuid()},
-		{"${auth_access_token}", gameAuth->getAuthAccessToken()},
-		{"${user_type}", gameAuth->getUserType()},
-		{"${assets_index_name}", gameJson.getAssetsIndex()},
+		{"${auth_uuid}", gameAuth_->getAuthUuid()},
+		{"${auth_access_token}", gameAuth_->getAuthAccessToken()},
+		{"${user_type}", gameAuth_->getUserType()},
+		{"${assets_index_name}", gameJson_.getAssetsIndex()},
 		{"${version_type}", "Kaminec Launcher"},
 		{"${user_properties}", "{}"},
 	};
@@ -137,10 +137,10 @@ QStringList Game::genGameArgs()
 			   <<QString("--width")<<QSettings().value("width").toString();
 	}
 
-	auto gameMainClass = gameJson.getGameMainClass();
+	auto gameMainClass = gameJson_.getGameMainClass();
 
-	gameLogger->setGameMainClass(gameMainClass.join(""));
-	gameLogger->setGameArgs(gameArgs);
+	gameLogger_->setGameMainClass(gameMainClass.join(""));
+	gameLogger_->setGameArgs(gameArgs);
 
 	return QStringList(gameMainClass + gameArgs);
 }
@@ -150,14 +150,14 @@ int Game::extractNatives()
 {
 	QString nativesDir = Path::nativesPath();
 	QDir().mkpath(nativesDir);
-	gameLogger->setNativesPath(nativesDir);
+	gameLogger_->setNativesPath(nativesDir);
 
-	auto extractfileList = gameJson.getExtractfileList();
+	auto extractfileList = gameJson_.getExtractfileList();
 
 	for(auto& extractfile : extractfileList)
 		extractfile.prepend(Path::libsPath() + "/");
 
-	gameLogger->setExtractFiles(extractfileList);
+	gameLogger_->setExtractFiles(extractfileList);
 
 	for(auto& extractfile : extractfileList)
 	{

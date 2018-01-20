@@ -25,32 +25,32 @@ private:
 		Rule(QVariant rule)
 		{
 			if(value(rule, "action").toString() == "allow"){
-				action = Action::Allow;
+				action_ = Action::Allow;
 			} else{
-				action = Action::Disallow;
+				action_ = Action::Disallow;
 			}
 			if(rule.toMap().contains("os")){
-				osName = value(rule, "os", "name").toString();
-				anyOS = false;
+				osName_ = value(rule, "os", "name").toString();
+				anyOS_ = false;
 			} else{
-				anyOS = true;
+				anyOS_ = true;
 			}
 		}
 
 		bool ruleAction() const
 		{
-			if(anyOS && osName == sysName()){
-				return action;
+			if(anyOS_ && osName_ == sysName()){
+				return action_;
 			}else {
-				return reverseAction(action);
+				return reverseAction(action_);
 			}
 		}
 	private:
-		Action action;
+		Action action_;
 
-		bool anyOS;
+		bool anyOS_;
 
-		QString osName;
+		QString osName_;
 
 	};
 	QList<Rule> mRuleList;

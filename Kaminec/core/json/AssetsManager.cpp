@@ -10,11 +10,11 @@
 #include <QByteArray>
 #include <QDebug>
 
-QString AssetsManager::resourcesDownload = "http://resources.download.minecraft.net/";
+QString AssetsManager::resourcesDownload_ = "http://resources.download.minecraft.net/";
 
 AssetsManager::AssetsManager(QObject *parent, QString assetsIndex) :
 	QObject(parent),
-	corePath(Path::corePath())
+	corePath_(Path::corePath())
 {
 	QFile assetsFile(Path::indexesPath() + QString("/%1.json").arg(assetsIndex));
 
@@ -33,20 +33,20 @@ AssetsManager::AssetsManager(QObject *parent, QString assetsIndex) :
 	auto assetsDoc = QJsonDocument::fromJson(assetsBytes, &ok);
 	if(ok.error != QJsonParseError::NoError)qDebug()<<"assets json failed:"<<ok.error;
 
-	assets = assetsDoc.object();
+	assets_ = assetsDoc.object();
 }
 
 QList<FileItem> AssetsManager::getDownloadAssetsUrls()
 {
 	QList<FileItem> downloadAssetsUrls;
 
-	QJsonObject objects = assets.value("objects").toObject();
+	QJsonObject objects = assets_.value("objects").toObject();
 	for(auto it = objects.begin(); it!=objects.end(); it++){
 		QString name = it.key();
 		int size = it.value().toObject().value("size").toInt();
 		QString hash = it.value().toObject().value("hash").toString();
 		QString path = QString("%1/%2").arg(hash.left(2), hash);
-		QUrl url = resourcesDownload + path;
+		QUrl url = resourcesDownload_ + path;
 		path.prepend(Path::objectsPath() + "/");
 
 		FileItem downloadAssetsUrl(name, size, "NULL", path, url);

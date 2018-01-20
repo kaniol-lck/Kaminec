@@ -7,23 +7,23 @@ Arguments::Arguments(QString arguments)
 
 	for(const QString& argument : argumentList){
 		if(argument.startsWith("--"))
-			options << QStringList{ argument };
+			options_ << QStringList{ argument };
 		else
-			options.last().append(argument);
+			options_.last().append(argument);
 	}
 
 }
 
 void Arguments::replace(const QString &before, const QString &after)
 {
-	for(auto& option : options)
+	for(auto& option : options_)
 		for(auto& item : option)
 			item.replace(before, after);
 }
 
 bool Arguments::setOption(const QString &optionName, const QString &optionContent)
 {
-	for(auto& option : options){
+	for(auto& option : options_){
 		if(option.first() == optionName){
 			if(option.size() == 1)
 				option.append(optionContent);
@@ -38,18 +38,18 @@ bool Arguments::setOption(const QString &optionName, const QString &optionConten
 
 void Arguments::addOption(const QString &optionName)
 {
-	options << QStringList{ optionName };
+	options_ << QStringList{ optionName };
 }
 
 void Arguments::addOption(const QString &optionName, const QString &optionContent)
 {
-	options << QStringList{ optionName, optionContent};
+	options_ << QStringList{ optionName, optionContent};
 }
 
 QStringList Arguments::toStringList() const
 {
 	QStringList argumentList;
-	for(const auto& option : options)
+	for(const auto& option : options_)
 		argumentList << option;
 	return argumentList;
 }

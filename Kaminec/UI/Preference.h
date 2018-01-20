@@ -38,12 +38,12 @@ private slots:
 	void on_more_pb_clicked();
 
 private:
-	Ui::Preference *ui;
+	Ui::Preference *ui_;
 
-	QSettings settings;
+	QSettings settings_;
 
-	ActiveAuth *activeAuth;
-	bool customPath = false;
+	ActiveAuth *activeAuth_;
+	bool customPath_ = false;
 };
 
 #endif // PREFERENCE_H

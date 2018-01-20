@@ -12,16 +12,16 @@ ModsManager::ModsManager(QObject *parent) : QObject(parent)
 
 void ModsManager::setGameDir(QString gameDir)
 {
-	usedModsDir = gameDir;
-	unusedModsDir = gameDir;
+	usedModsDir_ = gameDir;
+	unusedModsDir_ = gameDir;
 
-	if(!usedModsDir.cd("mods"))
+	if(!usedModsDir_.cd("mods"))
 		qDebug()<<"haven't launch before";
 
-	if(!unusedModsDir.cd("unused_mods")){
+	if(!unusedModsDir_.cd("unused_mods")){
 		qDebug()<<"??";
-		unusedModsDir.mkdir("unused_mods");
-		unusedModsDir.cd("unused_mods");
+		unusedModsDir_.mkdir("unused_mods");
+		unusedModsDir_.cd("unused_mods");
 	}
 
 	this->refresh();
@@ -29,23 +29,23 @@ void ModsManager::setGameDir(QString gameDir)
 
 QStandardItemModel *ModsManager::getModel()
 {
-	return &model;
+	return &model_;
 }
 
 void ModsManager::refresh()
 {
-	if(!usedModsDir.exists()){
+	if(!usedModsDir_.exists()){
 		return;
 	}
 
-	QStringList usedModsFileNames = usedModsDir.entryList(QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden);
-	QStringList unusedModsFileNames = unusedModsDir.entryList(QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden);
+	QStringList usedModsFileNames = usedModsDir_.entryList(QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden);
+	QStringList unusedModsFileNames = unusedModsDir_.entryList(QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden);
 
-	model.clear();
-	model.setColumnCount(3);
-	model.setHeaderData(0,Qt::Horizontal,"used");
-	model.setHeaderData(1,Qt::Horizontal,"mod name");
-	model.setHeaderData(2,Qt::Horizontal,"mod path");
+	model_.clear();
+	model_.setColumnCount(3);
+	model_.setHeaderData(0,Qt::Horizontal,"used");
+	model_.setHeaderData(1,Qt::Horizontal,"mod name");
+	model_.setHeaderData(2,Qt::Horizontal,"mod path");
 
 	for(const auto& fileName : usedModsFileNames){
 		if(!fileName.endsWith(".jar") &&
@@ -63,13 +63,13 @@ void ModsManager::refresh()
 		nameItem->setText(basename);
 
 		auto pathItem = new QStandardItem;
-		pathItem->setText(usedModsDir.filePath(fileName));
+		pathItem->setText(usedModsDir_.filePath(fileName));
 
 		itemList<<checkItem;
 		itemList<<nameItem;
 		itemList<<pathItem;
 
-		model.appendRow(itemList);
+		model_.appendRow(itemList);
 
 	}
 
@@ -89,13 +89,13 @@ void ModsManager::refresh()
 		nameItem->setText(basename);
 
 		auto pathItem = new QStandardItem;
-		pathItem->setText(unusedModsDir.filePath(fileName));
+		pathItem->setText(unusedModsDir_.filePath(fileName));
 
 		itemList<<checkItem;
 		itemList<<nameItem;
 		itemList<<pathItem;
 
-		model.appendRow(itemList);
+		model_.appendRow(itemList);
 
 	}
 	return;
@@ -104,23 +104,23 @@ void ModsManager::refresh()
 
 void ModsManager::start()
 {
-	QStringList usedModsFileNames = usedModsDir.entryList(QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden);
-	QStringList unusedModsFileNames = unusedModsDir.entryList(QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden);
+	QStringList usedModsFileNames = usedModsDir_.entryList(QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden);
+	QStringList unusedModsFileNames = unusedModsDir_.entryList(QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden);
 
-	for(int i = 0 ;i < model.rowCount(); i++ ){
-		auto checkItem = model.item(i, 0);
-		auto pathItem = model.item(i, 2);
+	for(int i = 0 ;i < model_.rowCount(); i++ ){
+		auto checkItem = model_.item(i, 0);
+		auto pathItem = model_.item(i, 2);
 		if(checkItem->checkState() == Qt::Checked){
 			if(!usedModsFileNames.contains(
 				   QFileInfo(pathItem->text()).fileName()))
 				move(pathItem->text(),
-					 usedModsDir.filePath(QFileInfo(pathItem->text()).fileName()));
+					 usedModsDir_.filePath(QFileInfo(pathItem->text()).fileName()));
 		}else{
 			assert(checkItem->checkState() == Qt::Unchecked);
 			if(!unusedModsFileNames.contains(
 				   QFileInfo(pathItem->text()).fileName()))
 				move(pathItem->text(),
-					 unusedModsDir.filePath(QFileInfo(pathItem->text()).fileName()));
+					 unusedModsDir_.filePath(QFileInfo(pathItem->text()).fileName()));
 		}
 	}
 

@@ -30,20 +30,20 @@ public:
 signals:
 
 private:
-	QFile logFile;
-	QStringList m_versionChain;
-	QString m_nativePath;
-	QStringList m_classPaths;
-	QString m_gameMainClass;
-	QStringList m_gameArgs;
-	QStringList m_JVMArgs;
-	QStringList m_extractFiles;
+	QFile logFile_;
+	QStringList versionChain_;
+	QString nativePath_;
+	QStringList classPaths_;
+	QString gameMainClass_;
+	QStringList gameArgs_;
+	QStringList JVMArgs_;
+	QStringList extractFiles_;
 
-	int startCode_use;
-	int game_use = 0;
+	int startCode_use_;
+	int game_use_ = 0;
 
-	QTime genStartCodeTime;
-	QTime gameTime;
+	QTime genStartCodeTime_;
+	QTime gameTime_;
 
 public slots:
 };

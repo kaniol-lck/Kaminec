@@ -43,7 +43,7 @@ ProfileManager::ProfileManager(QObject *parent) : QObject(parent)
 	loadfile.close();
 
 	QJsonParseError ok;
-	profilesMgrObj = QJsonDocument::fromJson(bytes,&ok).object();
+	profilesMgrObj_ = QJsonDocument::fromJson(bytes,&ok).object();
 	if(ok.error != QJsonParseError::NoError){
 		qDebug()<<ok.errorString();
 		qDebug()<<R"("launcher_profiles.json" may be crashed.)";
@@ -52,7 +52,7 @@ ProfileManager::ProfileManager(QObject *parent) : QObject(parent)
 
 bool ProfileManager::checkVersion(QString version)
 {
-	return profilesMgrObj.value("profiles").toVariant().toMap().contains("auto-version-" + version);
+	return profilesMgrObj_.value("profiles").toVariant().toMap().contains("auto-version-" + version);
 }
 
 void ProfileManager::addVersion(QString version, QString gamePath)
@@ -61,20 +61,20 @@ void ProfileManager::addVersion(QString version, QString gamePath)
 	QFile loadfile(corePath + "/launcher_profiles.json");
 
 	QJsonObject profile;
-	QJsonObject profiles = profilesMgrObj.value("profiles").toObject();
+	QJsonObject profiles = profilesMgrObj_.value("profiles").toObject();
 
 	profile.insert("name","auto-version-" + version);
 	profile.insert("lastVersionId", version);
 	profile.insert("gameDir", gamePath);
 
 	profiles.insert("auto-version-" + version, profile);
-	profilesMgrObj.insert("profiles", profiles);
+	profilesMgrObj_.insert("profiles", profiles);
 
 	if(!loadfile.open(QIODevice::ReadWrite|QIODevice::Text)){
 		qDebug()<<R"("launcher_profiles.json" opened error.)";
 	}
 
 	QTextStream out(&loadfile);
-	auto bytes = QJsonDocument(profilesMgrObj).toJson();
+	auto bytes = QJsonDocument(profilesMgrObj_).toJson();
 	out<<bytes;
 }
