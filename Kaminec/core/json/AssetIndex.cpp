@@ -1,6 +1,6 @@
 #include "AssetIndex.h"
 
-#include <assistance/utility.h>
+#include "assistance/utility.h"
 
 #include <QUrl>
 

@@ -6,16 +6,21 @@
 
 #include <QList>
 
-class DownloadJson : public JsonKit
+class DownloadJson
 {
 public:
 	DownloadJson(QString version);
 
-	QList<FileItem> getLibraryFileItems();
+	QList<FileItem> getLibraryFileItems() const;
 
-	FileItem getAssetsJsonFileItem();
+	FileItem getAssetsIndexFileItem() const;
 
-	FileItem getClientFileItem();
+	FileItem getClientFileItem() const;
+
+	QString getAssetsIndexId() const;
+
+private:
+	JsonKit jsonKit;
 };
 
 #endif // DOWNLOADJSON_H

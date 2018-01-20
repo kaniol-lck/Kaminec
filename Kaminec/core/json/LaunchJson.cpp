@@ -13,24 +13,24 @@ QString LaunchJson::getGameJarPath() const
 
 QStringList LaunchJson::getLibraryPaths() const
 {
-	QStringList librariesPaths;
+	QStringList libraryPaths;
 
 	for(const auto& library : jsonKit.libraries()){
 		if(library.isNatives()) continue;//ignore extract file
-		librariesPaths << library.path();
+		libraryPaths << library.path();
 	}
-	return librariesPaths;
+	return libraryPaths;
 }
 
 QStringList LaunchJson::getExtractPaths() const
 {
-	QStringList librariesPaths;
+	QStringList extractPaths;
 	for(const auto& library : jsonKit.libraries()){
 		if(library.isNatives())
-			librariesPaths << library.path();//keep extract file only
+			extractPaths << library.path();//keep extract file only
 	}
 
-	return librariesPaths;
+	return extractPaths;
 }
 
 QString LaunchJson::getMainClass() const

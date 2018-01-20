@@ -1,7 +1,6 @@
 #include "gamedownload.h"
 
 #include "core/Path.h"
-#include "core/json/JsonManager.h"
 #include "core/json/AssetsManager.h"
 #include "messager/fileitem.h"
 #include "downloader/downloadmanagerplus.h"
@@ -99,21 +98,25 @@ void GameDownload::download(int index)
 									 versionList.at(index).toMap().value("url").toUrl()));
 	downloadManagerPlus->waitForFinished();
 
-	downloadJson = new JsonManager(this, version);
+	DownloadJson downloadJson(version);
 
-	downloadManagerPlus->append(downloadJson->getDownloadClientUrl());
+	auto clientFileItem = downloadJson.getClientFileItem();
+	clientFileItem.mPath.prepend(Path::versionsPath());
+	downloadManagerPlus->append(clientFileItem);
 
-	auto downloadLibUrls = downloadJson->getDownloadLibUrls();
-	for(auto& i:downloadLibUrls){
+	auto LibraryFileItems = downloadJson.getLibraryFileItems();
+	for(auto& i:LibraryFileItems){
 		i.mPath.prepend(Path::libsPath()+"/");
 	}
 
-	downloadManagerPlus->append(downloadLibUrls);
+	downloadManagerPlus->append(LibraryFileItems);
 
-	downloadManagerPlus->append(downloadJson->getDownloadAssetsFileUrl());
+	auto assetsIndexFileItem = downloadJson.getAssetsIndexFileItem();
+	assetsIndexFileItem.mPath.prepend(Path::indexesPath());
+	downloadManagerPlus->append(assetsIndexFileItem);
 	downloadManagerPlus->waitForFinished();
 
-	downloadAsset = new AssetsManager(this,downloadJson->getAssetsIndex());
+	downloadAsset = new AssetsManager(this,downloadJson.getAssetsIndexId());
 	auto downloadAssetUrls = downloadAsset->getDownloadAssetsUrls();
 	downloadManagerPlus->append(downloadAssetUrls);
 

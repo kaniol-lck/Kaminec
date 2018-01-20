@@ -4,6 +4,7 @@
 #include "core/json/Library.h"
 #include "core/Arguments.h"
 #include "core/json/AssetIndex.h"
+#include "core/json/GameCoreJar.h"
 
 #include <memory>
 #include <QList>
@@ -17,6 +18,10 @@ public:
 	AssetIndex assetIndex() const;
 
 	QPair<QString, QString> version() const;
+
+	GameCoreJar client() const;
+
+	GameCoreJar server() const;
 
 	QList<Library> libraries() const;
 
@@ -40,7 +45,9 @@ private:
 
 	mutable std::shared_ptr<AssetIndex> mAssetIndex;
 
-	/*downloads*/
+	mutable std::shared_ptr<GameCoreJar> mGameClient;
+
+	mutable std::shared_ptr<GameCoreJar> mGameServer;
 
 	mutable std::shared_ptr<QList<Library>> mLibraries;
 

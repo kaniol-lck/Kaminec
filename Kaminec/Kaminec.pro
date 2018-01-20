@@ -52,7 +52,8 @@ SOURCES += main.cpp\
     core/json/LaunchJson.cpp \
     core/json/AssetIndex.cpp \
     core/json/DownloadJson.cpp \
-    core/json/JsonKit.cpp
+    core/json/JsonKit.cpp \
+    core/json/GameCoreJar.cpp
 
 HEADERS  += UI/kamineclauncher.h \
             messager/profile.h \
@@ -83,7 +84,8 @@ HEADERS  += UI/kamineclauncher.h \
     core/json/LaunchJson.h \
     core/json/AssetIndex.h \
     core/json/DownloadJson.h \
-    core/json/JsonKit.h
+    core/json/JsonKit.h \
+    core/json/GameCoreJar.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preference.ui \

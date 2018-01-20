@@ -34,16 +34,15 @@ void DownloadManagerPlus::append(const FileItem &item)
         info.at(2)->setText(QString("unkonwn"));
 
 	QFileInfo fileInfo(item.mPath);
-	if(fileInfo.exists() &&
-	   (fileInfo.size() != 0))
-		return;
-
-	mutex.lock();
-	downloadQueue.enqueue(item);
-    model.appendRow(info);
-    itemList.append(info);
-    ++totalCount;
-	mutex.unlock();
+	if(!fileInfo.exists() ||
+	   (fileInfo.size() == 0)){
+		mutex.lock();
+		downloadQueue.enqueue(item);
+		model.appendRow(info);
+		itemList.append(info);
+		++totalCount;
+		mutex.unlock();
+	}
 
     startDownload();
 }

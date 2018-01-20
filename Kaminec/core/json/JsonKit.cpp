@@ -50,6 +50,28 @@ QPair<QString, QString> JsonKit::version() const
 	return mVersion;
 }
 
+GameCoreJar JsonKit::client() const
+{
+	if(!mGameClient){
+		if(inheritedJson)
+			mGameClient = std::make_shared<GameCoreJar>(inheritedJson->client());
+		else
+			mGameClient = std::make_shared<GameCoreJar>(value(jsonVariant, "downloads", "client"));
+	}
+	return *mGameClient;
+}
+
+GameCoreJar JsonKit::server() const
+{
+	if(!mGameServer){
+		if(inheritedJson)
+			mGameServer = std::make_shared<GameCoreJar>(inheritedJson->server());
+		else
+			mGameServer = std::make_shared<GameCoreJar>(value(jsonVariant, "downloads", "server"));
+	}
+	return *mGameServer;
+}
+
 QList<Library> JsonKit::libraries() const
 {
 	if(!mLibraries){
