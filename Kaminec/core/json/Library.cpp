@@ -2,6 +2,7 @@
 
 #include "core/Ruler.h"
 #include "assistance/utility.h"
+#include "assistance/systeminfo.h"
 
 #include <QUrl>
 
@@ -33,13 +34,15 @@ QString Library::version() const
 
 int Library::size() const
 {
-	static int mSize = value(libraryVariant_, "downloads", "size").toInt();
+	static int mSize = isNatives()?value(libraryVariant_, "downloads", "classifiers", nativeKey(), "size").toInt():
+								   value(libraryVariant_, "downloads", "artifact", "size").toInt();
 	return mSize;
 }
 
 QString Library::sha1() const
 {
-	static QString mSha1 = value(libraryVariant_, "downloads", "sha1").toString();
+	static QString mSha1 = isNatives()?value(libraryVariant_, "downloads", "classifiers", nativeKey(), "sha1").toString():
+									   value(libraryVariant_, "downloads", "artifact", "sha1").toString();
 	return mSha1;
 }
 
@@ -55,7 +58,8 @@ QString Library::path() const
 
 QUrl Library::url() const
 {
-	static QUrl mUrl = value(libraryVariant_, "downloads", "url").toUrl();
+	static QUrl mUrl = isNatives()?value(libraryVariant_, "downloads", "classifiers", nativeKey(), "url").toUrl():
+								   value(libraryVariant_, "downloads", "artifact", "url").toUrl();
 	return mUrl;
 }
 
@@ -67,7 +71,8 @@ QString Library::nativeKey() const
 
 bool Library::isNatives() const
 {
-	return libraryVariant_.toMap().contains("natives");
+	return libraryVariant_.toMap().contains("natives") &&
+			value(libraryVariant_, "natives").toMap().contains(sysName());
 }
 
 bool Library::isAllow() const
