@@ -27,8 +27,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
            UI/kamineclauncher.cpp \
            messager/profile.cpp \
-		   core/json/jsonmanager.cpp \
-           core/game.cpp \
            messager/fileitem.cpp \
            LAminec/savesmanager.cpp \
     downloader/downloadmanagerplus.cpp \
@@ -58,8 +56,6 @@ SOURCES += main.cpp\
 HEADERS  += UI/kamineclauncher.h \
             messager/profile.h \
             core/gamemode.h \
-			core/json/jsonmanager.h \
-            core/game.h \
             messager/fileitem.h \
             LAminec/savesmanager.h \
     downloader/downloadmanagerplus.h \

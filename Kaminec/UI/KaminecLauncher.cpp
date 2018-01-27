@@ -4,7 +4,6 @@
 #include "UI/Preference.h"
 #include "core/Path.h"
 #include "core/gamemode.h"
-#include "core/game.h"
 #include "core/NewGame.h"
 #include "LAminec/modsmanager.h"
 #include "LAminec/savesmanager.h"
