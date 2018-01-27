@@ -25,7 +25,7 @@ void NewGame::start()
 	extractNatives();
 
 	gameProcess_->start(Path::JavaPath(),
-					   startcode);
+						startcode);
 
 	//these setting is foolish, migrate it later
 	QSettings().setValue("lastUsedVersion", gameProfile_.lastVersionId_);

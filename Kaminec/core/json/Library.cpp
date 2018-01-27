@@ -5,6 +5,7 @@
 #include "assistance/systeminfo.h"
 
 #include <QUrl>
+#include <QDebug>
 
 Library::Library(QVariant libraryVariant) :
 	libraryVariant_(libraryVariant),
@@ -34,14 +35,14 @@ QString Library::version() const
 
 int Library::size() const
 {
-	static int mSize = isNatives()?value(libraryVariant_, "downloads", "classifiers", nativeKey(), "size").toInt():
+	int mSize = isNatives()?value(libraryVariant_, "downloads", "classifiers", nativeKey(), "size").toInt():
 								   value(libraryVariant_, "downloads", "artifact", "size").toInt();
 	return mSize;
 }
 
 QString Library::sha1() const
 {
-	static QString mSha1 = isNatives()?value(libraryVariant_, "downloads", "classifiers", nativeKey(), "sha1").toString():
+	QString mSha1 = isNatives()?value(libraryVariant_, "downloads", "classifiers", nativeKey(), "sha1").toString():
 									   value(libraryVariant_, "downloads", "artifact", "sha1").toString();
 	return mSha1;
 }
@@ -58,14 +59,15 @@ QString Library::path() const
 
 QUrl Library::url() const
 {
-	static QUrl mUrl = isNatives()?value(libraryVariant_, "downloads", "classifiers", nativeKey(), "url").toUrl():
+	QUrl mUrl = isNatives()?value(libraryVariant_, "downloads", "classifiers", nativeKey(), "url").toUrl():
 								   value(libraryVariant_, "downloads", "artifact", "url").toUrl();
 	return mUrl;
 }
 
 QString Library::nativeKey() const
 {
-	static QString mNativeKey = value(libraryVariant_, "natives", sysName()).toString();
+	QString mNativeKey = value(libraryVariant_, "natives", sysName()).toString();
+	mNativeKey.replace("${arch}", QString::number(sysWordSize()));
 	return mNativeKey;
 }
 
@@ -78,7 +80,7 @@ bool Library::isNatives() const
 bool Library::isAllow() const
 {
 	if(libraryVariant_.toMap().contains("rules")){
-		static Ruler ruler(value(libraryVariant_, "rules"));
+		Ruler ruler(value(libraryVariant_, "rules"));
 		return ruler.isAllow();
 	}else{
 		return true;
