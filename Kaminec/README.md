@@ -4,7 +4,7 @@
 >
 > --Kaniol
 
-##The Source Code Structure of Kaminec Launcher
+## The Source Code Structure of Kaminec Launcher
 
 ```lua
 .
@@ -45,7 +45,7 @@
 
 *AS YOU SEE IN THIS DIRECTORY*
 
-##Description of These Main Parts
+## Description of These Main Parts
 
 - `assistance/` includes my utilities which helps my work,such as template function `value` used to index `QVariant` object much quicker and more readable.
 - `core/` is the core of Kamine Launcher.All the things like Launching game or generating start code or authenticate account are in it.
