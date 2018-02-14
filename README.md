@@ -28,4 +28,4 @@ You can find this project on GitHub:[kaniol-lck/Kaminec](www.github.com/kaniol-l
 
 ## Current Looks
 
-![](images\main_window.png)
+![](main_window.png)
