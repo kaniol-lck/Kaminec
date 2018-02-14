@@ -9,7 +9,7 @@ You can find this project on GitHub:[kaniol-lck/Kaminec](www.github.com/kaniol-l
 
 -------
 
-**VERY IMPORTANT:**you must put `7za.exe` in the directory of executable program to let my launcher extract natives.
+*VERY IMPORTANT*:you must put `7za.exe` in the directory of executable program to let my launcher extract natives.
 
 ------
 
@@ -25,3 +25,7 @@ You can find this project on GitHub:[kaniol-lck/Kaminec](www.github.com/kaniol-l
 - Account manage
 - Logger
 
+
+## Current Looks
+
+![main_window](.\images\main_window.png)
