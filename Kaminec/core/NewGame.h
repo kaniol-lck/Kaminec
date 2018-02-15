@@ -13,7 +13,7 @@ class Game : public QObject
 {
 	Q_OBJECT
 public:
-	explicit Game(QObject *parent, Profile profile, LaunchAuth *auth);
+	explicit Game(QObject *parent, Profile profile, LaunchAuth auth);
 
 	void start();
 
@@ -34,7 +34,7 @@ public slots:
 
 private:
 	Profile gameProfile_;
-	LaunchAuth *launchAuth_;
+	LaunchAuth launchAuth_;
 	LaunchJson launchJson_;
 	QProcess *gameProcess_;
 };

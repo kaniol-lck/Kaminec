@@ -16,6 +16,10 @@ public:
 	bool signout(const QByteArray& data) const = delete;//we needn't this method currently
 	bool invalidate(const QByteArray& data) const;
 
+	static const QString YggdrasilServer;
+	static const QString AuthenticateStyle;
+	static const QString TokenStyle;
+
 public slots:
 	void authenticateFinished(QNetworkReply *reply) const;
 	void validateFinished(QNetworkReply *reply) const;
@@ -28,10 +32,6 @@ private:
 	void post(const QNetworkRequest& request, const QByteArray& data, const decltype(SLOT(finished(QNetworkReply*)))& slotFunction) const;
 
 	mutable QNetworkAccessManager manager_;
-	static const QString YggdrasilServer;
-	static const QString authenticateStyle;
-	static const QString tokenStyle;
-
 	mutable bool success_;
 };
 

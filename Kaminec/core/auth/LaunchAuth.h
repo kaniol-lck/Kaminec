@@ -1,16 +1,16 @@
 #ifndef LAUNCHAUTH_H
 #define LAUNCHAUTH_H
 
-#include "core/auth/GenericAuth.h"
+#include "core/auth/AuthKit.h"
 #include "core/Gamemode.h"
 
 #include <QSettings>
 
-class LaunchAuth final: public GenericAuth
+class LaunchAuth
 {
 public:
-	LaunchAuth(QObject *parent, Mode authMode);
-	~LaunchAuth() = default;
+	LaunchAuth(Mode authMode);
+	~LaunchAuth();
 
 	bool validate() const;
 
@@ -21,7 +21,8 @@ public:
 	Mode getAuthMode() const;
 
 private:
-	QSettings settings_;
+	AuthKit *authKit_;
+	QSettings *settings_;
 	Mode authMode_;
 };
 

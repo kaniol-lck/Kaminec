@@ -9,8 +9,8 @@
 #include <QMessageBox>
 
 const QString AuthKit::YggdrasilServer = "https://authserver.mojang.com";
-const QString AuthKit::authenticateStyle = R"({"agent":{"name":"Minecraft","version":1},"requestUser": false,"username":"%1","password":"%2"})";
-const QString AuthKit::tokenStyle = R"({"accessToken":"%1","clientToken":"%2"})";
+const QString AuthKit::AuthenticateStyle = R"({"agent":{"name":"Minecraft","version":1},"requestUser": false,"username":"%1","password":"%2"})";
+const QString AuthKit::TokenStyle = R"({"accessToken":"%1","clientToken":"%2"})";
 
 
 AuthKit::AuthKit(QObject *parent) : QObject(parent)

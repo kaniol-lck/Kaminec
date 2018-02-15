@@ -38,7 +38,6 @@ SOURCES += main.cpp\
     LAminec/modsmanager.cpp \
     assistance/logger.cpp \
     assistance/utility.cpp \
-	core/auth/GenericAuth.cpp \
 	core/auth/LaunchAuth.cpp \
     LAminec/ActiveAuth.cpp \
     core/Path.cpp \
@@ -68,7 +67,6 @@ HEADERS  += UI/kamineclauncher.h \
     LAminec/modsmanager.h \
     assistance/utility.h \
     assistance/logger.h \
-	core/auth/GenericAuth.h \
 	core/auth/LaunchAuth.h \
     LAminec/ActiveAuth.h \
     assistance/systeminfo.h \

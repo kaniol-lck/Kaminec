@@ -8,7 +8,7 @@
 #include <QSettings>
 #include <QDebug>
 
-Game::Game(QObject *parent, Profile profile, LaunchAuth *auth) :
+Game::Game(QObject *parent, Profile profile, LaunchAuth auth) :
 	QObject(parent),
 	gameProfile_(profile),
 	launchAuth_(auth),
@@ -30,7 +30,7 @@ void Game::start()
 	//these setting is foolish, migrate it later
 	QSettings().setValue("lastUsedVersion", gameProfile_.lastVersionId_);
 	QSettings().setValue("gameDir", gameProfile_.gameDir_);
-	QSettings().setValue("isOnline", launchAuth_->getAuthMode() == Mode::Online);
+	QSettings().setValue("isOnline", launchAuth_.getAuthMode() == Mode::Online);
 
 	//forward finished infomation
 	connect(gameProcess_, SIGNAL(finished(int)), this, SIGNAL(finished(int)));
@@ -79,9 +79,9 @@ QStringList Game::getGameArguments()
 		{"${version_name}", gameProfile_.lastVersionId_},
 		{"${game_directory}", gameProfile_.gameDir_},
 		{"${assets_root}", Path::assetsPath()},
-		{"${auth_uuid}", launchAuth_->getAuthUuid()},
-		{"${auth_access_token}", launchAuth_->getAuthAccessToken()},
-		{"${user_type}", launchAuth_->getUserType()},
+		{"${auth_uuid}", launchAuth_.getAuthUuid()},
+		{"${auth_access_token}", launchAuth_.getAuthAccessToken()},
+		{"${user_type}", launchAuth_.getUserType()},
 		{"${assets_index_name}", launchJson_.getAssetsIndexId()},
 		{"${version_type}", "Kaminec Launcher"},
 		{"${user_properties}", "{}"},

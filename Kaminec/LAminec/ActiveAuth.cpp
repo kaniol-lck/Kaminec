@@ -8,33 +8,31 @@
 #include <QMessageBox>
 
 ActiveAuth::ActiveAuth(QObject *parent) :
-	GenericAuth(parent)
+	QObject(parent),
+	authKit_(new AuthKit(this))
 {
 
 }
 
 bool ActiveAuth::authenticate(QString username, QString password) const
 {
-	QByteArray data = authenticateStyle.arg(username).arg(password).toUtf8();
+	QByteArray data = AuthKit::AuthenticateStyle.arg(username).arg(password).toUtf8();
 
-	this->sendRequest(Authenticate, data);
-	return success_;
+	return authKit_->authenticate(data);
 }
 
 bool ActiveAuth::refresh() const
 {
-	QByteArray data = tokenStyle.arg(settings_.value("accessToken").toString())
+	QByteArray data = AuthKit::TokenStyle.arg(settings_.value("accessToken").toString())
 					  .arg(settings_.value("clientToken").toString()).toUtf8();
 
-	this->sendRequest(Refresh, data);
-	return success_;
+	return authKit_->refresh(data);
 }
 
 bool ActiveAuth::invalidate() const
 {
-	QByteArray data = tokenStyle.arg(settings_.value("accessToken").toString())
+	QByteArray data = AuthKit::TokenStyle.arg(settings_.value("accessToken").toString())
 					  .arg(settings_.value("clientToken").toString()).toUtf8();
 
-	this->sendRequest(Invalidate, data);
-	return success_;
+	return authKit_->invalidate(data);
 }

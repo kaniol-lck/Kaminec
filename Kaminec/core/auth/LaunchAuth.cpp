@@ -3,21 +3,24 @@
 #include <QSettings>
 #include <QUuid>
 
-LaunchAuth::LaunchAuth(QObject *parent, Mode authMode) :
-	GenericAuth(parent),
+LaunchAuth::LaunchAuth(Mode authMode) :
+	authKit_(new AuthKit(0)),
+	settings_(new QSettings(0)),
 	authMode_(authMode)
+{}
+
+LaunchAuth::~LaunchAuth()
 {
-//	if(mode == Mode::Online && !this->validate())
-//		mode = Mode::Offline;//auto offline mode
+	delete settings_;
+	delete authKit_;
 }
 
 bool LaunchAuth::validate() const
 {
-	QByteArray data = tokenStyle.arg(settings_.value("accessToken").toString())
-					  .arg(settings_.value("clientToken").toString()).toUtf8();
+	QByteArray data = AuthKit::TokenStyle.arg(settings_->value("accessToken").toString())
+					  .arg(settings_->value("clientToken").toString()).toUtf8();
 
-	this->sendRequest(Invalidate, data);
-	return success_;
+	return authKit_->validate(data);
 }
 
 QString LaunchAuth::getUserType() const
@@ -30,14 +33,14 @@ QString LaunchAuth::getUserType() const
 QString LaunchAuth::getAuthUuid() const
 {
 	return authMode_ == Mode::Online?
-				settings_.value("uuid").toString():
+				settings_->value("uuid").toString():
 				"${auth_uuid}";
 }
 
 QString LaunchAuth::getAuthAccessToken() const
 {
 	return authMode_ == Mode::Online?
-				settings_.value("accessToken").toString():
+				settings_->value("accessToken").toString():
 				"${auth_access_token}";
 }
 

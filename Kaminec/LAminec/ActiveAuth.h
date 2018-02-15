@@ -1,11 +1,12 @@
 #ifndef ACTIVEAUTH_H
 #define ACTIVEAUTH_H
 
-#include "core/auth/GenericAuth.h"
+#include "core/auth/AuthKit.h"
 
+#include <QObject>
 #include <QSettings>
 
-class ActiveAuth final: public GenericAuth
+class ActiveAuth : QObject
 {
 public:
 	ActiveAuth(QObject *parent);
@@ -16,6 +17,7 @@ public:
 	bool invalidate() const;
 
 private:
+	AuthKit *authKit_;
 	QSettings settings_;
 };
 
