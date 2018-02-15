@@ -140,7 +140,7 @@ void KaminecLauncher::startGame()
 	modsManager_->start();
 
 	//init game
-	auto game = new NewGame(this, this->getProfile(), auth);
+	auto game = new Game(this, this->getProfile(), auth);
 
 	//ui during gaming
 	ui_->start_pb->setText("Gaming...");

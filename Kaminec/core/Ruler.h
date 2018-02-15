@@ -53,7 +53,7 @@ private:
 		QString osName_;
 
 	};
-	QList<Rule> mRuleList;
+	QList<Rule> ruleList_;
 };
 
 #endif // RULER_H

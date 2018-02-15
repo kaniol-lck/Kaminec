@@ -11,14 +11,14 @@ Ruler::Action Ruler::reverseAction(const Ruler::Action &action){
 Ruler::Ruler(QVariant rule)
 {
 	for(const auto& ruleVariant: rule.toList()){
-		mRuleList << Rule(ruleVariant);
+		ruleList_ << Rule(ruleVariant);
 	}
 }
 
 bool Ruler::isAllow()
 {
 	bool allow = true;
-	for(const auto& action : mRuleList){
+	for(const auto& action : ruleList_){
 		if(action.ruleAction() == Disallow){
 			allow = false;
 			break;
