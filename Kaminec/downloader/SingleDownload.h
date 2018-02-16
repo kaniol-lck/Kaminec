@@ -22,7 +22,6 @@ public:
 
 signals:
     void finished(int) const;
-//    int downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
 
 private slots:
     void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);

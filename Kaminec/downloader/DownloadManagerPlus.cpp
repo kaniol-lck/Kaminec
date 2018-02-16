@@ -94,9 +94,6 @@ QStandardItemModel *DownloadManagerPlus::getModel()
 
 void DownloadManagerPlus::startNextDownload(int index)
 {
-	if(model_.rowCount()!=0){
-//        model.removeRow(0);//!!!!!!!!!
-    }
     qDebug()<<"downloader "<<index<<" finished,next";
 	++downloadedCount_;
 	emit downloadedCountChanged(downloadedCount_);
