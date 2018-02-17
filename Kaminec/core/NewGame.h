@@ -5,7 +5,7 @@
 #include <QProcess>
 
 #include "core/auth/LaunchAuth.h"
-#include "core/json/LaunchJson.h"
+#include "core/json/main/LaunchJson.h"
 #include "messager/profile.h"
 #include "assistance/logger.h"
 

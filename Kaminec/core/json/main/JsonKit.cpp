@@ -1,6 +1,6 @@
 #include "JsonKit.h"
 
-#include "core/json/Library.h"
+#include "core/json/main/Library.h"
 #include "core/Path.h"
 #include "assistance/utility.h"
 

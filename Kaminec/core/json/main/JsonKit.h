@@ -1,10 +1,10 @@
 #ifndef GAMEJSON_H
 #define GAMEJSON_H
 
-#include "core/json/Library.h"
+#include "core/json/main/Library.h"
 #include "core/Arguments.h"
-#include "core/json/AssetIndex.h"
-#include "core/json/GameCoreJar.h"
+#include "core/json/main/AssetIndex.h"
+#include "core/json/main/GameCoreJar.h"
 
 #include <memory>
 #include <QList>

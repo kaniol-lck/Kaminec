@@ -1,7 +1,7 @@
 #ifndef ASSETSKIT_H
 #define ASSETSKIT_H
 
-#include "core/json/Object.h"
+#include "core/json/assets/Object.h"
 
 #include <memory>
 #include <QVariant>

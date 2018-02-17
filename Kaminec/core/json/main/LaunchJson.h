@@ -1,7 +1,7 @@
 #ifndef LAUNCHJSON_H
 #define LAUNCHJSON_H
 
-#include "core/json/JsonKit.h"
+#include "core/json/main/JsonKit.h"
 
 #include <memory>
 

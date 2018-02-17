@@ -1,7 +1,7 @@
 #include "gamedownload.h"
 
 #include "core/Path.h"
-#include "core/json/DownloadAssets.h"
+#include "core/json/assets/DownloadAssets.h"
 #include "messager/fileitem.h"
 #include "downloader/downloadmanagerplus.h"
 

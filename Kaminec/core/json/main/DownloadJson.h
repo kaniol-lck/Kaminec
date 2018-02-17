@@ -1,7 +1,7 @@
 #ifndef DOWNLOADJSON_H
 #define DOWNLOADJSON_H
 
-#include "core/json/JsonKit.h"
+#include "core/json/main/JsonKit.h"
 #include "messager/FileItem.h"
 
 #include <QList>

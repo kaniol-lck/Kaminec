@@ -2,7 +2,7 @@
 #define ASSETSMANAGER_H
 
 #include "messager/fileitem.h"
-#include "core/json/AssetsKit.h"
+#include "core/json/assets/AssetsKit.h"
 
 #include <QList>
 #include <QJsonObject>

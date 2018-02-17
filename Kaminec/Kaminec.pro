@@ -41,19 +41,19 @@ SOURCES += main.cpp\
 	core/auth/LaunchAuth.cpp \
     LAminec/ActiveAuth.cpp \
     core/Path.cpp \
-	core/json/Library.cpp \
+	core/json/main/Library.cpp \
     core/Ruler.cpp \
     core/NewGame.cpp \
     core/Arguments.cpp \
-    core/json/LaunchJson.cpp \
-    core/json/AssetIndex.cpp \
-    core/json/DownloadJson.cpp \
-    core/json/JsonKit.cpp \
-    core/json/GameCoreJar.cpp \
+    core/json/main/LaunchJson.cpp \
+    core/json/main/AssetIndex.cpp \
+    core/json/main/DownloadJson.cpp \
+    core/json/main/JsonKit.cpp \
+    core/json/main/GameCoreJar.cpp \
     core/auth/AuthKit.cpp \
-    core/json/Object.cpp \
-    core/json/AssetsKit.cpp \
-    core/json/DownloadAssets.cpp
+    core/json/assets/Object.cpp \
+    core/json/assets/AssetsKit.cpp \
+    core/json/assets/DownloadAssets.cpp
 
 HEADERS  += UI/kamineclauncher.h \
             messager/profile.h \
@@ -73,19 +73,19 @@ HEADERS  += UI/kamineclauncher.h \
     LAminec/ActiveAuth.h \
     assistance/systeminfo.h \
     core/Path.h \
-	core/json/Library.h \
+	core/json/main/Library.h \
     core/Ruler.h \
     core/NewGame.h \
     core/Arguments.h \
-    core/json/LaunchJson.h \
-    core/json/AssetIndex.h \
-    core/json/DownloadJson.h \
-    core/json/JsonKit.h \
-    core/json/GameCoreJar.h \
+    core/json/main/LaunchJson.h \
+    core/json/main/AssetIndex.h \
+    core/json/main/DownloadJson.h \
+    core/json/main/JsonKit.h \
+    core/json/main/GameCoreJar.h \
     core/auth/AuthKit.h \
-    core/json/Object.h \
-    core/json/AssetsKit.h \
-    core/json/DownloadAssets.h
+    core/json/assets/Object.h \
+    core/json/assets/AssetsKit.h \
+    core/json/assets/DownloadAssets.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preference.ui \
