@@ -9,12 +9,6 @@ LaunchAuth::LaunchAuth(Mode authMode) :
 	authMode_(authMode)
 {}
 
-LaunchAuth::~LaunchAuth()
-{
-	delete settings_;
-	delete authKit_;
-}
-
 bool LaunchAuth::validate() const
 {
 	QByteArray data = AuthKit::kTokenStyle.arg(settings_->value("accessToken").toString())

@@ -4,9 +4,7 @@
 
 DownloadJson::DownloadJson(QString version) :
 	jsonKit_(version)
-{
-
-}
+{}
 
 QList<FileItem> DownloadJson::getLibraryFileItems() const
 {

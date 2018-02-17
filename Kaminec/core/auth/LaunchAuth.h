@@ -4,13 +4,14 @@
 #include "core/auth/AuthKit.h"
 #include "core/Gamemode.h"
 
+#include <memory>
 #include <QSettings>
 
 class LaunchAuth
 {
 public:
 	LaunchAuth(Mode authMode);
-	~LaunchAuth();
+	~LaunchAuth() = default;
 
 	bool validate() const;
 
@@ -21,8 +22,8 @@ public:
 	Mode getAuthMode() const;
 
 private:
-	AuthKit *authKit_;
-	QSettings *settings_;
+	std::shared_ptr<AuthKit> authKit_;
+	std::shared_ptr<QSettings> settings_;
 	Mode authMode_;
 };
 
