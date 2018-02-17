@@ -35,16 +35,14 @@ QString Library::version() const
 
 int Library::size() const
 {
-	int mSize = isNatives()?value(libraryVariant_, "downloads", "classifiers", nativeKey(), "size").toInt():
-								   value(libraryVariant_, "downloads", "artifact", "size").toInt();
-	return mSize;
+	return isNatives()?value(libraryVariant_, "downloads", "classifiers", nativeKey(), "size").toInt():
+					   value(libraryVariant_, "downloads", "artifact", "size").toInt();
 }
 
 QString Library::sha1() const
 {
-	QString mSha1 = isNatives()?value(libraryVariant_, "downloads", "classifiers", nativeKey(), "sha1").toString():
-									   value(libraryVariant_, "downloads", "artifact", "sha1").toString();
-	return mSha1;
+	return isNatives()?value(libraryVariant_, "downloads", "classifiers", nativeKey(), "sha1").toString():
+					   value(libraryVariant_, "downloads", "artifact", "sha1").toString();
 }
 
 QString Library::path() const
@@ -59,16 +57,14 @@ QString Library::path() const
 
 QUrl Library::url() const
 {
-	QUrl mUrl = isNatives()?value(libraryVariant_, "downloads", "classifiers", nativeKey(), "url").toUrl():
-								   value(libraryVariant_, "downloads", "artifact", "url").toUrl();
-	return mUrl;
+	return isNatives()?value(libraryVariant_, "downloads", "classifiers", nativeKey(), "url").toUrl():
+					   value(libraryVariant_, "downloads", "artifact", "url").toUrl();
 }
 
 QString Library::nativeKey() const
 {
-	QString mNativeKey = value(libraryVariant_, "natives", sysName()).toString();
-	mNativeKey.replace("${arch}", QString::number(sysWordSize()));
-	return mNativeKey;
+	return value(libraryVariant_, "natives", sysName()).toString()
+			.replace("${arch}", QString::number(sysWordSize()));
 }
 
 bool Library::isNatives() const

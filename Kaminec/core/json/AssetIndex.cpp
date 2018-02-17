@@ -10,30 +10,25 @@ AssetIndex::AssetIndex(QVariant assetIndexVariant) :
 
 QString AssetIndex::id() const
 {
-	QString mId = value(assetIndexVariant_, "id").toString();
-	return mId;
+	return value(assetIndexVariant_, "id").toString();
 }
 
 int AssetIndex::size() const
 {
-	int mSize = value(assetIndexVariant_, "size").toInt();
-	return mSize;
+	return value(assetIndexVariant_, "size").toInt();
 }
 
 QString AssetIndex::sha1() const
 {
-	QString mSha1 = value(assetIndexVariant_, "sha1").toString();
-	return mSha1;
+	return value(assetIndexVariant_, "sha1").toString();
 }
 
 QUrl AssetIndex::url() const
 {
-	QUrl mUrl = value(assetIndexVariant_, "url").toUrl();
-	return mUrl;
+	return value(assetIndexVariant_, "url").toUrl();
 }
 
 int AssetIndex::totalSize() const
 {
-	int mTotalSize = value(assetIndexVariant_, "totalSize").toInt();
-	return mTotalSize;
+	return value(assetIndexVariant_, "totalSize").toInt();
 }
