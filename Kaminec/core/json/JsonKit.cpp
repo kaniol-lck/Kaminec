@@ -13,18 +13,17 @@ JsonKit::JsonKit(QString version)
 {
 	QFile jsonFile(Path::getJsonPath(version));
 
-
 	//open json file and parse
 	if(!jsonFile.exists()){/*something here*/}
 	if(!jsonFile.open(QIODevice::ReadOnly | QIODevice::Text)){/*something here*/}
 
-	QByteArray jsonByte;
-	jsonByte.resize(jsonFile.bytesAvailable());
-	jsonByte = jsonFile.readAll();
+	QByteArray jsonBytes;
+	jsonBytes.resize(jsonFile.bytesAvailable());
+	jsonBytes = jsonFile.readAll();
 	jsonFile.close();
 
 	QJsonParseError ok;
-	jsonVariant_ = QJsonDocument::fromJson(jsonByte, &ok).toVariant();
+	jsonVariant_ = QJsonDocument::fromJson(jsonBytes, &ok).toVariant();
 	if(ok.error != QJsonParseError::NoError){/*something here*/}
 
 	version_ = qMakePair(value(jsonVariant_, "id").toString(),

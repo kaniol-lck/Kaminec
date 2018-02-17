@@ -17,7 +17,7 @@ LaunchAuth::~LaunchAuth()
 
 bool LaunchAuth::validate() const
 {
-	QByteArray data = AuthKit::TokenStyle.arg(settings_->value("accessToken").toString())
+	QByteArray data = AuthKit::kTokenStyle.arg(settings_->value("accessToken").toString())
 					  .arg(settings_->value("clientToken").toString()).toUtf8();
 
 	return authKit_->validate(data);

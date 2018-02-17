@@ -16,9 +16,9 @@ public:
 	bool signout(const QByteArray& data) const = delete;//we needn't this method currently
 	bool invalidate(const QByteArray& data) const;
 
-	static const QString YggdrasilServer;
-	static const QString AuthenticateStyle;
-	static const QString TokenStyle;
+	static const QString kYggdrasilServer;
+	static const QString kAuthenticateStyle;
+	static const QString kTokenStyle;
 
 public slots:
 	void authenticateFinished(QNetworkReply *reply) const;

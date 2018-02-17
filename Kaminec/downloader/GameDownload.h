@@ -2,7 +2,7 @@
 #define GAMEDOWNLOAD_H
 
 #include "core/json/DownloadJson.h"
-#include "core/json/AssetsManager.h"
+#include "core/json/DownloadAssets.h"
 #include "downloader/downloadmanagerplus.h"
 
 #include <QObject>
@@ -30,6 +30,8 @@ signals:
 public slots:
 
 private:
+	static QString kVersionManifestDownlaod;
+
 	bool inited_ = false;
 	QString corePath_;
 	QStandardItemModel model_;
@@ -37,7 +39,7 @@ private:
 	QTemporaryFile tempVersionsFile_;
 	DownloadManagerPlus *downloadManagerPlus_;
 	DownloadJson *downloadJson_;
-	AssetsManager *downloadAsset_;
+	DownloadAssets *downloadAsset_;
 	QVariantList versionList_;
 	int totalCount_;
 };

@@ -6,7 +6,7 @@
 class Library
 {
 public:
-	Library(QVariant libraryObject);
+	Library(QVariant libraryVariant);
 
 	QString name() const;
 
@@ -23,8 +23,8 @@ public:
 
 	bool isNatives() const;
 	bool isAllow() const;
-private:
 
+private:
 	QVariant libraryVariant_;
 	QString name_;
 	QStringList nameList_;

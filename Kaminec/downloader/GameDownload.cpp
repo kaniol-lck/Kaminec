@@ -1,7 +1,7 @@
 #include "gamedownload.h"
 
 #include "core/Path.h"
-#include "core/json/AssetsManager.h"
+#include "core/json/DownloadAssets.h"
 #include "messager/fileitem.h"
 #include "downloader/downloadmanagerplus.h"
 
@@ -12,6 +12,8 @@
 #include <QCoreApplication>
 #include <QJsonDocument>
 #include <QStandardItem>
+
+QString GameDownload::kVersionManifestDownlaod = "https://launchermeta.mojang.com/mc/game/version_manifest.json";
 
 GameDownload::GameDownload(QObject *parent) :
 	QObject(parent),
@@ -39,7 +41,7 @@ void GameDownload::init()
 											0,
 											QString("NULL"),
 											tempVersionsFile_.fileName(),
-											QUrl("https://launchermeta.mojang.com/mc/game/version_manifest.json")));
+											kVersionManifestDownlaod));
 		downloadManagerPlus_->waitForFinished();
 
 		if(!tempVersionsFile_.open()){
@@ -88,6 +90,7 @@ int GameDownload::getTotalCount()
 
 void GameDownload::download(int index)
 {
+	//download json file
 	auto version = versionList_.at(index).toMap().value("id").toString();
 
 	downloadManagerPlus_->append(FileItem(version + ".json",
@@ -98,26 +101,33 @@ void GameDownload::download(int index)
 									 versionList_.at(index).toMap().value("url").toUrl()));
 	downloadManagerPlus_->waitForFinished();
 
+	//download client
 	DownloadJson downloadJson(version);
 
 	auto clientFileItem = downloadJson.getClientFileItem();
 	clientFileItem.path_.prepend(Path::versionsPath());
 	downloadManagerPlus_->append(clientFileItem);
 
+	//download libraries
 	auto LibraryFileItems = downloadJson.getLibraryFileItems();
-	for(auto& i:LibraryFileItems){
-		i.path_.prepend(Path::libsPath()+"/");
+	for(auto& item:LibraryFileItems){
+		item.path_.prepend(Path::libsPath()+"/");
 	}
 
 	downloadManagerPlus_->append(LibraryFileItems);
 
+	//download asset index
 	auto assetsIndexFileItem = downloadJson.getAssetsIndexFileItem();
 	assetsIndexFileItem.path_.prepend(Path::indexesPath());
 	downloadManagerPlus_->append(assetsIndexFileItem);
 	downloadManagerPlus_->waitForFinished();
 
-	downloadAsset_ = new AssetsManager(this,downloadJson.getAssetsIndexId());
-	auto downloadAssetUrls = downloadAsset_->getDownloadAssetsUrls();
+	//download asset objects
+	DownloadAssets downloadAsset_(downloadJson.getAssetsIndexId());
+	auto downloadAssetUrls = downloadAsset_.getDownloadAssetsUrls();
+	for(auto& item : downloadAssetUrls){
+		item.path_.append(Path::objectsPath() + "/");
+	}
 	downloadManagerPlus_->append(downloadAssetUrls);
 
 	totalCount_ = downloadManagerPlus_->getTotalCount();

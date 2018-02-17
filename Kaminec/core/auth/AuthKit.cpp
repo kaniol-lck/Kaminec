@@ -8,9 +8,9 @@
 #include <QSettings>
 #include <QMessageBox>
 
-const QString AuthKit::YggdrasilServer = "https://authserver.mojang.com";
-const QString AuthKit::AuthenticateStyle = R"({"agent":{"name":"Minecraft","version":1},"requestUser": false,"username":"%1","password":"%2"})";
-const QString AuthKit::TokenStyle = R"({"accessToken":"%1","clientToken":"%2"})";
+const QString AuthKit::kYggdrasilServer = "https://authserver.mojang.com";
+const QString AuthKit::kAuthenticateStyle = R"({"agent":{"name":"Minecraft","version":1},"requestUser": false,"username":"%1","password":"%2"})";
+const QString AuthKit::kTokenStyle = R"({"accessToken":"%1","clientToken":"%2"})";
 
 
 AuthKit::AuthKit(QObject *parent) : QObject(parent)
@@ -139,7 +139,7 @@ QNetworkRequest AuthKit::makeRequest(const QString& endpoint) const
 {
 	QNetworkRequest request;
 
-	request.setUrl(QUrl(YggdrasilServer + endpoint));
+	request.setUrl(QUrl(kYggdrasilServer + endpoint));
 	request.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
 
 	return request;

@@ -2,26 +2,23 @@
 #define ASSETSMANAGER_H
 
 #include "messager/fileitem.h"
+#include "core/json/AssetsKit.h"
 
-#include <QObject>
 #include <QList>
 #include <QJsonObject>
 
-class AssetsManager : public QObject
+class DownloadAssets
 {
-	Q_OBJECT
 public:
-	explicit AssetsManager(QObject *parent, QString assetsIndex);
+	explicit DownloadAssets(QString assetsIndexId);
 
 	QList<FileItem> getDownloadAssetsUrls();
 
-signals:
-
-public slots:
-
 private:
-	static QString resourcesDownload_;
-	QJsonObject assets_;
+	static QString kResourcesDownload;
+
+	AssetsKit assetsKit_;
+	QVariant assets_;
 	QString corePath_;
 };
 

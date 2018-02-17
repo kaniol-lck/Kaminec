@@ -16,14 +16,14 @@ ActiveAuth::ActiveAuth(QObject *parent) :
 
 bool ActiveAuth::authenticate(QString username, QString password) const
 {
-	QByteArray data = AuthKit::AuthenticateStyle.arg(username).arg(password).toUtf8();
+	QByteArray data = AuthKit::kAuthenticateStyle.arg(username).arg(password).toUtf8();
 
 	return authKit_->authenticate(data);
 }
 
 bool ActiveAuth::refresh() const
 {
-	QByteArray data = AuthKit::TokenStyle.arg(settings_.value("accessToken").toString())
+	QByteArray data = AuthKit::kTokenStyle.arg(settings_.value("accessToken").toString())
 					  .arg(settings_.value("clientToken").toString()).toUtf8();
 
 	return authKit_->refresh(data);
@@ -31,7 +31,7 @@ bool ActiveAuth::refresh() const
 
 bool ActiveAuth::invalidate() const
 {
-	QByteArray data = AuthKit::TokenStyle.arg(settings_.value("accessToken").toString())
+	QByteArray data = AuthKit::kTokenStyle.arg(settings_.value("accessToken").toString())
 					  .arg(settings_.value("clientToken").toString()).toUtf8();
 
 	return authKit_->invalidate(data);

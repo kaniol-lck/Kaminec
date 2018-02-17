@@ -10,18 +10,15 @@ GameCoreJar::GameCoreJar(QVariant gameCoreJarVariant) :
 
 QString GameCoreJar::sha1() const
 {
-	static QString mSha1 = value(gameCoreJarVariant_, "sha1").toString();
-	return mSha1;
+	return value(gameCoreJarVariant_, "sha1").toString();
 }
 
 int GameCoreJar::size() const
 {
-	static int mSize = value(gameCoreJarVariant_, "size").toInt();
-	return mSize;
+	return value(gameCoreJarVariant_, "size").toInt();
 }
 
 QUrl GameCoreJar::url() const
 {
-	static QUrl mUrl = value(gameCoreJarVariant_, "url").toUrl();
-	return mUrl;
+	return value(gameCoreJarVariant_, "url").toUrl();
 }

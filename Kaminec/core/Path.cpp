@@ -73,6 +73,12 @@ QString Path::getJsonPath(const QString& version)
 			.arg(versionsPath(), version);
 }
 
+QString Path::getAssetIndexPath(const QString &index)
+{
+	return QString("%1/2%.json")
+			.arg(indexesPath(), index);
+}
+
 void Path::replaceLauncher(QString &path)
 {
 	path.replace("<launcher>", launcherPath());
