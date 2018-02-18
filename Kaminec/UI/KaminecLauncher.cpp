@@ -4,7 +4,7 @@
 #include "UI/Preference.h"
 #include "core/Path.h"
 #include "core/gamemode.h"
-#include "core/NewGame.h"
+#include "core/Launcher.h"
 #include "LAminec/modsmanager.h"
 #include "LAminec/savesmanager.h"
 #include "downloader/downloadmanagerplus.h"
@@ -139,15 +139,15 @@ void KaminecLauncher::startGame()
 	modsManager_->start();
 
 	//init game
-	auto game = new Game(this, this->getProfile(), auth);
+	auto launcher = new Launcher(this, this->getProfile(), auth);
 
 	//ui during gaming
 	ui_->start_pb->setText("Gaming...");
 	ui_->start_pb->setDisabled(true);
-	connect(game,SIGNAL(finished(int)),this,SLOT(gameFinished()));
+	connect(launcher,SIGNAL(finished(int)),this,SLOT(gameFinished()));
 
 	//start
-	game->start();
+	launcher->start();
 }
 
 void KaminecLauncher::on_action_preference_triggered()

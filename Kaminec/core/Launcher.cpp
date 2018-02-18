@@ -1,4 +1,4 @@
-#include "NewGame.h"
+#include "Launcher.h"
 
 #include "core/Path.h"
 #include "core/Arguments.h"
@@ -8,7 +8,7 @@
 #include <QSettings>
 #include <QDebug>
 
-Game::Game(QObject *parent, Profile profile, LaunchAuth auth) :
+Launcher::Launcher(QObject *parent, Profile profile, LaunchAuth auth) :
 	QObject(parent),
 	gameProfile_(profile),
 	launchAuth_(auth),
@@ -18,7 +18,7 @@ Game::Game(QObject *parent, Profile profile, LaunchAuth auth) :
 
 }
 
-void Game::start()
+void Launcher::start()
 {
 	auto startcode = getStartcode();
 
@@ -39,7 +39,7 @@ void Game::start()
 
 }
 
-QStringList Game::getStartcode()
+QStringList Launcher::getStartcode()
 {
 	QStringList startcode;
 	startcode << getJVMArguments();
@@ -49,7 +49,7 @@ QStringList Game::getStartcode()
 	return startcode;
 }
 
-QStringList Game::getJVMArguments()
+QStringList Launcher::getJVMArguments()
 {
 	auto JVMArgs = QStringList{
 			  "-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump",
@@ -70,7 +70,7 @@ QStringList Game::getJVMArguments()
 	return JVMArgs;
 }
 
-QStringList Game::getGameArguments()
+QStringList Launcher::getGameArguments()
 {
 	auto gameArguments = launchJson_.getGameArguments();
 
@@ -94,7 +94,7 @@ QStringList Game::getGameArguments()
 	return gameArguments.toStringList();
 }
 
-QString Game::getClassPaths()
+QString Launcher::getClassPaths()
 {
 	auto libraryPaths = launchJson_.getLibraryPaths();
 	auto gameJarPath = launchJson_.getGameJarPath();
@@ -111,7 +111,7 @@ QString Game::getClassPaths()
 	return classPaths.join(";");
 }
 
-void Game::extractNatives()
+void Launcher::extractNatives()
 {
 	QDir().mkdir(Path::nativesPath());
 
@@ -131,7 +131,7 @@ void Game::extractNatives()
 	}
 }
 
-void Game::deleteNatives()
+void Launcher::deleteNatives()
 {
 	deleteDirectory(Path::nativesPath());
 }

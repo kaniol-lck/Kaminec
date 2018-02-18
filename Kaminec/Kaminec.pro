@@ -43,7 +43,6 @@ SOURCES += main.cpp\
     core/Path.cpp \
 	core/json/main/Library.cpp \
     core/Ruler.cpp \
-    core/NewGame.cpp \
     core/Arguments.cpp \
     core/json/main/LaunchJson.cpp \
     core/json/main/AssetIndex.cpp \
@@ -53,7 +52,8 @@ SOURCES += main.cpp\
     core/auth/AuthKit.cpp \
     core/json/assets/Object.cpp \
     core/json/assets/AssetsKit.cpp \
-    core/json/assets/DownloadAssets.cpp
+    core/json/assets/DownloadAssets.cpp \
+    core/Launcher.cpp
 
 HEADERS  += UI/kamineclauncher.h \
             messager/profile.h \
@@ -75,7 +75,6 @@ HEADERS  += UI/kamineclauncher.h \
     core/Path.h \
 	core/json/main/Library.h \
     core/Ruler.h \
-    core/NewGame.h \
     core/Arguments.h \
     core/json/main/LaunchJson.h \
     core/json/main/AssetIndex.h \
@@ -85,7 +84,8 @@ HEADERS  += UI/kamineclauncher.h \
     core/auth/AuthKit.h \
     core/json/assets/Object.h \
     core/json/assets/AssetsKit.h \
-    core/json/assets/DownloadAssets.h
+    core/json/assets/DownloadAssets.h \
+    core/Launcher.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preference.ui \

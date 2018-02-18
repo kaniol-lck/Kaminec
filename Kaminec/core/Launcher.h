@@ -9,11 +9,11 @@
 #include "messager/profile.h"
 #include "assistance/logger.h"
 
-class Game : public QObject
+class Launcher : public QObject
 {
 	Q_OBJECT
 public:
-	explicit Game(QObject *parent, Profile profile, LaunchAuth auth);
+	explicit Launcher(QObject *parent, Profile profile, LaunchAuth auth);
 
 	void start();
 
