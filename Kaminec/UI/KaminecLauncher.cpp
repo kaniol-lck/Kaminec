@@ -134,12 +134,17 @@ void KaminecLauncher::startGame()
 	LaunchAuth auth(ui_->isVerified_cb->isChecked()?
 						Mode::Online :
 						Mode::Offline);
+	QSettings().setValue("isOnline", auth.getAuthMode() == Mode::Online);
+
+	auto profile = getProfile();
+	QSettings().setValue("lastUsedVersion", profile.lastVersionId_);
+	QSettings().setValue("gameDir", profile.gameDir_);
 
 	//prepare mods
 	modsManager_->start();
 
 	//init game
-	auto launcher = new Launcher(this, this->getProfile(), auth);
+	auto launcher = new Launcher(this, profile, auth);
 
 	//ui during gaming
 	ui_->start_pb->setText("Gaming...");

@@ -27,11 +27,6 @@ void Launcher::start()
 	gameProcess_->start(Path::JavaPath(),
 						startcode);
 
-	//these setting is foolish, migrate it later
-	QSettings().setValue("lastUsedVersion", gameProfile_.lastVersionId_);
-	QSettings().setValue("gameDir", gameProfile_.gameDir_);
-	QSettings().setValue("isOnline", launchAuth_.getAuthMode() == Mode::Online);
-
 	//forward finished infomation
 	connect(gameProcess_, SIGNAL(finished(int)), this, SIGNAL(finished(int)));
 	//delete natives after playing
