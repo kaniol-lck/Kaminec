@@ -14,7 +14,7 @@ public:
 
 	QStringList getLibraryPaths() const;
 
-	QStringList getExtractPaths() const;
+	QStringList getNativesPaths() const;
 
 	QString getMainClass() const;
 

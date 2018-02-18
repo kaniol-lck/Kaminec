@@ -22,15 +22,15 @@ QStringList LaunchJson::getLibraryPaths() const
 	return libraryPaths;
 }
 
-QStringList LaunchJson::getExtractPaths() const
+QStringList LaunchJson::getNativesPaths() const
 {
-	QStringList extractPaths;
+	QStringList nativesPaths;
 	for(const auto& library : jsonKit_.libraries()){
 		if(library.isNatives())
-			extractPaths << library.path();//keep extract file only
+			nativesPaths << library.path();//keep natives file only
 	}
 
-	return extractPaths;
+	return nativesPaths;
 }
 
 QString LaunchJson::getMainClass() const

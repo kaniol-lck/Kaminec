@@ -10,17 +10,13 @@
 
 Launcher::Launcher(QObject *parent, Profile profile, LaunchAuth auth) :
 	QObject(parent),
-	gameProfile_(profile),
-	launchAuth_(auth),
-	launchJson_(gameProfile_.lastVersionId_),
+	gameParser_(profile, auth),
 	gameProcess_(new QProcess(this))
-{
-
-}
+{}
 
 void Launcher::start()
 {
-	auto startcode = getStartcode();
+	auto startcode = gameParser_.getStartcode();
 
 	extractNatives();
 
@@ -34,87 +30,13 @@ void Launcher::start()
 
 }
 
-QStringList Launcher::getStartcode()
-{
-	QStringList startcode;
-	startcode << getJVMArguments();
-	startcode << launchJson_.getMainClass();
-	startcode << getGameArguments();
-
-	return startcode;
-}
-
-QStringList Launcher::getJVMArguments()
-{
-	auto JVMArgs = QStringList{
-			  "-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump",
-			  "-XX:+UseG1GC",
-			  "-XX:-UseAdaptiveSizePolicy",
-			  "-XX:-OmitStackTraceInFastThrow",
-			  QString("-Djava.library.path=%1").arg(Path::nativesPath()),
-			  "-Dfml.ignoreInvalidMinecraftCertificates=true",
-			  "-Dfml.ignorePatchDiscrepancies=true",
-			  "-cp"
-		};
-
-	JVMArgs.append(getClassPaths());
-
-	JVMArgs<<QString("-Xmn%1m").arg(QSettings().value("minMem").toString());
-	JVMArgs<<QString("-Xmx%1m").arg(QSettings().value("maxMem").toString());
-
-	return JVMArgs;
-}
-
-QStringList Launcher::getGameArguments()
-{
-	auto gameArguments = launchJson_.getGameArguments();
-
-	QMap<QString, QString> replace_list = {
-		{"${auth_player_name}", QSettings().value("playerName").toString()},
-		{"${version_name}", gameProfile_.lastVersionId_},
-		{"${game_directory}", gameProfile_.gameDir_},
-		{"${assets_root}", Path::assetsPath()},
-		{"${auth_uuid}", launchAuth_.getAuthUuid()},
-		{"${auth_access_token}", launchAuth_.getAuthAccessToken()},
-		{"${user_type}", launchAuth_.getUserType()},
-		{"${assets_index_name}", launchJson_.getAssetsIndexId()},
-		{"${version_type}", "Kaminec Launcher"},
-		{"${user_properties}", "{}"},
-	};
-
-	for(auto it = replace_list.begin(); it != replace_list.end(); it++){
-		gameArguments.replace(it.key(), it.value());
-	}
-
-	return gameArguments.toStringList();
-}
-
-QString Launcher::getClassPaths()
-{
-	auto libraryPaths = launchJson_.getLibraryPaths();
-	auto gameJarPath = launchJson_.getGameJarPath();
-
-	for(auto& libraryPath : libraryPaths)
-		libraryPath.prepend(Path::libsPath() + "/");
-
-	gameJarPath.prepend(Path::versionsPath());
-
-	QStringList classPaths;
-	classPaths << libraryPaths;
-	classPaths << gameJarPath;
-
-	return classPaths.join(";");
-}
-
 void Launcher::extractNatives()
 {
 	QDir().mkdir(Path::nativesPath());
 
-	auto extractList = launchJson_.getExtractPaths();
+	auto nativesPaths = gameParser_.getNativesPaths();
 
-	for(auto extractName : extractList){
-		auto extractPath = Path::libsPath() + "/" + extractName;
-		qDebug()<<extractPath;
+	for(auto extractPath : nativesPaths){
 		QFile extractFile(extractPath);
 		if(!extractFile.exists()) continue;
 		QStringList unzipargs;
