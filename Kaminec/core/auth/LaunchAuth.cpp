@@ -4,7 +4,6 @@
 #include <QUuid>
 
 LaunchAuth::LaunchAuth(Mode authMode) :
-	authKit_(new AuthKit(0)),
 	settings_(new QSettings(0)),
 	authMode_(authMode)
 {}
@@ -14,7 +13,7 @@ bool LaunchAuth::validate() const
 	QByteArray data = AuthKit::kTokenStyle.arg(settings_->value("accessToken").toString())
 					  .arg(settings_->value("clientToken").toString()).toUtf8();
 
-	return authKit_->validate(data);
+	return authKit_.validate(data);
 }
 
 QString LaunchAuth::getUserType() const

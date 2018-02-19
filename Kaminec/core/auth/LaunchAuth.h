@@ -22,7 +22,7 @@ public:
 	Mode getAuthMode() const;
 
 private:
-	std::shared_ptr<AuthKit> authKit_;
+	AuthKit authKit_;
 	std::shared_ptr<QSettings> settings_;
 	Mode authMode_;
 };

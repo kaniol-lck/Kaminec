@@ -17,7 +17,7 @@ public:
 	bool invalidate() const;
 
 private:
-	AuthKit *authKit_;
+	AuthKit authKit_;
 	QSettings settings_;
 };
 
