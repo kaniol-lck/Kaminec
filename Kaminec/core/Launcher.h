@@ -10,20 +10,20 @@ class Launcher : public QObject
 {
 	Q_OBJECT
 public:
-	explicit Launcher(QObject *parent, Profile profile, LaunchAuth auth);
+	explicit Launcher(QObject *parent);
 
-	void start();
+	void start(const Profile &profile, const LaunchAuth &auth);
 
-	void extractNatives();
+	void extractNatives(const QStringList &nativesPaths);
 
 signals:
 	void finished(int);
+	void exceptionMessage(QString);
 
 public slots:
 	void deleteNatives();
 
 private:
-	GameParser gameParser_;
 	QProcess *gameProcess_;
 };
 

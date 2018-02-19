@@ -25,7 +25,8 @@ void AuthResponse::authenticateFinished(QNetworkReply *reply) const
 	QByteArray data = reply->readAll();
 	QJsonParseError ok;
 	auto json = QJsonDocument::fromJson(data,&ok).toVariant();
-	if(ok.error != QJsonParseError::NoError){qDebug()<<"AuthJson failed."<<endl<<ok.error;}
+	if(ok.error != QJsonParseError::NoError)
+		throw std::runtime_error(QString("Auth json is not a valid json.").toStdString());
 
 	if(statusCode == 200){
 		//success
@@ -70,7 +71,8 @@ void AuthResponse::refreshFinished(QNetworkReply *reply) const
 	QByteArray data = reply->readAll();
 	QJsonParseError ok;
 	auto json = QJsonDocument::fromJson(data,&ok).toVariant();
-	if(ok.error != QJsonParseError::NoError){qDebug()<<"AuthJson failed."<<endl<<ok.error;}
+	if(ok.error != QJsonParseError::NoError)
+		throw std::runtime_error(QString("Auth json is not a valid json.").toStdString());
 	if(statusCode == 200){
 		//success
 		success_ = true;

@@ -5,6 +5,7 @@
 #include "messager/fileitem.h"
 #include "downloader/downloadmanagerplus.h"
 
+#include <stdexcept>
 #include <QDebug>
 #include <QSettings>
 #include <QStandardPaths>
@@ -44,11 +45,8 @@ void GameDownload::init()
 											kVersionManifestDownlaod));
 		downloadManagerPlus_->waitForFinished();
 
-		if(!tempVersionsFile_.open()){
-			qDebug()<<"Open failed";
-			qDebug()<<"Not find json file,Json file NOT find,The program will terminate.";
-		}
-		qDebug()<<"versionfile.json file opened";
+		if(!tempVersionsFile_.open())
+			throw std::runtime_error("Could not version_manifest.json.");
 
 		QByteArray jsonByte;
 		jsonByte.resize(tempVersionsFile_.bytesAvailable());
@@ -57,7 +55,8 @@ void GameDownload::init()
 
 		QJsonParseError ok;
 		auto jsonDoc = QJsonDocument::fromJson(jsonByte,&ok);
-		if(ok.error != QJsonParseError::NoError){qDebug()<<"Json failed."<<endl<<ok.error;}
+		if(ok.error != QJsonParseError::NoError)
+			throw std::runtime_error("Json file(version_manifest.json) is not a valid json.");
 
 		auto jsonMap = jsonDoc.toVariant().toMap();
 		versionList_ = jsonMap.value("versions").toList();

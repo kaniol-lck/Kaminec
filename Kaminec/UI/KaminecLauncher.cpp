@@ -144,15 +144,20 @@ void KaminecLauncher::startGame()
 	modsManager_->start();
 
 	//init game
-	auto launcher = new Launcher(this, profile, auth);
+	auto launcher = new Launcher(this);
 
 	//ui during gaming
 	ui_->start_pb->setText("Gaming...");
 	ui_->start_pb->setDisabled(true);
 	connect(launcher,SIGNAL(finished(int)),this,SLOT(gameFinished()));
+	connect(launcher,SIGNAL(exceptionMessage(QString)),this,SLOT(gameFinished()));
 
 	//start
-	launcher->start();
+	launcher->start(profile, auth);
+
+	disconnect(launcher,SIGNAL(finished(int)),this,SLOT(gameFinished()));
+	disconnect(launcher,SIGNAL(exceptionMessage(QString)),this,SLOT(gameFinished()));
+
 }
 
 void KaminecLauncher::on_action_preference_triggered()
@@ -248,6 +253,11 @@ void KaminecLauncher::updateVersionSelect()
 	ui_->version_cb->clear();
 	corePath_ = Path::corePath();
 	this->loadVersions();
+}
+
+void KaminecLauncher::exceptionMessage(QString message)
+{
+	QMessageBox::warning(this,"Error" , message);
 }
 
 void KaminecLauncher::resizeEvent(QResizeEvent *)

@@ -40,7 +40,7 @@ private slots:
 
     void on_start_pb_clicked();
 
-    void updateDownloadCount(int);
+	void updateDownloadCount(int downloaded);
 
     void gameFinished();
 
@@ -61,6 +61,8 @@ private slots:
 	void on_download_pb_clicked();
 
 	void updateVersionSelect();
+
+	void exceptionMessage(QString message);
 
 private:
 	void loadVersions();

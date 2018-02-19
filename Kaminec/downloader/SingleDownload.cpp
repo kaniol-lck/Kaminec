@@ -32,9 +32,9 @@ void SingleDownload::start(QList<QStandardItem*> modelItem, FileItem fileItem)
     if(!dir.exists())
 		dir.mkpath(dir.path());
     output_->setFileName(filename);
-    if(!output_->open(QIODevice::ReadWrite)){
-        qDebug()<<"Open "<<filename<<" failed";
+	if(!output_->open(QIODevice::ReadWrite)){
         emit finished(index_);
+		throw std::runtime_error(QString("Could not open File(%1)").arg(output_->fileName()).toStdString());
         return;
     }
 	qDebug()<<"Start download:"<<output_->fileName();
@@ -75,8 +75,8 @@ void SingleDownload::downloadFinished()
     isdownload_ = false;
 
     if(currentDownload_->error()){
-        qDebug()<<"Failed:"<<currentDownload_->errorString();
-    }else {
+		throw std::runtime_error(QString("Download Error:").append(currentDownload_->errorString()).toStdString());
+	}else {
         qDebug()<<"Succeed:"<<output_->fileName();
         emit finished(index_);
     }

@@ -16,10 +16,9 @@ void ModsManager::setGameDir(QString gameDir)
 	unusedModsDir_ = gameDir;
 
 	if(!usedModsDir_.cd("mods"))
-		qDebug()<<"haven't launch before";
+		throw std::runtime_error("Have not launched before.");
 
 	if(!unusedModsDir_.cd("unused_mods")){
-		qDebug()<<"??";
 		unusedModsDir_.mkdir("unused_mods");
 		unusedModsDir_.cd("unused_mods");
 	}

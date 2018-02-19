@@ -5,6 +5,7 @@
 #include "assistance/utility.h"
 
 #include <memory>
+#include <stdexcept>
 #include <QDir>
 #include <QJsonDocument>
 #include <QDebug>
@@ -14,8 +15,10 @@ JsonKit::JsonKit(QString version)
 	QFile jsonFile(Path::getJsonPath(version));
 
 	//open json file and parse
-	if(!jsonFile.exists()){/*something here*/}
-	if(!jsonFile.open(QIODevice::ReadOnly | QIODevice::Text)){/*something here*/}
+	if(!jsonFile.exists())
+		throw std::runtime_error(QString("Json file(%1) does not exist.").arg(jsonFile.fileName()).toStdString());
+	if(!jsonFile.open(QIODevice::ReadOnly | QIODevice::Text))
+		throw std::runtime_error(QString("Could not open Json file(%1).").arg(jsonFile.fileName()).toStdString());
 
 	QByteArray jsonBytes;
 	jsonBytes.resize(jsonFile.bytesAvailable());
@@ -24,7 +27,8 @@ JsonKit::JsonKit(QString version)
 
 	QJsonParseError ok;
 	jsonVariant_ = QJsonDocument::fromJson(jsonBytes, &ok).toVariant();
-	if(ok.error != QJsonParseError::NoError){/*something here*/}
+	if(ok.error != QJsonParseError::NoError)
+		throw std::runtime_error(QString("Json file(%1) is not a valid json.").arg(jsonFile.fileName()).toStdString());
 
 	version_ = qMakePair(value(jsonVariant_, "id").toString(),
 						 value(jsonVariant_, "inheritsFrom").toString());

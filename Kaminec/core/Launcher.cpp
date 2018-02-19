@@ -5,11 +5,9 @@
 
 #include <QDir>
 #include <QSettings>
-#include <QDebug>
 
-Launcher::Launcher(QObject *parent, Profile profile, LaunchAuth auth) :
+Launcher::Launcher(QObject *parent) :
 	QObject(parent),
-	gameParser_(profile, auth),
 	gameProcess_(new QProcess(this))
 {
 	//forward finished infomation
@@ -18,20 +16,25 @@ Launcher::Launcher(QObject *parent, Profile profile, LaunchAuth auth) :
 	connect(gameProcess_, SIGNAL(finished(int)), this, SLOT(deleteNatives()));
 }
 
-void Launcher::start()
+void Launcher::start(const Profile &profile, const LaunchAuth &auth)
 {
-	auto startcode = gameParser_.getStartcode();
+	try{
+		GameParser gameParser(profile, auth);
 
-	extractNatives();
+		auto startcode = gameParser.getStartcode();
 
-	gameProcess_->start(Path::JavaPath(), startcode);
+		extractNatives(gameParser.getNativesPaths());
+
+		gameProcess_->start(Path::JavaPath(), startcode);
+	}catch(std::exception& e){
+		emit exceptionMessage(QString(e.what()));
+	}
 }
 
-void Launcher::extractNatives()
+void Launcher::extractNatives(const QStringList &nativesPaths)
 {
 	QDir().mkdir(Path::nativesPath());
 
-	auto nativesPaths = gameParser_.getNativesPaths();
 
 	for(auto extractPath : nativesPaths){
 		QFile extractFile(extractPath);
