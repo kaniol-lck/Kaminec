@@ -8,7 +8,7 @@ Ruler::Action Ruler::reverseAction(const Ruler::Action &action){
 		return Action::Allow;
 }
 
-Ruler::Ruler(QVariant rule)
+Ruler::Ruler(const QVariant &rule)
 {
 	for(const auto& ruleVariant: rule.toList()){
 		ruleList_ << Rule(ruleVariant);

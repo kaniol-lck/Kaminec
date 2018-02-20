@@ -8,14 +8,14 @@ class Arguments
 {
 public:
 	Arguments() = default;
-	Arguments(QString arguments);
+	Arguments(const QString &arguments);
 
-	void replace(const QString& before, const QString& after);
+	void replace(const QString &before, const QString& after);
 
-	bool setOption(const QString& optionName, const QString& optionContent);
+	bool setOption(const QString &optionName, const QString& optionContent);
 
-	void addOption(const QString& optionName);
-	void addOption(const QString& optionName, const QString& optionContent);
+	void addOption(const QString &optionName);
+	void addOption(const QString &optionName, const QString& optionContent);
 
 	QStringList toStringList() const;
 

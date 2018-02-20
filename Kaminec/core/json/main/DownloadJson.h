@@ -9,7 +9,7 @@
 class DownloadJson
 {
 public:
-	DownloadJson(QString version);
+	DownloadJson(const QString &version);
 
 	QList<FileItem> getLibraryFileItems() const;
 

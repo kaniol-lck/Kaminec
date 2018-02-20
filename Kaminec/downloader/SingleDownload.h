@@ -18,7 +18,7 @@ public:
 
     bool isDownload() const;
 
-    void start(QList<QStandardItem *> modelItem, FileItem fileItem);
+	void start(const QList<QStandardItem *> &modelItem, const FileItem &fileItem);
 
 signals:
     void finished(int) const;

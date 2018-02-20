@@ -7,9 +7,9 @@
 struct Profile
 {
     Profile()=default;
-	explicit Profile(QString name,
-					 QString lastVersionId,
-					 QString gameDir);
+	explicit Profile(const QString &name,
+					 const QString &lastVersionId,
+					 const QString &gameDir);
 
 	QString name_;
 	QString lastVersionId_;

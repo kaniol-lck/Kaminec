@@ -18,7 +18,7 @@ public:
     explicit                DownloadManagerPlus(QObject *parent = nullptr);
 
     void                    append(const FileItem &item);
-	void                    append(QList<FileItem>& itemList_);
+	void                    append(QList<FileItem> &itemList_);
     void                    startDownload();
 
     int                     waitForFinished();

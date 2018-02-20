@@ -4,7 +4,7 @@
 
 #include <QUrl>
 
-GameCoreJar::GameCoreJar(QVariant gameCoreJarVariant) :
+GameCoreJar::GameCoreJar(const QVariant &gameCoreJarVariant) :
 	gameCoreJarVariant_(gameCoreJarVariant)
 {}
 

@@ -41,7 +41,7 @@ QNetworkRequest AuthKit::makeRequest(const QString& endpoint) const
 	return request;
 }
 
-void AuthKit::post(const QNetworkRequest &request, const QByteArray &data, const decltype(SLOT(finished(QNetworkReply*)))& slotFunction) const
+void AuthKit::post(const QNetworkRequest &request, const QByteArray &data, const decltype(SLOT(finished(QNetworkReply*))) slotFunction) const
 {
 	QEventLoop eventloop;
 	QObject::connect(manager_.get(), SIGNAL(finished(QNetworkReply*)), authResponse_.get(), slotFunction);

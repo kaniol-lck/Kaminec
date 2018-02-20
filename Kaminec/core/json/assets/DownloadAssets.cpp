@@ -5,7 +5,7 @@
 
 QString DownloadAssets::kResourcesDownload = "http://resources.download.minecraft.net/";
 
-DownloadAssets::DownloadAssets(QString assetsIndexId) :
+DownloadAssets::DownloadAssets(const QString &assetsIndexId) :
 	assetsKit_(assetsIndexId),
 	corePath_(Path::corePath())
 {

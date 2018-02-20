@@ -2,7 +2,7 @@
 
 #include "core/Path.h"
 
-DownloadJson::DownloadJson(QString version) :
+DownloadJson::DownloadJson(const QString &version) :
 	jsonKit_(version)
 {}
 

@@ -84,7 +84,7 @@ void KaminecLauncher::updateDownloadCount(int downloaded)
 	//update the number in label
     qDebug()<<"changed:"<<downloaded;
 	ui_->downloadValue_label->setText(QString("%1/%2")
-									 .arg(downloaded).arg(totalCount_));
+									  .arg(downloaded).arg(totalCount_));
 }
 
 void KaminecLauncher::downloadFinished()

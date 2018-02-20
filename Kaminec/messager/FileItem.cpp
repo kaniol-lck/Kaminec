@@ -8,11 +8,11 @@
 #include <QVariant>
 #include <QMap>
 
-FileItem::FileItem(QString name,
-                   int size,
-                   QString sha1,
-                   QString path,
-                   QUrl url):
+FileItem::FileItem(const QString &name,
+                   const int &size,
+                   const QString &sha1,
+                   const QString &path,
+                   const QUrl &url):
     name_(name),
     size_(size),
     Sha1_(sha1),
@@ -20,7 +20,7 @@ FileItem::FileItem(QString name,
     url_(url)
 {}
 
-FileItem::FileItem(QUrl url, QString path):
+FileItem::FileItem(const QUrl &url, const QString &path):
 	FileItem(QFileInfo(path).fileName(),
              0,
              "NULL",

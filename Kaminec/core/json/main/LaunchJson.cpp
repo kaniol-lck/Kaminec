@@ -1,6 +1,6 @@
 #include "LaunchJson.h"
 
-LaunchJson::LaunchJson(QString version) :
+LaunchJson::LaunchJson(const QString &version) :
 	jsonKit_(version)
 {
 

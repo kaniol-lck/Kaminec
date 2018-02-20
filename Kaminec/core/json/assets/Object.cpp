@@ -2,7 +2,7 @@
 
 #include "assistance/utility.h"
 
-Object::Object(QString name, QVariant objectVariant) :
+Object::Object(const QString &name, const QVariant &objectVariant) :
 	name_(name),
 	objectVariant_(objectVariant)
 {}

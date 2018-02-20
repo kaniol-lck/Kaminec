@@ -7,7 +7,7 @@
 #include <QUrl>
 #include <QDebug>
 
-Library::Library(QVariant libraryVariant) :
+Library::Library(const QVariant &libraryVariant) :
 	libraryVariant_(libraryVariant),
 	name_(value(libraryVariant_, "name").toString()),
 	nameList_(name_.split(":"))

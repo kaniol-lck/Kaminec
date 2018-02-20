@@ -21,9 +21,9 @@ public:
 	static QString getAssetIndexPath(const QString &index);
 
 private:
-	static void replaceLauncher(QString& path);
-	static void replaceCore(QString& path);
-	static void replaceAll(QString& path);
+	static void replaceLauncher(QString &path);
+	static void replaceCore(QString &path);
+	static void replaceAll(QString &path);
 };
 
 #endif // PATH_H

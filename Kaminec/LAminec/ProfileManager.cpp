@@ -50,12 +50,12 @@ ProfileManager::ProfileManager(QObject *parent) : QObject(parent)
 	}
 }
 
-bool ProfileManager::checkVersion(QString version)
+bool ProfileManager::checkVersion(const QString &version)
 {
 	return profilesMgrObj_.value("profiles").toVariant().toMap().contains("auto-version-" + version);
 }
 
-void ProfileManager::addVersion(QString version, QString gamePath)
+void ProfileManager::addVersion(const QString &version, const QString &gamePath)
 {
 	QString corePath = Path::corePath();
 	QFile loadfile(corePath + "/launcher_profiles.json");

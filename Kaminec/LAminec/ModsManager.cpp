@@ -10,7 +10,7 @@ ModsManager::ModsManager(QObject *parent) : QObject(parent)
 
 }
 
-void ModsManager::setGameDir(QString gameDir)
+void ModsManager::setGameDir(const QString &gameDir)
 {
 	usedModsDir_ = gameDir;
 	unusedModsDir_ = gameDir;

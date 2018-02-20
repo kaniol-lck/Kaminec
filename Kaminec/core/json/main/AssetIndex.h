@@ -7,7 +7,7 @@ class AssetIndex
 {
 public:
 	AssetIndex() = default;
-	AssetIndex(QVariant assetIndexVariant);
+	AssetIndex(const QVariant &assetIndexVariant);
 
 	QString id() const;
 

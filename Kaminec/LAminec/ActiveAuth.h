@@ -12,7 +12,7 @@ public:
 	ActiveAuth(QObject *parent);
 	~ActiveAuth() = default;
 
-	bool authenticate(QString username, QString password) const;
+	bool authenticate(const QString &username, const QString &password) const;
 	bool refresh() const;
 	bool invalidate() const;
 

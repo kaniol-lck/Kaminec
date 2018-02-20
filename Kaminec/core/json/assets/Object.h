@@ -6,7 +6,7 @@
 class Object
 {
 public:
-	Object(QString name, QVariant objectVariant);
+	Object(const QString &name, const QVariant &objectVariant);
 
 	QString name() const;
 	QString hash() const;

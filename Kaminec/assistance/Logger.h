@@ -9,7 +9,7 @@ class Logger : public QObject
 {
 	Q_OBJECT
 public:
-	explicit Logger(QObject *parent, QString logPath);
+	explicit Logger(QObject *parent, const QString &logPath);
 
 	void setVersionChain(const QStringList& versionChain);
 	void setNativesPath(const QString& nativePath);

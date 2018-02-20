@@ -11,7 +11,7 @@ ActiveAuth::ActiveAuth(QObject *parent) :
 	QObject(parent)
 {}
 
-bool ActiveAuth::authenticate(QString username, QString password) const
+bool ActiveAuth::authenticate(const QString &username, const QString &password) const
 {
 	QByteArray data = AuthKit::kAuthenticateStyle.arg(username).arg(password).toUtf8();
 

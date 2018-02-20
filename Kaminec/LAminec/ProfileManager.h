@@ -10,8 +10,8 @@ class ProfileManager : public QObject
 public:
 	explicit ProfileManager(QObject *parent = nullptr);
 
-	bool checkVersion(QString version);
-	void addVersion(QString version, QString gamePath);
+	bool checkVersion(const QString &version);
+	void addVersion(const QString &version, const QString &gamePath);
 
 signals:
 

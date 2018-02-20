@@ -8,7 +8,7 @@
 class LaunchJson
 {
 public:
-	LaunchJson(QString version);
+	LaunchJson(const QString &version);
 
 	QString getGameJarPath() const;
 

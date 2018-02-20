@@ -12,7 +12,7 @@ class ModsManager : public QObject
 public:
 	explicit ModsManager(QObject *parent = nullptr);
 
-	void setGameDir(QString gameDir);
+	void setGameDir(const QString &gameDir);
 
 	QStandardItemModel* getModel();
 

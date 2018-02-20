@@ -11,12 +11,12 @@
 struct FileItem
 {
     FileItem()=default;
-    explicit FileItem(QString name,
-                      int     size,
-                      QString sha1,
-                      QString path,
-                      QUrl url);
-	explicit FileItem(QUrl url, QString path);
+	explicit FileItem(const QString &name,
+					  const int     &size,
+					  const QString &sha1,
+					  const QString &path,
+					  const QUrl &url);
+	explicit FileItem(const QUrl &url, const QString &path);
 
 	static FileItem fromJson(const QString &name, const QVariant &variant);
 

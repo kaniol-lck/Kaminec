@@ -10,7 +10,7 @@
 class DownloadAssets
 {
 public:
-	explicit DownloadAssets(QString assetsIndexId);
+	explicit DownloadAssets(const QString &assetsIndexId);
 
 	QList<FileItem> getDownloadAssetsUrls();
 

@@ -4,7 +4,7 @@
 #include <QFile>
 #include <QTextStream>
 
-Logger::Logger(QObject *parent, QString logPath) :
+Logger::Logger(QObject *parent, const QString &logPath) :
 	QObject(parent),
 	logFile_(logPath)
 {

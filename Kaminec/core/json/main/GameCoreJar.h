@@ -6,7 +6,7 @@
 class GameCoreJar
 {
 public:
-	GameCoreJar(QVariant gameCoreJarVariant);
+	GameCoreJar(const QVariant &gameCoreJarVariant);
 
 	QString sha1() const;
 	int size() const;

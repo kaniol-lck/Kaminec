@@ -10,7 +10,7 @@
 #include <QJsonObject>
 #include <QByteArray>
 
-AssetsKit::AssetsKit(QString assetsIndexId)
+AssetsKit::AssetsKit(const QString &assetsIndexId)
 {
 	QFile assetsFile(Path::indexesPath() + QString("/%1.json").arg(assetsIndexId));
 

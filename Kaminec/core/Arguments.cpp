@@ -1,8 +1,6 @@
 #include "Arguments.h"
 
-#include <QDebug>
-
-Arguments::Arguments(QString arguments)
+Arguments::Arguments(const QString &arguments)
 {
 	//split the arguments with whitespace
 	auto argumentList = arguments.split(" ");

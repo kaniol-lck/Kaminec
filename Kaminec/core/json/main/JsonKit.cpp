@@ -10,7 +10,7 @@
 #include <QJsonDocument>
 #include <QDebug>
 
-JsonKit::JsonKit(QString version)
+JsonKit::JsonKit(const QString &version)
 {
 	QFile jsonFile(Path::getJsonPath(version));
 

@@ -24,7 +24,7 @@ bool SingleDownload::isDownload() const
     return isdownload_;
 }
 
-void SingleDownload::start(QList<QStandardItem*> modelItem, FileItem fileItem)
+void SingleDownload::start(const QList<QStandardItem *> &modelItem, const FileItem &fileItem)
 {
     modelItem_ = modelItem;
     QString filename = fileItem.path_;

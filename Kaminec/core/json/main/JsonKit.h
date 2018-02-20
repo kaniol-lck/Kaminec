@@ -13,7 +13,7 @@
 class JsonKit
 {
 public:
-	JsonKit(QString version);
+	JsonKit(const QString &version);
 
 	AssetIndex assetIndex() const;
 

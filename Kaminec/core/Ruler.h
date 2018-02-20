@@ -10,7 +10,7 @@
 class Ruler
 {
 public:
-	Ruler(QVariant rule);
+	Ruler(const QVariant &rule);
 
 	bool isAllow();
 
@@ -22,7 +22,7 @@ private:
 	//nested class Rule implementation
 	class Rule{
 	public:
-		Rule(QVariant rule)
+		Rule(const QVariant &rule)
 		{
 			if(value(rule, "action").toString() == "allow"){
 				action_ = Action::Allow;

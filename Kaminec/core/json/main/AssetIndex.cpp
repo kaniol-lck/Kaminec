@@ -4,7 +4,7 @@
 
 #include <QUrl>
 
-AssetIndex::AssetIndex(QVariant assetIndexVariant) :
+AssetIndex::AssetIndex(const QVariant &assetIndexVariant) :
 	assetIndexVariant_(assetIndexVariant)
 {}
 

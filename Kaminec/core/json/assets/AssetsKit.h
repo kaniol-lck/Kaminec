@@ -10,7 +10,7 @@
 class AssetsKit
 {
 public:
-	AssetsKit(QString assetsIndexId);
+	AssetsKit(const QString &assetsIndexId);
 
 	QList<Object> objects();
 

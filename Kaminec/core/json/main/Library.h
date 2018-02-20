@@ -6,7 +6,7 @@
 class Library
 {
 public:
-	Library(QVariant libraryVariant);
+	Library(const QVariant &libraryVariant);
 
 	QString name() const;
 
