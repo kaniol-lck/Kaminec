@@ -150,13 +150,13 @@ void KaminecLauncher::startGame()
 	ui_->start_pb->setText("Gaming...");
 	ui_->start_pb->setDisabled(true);
 	connect(launcher,SIGNAL(finished(int)),this,SLOT(gameFinished()));
-	connect(launcher,SIGNAL(exceptionMessage(QString)),this,SLOT(gameFinished()));
+	connect(launcher,SIGNAL(exceptionMessage(QString)),this,SLOT(exceptionMessage(QString)));
 
 	//start
 	launcher->start(profile, auth);
 
 	disconnect(launcher,SIGNAL(finished(int)),this,SLOT(gameFinished()));
-	disconnect(launcher,SIGNAL(exceptionMessage(QString)),this,SLOT(gameFinished()));
+	disconnect(launcher,SIGNAL(exceptionMessage(QString)),this,SLOT(exceptionMessage(QString)));
 
 }
 
@@ -257,6 +257,7 @@ void KaminecLauncher::updateVersionSelect()
 
 void KaminecLauncher::exceptionMessage(QString message)
 {
+	gameFinished();
 	QMessageBox::warning(this,"Error" , message);
 }
 

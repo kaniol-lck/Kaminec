@@ -1,15 +1,25 @@
 #include "Arguments.h"
 
+#include <QDebug>
+
 Arguments::Arguments(QString arguments)
 {
 	//split the arguments with whitespace
 	auto argumentList = arguments.split(" ");
 
+	/*1.0.json:
+	 *"minecraftArguments":
+	 *"${auth_player_name} ${auth_session} --gameDir ${game_directory} --assetsDir ${game_assets}"
+	 */
+
 	for(const QString& argument : argumentList){
-		if(argument.startsWith("--"))
+		if(argument.startsWith("--")||
+		   options_.isEmpty()||
+		   !options_.last().last().startsWith("--"))
 			options_ << QStringList{ argument };
-		else
+		else{
 			options_.last().append(argument);
+		}
 	}
 
 }
