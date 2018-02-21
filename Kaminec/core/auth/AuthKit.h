@@ -11,7 +11,7 @@
 class AuthKit
 {
 public:
-	AuthKit() = default;
+	AuthKit();
 
 	bool authenticate(const QByteArray &data) const;
 	bool validate(const QByteArray &data) const;
@@ -25,7 +25,7 @@ public:
 
 private:
 	QNetworkRequest makeRequest(const QString &endpoint) const;
-	void post(const QNetworkRequest &request, const QByteArray& data, const decltype(SLOT(finished(QNetworkReply*))) slotFunction) const;
+	void post(const QNetworkRequest &request, const QByteArray& data, const char *slotFunction) const;
 
 	std::shared_ptr<AuthResponse> authResponse_;
 	std::shared_ptr<QNetworkAccessManager> manager_;

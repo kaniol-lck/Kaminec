@@ -20,7 +20,7 @@ public slots:
 	void invalidateFinished(QNetworkReply *reply) const;
 
 private:
-	mutable bool success_;
+	mutable bool success_ = false;
 };
 
 #endif // AUTHRESPONSE_H

@@ -7,27 +7,32 @@ const QString AuthKit::kYggdrasilServer = "https://authserver.mojang.com";
 const QString AuthKit::kAuthenticateStyle = R"({"agent":{"name":"Minecraft","version":1},"requestUser": false,"username":"%1","password":"%2"})";
 const QString AuthKit::kTokenStyle = R"({"accessToken":"%1","clientToken":"%2"})";
 
+AuthKit::AuthKit() :
+	authResponse_(new AuthResponse),
+	manager_(new QNetworkAccessManager)
+{}
+
 bool AuthKit::authenticate(const QByteArray &data) const
 {
-	post(makeRequest("/authenticate"), data, SLOT(AuthResponse::authenticateFinished(QNetworkReply*)));
+	post(makeRequest("/authenticate"), data, SLOT(authenticateFinished(QNetworkReply*)));
 	return authResponse_->success();
 }
 
 bool AuthKit::validate(const QByteArray &data) const
 {
-	post(makeRequest("/validate"), data, SLOT(AuthResponse::validateFinished(QNetworkReply*)));
+	post(makeRequest("/validate"), data, SLOT(validateFinished(QNetworkReply*)));
 	return authResponse_->success();
 }
 
 bool AuthKit::refresh(const QByteArray &data) const
 {
-	post(makeRequest("/refresh"), data, SLOT(AuthResponse::refreshFinished(QNetworkReply*)));
+	post(makeRequest("/refresh"), data, SLOT(refreshFinished(QNetworkReply*)));
 	return authResponse_->success();
 }
 
 bool AuthKit::invalidate(const QByteArray &data) const
 {
-	post(makeRequest("/invalidate"), data, SLOT(AuthResponse::invalidateFinished(QNetworkReply*)));
+	post(makeRequest("/invalidate"), data, SLOT(invalidateFinished(QNetworkReply*)));
 	return authResponse_->success();
 }
 
@@ -41,7 +46,7 @@ QNetworkRequest AuthKit::makeRequest(const QString& endpoint) const
 	return request;
 }
 
-void AuthKit::post(const QNetworkRequest &request, const QByteArray &data, const decltype(SLOT(finished(QNetworkReply*))) slotFunction) const
+void AuthKit::post(const QNetworkRequest &request, const QByteArray &data, const char *slotFunction) const
 {
 	QEventLoop eventloop;
 	QObject::connect(manager_.get(), SIGNAL(finished(QNetworkReply*)), authResponse_.get(), slotFunction);
