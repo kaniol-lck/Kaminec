@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 
-#include "messager/profile.h"
 #include "LAminec/ActiveAuth.h"
 #include "LAminec/savesmanager.h"
 #include "LAminec/profilemanager.h"

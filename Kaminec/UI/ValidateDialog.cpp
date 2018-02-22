@@ -1,5 +1,6 @@
 #include "validatedialog.h"
 #include "ui_validatedialog.h"
+
 #include "LAminec/ActiveAuth.h"
 
 #include <QSettings>

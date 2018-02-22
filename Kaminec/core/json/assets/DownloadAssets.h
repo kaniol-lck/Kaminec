@@ -5,7 +5,7 @@
 #include "core/json/assets/AssetsKit.h"
 
 #include <QList>
-#include <QJsonObject>
+#include <QVariant>
 
 class DownloadAssets
 {

@@ -1,12 +1,6 @@
 #include "ActiveAuth.h"
 #include "assistance/utility.h"
 
-#include <QSettings>
-#include <QJsonDocument>
-#include <QNetworkReply>
-#include <QNetworkRequest>
-#include <QMessageBox>
-
 ActiveAuth::ActiveAuth(QObject *parent) :
 	QObject(parent)
 {}

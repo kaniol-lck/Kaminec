@@ -1,16 +1,13 @@
 #include "preference.h"
-#include "core/Path.h"
 #include "ui_preference.h"
-#include "UI/ValidateDialog.h"
-#include "LAminec/ActiveAuth.h"
 
-#include <QStringList>
+#include "core/Path.h"
+#include "UI/ValidateDialog.h"
+
 #include <QProcess>
 #include <QSettings>
 #include <QFileDialog>
 #include <QMessageBox>
-#include <QStandardPaths>
-#include <QDebug>
 
 Preference::Preference(QWidget *parent, ActiveAuth *auth) :
 	QDialog(parent),

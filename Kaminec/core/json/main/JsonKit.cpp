@@ -1,14 +1,10 @@
 #include "JsonKit.h"
 
-#include "core/json/main/Library.h"
 #include "core/Path.h"
 #include "assistance/utility.h"
 
-#include <memory>
 #include <stdexcept>
-#include <QDir>
 #include <QJsonDocument>
-#include <QDebug>
 
 JsonKit::JsonKit(const QString &version)
 {

@@ -1,14 +1,10 @@
 #include "modsmanager.h"
 
-#include <QDir>
-#include <QDebug>
 #include <QList>
 #include <cassert>
 
 ModsManager::ModsManager(QObject *parent) : QObject(parent)
-{
-
-}
+{}
 
 void ModsManager::setGameDir(const QString &gameDir)
 {

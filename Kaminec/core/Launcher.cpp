@@ -4,7 +4,6 @@
 #include "assistance/utility.h"
 
 #include <QDir>
-#include <QSettings>
 
 Launcher::Launcher(QObject *parent) :
 	QObject(parent),

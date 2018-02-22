@@ -1,7 +1,6 @@
 #include "LaunchAuth.h"
 
 #include <QSettings>
-#include <QUuid>
 
 LaunchAuth::LaunchAuth(Mode authMode) :
 	settings_(new QSettings(0)),

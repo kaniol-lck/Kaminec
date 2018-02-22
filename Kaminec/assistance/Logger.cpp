@@ -7,9 +7,7 @@
 Logger::Logger(QObject *parent, const QString &logPath) :
 	QObject(parent),
 	logFile_(logPath)
-{
-
-}
+{}
 
 void Logger::setVersionChain(const QStringList &versionChain)
 {

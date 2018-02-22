@@ -4,27 +4,14 @@
 #include "UI/Preference.h"
 #include "core/Path.h"
 #include "core/gamemode.h"
-#include "LAminec/modsmanager.h"
-#include "LAminec/savesmanager.h"
-#include "downloader/downloadmanagerplus.h"
 
-#include <algorithm>
-#include <QTime>
 #include <QDebug>
 #include <QString>
-#include <QByteArray>
-#include <QFile>
 #include <QDir>
 #include <QUrl>
 #include <QSettings>
-#include <QStandardPaths>
 #include <QFileDialog>
 #include <QMessageBox>
-#include <QJsonObject>
-#include <QJsonDocument>
-#include <QTextStream>
-#include <QProcess>
-#include <QStandardItemModel>
 
 KaminecLauncher::KaminecLauncher(QWidget *parent) :
     QMainWindow(parent),

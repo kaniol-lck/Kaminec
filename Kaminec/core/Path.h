@@ -2,7 +2,6 @@
 #define PATH_H
 
 #include <QString>
-#include <QSettings>
 
 class Path {
 public:

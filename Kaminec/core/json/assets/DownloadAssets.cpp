@@ -1,6 +1,5 @@
 #include "DownloadAssets.h"
 
-#include "core/Path.h"
 #include "assistance/utility.h"
 
 QString DownloadAssets::kResourcesDownload = "http://resources.download.minecraft.net/";

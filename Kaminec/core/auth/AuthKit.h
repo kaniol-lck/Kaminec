@@ -4,7 +4,6 @@
 #include "core/auth/AuthResponse.h"
 
 #include <memory>
-#include <QObject>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 

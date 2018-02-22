@@ -6,7 +6,6 @@
 #include <QJsonObject>
 #include <QTextStream>
 #include <QSettings>
-#include <QStandardPaths>
 #include <QDir>
 #include <QFile>
 #include <QDebug>

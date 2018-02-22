@@ -3,9 +3,7 @@
 
 #include <QStandardItem>
 #include <QList>
-#include <QSize>
 #include <QString>
-#include <QPair>
 #include <QUrl>
 
 struct FileItem
@@ -17,8 +15,6 @@ struct FileItem
 					  const QString &path,
 					  const QUrl &url);
 	explicit FileItem(const QUrl &url, const QString &path);
-
-	static FileItem fromJson(const QString &name, const QVariant &variant);
 
     QList<QStandardItem *> getInfoList() const;
 

@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QStandardItemModel>
-#include <QStandardItem>
 #include <QDir>
 
 class ModsManager : public QObject

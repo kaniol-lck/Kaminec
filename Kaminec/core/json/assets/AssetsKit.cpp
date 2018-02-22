@@ -4,10 +4,8 @@
 #include "core/Path.h"
 
 #include <stdexcept>
-#include <QList>
 #include <QFile>
 #include <QJsonDocument>
-#include <QJsonObject>
 #include <QByteArray>
 
 AssetsKit::AssetsKit(const QString &assetsIndexId)

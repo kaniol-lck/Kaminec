@@ -2,7 +2,6 @@
 #define ARGUMENTS_H
 
 #include <QList>
-#include <QString>
 
 class Arguments
 {

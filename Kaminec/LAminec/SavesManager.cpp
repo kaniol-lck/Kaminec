@@ -1,14 +1,9 @@
 #include "savesmanager.h"
 
-#include <QStandardItemModel>
-#include <QFile>
 #include <QDebug>
 #include <QMessageBox>
 #include <QJsonObject>
-#include <QJsonArray>
 #include <QJsonDocument>
-#include <QTextStream>
-#include <QDir>
 #include <QFileInfo>
 #include <QFileDialog>
 #include <QDateTime>

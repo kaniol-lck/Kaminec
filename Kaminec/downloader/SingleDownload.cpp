@@ -4,9 +4,6 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QProcess>
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
 #include <QNetworkRequest>
 
 
