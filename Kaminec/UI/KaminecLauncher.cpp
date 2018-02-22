@@ -33,7 +33,6 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 	savesManager_(new SavesManager(this)),
 	modsManager_(new ModsManager(this)),
 	gameDownload_(new GameDownload(this)),
-	corePath_(Path::corePath()),
 	launcher_(new Launcher(this))
 {
 	//setup ui
@@ -223,7 +222,7 @@ void KaminecLauncher::loadVersions()
 		for(auto i : list){
 			ui_->version_cb->addItem(i.fileName());
 			if(!profileManager_.checkVersion(i.fileName()))
-				profileManager_.addVersion(i.fileName(), corePath_);
+				profileManager_.addVersion(i.fileName(), Path::corePath());
 		}
 	}
 
@@ -246,7 +245,6 @@ void KaminecLauncher::setBackGround()
 void KaminecLauncher::updateVersionSelect()
 {
 	ui_->version_cb->clear();
-	corePath_ = Path::corePath();
 	this->loadVersions();
 }
 

@@ -18,7 +18,6 @@ QString GameDownload::kVersionManifestDownlaod = "https://launchermeta.mojang.co
 
 GameDownload::GameDownload(QObject *parent) :
 	QObject(parent),
-	corePath_(Path::corePath()),
 	tempFileName_(QDir::tempPath() + "/" +
 				 QCoreApplication::applicationName() +"_XXXXXX.json"),
 	downloadManagerPlus_(new DownloadManagerPlus(this))

@@ -33,7 +33,6 @@ private:
 	static QString kVersionManifestDownlaod;
 
 	bool inited_ = false;
-	QString corePath_;
 	QStandardItemModel model_;
 	QString tempFileName_;
 	QTemporaryFile tempVersionsFile_;

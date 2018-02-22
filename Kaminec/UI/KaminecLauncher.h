@@ -79,7 +79,6 @@ private:
 	QList<QVariant> versionList_;
 	GameDownload *gameDownload_;
 	ProfileManager profileManager_;
-	QString corePath_;
 	Launcher *launcher_;
 };
 

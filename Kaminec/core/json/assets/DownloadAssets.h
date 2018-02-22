@@ -19,7 +19,6 @@ private:
 
 	AssetsKit assetsKit_;
 	QVariant assets_;
-	QString corePath_;
 };
 
 #endif // ASSETSMANAGER_H
