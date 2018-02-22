@@ -4,7 +4,6 @@
 #include "UI/Preference.h"
 #include "core/Path.h"
 #include "core/gamemode.h"
-#include "core/Launcher.h"
 #include "LAminec/modsmanager.h"
 #include "LAminec/savesmanager.h"
 #include "downloader/downloadmanagerplus.h"
@@ -34,7 +33,8 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 	savesManager_(new SavesManager(this)),
 	modsManager_(new ModsManager(this)),
 	gameDownload_(new GameDownload(this)),
-	corePath_(Path::corePath())
+	corePath_(Path::corePath()),
+	launcher_(new Launcher(this))
 {
 	//setup ui
 	ui_->setupUi(this);
@@ -55,6 +55,9 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 
 	modsManager_->setGameDir(ui_->gameDir_le->text());
 	ui_->versionsList_treeView->setModel(gameDownload_->getVersionsModel());
+
+	connect(launcher_,SIGNAL(finished(int)),this,SLOT(gameFinished()));
+	connect(launcher_,SIGNAL(exceptionMessage(QString)),this,SLOT(exceptionMessage(QString)));
 }
 
 KaminecLauncher::~KaminecLauncher()
@@ -143,20 +146,12 @@ void KaminecLauncher::startGame()
 	//prepare mods
 	modsManager_->start();
 
-	//init game
-	auto launcher = new Launcher(this);
-
 	//ui during gaming
 	ui_->start_pb->setText("Gaming...");
 	ui_->start_pb->setDisabled(true);
-	connect(launcher,SIGNAL(finished(int)),this,SLOT(gameFinished()));
-	connect(launcher,SIGNAL(exceptionMessage(QString)),this,SLOT(exceptionMessage(QString)));
 
 	//start
-	launcher->start(profile, auth);
-
-	disconnect(launcher,SIGNAL(finished(int)),this,SLOT(gameFinished()));
-	disconnect(launcher,SIGNAL(exceptionMessage(QString)),this,SLOT(exceptionMessage(QString)));
+	launcher_->start(profile, auth);
 
 }
 

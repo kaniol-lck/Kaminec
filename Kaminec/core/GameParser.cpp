@@ -10,7 +10,8 @@ GameParser::GameParser(const Profile &profile, const LaunchAuth &auth):
 
 QStringList GameParser::getStartcode()
 {
-	if(!launchAuth_.validate())
+	if(launchAuth_.getAuthMode()==Mode::Online &&
+	   !launchAuth_.validate())
 		throw std::runtime_error("Invalid account.");
 
 	QStringList startcode;

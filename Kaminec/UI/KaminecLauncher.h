@@ -9,6 +9,7 @@
 #include "LAminec/profilemanager.h"
 #include "LAminec/modsmanager.h"
 #include "downloader/gamedownload.h"
+#include "core/Launcher.h"
 
 namespace Ui {
 class KaminecLauncher;
@@ -79,6 +80,7 @@ private:
 	GameDownload *gameDownload_;
 	ProfileManager profileManager_;
 	QString corePath_;
+	Launcher *launcher_;
 };
 
 #endif // KAMINECLAUNCHER_H
