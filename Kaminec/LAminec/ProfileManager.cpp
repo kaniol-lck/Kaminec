@@ -127,3 +127,23 @@ Profile ProfileManager::getSelectedProfile()
 
 	throw std::runtime_error("Selected profile does not exist.");
 }
+
+void ProfileManager::refresh()
+{
+	qDebug()<<Path::corePath();
+	profilesFile_.setFileName(Path::corePath() + "/launcher_profiles.json");
+	if(!profilesFile_.open(QIODevice::ReadOnly | QIODevice::Text))
+		throw std::runtime_error(R"("launcher_profiles.json" opened error.)");
+	QByteArray bytes = QString::fromLocal8Bit(profilesFile_.readAll()).toUtf8();
+	profilesFile_.close();
+
+	if(bytes.size()==0){
+		qDebug()<<"No content,auto make.";
+		initProfiles();
+	} else{
+		QJsonParseError ok;
+		profilesVariant_ = QJsonDocument::fromJson(bytes,&ok).toVariant();
+		if(ok.error != QJsonParseError::NoError)
+			throw std::runtime_error((ok.errorString() + R"("launcher_profiles.json" may be crashed.)").toStdString());
+	}
+}

@@ -60,12 +60,20 @@ private slots:
 
 	void on_download_pb_clicked();
 
-	void updateVersionSelect();
+	void updateProfiles();
+
+	void updateVersions();
 
 	void exceptionMessage(QString message);
 
+	void on_profile_cb_currentIndexChanged(const QString &arg1);
+
 private:
+	void loadProfiles();
+
 	void loadVersions();
+
+	void loadProfileInfo(const Profile &profile);
 
 	void setBackGround();
 
@@ -74,11 +82,14 @@ private:
 	ActiveAuth *activeAuth_;
 	SavesManager *savesManager_;
 	ModsManager *modsManager_;
-	int totalCount_;
-	QList<QVariant> versionList_;
 	GameDownload *gameDownload_;
 	ProfileManager profileManager_;
 	Launcher *launcher_;
+
+	int totalCount_;
+
+	QList<QVariant> versionList_;
+	QList<Profile> profileList_;
 };
 
 #endif // KAMINECLAUNCHER_H

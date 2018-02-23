@@ -133,6 +133,8 @@ void Preference::on_buttonBox_accepted()
 	settings_.setValue("minMem", ui_->minMem_sb->value());
 	settings_.setValue("maxMem", ui_->maxMem_sb->value());
 	settings_.setValue("javaArg", ui_->javaArg_te->toPlainText().replace("\n","\\n"));
+
+	emit settingfinished();
 }
 
 void Preference::on_login_pb_clicked()

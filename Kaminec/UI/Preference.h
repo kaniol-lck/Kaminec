@@ -20,6 +20,9 @@ public:
 private:
 	QString getAutoJavaPath();
 
+signals:
+	void settingfinished();
+
 private slots:
 	void on_corePath_showPb_clicked();
 

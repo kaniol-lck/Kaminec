@@ -25,6 +25,9 @@ public:
 	bool setSelectedProfile(const QString &name);
 	Profile getSelectedProfile();
 
+	//temporary method
+	void refresh();
+
 private:
 	QFile profilesFile_;
 	QVariant profilesVariant_;

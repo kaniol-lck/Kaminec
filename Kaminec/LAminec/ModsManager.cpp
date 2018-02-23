@@ -6,13 +6,13 @@
 ModsManager::ModsManager(QObject *parent) : QObject(parent)
 {}
 
-void ModsManager::setGameDir(const QString &gameDir)
+bool ModsManager::setGameDir(const QString &gameDir)
 {
 	usedModsDir_ = gameDir;
 	unusedModsDir_ = gameDir;
 
 	if(!usedModsDir_.cd("mods"))
-		throw std::runtime_error("Have not launched before.");
+		return false;
 
 	if(!unusedModsDir_.cd("unused_mods")){
 		unusedModsDir_.mkdir("unused_mods");
@@ -20,6 +20,7 @@ void ModsManager::setGameDir(const QString &gameDir)
 	}
 
 	this->refresh();
+	return true;
 }
 
 QStandardItemModel *ModsManager::getModel()

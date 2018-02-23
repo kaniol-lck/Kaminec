@@ -33,7 +33,8 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
     ui_->downloadValue_label->setVisible(false);
 	ui_->saveMgr_treeView->setModel(savesManager_->getModel());
 
-	this->loadVersions();
+	loadVersions();
+	loadProfiles();
 
 	//load gameDir
 	ui_->gameDir_le->setText(QSettings().value("gameDir").toString());
@@ -86,8 +87,8 @@ void KaminecLauncher::downloadFinished()
     ui_->downloadProgress_progressBar_2->setVisible(false);
 	ui_->downloadValue_label->setVisible(false);
 
-	//update version select
-	this->updateVersionSelect();
+	//update versions
+	updateVersions();
 }
 
 void KaminecLauncher::gameFinished()
@@ -147,7 +148,8 @@ void KaminecLauncher::on_action_preference_triggered()
 	auto preference = new Preference(this, activeAuth_);
 	preference->show();
 
-	connect(preference,SIGNAL(accepted()),this,SLOT(updateVersionSelect()));
+	connect(preference,SIGNAL(settingfinished()),this,SLOT(updateProfiles()));
+	connect(preference,SIGNAL(settingfinished()),this,SLOT(updateVersions()));
 }
 
 
@@ -198,6 +200,28 @@ void KaminecLauncher::on_download_pb_clicked()
 
 }
 
+void KaminecLauncher::updateProfiles()
+{
+	ui_->profile_cb->clear();
+	profileManager_.refresh();
+	loadProfiles();
+}
+
+void KaminecLauncher::loadProfiles()
+{
+	//get profile list from profileManager
+	profileList_ = profileManager_.getProfileList();
+
+	//show profile
+	for(const auto& profile : profileList_)
+		if(profile.name_ != "") //distinguish it by profile type in another day
+			ui_->profile_cb->addItem(profile.name_);
+
+	//load profile info
+	loadProfileInfo(profileManager_.getSelectedProfile());
+
+}
+
 void KaminecLauncher::loadVersions()
 {
 	//load exsit versions and check laucher_profiles.json
@@ -207,17 +231,27 @@ void KaminecLauncher::loadVersions()
 		dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
 		QFileInfoList list = dir.entryInfoList();
 		for(auto i : list){
+			versionList_.append(i.fileName());
 			ui_->version_cb->addItem(i.fileName());
 			if(!profileManager_.checkVersion(i.fileName()))
 				profileManager_.addVersion(i.fileName(), Path::corePath());
 		}
 	}
+}
 
-	//load last used version
-	auto index = ui_->version_cb->findText(QSettings().value("lastUsedVersion").toString());
-	qDebug()<<QSettings().value("lastUsedVersion").toString();
-	if(index != -1)
-		ui_->version_cb->setCurrentIndex(index);
+void KaminecLauncher::loadProfileInfo(const Profile &profile)
+{
+	//profile name
+	auto index = ui_->profile_cb->findText(profile.name_);
+	if(index != -1) ui_->profile_cb->setCurrentIndex(index);
+
+	//version
+	index = ui_->version_cb->findText(profile.lastVersionId_);
+	if(index != -1) ui_->version_cb->setCurrentIndex(index);
+	else ui_->statusBar->showMessage(QString("version not exist:") + profile.name_, 3000);
+
+	//game directory
+	ui_->gameDir_le->setText(profile.gameDir_);
 }
 
 void KaminecLauncher::setBackGround()
@@ -229,10 +263,10 @@ void KaminecLauncher::setBackGround()
 	this->setPalette(palette);
 }
 
-void KaminecLauncher::updateVersionSelect()
+void KaminecLauncher::updateVersions()
 {
 	ui_->version_cb->clear();
-	this->loadVersions();
+	loadVersions();
 }
 
 void KaminecLauncher::exceptionMessage(QString message)
@@ -245,4 +279,13 @@ void KaminecLauncher::resizeEvent(QResizeEvent *)
 {
 	//reset background when resize this window
 	setBackGround();
+}
+
+void KaminecLauncher::on_profile_cb_currentIndexChanged(const QString &arg1)
+{
+	for(const auto& profile : profileList_)
+		if(profile.name_ == arg1){
+			loadProfileInfo(profile);
+			profileManager_.setSelectedProfile(arg1);
+		}
 }

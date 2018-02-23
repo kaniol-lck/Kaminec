@@ -11,7 +11,7 @@ class ModsManager : public QObject
 public:
 	explicit ModsManager(QObject *parent = nullptr);
 
-	void setGameDir(const QString &gameDir);
+	bool setGameDir(const QString &gameDir);
 
 	QStandardItemModel* getModel();
 
