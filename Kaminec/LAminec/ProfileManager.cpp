@@ -1,6 +1,7 @@
 #include "profilemanager.h"
+
 #include "core/Path.h"
-#include "messager/profile.h"
+#include "assistance/utility.h"
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -10,70 +11,119 @@
 #include <QFile>
 #include <QDebug>
 
-ProfileManager::ProfileManager(QObject *parent) : QObject(parent)
+ProfileManager::ProfileManager(QObject *parent) :
+	QObject(parent),
+	profilesFile_(Path::corePath() + "/launcher_profiles.json")
 {
-	QString corePath = Path::corePath();
-	if(!QDir(corePath).exists()){
-		QDir().mkpath(corePath);
-	}
-	QFile loadfile(corePath + "/launcher_profiles.json");
+	if(!profilesFile_.open(QIODevice::ReadOnly | QIODevice::Text))
+		throw std::runtime_error(R"("launcher_profiles.json" opened error.)");
+	QByteArray bytes = QString::fromLocal8Bit(profilesFile_.readAll()).toUtf8();
+	profilesFile_.close();
 
-	if(!loadfile.open(QIODevice::ReadWrite|QIODevice::Text)){
-		qDebug()<<R"("launcher_profiles.json" opened error.)";
-	}
-
-	QByteArray bytes = QString::fromLocal8Bit(loadfile.readAll()).toUtf8();
 	if(bytes.size()==0){
 		qDebug()<<"No content,auto make.";
-		QJsonObject json;
-		json.insert("selectedProfile","(Default)");
-		QJsonObject profiles;
-		QJsonObject profile;
-		profile.insert("name","(Default)");
-		profile.insert("lastVersionId","1.10.2");
-		profile.insert("gameDir",QSettings().value("corePath").toString());
-		profiles.insert("(Default)",profile);
-		json.insert("profiles",profiles);
-
-		QTextStream out(&loadfile);
-		bytes = QJsonDocument(json).toJson();
-		out<<bytes;
+		initProfiles();
+	} else{
+		QJsonParseError ok;
+		profilesVariant_ = QJsonDocument::fromJson(bytes,&ok).toVariant();
+		if(ok.error != QJsonParseError::NoError)
+			throw std::runtime_error((ok.errorString() + R"("launcher_profiles.json" may be crashed.)").toStdString());
 	}
-	loadfile.close();
+}
 
-	QJsonParseError ok;
-	profilesMgrObj_ = QJsonDocument::fromJson(bytes,&ok).object();
-	if(ok.error != QJsonParseError::NoError){
-		qDebug()<<ok.errorString();
-		qDebug()<<R"("launcher_profiles.json" may be crashed.)";
-	}
+bool ProfileManager::initProfiles(const Profile &profile)
+{
+	QJsonObject json
+	{
+		{"selectedProfile", profile.name_},
+		{"profiles", QJsonObject{
+				{profile.name_, QJsonObject{
+						{"name", profile.name_},
+						{"lastVersionId", profile.lastVersionId_},
+						{"gameDir", profile.gameDir_}
+					}
+				}
+			}
+		}
+	};
+
+	if(!profilesFile_.open(QIODevice::WriteOnly | QIODevice::Text))
+		return false;
+	QTextStream out(&profilesFile_);
+	auto bytes = QJsonDocument(json).toJson();
+	profilesVariant_ = json;
+	out<<bytes;
+	profilesFile_.close();
+
+	return true;
+}
+
+QList<Profile> ProfileManager::getProfileList()
+{
+	QList<Profile> profileList;
+	for(const auto& profileVariant : value(profilesVariant_, "profiles").toMap())
+		profileList<<Profile(value(profileVariant, "name").toString(),
+							 value(profileVariant, "lastVersionId").toString(),
+							 value(profileVariant, "gameDir").toString());
+	return profileList;
 }
 
 bool ProfileManager::checkVersion(const QString &version)
 {
-	return profilesMgrObj_.value("profiles").toVariant().toMap().contains("auto-version-" + version);
+	//found this version
+	for(const auto& profileVariant : value(profilesVariant_, "profiles").toMap())
+		if(value(profileVariant, "lastVersionId") == version)
+			return true;
+	return false;
 }
 
-void ProfileManager::addVersion(const QString &version, const QString &gamePath)
+bool ProfileManager::addVersion(const QString &version, const QString &gamePath)
 {
-	QString corePath = Path::corePath();
-	QFile loadfile(corePath + "/launcher_profiles.json");
+	auto json = value(profilesVariant_, "profiles").toJsonObject();
 
-	QJsonObject profile;
-	QJsonObject profiles = profilesMgrObj_.value("profiles").toObject();
+	json.insert(version, QJsonObject{
+					{"name", version},
+					{"lastVersionId", version},
+					{"gameDir", gamePath}
+				});
 
-	profile.insert("name","auto-version-" + version);
-	profile.insert("lastVersionId", version);
-	profile.insert("gameDir", gamePath);
-
-	profiles.insert("auto-version-" + version, profile);
-	profilesMgrObj_.insert("profiles", profiles);
-
-	if(!loadfile.open(QIODevice::ReadWrite|QIODevice::Text)){
-		qDebug()<<R"("launcher_profiles.json" opened error.)";
-	}
-
-	QTextStream out(&loadfile);
-	auto bytes = QJsonDocument(profilesMgrObj_).toJson();
+	if(!profilesFile_.open(QIODevice::WriteOnly | QIODevice::Text))
+		return false;
+	QTextStream out(&profilesFile_);
+	auto bytes = QJsonDocument(json).toJson();
+	profilesVariant_ = json;
 	out<<bytes;
+	profilesFile_.close();
+
+	return true;
+}
+
+bool ProfileManager::setSelectedProfile(const QString &name)
+{
+	auto json = profilesVariant_.toJsonObject();
+
+	json.insert("selectedProfile", name);
+
+	if(!profilesFile_.open(QIODevice::WriteOnly | QIODevice::Text))
+		return false;
+	QTextStream out(&profilesFile_);
+	auto bytes = QJsonDocument(json).toJson();
+	profilesVariant_ = json;
+	out<<bytes;
+	profilesFile_.close();
+
+	return true;
+}
+
+Profile ProfileManager::getSelectedProfile()
+{
+	auto name = value(profilesVariant_, "selectedProfile").toString();
+
+	for(const auto& profileVariant : value(profilesVariant_, "profiles").toMap())
+		if(value(profileVariant, "name") == name)
+			return Profile(value(profileVariant, "name").toString(),
+						   value(profileVariant, "lastVersionId").toString(),
+						   value(profileVariant, "gameDir").toString());
+
+	throw std::runtime_error("Selected profile does not exist.");
 }

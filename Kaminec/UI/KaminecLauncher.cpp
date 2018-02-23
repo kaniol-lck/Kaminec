@@ -125,7 +125,7 @@ void KaminecLauncher::startGame()
 						Mode::Offline);
 	QSettings().setValue("isOnline", auth.getAuthMode() == Mode::Online);
 
-	auto profile = getProfile();
+	auto profile = profileManager_.getSelectedProfile();
 	QSettings().setValue("lastUsedVersion", profile.lastVersionId_);
 	QSettings().setValue("gameDir", profile.gameDir_);
 
