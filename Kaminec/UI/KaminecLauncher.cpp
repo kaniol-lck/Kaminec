@@ -32,6 +32,9 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
     ui_->downloadProgress_progressBar_2->setVisible(false);
     ui_->downloadValue_label->setVisible(false);
 	ui_->saveMgr_treeView->setModel(savesManager_->getModel());
+	ui_->profileName_label->setVisible(false);
+	ui_->profileName_le->setVisible(false);
+	ui_->editOver_pb->setVisible(false);
 
 	loadVersions();
 	loadProfiles();
@@ -243,7 +246,10 @@ void KaminecLauncher::loadProfileInfo(const Profile &profile)
 {
 	//profile name
 	auto index = ui_->profile_cb->findText(profile.name_);
-	if(index != -1) ui_->profile_cb->setCurrentIndex(index);
+	if(index != -1) {
+		ui_->profile_cb->setCurrentIndex(index);
+		ui_->profileName_le->setText(profile.name_);
+	}
 
 	//version
 	index = ui_->version_cb->findText(profile.lastVersionId_);
@@ -288,4 +294,25 @@ void KaminecLauncher::on_profile_cb_currentIndexChanged(const QString &arg1)
 			loadProfileInfo(profile);
 			profileManager_.setSelectedProfile(arg1);
 		}
+}
+
+void KaminecLauncher::on_editProfile_pb_clicked()
+{
+	ui_->profileName_label->setVisible(true);
+	ui_->profileName_le->setVisible(true);
+	ui_->editOver_pb->setVisible(true);
+}
+
+void KaminecLauncher::on_editOver_pb_clicked()
+{
+	//Accepted
+	auto newName = ui_->profileName_le->text();
+	if(newName == "") return;
+	profileManager_.renameProfile(ui_->profile_cb->currentText(), newName);
+	updateProfiles();
+
+	ui_->profileName_label->setVisible(false);
+	ui_->profileName_le->setVisible(false);
+	ui_->editOver_pb->setVisible(false);
+
 }

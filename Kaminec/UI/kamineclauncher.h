@@ -68,6 +68,10 @@ private slots:
 
 	void on_profile_cb_currentIndexChanged(const QString &arg1);
 
+	void on_editProfile_pb_clicked();
+
+	void on_editOver_pb_clicked();
+
 private:
 	void loadProfiles();
 

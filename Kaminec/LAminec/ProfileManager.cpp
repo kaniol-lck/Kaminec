@@ -79,9 +79,11 @@ bool ProfileManager::checkVersion(const QString &version)
 
 bool ProfileManager::addVersion(const QString &version, const QString &gamePath)
 {
-	auto json = value(profilesVariant_, "profiles").toJsonObject();
+	auto json = profilesVariant_.toJsonObject();
 
-	json.insert(version, QJsonObject{
+	auto profiles = value(profilesVariant_, "profiles").toJsonObject();
+
+	profiles.insert(version, QJsonObject{
 					{"name", version},
 					{"lastVersionId", version},
 					{"gameDir", gamePath}
@@ -89,9 +91,37 @@ bool ProfileManager::addVersion(const QString &version, const QString &gamePath)
 
 	if(!profilesFile_.open(QIODevice::WriteOnly | QIODevice::Text))
 		return false;
+
+	json.insert("profiles", profiles);
+
 	QTextStream out(&profilesFile_);
 	auto bytes = QJsonDocument(json).toJson();
-	profilesVariant_ = json;
+	profilesVariant_ = profiles;
+	out<<bytes;
+	profilesFile_.close();
+
+	return true;
+}
+
+bool ProfileManager::renameProfile(const QString &oldName, const QString &newName)
+{
+	auto json = profilesVariant_.toJsonObject();
+
+	auto profiles = value(profilesVariant_, "profiles").toJsonObject();
+
+	auto oldProfile = profiles.take(oldName).toObject();
+	oldProfile.insert("name", newName);
+
+	profiles.insert(newName, oldProfile);
+
+	if(!profilesFile_.open(QIODevice::WriteOnly | QIODevice::Text))
+		return false;
+
+	json.insert("profiles", profiles);
+
+	QTextStream out(&profilesFile_);
+	auto bytes = QJsonDocument(json).toJson();
+	profilesVariant_ = profiles;
 	out<<bytes;
 	profilesFile_.close();
 

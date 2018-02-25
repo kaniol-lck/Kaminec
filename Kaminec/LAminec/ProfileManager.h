@@ -20,7 +20,8 @@ public:
 	bool checkVersion(const QString &version);
 	bool addVersion(const QString &version, const QString &gamePath);
 
-	void addProfile(const QString &name, const QString &version, const QString &gamePath);
+	bool insertProfile(const Profile &profile);
+	bool renameProfile(const QString &oldName, const QString &newName);
 
 	bool setSelectedProfile(const QString &name);
 	Profile getSelectedProfile();
