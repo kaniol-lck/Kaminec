@@ -10,8 +10,8 @@ public:
 
 	QString name() const;
 
-	QString module() const;
-	QString moduleName() const;
+	QString package() const;
+	QString packageName() const;
 	QString version() const;
 
 	int size() const;

@@ -18,12 +18,12 @@ QString Library::name() const
 	return name_;
 }
 
-QString Library::module() const
+QString Library::package() const
 {
 	return nameList_.at(0);
 }
 
-QString Library::moduleName() const
+QString Library::packageName() const
 {
 	return nameList_.at(1);
 }
@@ -49,10 +49,10 @@ QString Library::path() const
 {
 	if(isNatives())
 		return QString("%1/%2/%3/%2-%3-%4.jar")
-				.arg(module().replace(".", "/"), moduleName(), version(), nativeKey());
+				.arg(package().replace(".", "/"), packageName(), version(), nativeKey());
 	else
 		return QString("%1/%2/%3/%2-%3.jar")
-				.arg(module().replace(".", "/"), moduleName(), version());
+				.arg(package().replace(".", "/"), packageName(), version());
 }
 
 QUrl Library::url() const

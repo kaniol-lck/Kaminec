@@ -8,6 +8,8 @@ class Arguments
 public:
 	Arguments() = default;
 	Arguments(const QString &arguments);
+	Arguments(const QStringList &arguments);
+	Arguments(const QVariant &arguments);
 
 	void replace(const QString &before, const QString& after);
 
@@ -19,7 +21,8 @@ public:
 	QStringList toStringList() const;
 
 private:
-	QList<QStringList> options_;
+	QStringList arguments_;
+	QList<int> optionGroupMark_;
 };
 
 #endif // ARGUMENTS_H

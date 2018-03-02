@@ -2,9 +2,7 @@
 
 LaunchJson::LaunchJson(const QString &version) :
 	jsonKit_(version)
-{
-
-}
+{}
 
 QString LaunchJson::getGameJarPath() const
 {

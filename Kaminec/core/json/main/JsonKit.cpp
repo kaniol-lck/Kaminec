@@ -105,7 +105,21 @@ QString JsonKit::mainClass() const
 Arguments JsonKit::minecraftArguments() const
 {
 	if(!minecraftArguments_){
-		minecraftArguments_ = std::make_shared<Arguments>(value(jsonVariant_, "minecraftArguments").toString());
+		if(jsonVariant_.toMap().contains("arguments") &&
+		   value(jsonVariant_, "arguments").toMap().contains("game")){
+			minecraftArguments_ = std::make_shared<Arguments>(value(jsonVariant_, "arguments", "game").toStringList());
+		}
+		else {
+			minecraftArguments_ = std::make_shared<Arguments>(value(jsonVariant_, "minecraftArguments").toString());
+		}
 	}
 	return *minecraftArguments_;
+}
+
+Arguments JsonKit::JVMArguments() const
+{
+	if(!JVMArguments_){
+			minecraftArguments_ = std::make_shared<Arguments>(value(jsonVariant_, "arguments", "jvm").toStringList());
+	}
+	return *JVMArguments_;
 }

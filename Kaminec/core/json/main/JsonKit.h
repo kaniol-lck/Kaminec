@@ -31,6 +31,8 @@ public:
 
 	Arguments minecraftArguments() const;
 
+	Arguments JVMArguments() const;
+
 private:
 	QVariant jsonVariant_;
 
@@ -58,6 +60,8 @@ private:
 	mutable std::shared_ptr<QString> mainClass_;
 
 	mutable std::shared_ptr<Arguments> minecraftArguments_;
+
+	mutable std::shared_ptr<Arguments> JVMArguments_;
 
 };
 
