@@ -104,7 +104,7 @@ bool ProfileManager::addVersion(const QString &version, const QString &gamePath)
 }
 
 bool ProfileManager::renameProfile(const QString &oldName, const QString &newName)
-{
+{	
 	auto json = profilesVariant_.toJsonObject();
 
 	auto profiles = value(profilesVariant_, "profiles").toJsonObject();
@@ -118,6 +118,9 @@ bool ProfileManager::renameProfile(const QString &oldName, const QString &newNam
 		return false;
 
 	json.insert("profiles", profiles);
+
+	if(value(profilesVariant_, "selectedProfile").toString() == oldName)
+		json.insert("selectedProfile", newName);
 
 	QTextStream out(&profilesFile_);
 	auto bytes = QJsonDocument(json).toJson();
@@ -150,7 +153,7 @@ Profile ProfileManager::getSelectedProfile()
 	auto name = value(profilesVariant_, "selectedProfile").toString();
 
 	for(const auto& profileVariant : value(profilesVariant_, "profiles").toMap())
-		if(value(profileVariant, "name") == name)
+		if(value(profileVariant, "name").toString() == name)
 			return Profile(value(profileVariant, "name").toString(),
 						   value(profileVariant, "lastVersionId").toString(),
 						   value(profileVariant, "gameDir").toString());

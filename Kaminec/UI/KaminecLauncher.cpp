@@ -212,6 +212,9 @@ void KaminecLauncher::updateProfiles()
 
 void KaminecLauncher::loadProfiles()
 {
+	//get selected profile
+	auto selectedProfile = profileManager_.getSelectedProfile();
+
 	//get profile list from profileManager
 	profileList_ = profileManager_.getProfileList();
 
@@ -220,8 +223,8 @@ void KaminecLauncher::loadProfiles()
 		if(profile.name_ != "") //distinguish it by profile type in another day
 			ui_->profile_cb->addItem(profile.name_);
 
-	//load profile info
-	loadProfileInfo(profileManager_.getSelectedProfile());
+	//load selected profile info
+	loadProfileInfo(selectedProfile);
 
 }
 
