@@ -10,6 +10,7 @@
 #include <QDir>
 #include <QFile>
 #include <QDebug>
+#include <QSettings>
 
 ProfileManager::ProfileManager(QObject *parent) :
 	QObject(parent),
@@ -35,7 +36,6 @@ bool ProfileManager::initProfiles(const Profile &profile)
 {
 	QJsonObject json
 	{
-		{"selectedProfile", profile.name_},
 		{"profiles", QJsonObject{
 				{profile.name_, QJsonObject{
 						{"name", profile.name_},
@@ -119,8 +119,8 @@ bool ProfileManager::renameProfile(const QString &oldName, const QString &newNam
 
 	json.insert("profiles", profiles);
 
-	if(value(profilesVariant_, "selectedProfile").toString() == oldName)
-		json.insert("selectedProfile", newName);
+	if(oldName == QSettings().value("selectedProfile").toString())
+		setSelectedProfile(newName);
 
 	QTextStream out(&profilesFile_);
 	auto bytes = QJsonDocument(json).toJson();
@@ -133,24 +133,13 @@ bool ProfileManager::renameProfile(const QString &oldName, const QString &newNam
 
 bool ProfileManager::setSelectedProfile(const QString &name)
 {
-	auto json = profilesVariant_.toJsonObject();
-
-	json.insert("selectedProfile", name);
-
-	if(!profilesFile_.open(QIODevice::WriteOnly | QIODevice::Text))
-		return false;
-	QTextStream out(&profilesFile_);
-	auto bytes = QJsonDocument(json).toJson();
-	profilesVariant_ = json;
-	out<<bytes;
-	profilesFile_.close();
-
+	QSettings().setValue("selectedProfile", name);
 	return true;
 }
 
 Profile ProfileManager::getSelectedProfile()
 {
-	auto name = value(profilesVariant_, "selectedProfile").toString();
+	auto name = QSettings().value("selectedProfile").toString();
 
 	for(const auto& profileVariant : value(profilesVariant_, "profiles").toMap())
 		if(value(profileVariant, "name").toString() == name)
@@ -158,7 +147,7 @@ Profile ProfileManager::getSelectedProfile()
 						   value(profileVariant, "lastVersionId").toString(),
 						   value(profileVariant, "gameDir").toString());
 
-	throw std::runtime_error("Selected profile does not exist.");
+	return Profile();
 }
 
 void ProfileManager::refresh()
