@@ -152,7 +152,6 @@ Profile ProfileManager::getSelectedProfile()
 
 void ProfileManager::refresh()
 {
-	qDebug()<<Path::corePath();
 	profilesFile_.setFileName(Path::corePath() + "/launcher_profiles.json");
 	if(!profilesFile_.open(QIODevice::ReadOnly | QIODevice::Text))
 		throw std::runtime_error(R"("launcher_profiles.json" opened error.)");
