@@ -58,6 +58,16 @@ bool ProfileManager::initProfiles(const Profile &profile)
 	return true;
 }
 
+Profile ProfileManager::getProfile(const QString &name)
+{
+	for(const auto& profileVariant : value(profilesVariant_, "profiles").toMap())
+		if(value(profileVariant, "name").toString() == name)
+			return Profile(value(profileVariant, "name").toString(),
+						   value(profileVariant, "lastVersionId").toString(),
+						   value(profileVariant, "gameDir").toString());
+	return Profile();
+}
+
 QList<Profile> ProfileManager::getProfileList()
 {
 	QList<Profile> profileList;
@@ -79,24 +89,29 @@ bool ProfileManager::checkVersion(const QString &version)
 
 bool ProfileManager::addVersion(const QString &version, const QString &gamePath)
 {
+	return insertProfile(Profile(version, version, gamePath));
+}
+
+bool ProfileManager::insertProfile(const Profile &profile)
+{
 	auto json = profilesVariant_.toJsonObject();
 
 	auto profiles = value(profilesVariant_, "profiles").toJsonObject();
 
-	profiles.insert(version, QJsonObject{
-					{"name", version},
-					{"lastVersionId", version},
-					{"gameDir", gamePath}
+	profiles.insert(profile.name_, QJsonObject{
+					{"name", profile.name_},
+					{"lastVersionId", profile.lastVersionId_},
+					{"gameDir", profile.gameDir_}
 				});
 
-	if(!profilesFile_.open(QIODevice::WriteOnly | QIODevice::Text))
-		return false;
 
 	json.insert("profiles", profiles);
 
+	if(!profilesFile_.open(QIODevice::WriteOnly | QIODevice::Text))
+		return false;
 	QTextStream out(&profilesFile_);
 	auto bytes = QJsonDocument(json).toJson();
-	profilesVariant_ = profiles;
+	profilesVariant_ = json;
 	out<<bytes;
 	profilesFile_.close();
 
@@ -124,7 +139,7 @@ bool ProfileManager::renameProfile(const QString &oldName, const QString &newNam
 
 	QTextStream out(&profilesFile_);
 	auto bytes = QJsonDocument(json).toJson();
-	profilesVariant_ = profiles;
+	profilesVariant_ = json;
 	out<<bytes;
 	profilesFile_.close();
 
@@ -139,15 +154,7 @@ bool ProfileManager::setSelectedProfile(const QString &name)
 
 Profile ProfileManager::getSelectedProfile()
 {
-	auto name = QSettings().value("selectedProfile").toString();
-
-	for(const auto& profileVariant : value(profilesVariant_, "profiles").toMap())
-		if(value(profileVariant, "name").toString() == name)
-			return Profile(value(profileVariant, "name").toString(),
-						   value(profileVariant, "lastVersionId").toString(),
-						   value(profileVariant, "gameDir").toString());
-
-	return Profile();
+	return getProfile(QSettings().value("selectedProfile").toString());
 }
 
 void ProfileManager::refresh()

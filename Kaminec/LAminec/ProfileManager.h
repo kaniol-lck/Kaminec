@@ -15,6 +15,7 @@ public:
 
 	bool initProfiles(const Profile &profile = Profile());
 
+	Profile getProfile(const QString &name);
 	QList<Profile> getProfileList();
 
 	bool checkVersion(const QString &version);
