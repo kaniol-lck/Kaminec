@@ -46,32 +46,32 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
         <string>Start Game</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_7">
-        <item row="0" column="0" colspan="2">
+        <item row="0" column="0">
+         <widget class="QLabel" name="profile_label">
+          <property name="text">
+           <string>Profile:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="buddy">
+           <cstring>profile_cb</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="profile_cb"/>
+        </item>
+        <item row="0" column="2">
+         <widget class="QPushButton" name="editProfile_pb">
+          <property name="text">
+           <string>&amp;Edit</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" colspan="3">
          <layout class="QGridLayout" name="gridLayout_3">
           <item row="0" column="0">
-           <widget class="QLabel" name="profile_label">
-            <property name="text">
-             <string>Profile:</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-            <property name="buddy">
-             <cstring>profile_cb</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QComboBox" name="profile_cb"/>
-          </item>
-          <item row="0" column="2">
-           <widget class="QPushButton" name="editProfile_pb">
-            <property name="text">
-             <string>&amp;Edit</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
            <widget class="QLabel" name="profileName_label">
             <property name="text">
              <string>&amp;Name;</string>
@@ -84,17 +84,10 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
+          <item row="0" column="1" colspan="2">
            <widget class="QLineEdit" name="profileName_le"/>
           </item>
-          <item row="1" column="2">
-           <widget class="QPushButton" name="editOver_pb">
-            <property name="text">
-             <string>&amp;Ok</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
+          <item row="1" column="0">
            <widget class="QLabel" name="version_label">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -119,26 +112,7 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
             </property>
            </widget>
           </item>
-          <item row="2" column="1" colspan="2">
-           <widget class="QComboBox" name="version_cb">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="styleSheet">
-             <string notr="true"/>
-            </property>
-            <property name="duplicatesEnabled">
-             <bool>false</bool>
-            </property>
-            <property name="frame">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
+          <item row="2" column="0">
            <widget class="QLabel" name="gameDir_label">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -163,10 +137,7 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
             </property>
            </widget>
           </item>
-          <item row="3" column="1">
-           <widget class="QLineEdit" name="gameDir_le"/>
-          </item>
-          <item row="3" column="2">
+          <item row="2" column="2">
            <widget class="QPushButton" name="gameDir_showPb">
             <property name="autoFillBackground">
              <bool>false</bool>
@@ -182,9 +153,38 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
             </property>
            </widget>
           </item>
+          <item row="1" column="1" colspan="2">
+           <widget class="QComboBox" name="version_cb">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+            <property name="duplicatesEnabled">
+             <bool>false</bool>
+            </property>
+            <property name="frame">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="gameDir_le"/>
+          </item>
+          <item row="3" column="0" colspan="3">
+           <widget class="QPushButton" name="editOver_pb">
+            <property name="text">
+             <string>&amp;Ok</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
-        <item row="1" column="0" colspan="2">
+        <item row="2" column="0" colspan="2">
          <spacer name="verticalSpacer">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -200,14 +200,14 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
           </property>
          </spacer>
         </item>
-        <item row="2" column="0">
+        <item row="3" column="0">
          <widget class="QCheckBox" name="isVerified_cb">
           <property name="text">
            <string>online</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
+        <item row="3" column="1">
          <widget class="QPushButton" name="start_pb">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">

@@ -32,15 +32,19 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
     ui_->downloadProgress_progressBar_2->setVisible(false);
     ui_->downloadValue_label->setVisible(false);
 	ui_->saveMgr_treeView->setModel(savesManager_->getModel());
+
 	ui_->profileName_label->setVisible(false);
 	ui_->profileName_le->setVisible(false);
+	ui_->version_label->setVisible(false);
+	ui_->version_cb->setVisible(false);
+	ui_->gameDir_label->setVisible(false);
+	ui_->gameDir_le->setVisible(false);
+	ui_->gameDir_showPb->setVisible(false);
 	ui_->editOver_pb->setVisible(false);
 
 	loadVersions();
 	loadProfiles();
 
-	//load gameDir
-	ui_->gameDir_le->setText(QSettings().value("gameDir").toString());
 	ui_->isVerified_cb->setChecked(QSettings().value("isOnline", false).toBool());
 
 	modsManager_->setGameDir(ui_->gameDir_le->text());
@@ -55,15 +59,6 @@ KaminecLauncher::~KaminecLauncher()
 	//delete ui
     delete ui_;
 }
-
-inline const Profile KaminecLauncher::getProfile()
-{
-	//get current profile
-	return Profile(QSettings().value("name").toString(),
-				   ui_->version_cb->currentText(),
-				   ui_->gameDir_le->text());
-}
-
 
 void KaminecLauncher::on_start_pb_clicked()
 {
@@ -303,6 +298,11 @@ void KaminecLauncher::on_editProfile_pb_clicked()
 {
 	ui_->profileName_label->setVisible(true);
 	ui_->profileName_le->setVisible(true);
+	ui_->version_label->setVisible(true);
+	ui_->version_cb->setVisible(true);
+	ui_->gameDir_label->setVisible(true);
+	ui_->gameDir_le->setVisible(true);
+	ui_->gameDir_showPb->setVisible(true);
 	ui_->editOver_pb->setVisible(true);
 }
 
@@ -312,10 +312,22 @@ void KaminecLauncher::on_editOver_pb_clicked()
 	auto newName = ui_->profileName_le->text();
 	if(newName == "") return;
 	profileManager_.renameProfile(ui_->profile_cb->currentText(), newName);
+
+	auto profile = profileManager_.getProfile(newName);
+
+	profile.lastVersionId_ = ui_->version_cb->currentText();
+	profile.gameDir_ = ui_->gameDir_le->text();
+
+	profileManager_.insertProfile(profile);
 	updateProfiles();
 
 	ui_->profileName_label->setVisible(false);
 	ui_->profileName_le->setVisible(false);
+	ui_->version_label->setVisible(false);
+	ui_->version_cb->setVisible(false);
+	ui_->gameDir_label->setVisible(false);
+	ui_->gameDir_le->setVisible(false);
+	ui_->gameDir_showPb->setVisible(false);
 	ui_->editOver_pb->setVisible(false);
 
 }
