@@ -47,8 +47,7 @@ bool ProfileManager::initProfiles(const Profile &profile)
 		}
 	};
 
-	if(!profilesFile_.open(QIODevice::WriteOnly | QIODevice::Text))
-		return false;
+	if(!profilesFile_.open(QIODevice::WriteOnly | QIODevice::Text))return false;
 	QTextStream out(&profilesFile_);
 	auto bytes = QJsonDocument(json).toJson();
 	profilesVariant_ = json;
@@ -118,6 +117,26 @@ bool ProfileManager::insertProfile(const Profile &profile)
 	return true;
 }
 
+bool ProfileManager::removeProfile(const QString &name)
+{
+	auto json = profilesVariant_.toJsonObject();
+
+	auto profiles = value(profilesVariant_, "profiles").toJsonObject();
+
+	profiles.remove(name);
+
+	json.insert("profiles", profiles);
+
+	if(!profilesFile_.open(QIODevice::WriteOnly | QIODevice::Text))return false;
+	QTextStream out(&profilesFile_);
+	auto bytes = QJsonDocument(json).toJson();
+	profilesVariant_ = json;
+	out<<bytes;
+	profilesFile_.close();
+
+	return true;
+}
+
 bool ProfileManager::renameProfile(const QString &oldName, const QString &newName)
 {	
 	auto json = profilesVariant_.toJsonObject();
@@ -129,14 +148,12 @@ bool ProfileManager::renameProfile(const QString &oldName, const QString &newNam
 
 	profiles.insert(newName, oldProfile);
 
-	if(!profilesFile_.open(QIODevice::WriteOnly | QIODevice::Text))
-		return false;
-
 	json.insert("profiles", profiles);
 
 	if(oldName == QSettings().value("selectedProfile").toString())
 		setSelectedProfile(newName);
 
+	if(!profilesFile_.open(QIODevice::WriteOnly | QIODevice::Text))return false;
 	QTextStream out(&profilesFile_);
 	auto bytes = QJsonDocument(json).toJson();
 	profilesVariant_ = json;

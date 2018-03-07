@@ -22,6 +22,7 @@ public:
 	bool addVersion(const QString &version, const QString &gamePath);
 
 	bool insertProfile(const Profile &profile);
+	bool removeProfile(const QString &name);
 	bool renameProfile(const QString &oldName, const QString &newName);
 
 	bool setSelectedProfile(const QString &name);

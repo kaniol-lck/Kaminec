@@ -311,14 +311,15 @@ void KaminecLauncher::on_editOver_pb_clicked()
 	//Accepted
 	auto newName = ui_->profileName_le->text();
 	if(newName == "") return;
-	profileManager_.renameProfile(ui_->profile_cb->currentText(), newName);
 
-	auto profile = profileManager_.getProfile(newName);
-
+	auto profile = profileManager_.getSelectedProfile();
+	profile.name_ = newName;
 	profile.lastVersionId_ = ui_->version_cb->currentText();
 	profile.gameDir_ = ui_->gameDir_le->text();
 
+	profileManager_.removeProfile(ui_->profile_cb->currentText());
 	profileManager_.insertProfile(profile);
+	profileManager_.setSelectedProfile(newName);
 	updateProfiles();
 
 	ui_->profileName_label->setVisible(false);
