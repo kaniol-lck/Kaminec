@@ -40,7 +40,6 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 	ui_->gameDir_label->setVisible(false);
 	ui_->gameDir_le->setVisible(false);
 	ui_->gameDir_showPb->setVisible(false);
-	ui_->editOver_pb->setVisible(false);
 
 	loadVersions();
 	loadProfiles();
@@ -296,39 +295,30 @@ void KaminecLauncher::on_profile_cb_currentIndexChanged(const QString &arg1)
 
 void KaminecLauncher::on_editProfile_pb_clicked()
 {
-	ui_->profileName_label->setVisible(true);
-	ui_->profileName_le->setVisible(true);
-	ui_->version_label->setVisible(true);
-	ui_->version_cb->setVisible(true);
-	ui_->gameDir_label->setVisible(true);
-	ui_->gameDir_le->setVisible(true);
-	ui_->gameDir_showPb->setVisible(true);
-	ui_->editOver_pb->setVisible(true);
-}
+	//Accept
+	if(isEditing){
+		auto newName = ui_->profileName_le->text();
+		if(newName == "") return;
 
-void KaminecLauncher::on_editOver_pb_clicked()
-{
-	//Accepted
-	auto newName = ui_->profileName_le->text();
-	if(newName == "") return;
+		auto profile = profileManager_.getSelectedProfile();
+		profile.name_ = newName;
+		profile.lastVersionId_ = ui_->version_cb->currentText();
+		profile.gameDir_ = ui_->gameDir_le->text();
 
-	auto profile = profileManager_.getSelectedProfile();
-	profile.name_ = newName;
-	profile.lastVersionId_ = ui_->version_cb->currentText();
-	profile.gameDir_ = ui_->gameDir_le->text();
+		profileManager_.removeProfile(ui_->profile_cb->currentText());
+		profileManager_.insertProfile(profile);
+		profileManager_.setSelectedProfile(newName);
+		updateProfiles();
+	}
 
-	profileManager_.removeProfile(ui_->profile_cb->currentText());
-	profileManager_.insertProfile(profile);
-	profileManager_.setSelectedProfile(newName);
-	updateProfiles();
+	isEditing = !isEditing;
+	ui_->profileName_label->setVisible(isEditing);
+	ui_->profileName_le->setVisible(isEditing);
+	ui_->version_label->setVisible(isEditing);
+	ui_->version_cb->setVisible(isEditing);
+	ui_->gameDir_label->setVisible(isEditing);
+	ui_->gameDir_le->setVisible(isEditing);
+	ui_->gameDir_showPb->setVisible(isEditing);
 
-	ui_->profileName_label->setVisible(false);
-	ui_->profileName_le->setVisible(false);
-	ui_->version_label->setVisible(false);
-	ui_->version_cb->setVisible(false);
-	ui_->gameDir_label->setVisible(false);
-	ui_->gameDir_le->setVisible(false);
-	ui_->gameDir_showPb->setVisible(false);
-	ui_->editOver_pb->setVisible(false);
-
+	ui_->editProfile_pb->setText(isEditing?"&OK":"&Edit");
 }

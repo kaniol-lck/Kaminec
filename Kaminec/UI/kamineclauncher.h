@@ -68,8 +68,6 @@ private slots:
 
 	void on_editProfile_pb_clicked();
 
-	void on_editOver_pb_clicked();
-
 private:
 	void loadProfiles();
 
@@ -92,6 +90,8 @@ private:
 
 	QList<QVariant> versionList_;
 	QList<Profile> profileList_;
+
+	bool isEditing = false;
 };
 
 #endif // KAMINECLAUNCHER_H
