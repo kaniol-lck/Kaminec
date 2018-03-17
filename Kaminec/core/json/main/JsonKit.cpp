@@ -107,7 +107,7 @@ Arguments JsonKit::minecraftArguments() const
 	if(!minecraftArguments_){
 		if(jsonVariant_.toMap().contains("arguments") &&
 		   value(jsonVariant_, "arguments").toMap().contains("game")){
-			minecraftArguments_ = std::make_shared<Arguments>(value(jsonVariant_, "arguments", "game").toStringList());
+			minecraftArguments_ = std::make_shared<Arguments>(value(jsonVariant_, "arguments", "game"));
 		}
 		else {
 			minecraftArguments_ = std::make_shared<Arguments>(value(jsonVariant_, "minecraftArguments").toString());

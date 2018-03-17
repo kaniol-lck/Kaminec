@@ -1,5 +1,7 @@
 #include "Arguments.h"
 
+#include "core/Ruler.h"
+
 Arguments::Arguments(const QString &arguments) :
 	//split the arguments with whitespace
 	Arguments(arguments.split(" "))
@@ -20,6 +22,22 @@ Arguments::Arguments(const QStringList &arguments)
 		   !arguments_.at(optionGroupMark_.last()).startsWith("--")){
 			optionGroupMark_.append(i);
 		}
+	}
+}
+
+Arguments::Arguments(const QVariant &arguments)
+{
+	for(const auto& argument : arguments.toList()){
+		if(argument.toMap().contains("rules")){
+			Ruler ruler(value(argument, "rules"));
+			if(ruler.isAllow()){
+				if(value(argument, "value").toString() != "")
+					arguments_.append(value(argument, "value").toString());
+				else
+					arguments_.append(value(argument, "value").toStringList());
+			}
+		} else
+			arguments_.append(argument.toString());
 	}
 }
 

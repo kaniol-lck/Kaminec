@@ -55,7 +55,9 @@ SOURCES += main.cpp\
     core/json/assets/DownloadAssets.cpp \
     core/Launcher.cpp \
     core/GameParser.cpp \
-    core/auth/AuthResponse.cpp
+    core/auth/AuthResponse.cpp \
+    core/Custom.cpp \
+    core/Rule.cpp
 
 HEADERS  += UI/kamineclauncher.h \
             messager/profile.h \
@@ -89,7 +91,9 @@ HEADERS  += UI/kamineclauncher.h \
     core/json/assets/DownloadAssets.h \
     core/Launcher.h \
     core/GameParser.h \
-    core/auth/AuthResponse.h
+    core/auth/AuthResponse.h \
+    core/Custom.h \
+    core/Rule.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preference.ui \
