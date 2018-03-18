@@ -103,11 +103,9 @@ bool ProfileManager::insertProfile(const Profile &profile)
 					{"gameDir", profile.gameDir_}
 				});
 
-
 	json.insert("profiles", profiles);
 
-	if(!profilesFile_.open(QIODevice::WriteOnly | QIODevice::Text))
-		return false;
+	if(!profilesFile_.open(QIODevice::WriteOnly | QIODevice::Text)) return false;
 	QTextStream out(&profilesFile_);
 	auto bytes = QJsonDocument(json).toJson();
 	profilesVariant_ = json;

@@ -312,6 +312,7 @@ void KaminecLauncher::on_editProfile_pb_clicked()
 	}
 
 	isEditing = !isEditing;
+	ui_->profile_cb->setEnabled(!isEditing);
 	ui_->profileName_label->setVisible(isEditing);
 	ui_->profileName_le->setVisible(isEditing);
 	ui_->version_label->setVisible(isEditing);
