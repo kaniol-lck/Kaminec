@@ -2,9 +2,9 @@
 #define ACTIVEAUTH_H
 
 #include "core/auth/AuthKit.h"
+#include "core/Custom.h"
 
 #include <QObject>
-#include <QSettings>
 
 class ActiveAuth : QObject
 {
@@ -18,7 +18,7 @@ public:
 
 private:
 	AuthKit authKit_;
-	QSettings settings_;
+	Custom custom_;
 };
 
 #endif // ACTIVEAUTH_H

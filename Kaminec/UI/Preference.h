@@ -2,6 +2,7 @@
 #define PREFERENCE_H
 
 #include "LAminec/ActiveAuth.h"
+#include "core/Custom.h"
 
 #include <QDialog>
 
@@ -43,7 +44,7 @@ private slots:
 private:
 	Ui::Preference *ui_;
 
-	QSettings settings_;
+	Custom custom_;
 
 	ActiveAuth *activeAuth_;
 	bool customPath_ = false;

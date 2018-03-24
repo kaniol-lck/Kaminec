@@ -1,12 +1,11 @@
 #include "AuthResponse.h"
 
 #include "assistance/utility.h"
-
+#include "core/Custom.h"
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QJsonDocument>
-#include <QSettings>
 #include <QMessageBox>
 
 AuthResponse::AuthResponse(QObject *parent) :
@@ -39,11 +38,11 @@ void AuthResponse::authenticateFinished(QNetworkReply *reply) const
 		auto playerName = value(json, "selectedProfile", "name").toString();
 
 		//store these information to settings
-		QSettings settings;
-		settings.setValue("uuid", uuid);
-		settings.setValue("accessToken", accessToken);
-		settings.setValue("clientToken", clientToken);
-		settings.setValue("id", playerName);
+		Custom custom;
+		custom.setUuid(uuid);
+		custom.setAccessToken(accessToken);
+		custom. setClientToken(clientToken);
+		custom.setOfficialName(playerName);
 		qDebug()<<"Welcome:"<<playerName;
 	} else{
 		//failure
@@ -84,11 +83,11 @@ void AuthResponse::refreshFinished(QNetworkReply *reply) const
 		auto playerName = value(json, "selectedProfile", "name").toString();
 
 		//store these information to settings
-		QSettings settings;
-		settings.setValue("uuid", uuid);
-		settings.setValue("accessToken", accessToken);
-		settings.setValue("clientToken", clientToken);
-		settings.setValue("name", playerName);
+		Custom custom;
+		custom.setUuid(uuid);
+		custom.setAccessToken(accessToken);
+		custom. setClientToken(clientToken);
+		custom.setOfficialName(playerName);
 		qDebug()<<"Welcome:"<<playerName;
 	} else{
 		//failure

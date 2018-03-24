@@ -2,6 +2,7 @@
 #define VALIDATEDIALOG_H
 
 #include "LAminec/ActiveAuth.h"
+#include "core/Custom.h"
 
 #include <QDialog>
 
@@ -31,6 +32,7 @@ private:
 
 	ActiveAuth *activeAuth_;
 	bool showPassword_ = false;
+	Custom custom_;
 };
 
 #endif // VALIDATEDIALOG_H

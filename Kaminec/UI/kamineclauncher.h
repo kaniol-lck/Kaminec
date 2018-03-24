@@ -9,6 +9,7 @@
 #include "LAminec/modsmanager.h"
 #include "downloader/gamedownload.h"
 #include "core/Launcher.h"
+#include "core/Custom.h"
 
 namespace Ui {
 class KaminecLauncher;
@@ -90,6 +91,8 @@ private:
 
 	QList<QVariant> versionList_;
 	QList<Profile> profileList_;
+
+	Custom custom_;
 
 	bool isEditing = false;
 };

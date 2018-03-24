@@ -5,7 +5,6 @@
 #include "core/Gamemode.h"
 
 #include <memory>
-#include <QSettings>
 
 class LaunchAuth
 {
@@ -23,7 +22,6 @@ public:
 
 private:
 	AuthKit authKit_;
-	std::shared_ptr<QSettings> settings_;
 	Mode authMode_;
 };
 

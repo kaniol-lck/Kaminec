@@ -21,7 +21,7 @@ Rule::Rule(const QVariant &rule)
 	if(rule.toMap().contains("features")){
 		auto featuresMap = value(rule, "features").toMap();
 		for(auto it = featuresMap.begin(); it != featuresMap.end(); it++){
-			if(Custom().checkSettings(it.key()) != it.value().toBool())
+			if(Custom().checkFeature(it.key()) != it.value().toBool())
 				action_ = false;
 		}
 	}

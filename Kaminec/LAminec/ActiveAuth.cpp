@@ -14,16 +14,16 @@ bool ActiveAuth::authenticate(const QString &username, const QString &password) 
 
 bool ActiveAuth::refresh() const
 {
-	QByteArray data = AuthKit::kTokenStyle.arg(settings_.value("accessToken").toString())
-					  .arg(settings_.value("clientToken").toString()).toUtf8();
+	QByteArray data = AuthKit::kTokenStyle.arg(custom_.getAccessToken())
+					  .arg(custom_.getClientToken()).toUtf8();
 
 	return authKit_.refresh(data);
 }
 
 bool ActiveAuth::invalidate() const
 {
-	QByteArray data = AuthKit::kTokenStyle.arg(settings_.value("accessToken").toString())
-					  .arg(settings_.value("clientToken").toString()).toUtf8();
+	QByteArray data = AuthKit::kTokenStyle.arg(custom_.getAccessToken())
+					  .arg(custom_.getClientToken()).toUtf8();
 
 	return authKit_.invalidate(data);
 }

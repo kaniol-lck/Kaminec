@@ -3,8 +3,6 @@
 
 #include "LAminec/ActiveAuth.h"
 
-#include <QSettings>
-
 ValidateDialog::ValidateDialog(QWidget *parent, ActiveAuth *auth) :
 	QDialog(parent),
 	ui_(new Ui::ValidateDialog),
@@ -43,9 +41,9 @@ void ValidateDialog::on_buttonBox_accepted()
 {
 	if(activeAuth_->authenticate(ui_->email_le->text(),
 						  ui_->password_le->text())){
-		QSettings().setValue("email", ui_->email_le->text());
-		QSettings().setValue("isLogged", true);
-		emit login(QSettings().value("id").toString());
+		custom_.setEmail(ui_->email_le->text());
+		custom_.setLogged(true);
+		emit login(custom_.getOfficialName());
 		this->accept();
 	}
 	else

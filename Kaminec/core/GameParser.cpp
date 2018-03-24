@@ -37,8 +37,9 @@ QStringList GameParser::getJVMArguments()
 
 	JVMArgs.append(getClassPaths());
 
-	JVMArgs<<QString("-Xmn%1m").arg(QSettings().value("minMem").toString());
-	JVMArgs<<QString("-Xmx%1m").arg(QSettings().value("maxMem").toString());
+	auto range = custom_.getMemoryAllocateRange();
+	JVMArgs<<QString("-Xmn%1m").arg(range.first);
+	JVMArgs<<QString("-Xmx%1m").arg(range.second);
 
 	return JVMArgs;
 }
@@ -48,7 +49,7 @@ QStringList GameParser::getGameArguments()
 	auto gameArguments = launchJson_.getGameArguments();
 
 	QMap<QString, QString> replace_list = {
-		{"${auth_player_name}", QSettings().value("playerName").toString()},
+		{"${auth_player_name}", custom_.getPlayerName()},
 		{"${version_name}", profile_.lastVersionId_},
 		{"${game_directory}", profile_.gameDir_},
 		{"${assets_root}", Path::assetsPath()},

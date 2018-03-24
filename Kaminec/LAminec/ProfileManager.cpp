@@ -6,18 +6,19 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QTextStream>
-#include <QSettings>
 #include <QDir>
 #include <QFile>
 #include <QDebug>
-#include <QSettings>
+#include <cassert>
 
 ProfileManager::ProfileManager(QObject *parent) :
 	QObject(parent),
 	profilesFile_(Path::corePath() + "/launcher_profiles.json")
 {
-	if(!profilesFile_.open(QIODevice::ReadOnly | QIODevice::Text))
-		throw std::runtime_error(R"("launcher_profiles.json" opened error.)");
+	if(!profilesFile_.open(QIODevice::ReadOnly | QIODevice::Text)){
+		qDebug()<<"No content,auto make.";
+		initProfiles();
+	}
 	QByteArray bytes = QString::fromLocal8Bit(profilesFile_.readAll()).toUtf8();
 	profilesFile_.close();
 
@@ -95,7 +96,9 @@ bool ProfileManager::insertProfile(const Profile &profile)
 {
 	auto json = profilesVariant_.toJsonObject();
 
-	auto profiles = value(profilesVariant_, "profiles").toJsonObject();
+	auto profiles = json.value("profiles").toObject();//value(profilesVariant_, "profiles").toJsonObject();
+
+	assert(QJsonValue(profiles)!=QJsonValue::Undefined);
 
 	profiles.insert(profile.name_, QJsonObject{
 					{"name", profile.name_},
@@ -119,7 +122,7 @@ bool ProfileManager::removeProfile(const QString &name)
 {
 	auto json = profilesVariant_.toJsonObject();
 
-	auto profiles = value(profilesVariant_, "profiles").toJsonObject();
+	QJsonObject profiles = json.value("profiles").toObject();//value(profilesVariant_, "profiles").toJsonObject();
 
 	profiles.remove(name);
 
@@ -148,7 +151,7 @@ bool ProfileManager::renameProfile(const QString &oldName, const QString &newNam
 
 	json.insert("profiles", profiles);
 
-	if(oldName == QSettings().value("selectedProfile").toString())
+	if(oldName == custom_.getSelectedProfileName())
 		setSelectedProfile(newName);
 
 	if(!profilesFile_.open(QIODevice::WriteOnly | QIODevice::Text))return false;
@@ -163,13 +166,13 @@ bool ProfileManager::renameProfile(const QString &oldName, const QString &newNam
 
 bool ProfileManager::setSelectedProfile(const QString &name)
 {
-	QSettings().setValue("selectedProfile", name);
+	custom_.setSelectedProfileName(name);
 	return true;
 }
 
 Profile ProfileManager::getSelectedProfile()
 {
-	return getProfile(QSettings().value("selectedProfile").toString());
+	return getProfile(custom_.getSelectedProfileName());
 }
 
 void ProfileManager::refresh()

@@ -2,6 +2,7 @@
 #define PROFILEMANAGER_H
 
 #include "messager/profile.h"
+#include "core/Custom.h"
 
 #include <QObject>
 #include <QFile>
@@ -34,7 +35,7 @@ public:
 private:
 	QFile profilesFile_;
 	QVariant profilesVariant_;
-
+	Custom custom_;
 };
 
 #endif // PROFILEMANAGER_H

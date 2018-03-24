@@ -9,7 +9,6 @@
 #include <QString>
 #include <QDir>
 #include <QUrl>
-#include <QSettings>
 #include <QFileDialog>
 #include <QMessageBox>
 
@@ -44,7 +43,7 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 	loadVersions();
 	loadProfiles();
 
-	ui_->isVerified_cb->setChecked(QSettings().value("isOnline", false).toBool());
+	ui_->isVerified_cb->setChecked(custom_.getOnlineMode());
 
 	modsManager_->setGameDir(ui_->gameDir_le->text());
 	ui_->versionsList_treeView->setModel(gameDownload_->getVersionsModel());
@@ -121,11 +120,9 @@ void KaminecLauncher::startGame()
 	LaunchAuth auth(ui_->isVerified_cb->isChecked()?
 						Mode::Online :
 						Mode::Offline);
-	QSettings().setValue("isOnline", auth.getAuthMode() == Mode::Online);
+	custom_.setOnlineMode(auth.getAuthMode() == Mode::Online);
 
 	auto profile = profileManager_.getSelectedProfile();
-	QSettings().setValue("lastUsedVersion", profile.lastVersionId_);
-	QSettings().setValue("gameDir", profile.gameDir_);
 
 	//prepare mods
 	modsManager_->start();
@@ -269,6 +266,7 @@ void KaminecLauncher::setBackGround()
 void KaminecLauncher::updateVersions()
 {
 	ui_->version_cb->clear();
+	versionList_.clear();
 	loadVersions();
 }
 

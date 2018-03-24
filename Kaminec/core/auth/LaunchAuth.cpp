@@ -1,16 +1,15 @@
 #include "LaunchAuth.h"
 
-#include <QSettings>
+#include "core/Custom.h"
 
 LaunchAuth::LaunchAuth(Mode authMode) :
-	settings_(new QSettings(0)),
 	authMode_(authMode)
 {}
 
 bool LaunchAuth::validate() const
 {
-	QByteArray data = AuthKit::kTokenStyle.arg(settings_->value("accessToken").toString())
-					  .arg(settings_->value("clientToken").toString()).toUtf8();
+	QByteArray data = AuthKit::kTokenStyle.arg(Custom().getAccessToken())
+					  .arg(Custom().getClientToken()).toUtf8();
 
 	return authKit_.validate(data);
 }
@@ -25,14 +24,14 @@ QString LaunchAuth::getUserType() const
 QString LaunchAuth::getAuthUuid() const
 {
 	return authMode_ == Mode::Online?
-				settings_->value("uuid").toString():
+				Custom().getUuid():
 				"${auth_uuid}";
 }
 
 QString LaunchAuth::getAuthAccessToken() const
 {
 	return authMode_ == Mode::Online?
-				settings_->value("accessToken").toString():
+				Custom().getAccessToken():
 				"${auth_access_token}";
 }
 

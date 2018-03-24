@@ -4,6 +4,7 @@
 #include "messager/Profile.h"
 #include "core/auth/LaunchAuth.h"
 #include "core/json/main/LaunchJson.h"
+#include "core/Custom.h"
 
 class GameParser
 {
@@ -23,6 +24,7 @@ private:
 	Profile profile_;
 	LaunchAuth launchAuth_;
 	LaunchJson launchJson_;
+	Custom custom_;
 
 };
 
