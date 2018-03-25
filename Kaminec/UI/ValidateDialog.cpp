@@ -24,19 +24,6 @@ ValidateDialog::~ValidateDialog()
 	delete ui_;
 }
 
-void ValidateDialog::on_showPassword_pb_clicked()
-{
-	if(showPassword_){
-		showPassword_ = false;
-		ui_->password_le->setEchoMode(QLineEdit::Password);
-		ui_->showPassword_pb->setText("&Show Password");
-	}else{
-		showPassword_ = true;
-		ui_->password_le->setEchoMode(QLineEdit::Normal);
-		ui_->showPassword_pb->setText("&Hide Password");
-	}
-}
-
 void ValidateDialog::on_buttonBox_accepted()
 {
 	if(activeAuth_->authenticate(ui_->email_le->text(),
@@ -48,4 +35,15 @@ void ValidateDialog::on_buttonBox_accepted()
 	}
 	else
 		this->exec();
+}
+
+void ValidateDialog::on_showPassword_pb_toggled(bool checked)
+{
+	if(checked){
+		ui_->password_le->setEchoMode(QLineEdit::Normal);
+		ui_->showPassword_pb->setText("&Hide Password");
+	}else{
+		ui_->password_le->setEchoMode(QLineEdit::Password);
+		ui_->showPassword_pb->setText("&Show Password");
+	}
 }

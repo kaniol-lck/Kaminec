@@ -67,6 +67,9 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
           <property name="text">
            <string>&amp;Edit</string>
           </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item row="1" column="0" colspan="3">

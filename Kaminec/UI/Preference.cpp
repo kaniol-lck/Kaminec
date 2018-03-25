@@ -182,29 +182,27 @@ void Preference::on_fullScreen_checkBox_stateChanged(int arg1)
 	}
 }
 
-void Preference::on_more_pb_clicked()
+void Preference::on_more_pb_toggled(bool checked)
 {
-	customPath_ = !customPath_;
+	ui_->versionsPath_label->setVisible(checked);
+	ui_->versionsPath_le->setVisible(checked);
+	ui_->versionsPath_showPb->setVisible(checked);
+	ui_->libsPath_label->setVisible(checked);
+	ui_->libsPath_le->setVisible(checked);
+	ui_->libsPath_showPb->setVisible(checked);
+	ui_->nativesPath_label->setVisible(checked);
+	ui_->nativesPath_le->setVisible(checked);
+	ui_->nativesPath_showPb->setVisible(checked);
+	ui_->assetsPath_label->setVisible(checked);
+	ui_->assetsPath_le->setVisible(checked);
+	ui_->assetsPath_showPb->setVisible(checked);
+	ui_->indexesPath_label->setVisible(checked);
+	ui_->indexesPath_le->setVisible(checked);
+	ui_->indexesPath_showPb->setVisible(checked);
+	ui_->objectsPath_label->setVisible(checked);
+	ui_->objectsPath_le->setVisible(checked);
+	ui_->objectsPath_showPb->setVisible(checked);
+	ui_->customPathHelper_tb->setVisible(checked);
 
-	ui_->versionsPath_label->setVisible(customPath_);
-	ui_->versionsPath_le->setVisible(customPath_);
-	ui_->versionsPath_showPb->setVisible(customPath_);
-	ui_->libsPath_label->setVisible(customPath_);
-	ui_->libsPath_le->setVisible(customPath_);
-	ui_->libsPath_showPb->setVisible(customPath_);
-	ui_->nativesPath_label->setVisible(customPath_);
-	ui_->nativesPath_le->setVisible(customPath_);
-	ui_->nativesPath_showPb->setVisible(customPath_);
-	ui_->assetsPath_label->setVisible(customPath_);
-	ui_->assetsPath_le->setVisible(customPath_);
-	ui_->assetsPath_showPb->setVisible(customPath_);
-	ui_->indexesPath_label->setVisible(customPath_);
-	ui_->indexesPath_le->setVisible(customPath_);
-	ui_->indexesPath_showPb->setVisible(customPath_);
-	ui_->objectsPath_label->setVisible(customPath_);
-	ui_->objectsPath_le->setVisible(customPath_);
-	ui_->objectsPath_showPb->setVisible(customPath_);
-	ui_->customPathHelper_tb->setVisible(customPath_);
-
-	ui_->more_pb->setText(customPath_?"Fold":"More");
+	ui_->more_pb->setText(checked?"Fold":"More");
 }

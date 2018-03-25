@@ -39,7 +39,7 @@ private slots:
 
 	void on_fullScreen_checkBox_stateChanged(int arg1);
 
-	void on_more_pb_clicked();
+	void on_more_pb_toggled(bool checked);
 
 private:
 	Ui::Preference *ui_;
@@ -47,7 +47,6 @@ private:
 	Custom custom_;
 
 	ActiveAuth *activeAuth_;
-	bool customPath_ = false;
 };
 
 #endif // PREFERENCE_H

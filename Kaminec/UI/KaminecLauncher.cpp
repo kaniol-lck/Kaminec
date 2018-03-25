@@ -291,10 +291,11 @@ void KaminecLauncher::on_profile_cb_currentIndexChanged(const QString &arg1)
 		}
 }
 
-void KaminecLauncher::on_editProfile_pb_clicked()
+void KaminecLauncher::on_editProfile_pb_toggled(bool checked)
 {
 	//Accept
-	if(isEditing){
+	ui_->profile_cb->setEnabled(!checked);
+	if(!checked){
 		auto newName = ui_->profileName_le->text();
 		if(newName == "") return;
 
@@ -309,15 +310,13 @@ void KaminecLauncher::on_editProfile_pb_clicked()
 		updateProfiles();
 	}
 
-	isEditing = !isEditing;
-	ui_->profile_cb->setEnabled(!isEditing);
-	ui_->profileName_label->setVisible(isEditing);
-	ui_->profileName_le->setVisible(isEditing);
-	ui_->version_label->setVisible(isEditing);
-	ui_->version_cb->setVisible(isEditing);
-	ui_->gameDir_label->setVisible(isEditing);
-	ui_->gameDir_le->setVisible(isEditing);
-	ui_->gameDir_showPb->setVisible(isEditing);
+	ui_->profileName_label->setVisible(checked);
+	ui_->profileName_le->setVisible(checked);
+	ui_->version_label->setVisible(checked);
+	ui_->version_cb->setVisible(checked);
+	ui_->gameDir_label->setVisible(checked);
+	ui_->gameDir_le->setVisible(checked);
+	ui_->gameDir_showPb->setVisible(checked);
 
-	ui_->editProfile_pb->setText(isEditing?"&OK":"&Edit");
+	ui_->editProfile_pb->setText(checked?"&OK":"&Edit");
 }

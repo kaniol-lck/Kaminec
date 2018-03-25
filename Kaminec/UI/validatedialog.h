@@ -23,15 +23,14 @@ signals:
 	void login(QString username);
 
 private slots:
-	void on_showPassword_pb_clicked();
-
 	void on_buttonBox_accepted();
+
+	void on_showPassword_pb_toggled(bool checked);
 
 private:
 	Ui::ValidateDialog *ui_;
 
 	ActiveAuth *activeAuth_;
-	bool showPassword_ = false;
 	Custom custom_;
 };
 

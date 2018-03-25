@@ -67,7 +67,7 @@ private slots:
 
 	void on_profile_cb_currentIndexChanged(const QString &arg1);
 
-	void on_editProfile_pb_clicked();
+	void on_editProfile_pb_toggled(bool checked);
 
 private:
 	void loadProfiles();
@@ -94,7 +94,6 @@ private:
 
 	Custom custom_;
 
-	bool isEditing = false;
 };
 
 #endif // KAMINECLAUNCHER_H

@@ -35,7 +35,7 @@ QString Path::nativesPath()
 
 QString Path::versionsPath()
 {
-	auto path = Custom().getGameNativesDirectory();
+	auto path = Custom().getGameVersionsDirectory();
 	replaceCore(path);
 	return path;
 }
