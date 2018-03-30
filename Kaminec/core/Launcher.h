@@ -1,5 +1,5 @@
-#ifndef NEWGAME_H
-#define NEWGAME_H
+#ifndef LAUNCHER_H
+#define LAUNCHER_H
 
 #include <QObject>
 #include <QProcess>
@@ -27,4 +27,4 @@ private:
 	QProcess *gameProcess_;
 };
 
-#endif // NEWGAME_H
+#endif // LAUNCHER_H

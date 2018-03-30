@@ -16,7 +16,7 @@ GameDownload::GameDownload(QObject *parent) :
 	QObject(parent),
 	tempFileName_(QDir::tempPath() + "/" +
 				 QCoreApplication::applicationName() +"_XXXXXX.json"),
-	downloadManagerPlus_(new DownloadManagerPlus(this))
+	downloadKit_(new DownloadKit(this))
 {}
 
 void GameDownload::init()
@@ -33,12 +33,12 @@ void GameDownload::init()
 
 		tempVersionsFile_.open();
 		tempVersionsFile_.close();
-		downloadManagerPlus_->append(FileItem(QString("version_manifest.json"),
+		downloadKit_->append(FileItem(QString("version_manifest.json"),
 											0,
 											QString("NULL"),
 											tempVersionsFile_.fileName(),
 											kVersionManifestDownlaod));
-		downloadManagerPlus_->waitForFinished();
+		downloadKit_->waitForFinished();
 
 		if(!tempVersionsFile_.open())
 			throw std::runtime_error("Could not version_manifest.json.");
@@ -74,7 +74,7 @@ QStandardItemModel *GameDownload::getVersionsModel()
 
 QStandardItemModel *GameDownload::getDownloadModel()
 {
-	return downloadManagerPlus_->getModel();
+	return downloadKit_->getModel();
 }
 
 int GameDownload::getTotalCount()
@@ -87,20 +87,20 @@ void GameDownload::download(int index)
 	//download json file
 	auto version = versionList_.at(index).toMap().value("id").toString();
 
-	downloadManagerPlus_->append(FileItem(version + ".json",
+	downloadKit_->append(FileItem(version + ".json",
 									 0,
 									 "NULL",
 									 QString("%1/%2/%2.json")
 									 .arg(Path::versionsPath()).arg(version),
 									 versionList_.at(index).toMap().value("url").toUrl()));
-	downloadManagerPlus_->waitForFinished();
+	downloadKit_->waitForFinished();
 
 	//download client
 	DownloadJson downloadJson(version);
 
 	auto clientFileItem = downloadJson.getClientFileItem();
 	clientFileItem.path_.prepend(Path::versionsPath());
-	downloadManagerPlus_->append(clientFileItem);
+	downloadKit_->append(clientFileItem);
 
 	//download libraries
 	auto LibraryFileItems = downloadJson.getLibraryFileItems();
@@ -108,13 +108,13 @@ void GameDownload::download(int index)
 		item.path_.prepend(Path::libsPath()+"/");
 	}
 
-	downloadManagerPlus_->append(LibraryFileItems);
+	downloadKit_->append(LibraryFileItems);
 
 	//download asset index
 	auto assetsIndexFileItem = downloadJson.getAssetsIndexFileItem();
 	assetsIndexFileItem.path_.prepend(Path::indexesPath());
-	downloadManagerPlus_->append(assetsIndexFileItem);
-	downloadManagerPlus_->waitForFinished();
+	downloadKit_->append(assetsIndexFileItem);
+	downloadKit_->waitForFinished();
 
 	//download asset objects
 	DownloadAssets downloadAsset_(downloadJson.getAssetsIndexId());
@@ -122,12 +122,12 @@ void GameDownload::download(int index)
 	for(auto& item : downloadAssetUrls){
 		item.path_.append(Path::objectsPath() + "/");
 	}
-	downloadManagerPlus_->append(downloadAssetUrls);
+	downloadKit_->append(downloadAssetUrls);
 
-	totalCount_ = downloadManagerPlus_->getTotalCount();
+	totalCount_ = downloadKit_->getTotalCount();
 
-	connect(downloadManagerPlus_,SIGNAL(downloadedCountChanged(int)),this,SIGNAL(downloadedCountChanged(int)));
-	connect(downloadManagerPlus_,SIGNAL(finished()),this,SIGNAL(finished()));
+	connect(downloadKit_,SIGNAL(downloadedCountChanged(int)),this,SIGNAL(downloadedCountChanged(int)));
+	connect(downloadKit_,SIGNAL(finished()),this,SIGNAL(finished()));
 
 	return;
 }

@@ -3,7 +3,7 @@
 
 #include "core/json/main/DownloadJson.h"
 #include "core/json/assets/DownloadAssets.h"
-#include "downloader/downloadmanagerplus.h"
+#include "downloader/downloadkit.h"
 
 #include <QObject>
 #include <QStandardItemModel>
@@ -36,7 +36,7 @@ private:
 	QStandardItemModel model_;
 	QString tempFileName_;
 	QTemporaryFile tempVersionsFile_;
-	DownloadManagerPlus *downloadManagerPlus_;
+	DownloadKit *downloadKit_;
 	DownloadJson *downloadJson_;
 	DownloadAssets *downloadAsset_;
 	QVariantList versionList_;

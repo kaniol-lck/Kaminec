@@ -1,5 +1,5 @@
-#ifndef ASSETSMANAGER_H
-#define ASSETSMANAGER_H
+#ifndef DOWNLOADASSETS_H
+#define DOWNLOADASSETS_H
 
 #include "messager/fileitem.h"
 #include "core/json/assets/AssetsKit.h"
@@ -21,4 +21,4 @@ private:
 	QVariant assets_;
 };
 
-#endif // ASSETSMANAGER_H
+#endif // DOWNLOADASSETS_H

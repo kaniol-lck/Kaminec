@@ -1,5 +1,5 @@
-#ifndef GAMEJSON_H
-#define GAMEJSON_H
+#ifndef JSONKIT_H
+#define JSONKIT_H
 
 #include "core/json/main/Library.h"
 #include "core/Arguments.h"
@@ -65,4 +65,4 @@ private:
 
 };
 
-#endif // GAMEJSON_H
+#endif // JSONKIT_H

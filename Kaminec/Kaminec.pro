@@ -29,7 +29,6 @@ SOURCES += main.cpp\
            messager/profile.cpp \
            messager/fileitem.cpp \
            LAminec/savesmanager.cpp \
-    downloader/downloadmanagerplus.cpp \
     downloader/singledownload.cpp \
     UI/preference.cpp \
     LAminec/profilemanager.cpp \
@@ -57,14 +56,14 @@ SOURCES += main.cpp\
     core/GameParser.cpp \
     core/auth/AuthResponse.cpp \
     core/Custom.cpp \
-    core/Rule.cpp
+    core/Rule.cpp \
+    downloader/downloadkit.cpp
 
 HEADERS  += UI/kamineclauncher.h \
             messager/profile.h \
             core/gamemode.h \
             messager/fileitem.h \
             LAminec/savesmanager.h \
-    downloader/downloadmanagerplus.h \
     downloader/singledownload.h \
     UI/preference.h \
     LAminec/profilemanager.h \
@@ -93,7 +92,8 @@ HEADERS  += UI/kamineclauncher.h \
     core/GameParser.h \
     core/auth/AuthResponse.h \
     core/Custom.h \
-    core/Rule.h
+    core/Rule.h \
+    downloader/downloadkit.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preference.ui \
