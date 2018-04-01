@@ -46,7 +46,7 @@ Preference::Preference(QWidget *parent, ActiveAuth *auth) :
 	ui_->libsPath_le->setText(custom_.getGameLibrariesDirectory());
 	ui_->nativesPath_le->setText(custom_.getGameNativesDirectory());
 	ui_->assetsPath_le->setText(custom_.getAssetsDirectory());
-	ui_->indexesPath_le->setText(custom_.getAssetsIndexes());
+	ui_->indexesPath_le->setText(custom_.getAssetsIndexesDirectory());
 	ui_->objectsPath_le->setText(custom_.getAssetsObjectsDirectory());
 
 	ui_->fullScreen_checkBox->setChecked(custom_.getGameWindowFullScreen());
@@ -66,9 +66,9 @@ Preference::Preference(QWidget *parent, ActiveAuth *auth) :
 		ui_->login_pb->setText("&Log out");
 	}
 
-	//check if you point out javaPath
-	if(ui_->javaPath_le->text() == "")
-		ui_->javaPath_le->setText(getAutoJavaPath());
+//	//check if you point out javaPath
+//	if(ui_->javaPath_le->text() == "")
+//		ui_->javaPath_le->setText(getAutoJavaPath());
 }
 
 Preference::~Preference()

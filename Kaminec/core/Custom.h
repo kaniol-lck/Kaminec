@@ -2,81 +2,60 @@
 #define CUSTOM_H
 
 #include <QSettings>
+#include <QCoreApplication>
+#include <QStandardPaths>
+
+#define getterAndSetter(name, type, key, defaultValue) \
+	void set##name(const decltype(QVariant().to##type()) &key){\
+		settings_.setValue(#key, key);\
+	}\
+	\
+	decltype(QVariant().to##type()) get##name() const{\
+		return settings_.value(#key, defaultValue).to##type();\
+	}
+
+#define getterAndSetter_prefix(name, type, key, prefix, defaultValue) \
+	void set##name(const decltype(QVariant().to##type()) &key){\
+		settings_.setValue(QString(prefix) + #key, key);\
+	}\
+	\
+	decltype(QVariant().to##type()) get##name() const{\
+		return settings_.value(QString(prefix) + #key, defaultValue).to##type();\
+	}
 
 class Custom
 {
 public:
 	Custom() = default;
 
-	//launcher settings
 
-	void setSelectedProfileName(const QString &selectedProfileName);
-	QString getSelectedProfileName() const;
+	//launcher settings
+	getterAndSetter(SelectedProfileName, String, selectedProfileName, "")
 
 	//account settings
+	getterAndSetter(Logged, Bool, logged, false)
+	getterAndSetter(Email, String, email, "")
+	getterAndSetter(OnlineMode, Bool, onlineMode, false)
 
-	void setLogged(bool flag = true);
-	bool getLogged() const;
-
-	void setEmail(const QString &email);
-	QString getEmail() const;
-
-	void setOnlineMode(bool flag = true);
-	bool getOnlineMode() const;
-
-	void setPlayerName(const QString &playerName);
-	QString getPlayerName() const;
-
-	void setAutoOfficialName(bool flag = true);
-	bool getAutoOfficialName() const;
-
-	void setOfficialName(const QString &officialName);
-	QString getOfficialName() const;
-
-	void setUuid(const QString &uuid);
-	QString getUuid() const;
-
-	void setAccessToken(const QString &accessToken);
-	QString getAccessToken() const;
-
-	void setClientToken(const QString &clientToken);
-	QString getClientToken() const;
+	getterAndSetter(PlayerName, String, playerName, "Steve")
+	getterAndSetter(AutoOfficialName, Bool, autoOfficialName, false)
+	getterAndSetter(OfficialName, String, officialName, "")
+	getterAndSetter(Uuid, String, uuid, "")
+	getterAndSetter(AccessToken, String, accessToken, "")
+	getterAndSetter(ClientToken, String, clientToken, "")
 
 	//directory settings
-
-	void setCoreGameFileDirectory(const QString &coreDirectory);
-	QString getCoreGameFileDirectory() const;
-
-	void setDefaultGameDirectory(const QString &gameDirectory);
-	QString getDefaultGameDirectory() const;
-
-	void setJavaDirectory(const QString &JavaDirectory);
-	QString getJavaDirectory() const;
-
-	void setGameVersionsDirectory(const QString &gameVersionDirectory);
-	QString getGameVersionsDirectory() const;
-
-	void setGameLibrariesDirectory(const QString &gameLibrariesDirectory);
-	QString getGameLibrariesDirectory() const;
-
-	void setAssetsDirectory(const QString &assetsDirectory);
-	QString getAssetsDirectory() const;
-
-	void setAssetsIndexesDirectory(const QString &assetsIndexesDirectory);
-	QString getAssetsIndexes() const;
-
-	void setAssetsObjectsDirectory(const QString &assetsObjectsDirectory);
-	QString getAssetsObjectsDirectory() const;
-
-	void setGameNativesDirectory(const QString &gameNativesDirectory);
-	QString getGameNativesDirectory() const;
-
-	void setUnusedModsDirectory(const QString &unusedModsDirectory);
-	QString getUnusedModsDirectory() const;
-
-	void setSavesBackupDirectory(const QString &savesBackupDirectory);
-	QString getSavesBackupDirectory() const;
-
+	getterAndSetter_prefix(CoreGameFileDirectory, String, coreDirectory, "path/", QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/.minecraft")
+	getterAndSetter_prefix(DefaultGameDirectory, String, gameDirectory, "path/", getCoreGameFileDirectory())
+	getterAndSetter_prefix(JavaDirectory, String, JavaDirectory, "path/", "")
+	getterAndSetter_prefix(GameVersionsDirectory, String, gameVersionDirectory, "path/", "<core>/versions")
+	getterAndSetter_prefix(GameLibrariesDirectory, String, gameLibrariesDirectory, "path/", "<core>/libraries")
+	getterAndSetter_prefix(AssetsDirectory, String, assetsDirectory, "path/", "<core>/assets")
+	getterAndSetter_prefix(AssetsIndexesDirectory, String, assetsIndexesDirectory, "path/", "<assets>/indexes")
+	getterAndSetter_prefix(AssetsObjectsDirectory, String, assetsObjectsDirectory, "path/", "<assets>/objects")
+	getterAndSetter_prefix(GameNativesDirectory, String, gameNativesDirectory, "path/", "<launcher>/natives")
+	getterAndSetter_prefix(UnusedModsDirectory, String, unusedModsDirectory, "path/", "<game>/unused_mods")
+	getterAndSetter_prefix(SavesBackupDirectory, String , savesBackupDirectory, "path/", "<game>/savesBackup")
 	//JVM settings
 
 	void setMemoryAllocateRange(int minimum, int maximum);
@@ -100,21 +79,15 @@ public:
 
 	//game settings
 
-	void setGameWindowFullScreen(bool flag = true);
-	bool getGameWindowFullScreen() const;
-
-	void setCustomGameWindowSize(bool flag = true);
-	bool getCustomGameWindowSize() const;
+	getterAndSetter(GameWindowFullScreen, Bool, gameWindowFullScreen, false)
+	getterAndSetter(CustomGameWindowSize, Bool, customGameWindowSize, false)
 
 	void setGameWindowSize(int width, int height);
 	void setGameWindowSize(QPair<int, int> size);
 	QPair<int, int> getGameWindowSize() const;
 
-	void setServerSocket(const QString &socket);
-	QString setServerSocket() const;
-
-	void setServerMode(bool serverMode = true);
-	bool getServerMode() const;
+	getterAndSetter(ServerSocket, String, serverSocket, "")
+	getterAndSetter(ServerMode, Bool, serverMode, false)
 
 	//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
 

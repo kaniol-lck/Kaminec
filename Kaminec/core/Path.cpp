@@ -49,7 +49,7 @@ QString Path::assetsPath()
 
 QString Path::indexesPath()
 {
-	auto path = Custom().getAssetsIndexes();
+	auto path = Custom().getAssetsIndexesDirectory();
 	replaceAll(path);
 	return path;
 }

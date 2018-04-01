@@ -210,9 +210,10 @@ void KaminecLauncher::loadProfiles()
 	profileList_ = profileManager_.getProfileList();
 
 	//show profile
-	for(const auto& profile : profileList_)
+	for(const auto& profile : profileList_){
 		if(profile.name_ != "") //distinguish it by profile type in another day
 			ui_->profile_cb->addItem(profile.name_);
+	}
 
 	//load selected profile info
 	loadProfileInfo(selectedProfile);
