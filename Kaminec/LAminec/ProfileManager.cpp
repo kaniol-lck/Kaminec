@@ -9,7 +9,6 @@
 #include <QDir>
 #include <QFile>
 #include <QDebug>
-#include <cassert>
 
 ProfileManager::ProfileManager(QObject *parent) :
 	QObject(parent),
@@ -27,7 +26,7 @@ ProfileManager::ProfileManager(QObject *parent) :
 		initProfiles();
 	} else{
 		QJsonParseError ok;
-		profilesVariant_ = QJsonDocument::fromJson(bytes,&ok).toVariant();
+		profilesObject_ = QJsonDocument::fromJson(bytes,&ok).object();
 		if(ok.error != QJsonParseError::NoError)
 			throw std::runtime_error((ok.errorString() + R"("launcher_profiles.json" may be crashed.)").toStdString());
 	}
@@ -35,8 +34,7 @@ ProfileManager::ProfileManager(QObject *parent) :
 
 bool ProfileManager::initProfiles(const Profile &profile)
 {
-	QJsonObject json
-	{
+	profilesObject_ = QJsonObject{
 		{"profiles", QJsonObject{
 				{profile.name_, QJsonObject{
 						{"name", profile.name_},
@@ -50,8 +48,7 @@ bool ProfileManager::initProfiles(const Profile &profile)
 
 	if(!profilesFile_.open(QIODevice::WriteOnly | QIODevice::Text))return false;
 	QTextStream out(&profilesFile_);
-	auto bytes = QJsonDocument(json).toJson();
-	profilesVariant_ = json;
+	auto bytes = QJsonDocument(profilesObject_).toJson();
 	out<<bytes;
 	profilesFile_.close();
 
@@ -60,7 +57,7 @@ bool ProfileManager::initProfiles(const Profile &profile)
 
 Profile ProfileManager::getProfile(const QString &name)
 {
-	for(const auto& profileVariant : value(profilesVariant_, "profiles").toMap())
+	for(const auto& profileVariant : profilesObject_.value("profiles").toVariant().toMap())
 		if(value(profileVariant, "name").toString() == name)
 			return Profile(value(profileVariant, "name").toString(),
 						   value(profileVariant, "lastVersionId").toString(),
@@ -71,17 +68,18 @@ Profile ProfileManager::getProfile(const QString &name)
 QList<Profile> ProfileManager::getProfileList()
 {
 	QList<Profile> profileList;
-	for(const auto& profileVariant : value(profilesVariant_, "profiles").toMap())
+	for(const auto& profileVariant : profilesObject_.value("profiles").toVariant().toMap()){
 		profileList<<Profile(value(profileVariant, "name").toString(),
 							 value(profileVariant, "lastVersionId").toString(),
 							 value(profileVariant, "gameDir").toString());
+	}
 	return profileList;
 }
 
 bool ProfileManager::checkVersion(const QString &version)
 {
 	//found this version
-	for(const auto& profileVariant : value(profilesVariant_, "profiles").toMap())
+	for(const auto& profileVariant : profilesObject_.value("profiles").toVariant().toMap())
 		if(value(profileVariant, "lastVersionId") == version)
 			return true;
 	return false;
@@ -94,11 +92,7 @@ bool ProfileManager::addVersion(const QString &version, const QString &gamePath)
 
 bool ProfileManager::insertProfile(const Profile &profile)
 {
-	auto json = profilesVariant_.toJsonObject();
-
-	auto profiles = json.value("profiles").toObject();//value(profilesVariant_, "profiles").toJsonObject();
-
-	assert(QJsonValue(profiles)!=QJsonValue::Undefined);
+	auto profiles = profilesObject_.value("profiles").toObject();
 
 	profiles.insert(profile.name_, QJsonObject{
 					{"name", profile.name_},
@@ -106,12 +100,11 @@ bool ProfileManager::insertProfile(const Profile &profile)
 					{"gameDir", profile.gameDir_}
 				});
 
-	json.insert("profiles", profiles);
+	profilesObject_.insert("profiles", profiles);
 
 	if(!profilesFile_.open(QIODevice::WriteOnly | QIODevice::Text)) return false;
 	QTextStream out(&profilesFile_);
-	auto bytes = QJsonDocument(json).toJson();
-	profilesVariant_ = json;
+	auto bytes = QJsonDocument(profilesObject_).toJson();
 	out<<bytes;
 	profilesFile_.close();
 
@@ -120,18 +113,15 @@ bool ProfileManager::insertProfile(const Profile &profile)
 
 bool ProfileManager::removeProfile(const QString &name)
 {
-	auto json = profilesVariant_.toJsonObject();
-
-	QJsonObject profiles = json.value("profiles").toObject();//value(profilesVariant_, "profiles").toJsonObject();
+	QJsonObject profiles = profilesObject_.value("profiles").toObject();
 
 	profiles.remove(name);
 
-	json.insert("profiles", profiles);
+	profilesObject_.insert("profiles", profiles);
 
 	if(!profilesFile_.open(QIODevice::WriteOnly | QIODevice::Text))return false;
 	QTextStream out(&profilesFile_);
-	auto bytes = QJsonDocument(json).toJson();
-	profilesVariant_ = json;
+	auto bytes = QJsonDocument(profilesObject_).toJson();
 	out<<bytes;
 	profilesFile_.close();
 
@@ -139,25 +129,22 @@ bool ProfileManager::removeProfile(const QString &name)
 }
 
 bool ProfileManager::renameProfile(const QString &oldName, const QString &newName)
-{	
-	auto json = profilesVariant_.toJsonObject();
-
-	auto profiles = value(profilesVariant_, "profiles").toJsonObject();
+{
+	QJsonObject profiles = profilesObject_.value("profiles").toObject();
 
 	auto oldProfile = profiles.take(oldName).toObject();
 	oldProfile.insert("name", newName);
 
 	profiles.insert(newName, oldProfile);
 
-	json.insert("profiles", profiles);
+	profilesObject_.insert("profiles", profiles);
 
 	if(oldName == custom_.getSelectedProfileName())
 		setSelectedProfile(newName);
 
 	if(!profilesFile_.open(QIODevice::WriteOnly | QIODevice::Text))return false;
 	QTextStream out(&profilesFile_);
-	auto bytes = QJsonDocument(json).toJson();
-	profilesVariant_ = json;
+	auto bytes = QJsonDocument(profilesObject_).toJson();
 	out<<bytes;
 	profilesFile_.close();
 
@@ -188,7 +175,7 @@ void ProfileManager::refresh()
 		initProfiles();
 	} else{
 		QJsonParseError ok;
-		profilesVariant_ = QJsonDocument::fromJson(bytes,&ok).toVariant();
+		profilesObject_ = QJsonDocument::fromJson(bytes,&ok).object();
 		if(ok.error != QJsonParseError::NoError)
 			throw std::runtime_error((ok.errorString() + R"("launcher_profiles.json" may be crashed.)").toStdString());
 	}

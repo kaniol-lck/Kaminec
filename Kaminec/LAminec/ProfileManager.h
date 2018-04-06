@@ -6,7 +6,7 @@
 
 #include <QObject>
 #include <QFile>
-#include <QVariant>
+#include <QJsonObject>
 
 class ProfileManager : public QObject
 {
@@ -34,7 +34,7 @@ public:
 
 private:
 	QFile profilesFile_;
-	QVariant profilesVariant_;
+	QJsonObject profilesObject_;
 	Custom custom_;
 };
 
