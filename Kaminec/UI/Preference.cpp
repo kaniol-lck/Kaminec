@@ -16,6 +16,8 @@ Preference::Preference(QWidget *parent, ActiveAuth *auth) :
 	setWindowFlags(Qt::Dialog);
 	ui_->setupUi(this);
 
+	ui_->extraJavaArg_te->setVisible(false);
+
 	ui_->versionsPath_label->setVisible(false);
 	ui_->versionsPath_le->setVisible(false);
 	ui_->versionsPath_showPb->setVisible(false);
@@ -58,7 +60,7 @@ Preference::Preference(QWidget *parent, ActiveAuth *auth) :
 	auto range = custom_.getMemoryAllocateRange();
 	ui_->minMem_sb->setValue(range.first);
 	ui_->maxMem_sb->setValue(range.second);
-	ui_->javaArg_te->setText(custom_.getExtraJVMArguments().join("\n"));
+	ui_->extraJavaArg_te->setText(custom_.getExtraJVMArguments().join("\n"));
 
 	//check if you logged in
 	if(custom_.getLogged()){
@@ -132,7 +134,7 @@ void Preference::on_buttonBox_accepted()
 	custom_.setJavaDirectory(ui_->javaPath_le->text());
 	custom_.setMemoryAllocateRange(ui_->minMem_sb->value(),
 								   ui_->maxMem_sb->value());
-	custom_.setExtraJVMArguments(ui_->javaArg_te->toPlainText().split("\n"));
+	custom_.setExtraJVMArguments(ui_->extraJavaArg_te->toPlainText().split("\n"));
 
 	emit settingfinished();
 }
@@ -205,4 +207,9 @@ void Preference::on_more_pb_toggled(bool checked)
 	ui_->customPathHelper_tb->setVisible(checked);
 
 	ui_->more_pb->setText(checked?"Fold":"More");
+}
+
+void Preference::on_extraJavaArguments_gb_toggled(bool arg1)
+{
+	ui_->extraJavaArg_te->setVisible(arg1);
 }
