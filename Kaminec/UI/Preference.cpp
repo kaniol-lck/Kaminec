@@ -1,7 +1,7 @@
 #include "preference.h"
 #include "ui_preference.h"
 
-#include "core/Path.h"
+#include "assistance/Path.h"
 #include "UI/ValidateDialog.h"
 
 #include <QProcess>

@@ -10,17 +10,22 @@
 .
 +--assistance
 |  +--files...
-+--core
-|  +--auth
-|  |  +--files...
-|  +--json
-|  |  +--assets
-|  |  |  +--files...
-|  |  +--main
-|  |  |  +--files...
-+--downloader
++--download
 |  +--files...
++--kits
+|  +--AssetKit
+|  |  +--files...
+|  +--AuthKit
+|  |  +--files...
+|  +--DownloadKit
+|  |  +--files...
+|  +--JsonKit
+|  |  +--files...
+|  +--Ruler
+|  |  +--files...
 +--LAminec
+|  +--files...
++--launch
 |  +--files...
 +--messager
 |  +--files...
@@ -38,9 +43,10 @@
 ## The Main Parts
 
 - assistance
-- core
-- downloader
+- download
+- kits
 - LAminec
+- launch
 - messager
 - resources
 - UI
@@ -50,9 +56,10 @@
 ## Description of These Main Parts
 
 - `assistance/` includes my utilities which helps my work,such as template function `value` used to index `QVariant` object much quicker and more readable.
-- `core/` is the core of Kamine Launcher.All the things like Launching game or generating start code or authenticate account are in it.
-- `downloader/` .There is a implementation of universal downloader(with multi-task) to support my download works.Cases to download is downloading game and fixing game file.
+- `download/` .There is a implementation of universal downloader(with multi-task) to support my download works.Cases to download is downloading game and fixing game file.
+- `kits/` is the most important parts of Kaminec Launcher coz it packages those important works of launcher.These kits are:`Assetkit`, `AuthKit`, `DownloadKit`, `JsonKit`, `Ruler`.
 - `LAminec/` is a collection of assorted funtionalities.
+- `launch/` does what a launcher should essentially do.
 - `messager/` includes the simple message classes.
 - `resources/` includes the resource I used in this project.
 - `UI/` is the User Interface of Kaminec Launcher.

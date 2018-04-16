@@ -25,75 +25,75 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += main.cpp\
-           UI/kamineclauncher.cpp \
-           messager/profile.cpp \
-           messager/fileitem.cpp \
-           LAminec/savesmanager.cpp \
-    downloader/singledownload.cpp \
-    UI/preference.cpp \
-    LAminec/profilemanager.cpp \
-    downloader/gamedownload.cpp \
-    UI/validatedialog.cpp \
-    LAminec/modsmanager.cpp \
+	UI/kamineclauncher.cpp \
+	UI/preference.cpp \
+	UI/validatedialog.cpp \
+    assistance/Custom.cpp \
     assistance/logger.cpp \
-    assistance/utility.cpp \
-	core/auth/LaunchAuth.cpp \
+    assistance/Path.cpp \
+	assistance/utility.cpp \
+    download/DownloadAssets.cpp \
+	download/DownloadJson.cpp \
+    download/GameDownload.cpp \
+    kits/AssetKit/AssetKit.cpp \
+    kits/AssetKit/AssetObject.cpp \
+    kits/AuthKit/AuthKit.cpp \
+    kits/AuthKit/AuthResponse.cpp \
+    kits/DownloadKit/DownloadKit.cpp \
+    kits/DownloadKit/SingleDownload.cpp \
+    kits/JsonKit/AssetIndex.cpp \
+    kits/JsonKit/GameCoreJar.cpp \
+    kits/JsonKit/JsonKit.cpp \
+    kits/JsonKit/Library.cpp \
+    kits/Ruler/Rule.cpp \
+    kits/Ruler/Ruler.cpp \
     LAminec/ActiveAuth.cpp \
-    core/Path.cpp \
-	core/json/main/Library.cpp \
-    core/Ruler.cpp \
-    core/Arguments.cpp \
-    core/json/main/LaunchJson.cpp \
-    core/json/main/AssetIndex.cpp \
-    core/json/main/DownloadJson.cpp \
-    core/json/main/JsonKit.cpp \
-    core/json/main/GameCoreJar.cpp \
-    core/auth/AuthKit.cpp \
-    core/json/assets/Object.cpp \
-    core/json/assets/AssetsKit.cpp \
-    core/json/assets/DownloadAssets.cpp \
-    core/Launcher.cpp \
-    core/GameParser.cpp \
-    core/auth/AuthResponse.cpp \
-    core/Custom.cpp \
-    core/Rule.cpp \
-    downloader/downloadkit.cpp
+    LAminec/ModsManager.cpp \
+    LAminec/profileManager.cpp \
+    LAminec/SavesManager.cpp \
+    launch/GameParser.cpp \
+    launch/LaunchAuth.cpp \
+    launch/Launcher.cpp \
+    launch/LaunchJson.cpp \
+    messager/Arguments.cpp \
+    messager/FileItem.cpp \
+	messager/Profile.cpp
 
 HEADERS  += UI/kamineclauncher.h \
-            messager/profile.h \
-            core/gamemode.h \
-            messager/fileitem.h \
-            LAminec/savesmanager.h \
-    downloader/singledownload.h \
-    UI/preference.h \
-    LAminec/profilemanager.h \
-    downloader/gamedownload.h \
-    UI/validatedialog.h \
-    LAminec/modsmanager.h \
-    assistance/utility.h \
-    assistance/logger.h \
-	core/auth/LaunchAuth.h \
-    LAminec/ActiveAuth.h \
+	UI/preference.h \
+	UI/validatedialog.h \
+    assistance/Custom.h \
+    assistance/Gamemode.h \
+    assistance/Logger.h \
+    assistance/Path.h \
     assistance/systeminfo.h \
-    core/Path.h \
-	core/json/main/Library.h \
-    core/Ruler.h \
-    core/Arguments.h \
-    core/json/main/LaunchJson.h \
-    core/json/main/AssetIndex.h \
-    core/json/main/DownloadJson.h \
-    core/json/main/JsonKit.h \
-    core/json/main/GameCoreJar.h \
-    core/auth/AuthKit.h \
-    core/json/assets/Object.h \
-    core/json/assets/AssetsKit.h \
-    core/json/assets/DownloadAssets.h \
-    core/Launcher.h \
-    core/GameParser.h \
-    core/auth/AuthResponse.h \
-    core/Custom.h \
-    core/Rule.h \
-    downloader/downloadkit.h
+	assistance/utility.h \
+    download/DownloadAssets.h \
+	download/DownloadJson.h \
+    download/GameDownload.h \
+    kits/AssetKit/AssetKit.h \
+    kits/AssetKit/AssetObject.h \
+    kits/AuthKit/AuthKit.h \
+    kits/AuthKit/AuthResponse.h \
+    kits/DownloadKit/DownloadKit.h \
+    kits/DownloadKit/SingleDownload.h \
+    kits/JsonKit/AssetIndex.h \
+    kits/JsonKit/GameCoreJar.h \
+    kits/JsonKit/JsonKit.h \
+    kits/JsonKit/Library.h \
+    kits/Ruler/Rule.h \
+    kits/Ruler/Ruler.h \
+    LAminec/ActiveAuth.h \
+    LAminec/ModsManager.h \
+    LAminec/ProfileManager.h \
+    LAminec/SavesManager.h \
+    launch/GameParser.h \
+    launch/LaunchAuth.h \
+    launch/Launcher.h \
+    launch/LaunchJson.h \
+    messager/Arguments.h \
+    messager/FileItem.h \
+	messager/Profile.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preference.ui \
@@ -103,3 +103,6 @@ RESOURCES += \
 	resources/background.qrc
 
 RC_FILE = resources/icon.rc
+
+DISTFILES += \
+    README.md

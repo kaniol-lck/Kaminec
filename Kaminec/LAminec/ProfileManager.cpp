@@ -1,6 +1,6 @@
 #include "profilemanager.h"
 
-#include "core/Path.h"
+#include "assistance/Path.h"
 #include "assistance/utility.h"
 
 #include <QJsonDocument>

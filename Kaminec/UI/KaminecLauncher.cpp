@@ -2,8 +2,8 @@
 #include "ui_kamineclauncher.h"
 
 #include "UI/Preference.h"
-#include "core/Path.h"
-#include "core/gamemode.h"
+#include "assistance/Path.h"
+#include "assistance/gamemode.h"
 
 #include <QDebug>
 #include <QString>

@@ -2,7 +2,7 @@
 #define PROFILEMANAGER_H
 
 #include "messager/profile.h"
-#include "core/Custom.h"
+#include "assistance/Custom.h"
 
 #include <QObject>
 #include <QFile>

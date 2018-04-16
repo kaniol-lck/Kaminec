@@ -1,0 +1,125 @@
+#include "JsonKit.h"
+
+#include "assistance/Path.h"
+#include "assistance/utility.h"
+
+#include <stdexcept>
+#include <QJsonDocument>
+
+JsonKit::JsonKit(const QString &version)
+{
+	QFile jsonFile(Path::getJsonPath(version));
+
+	//open json file and parse
+	if(!jsonFile.exists())
+		throw std::runtime_error(QString("Json file(%1) does not exist.").arg(jsonFile.fileName()).toStdString());
+	if(!jsonFile.open(QIODevice::ReadOnly | QIODevice::Text))
+		throw std::runtime_error(QString("Could not open Json file(%1).").arg(jsonFile.fileName()).toStdString());
+
+	QByteArray jsonBytes;
+	jsonBytes.resize(jsonFile.bytesAvailable());
+	jsonBytes = jsonFile.readAll();
+	jsonFile.close();
+
+	QJsonParseError ok;
+	jsonVariant_ = QJsonDocument::fromJson(jsonBytes, &ok).toVariant();
+	if(ok.error != QJsonParseError::NoError)
+		throw std::runtime_error(QString("Json file(%1) is not a valid json.").arg(jsonFile.fileName()).toStdString());
+
+	version_ = qMakePair(value(jsonVariant_, "id").toString(),
+						 value(jsonVariant_, "inheritsFrom").toString());
+
+	if(version_.second != "")
+		inheritedJson_ = std::make_shared<JsonKit>(version_.second);
+}
+
+AssetIndex JsonKit::assetIndex() const
+{
+	if(!assetIndex_){
+		if(inheritedJson_)
+			assetIndex_ = std::make_shared<AssetIndex>(inheritedJson_->assetIndex());
+		else
+			assetIndex_ = std::make_shared<AssetIndex>(value(jsonVariant_, "assetIndex"));
+	}
+	return *assetIndex_;
+}
+
+QPair<QString, QString> JsonKit::version() const
+{
+	return version_;
+}
+
+GameCoreJar JsonKit::client() const
+{
+	if(!gameClient_){
+		if(inheritedJson_)
+			gameClient_ = std::make_shared<GameCoreJar>(inheritedJson_->client());
+		else
+			gameClient_ = std::make_shared<GameCoreJar>(value(jsonVariant_, "downloads", "client"));
+	}
+	return *gameClient_;
+}
+
+GameCoreJar JsonKit::server() const
+{
+	if(!gameServer_){
+		if(inheritedJson_)
+			gameServer_ = std::make_shared<GameCoreJar>(inheritedJson_->server());
+		else
+			gameServer_ = std::make_shared<GameCoreJar>(value(jsonVariant_, "downloads", "server"));
+	}
+	return *gameServer_;
+}
+
+QList<Library> JsonKit::libraries() const
+{
+	if(!libraries_){
+		libraries_ = std::make_shared<QList<Library>>();
+		for(auto&& libraryVariant : value(jsonVariant_, "libraries").toList())
+			libraries_->append(Library(libraryVariant));
+	}
+	if(inheritedJson_){
+		return *libraries_ + inheritedJson_->libraries();
+	}
+	return *libraries_;
+}
+
+QString JsonKit::jarName() const
+{
+	if(!jarName_){
+		if(jsonVariant_.toMap().contains("jar"))
+			jarName_ = std::make_shared<QString>(value(jsonVariant_, "jar").toString());
+		else
+			jarName_ = std::make_shared<QString>(version_.first);
+	}
+	return *jarName_;
+}
+
+QString JsonKit::mainClass() const
+{
+	if(!mainClass_)
+		mainClass_ = std::make_shared<QString>(value(jsonVariant_, "mainClass").toString());
+	return *mainClass_;
+}
+
+Arguments JsonKit::minecraftArguments() const
+{
+	if(!minecraftArguments_){
+		if(jsonVariant_.toMap().contains("arguments") &&
+		   value(jsonVariant_, "arguments").toMap().contains("game")){
+			minecraftArguments_ = std::make_shared<Arguments>(value(jsonVariant_, "arguments", "game"));
+		}
+		else {
+			minecraftArguments_ = std::make_shared<Arguments>(value(jsonVariant_, "minecraftArguments").toString());
+		}
+	}
+	return *minecraftArguments_;
+}
+
+Arguments JsonKit::JVMArguments() const
+{
+	if(!JVMArguments_){
+			minecraftArguments_ = std::make_shared<Arguments>(value(jsonVariant_, "arguments", "jvm").toStringList());
+	}
+	return *JVMArguments_;
+}

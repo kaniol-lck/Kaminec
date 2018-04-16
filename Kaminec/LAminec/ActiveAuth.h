@@ -1,8 +1,8 @@
 #ifndef ACTIVEAUTH_H
 #define ACTIVEAUTH_H
 
-#include "core/auth/AuthKit.h"
-#include "core/Custom.h"
+#include "kits/AuthKit/AuthKit.h"
+#include "assistance/Custom.h"
 
 #include <QObject>
 
