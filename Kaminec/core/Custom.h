@@ -97,4 +97,7 @@ private:
 	QSettings settings_;
 };
 
+#undef getterAndSetter
+#undef getterAndSetter_prefix
+
 #endif // CUSTOM_H
