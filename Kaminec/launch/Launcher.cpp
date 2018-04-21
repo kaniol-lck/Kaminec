@@ -8,7 +8,8 @@
 
 Launcher::Launcher(QObject *parent) :
 	QObject(parent),
-	gameProcess_(new QProcess(this))
+	gameProcess_(new QProcess(this)),
+	logger_(new Logger(this))
 {
 	//forward finished infomation
 	connect(gameProcess_, SIGNAL(finished(int)), this, SIGNAL(finished(int)));
@@ -19,15 +20,26 @@ Launcher::Launcher(QObject *parent) :
 void Launcher::start(const Profile &profile, const LaunchAuth &auth)
 {
 	try{
+		logger_.startGenStartcode();
 		GameParser gameParser(profile, auth);
 
 		auto launchPack = gameParser.getLaunchPack();
 
 		auto startcode = launchPack.startCode();
 
-		extractNatives(launchPack.nativesFiles());
+		logger_.finishGenStartcode();
 
+		extractNatives(launchPack.nativesFiles());
 		gameProcess_->start(Path::JavaPath(), startcode);
+
+		logger_.setVersionChain(launchPack.versionChain());
+		logger_.setClassPaths(launchPack.classPaths());
+		logger_.setGameMainClass(launchPack.mainClass());
+		logger_.setGameArgs(launchPack.gameArguments());
+		logger_.setJVMArgs(launchPack.JVMConfigure());
+		logger_.setNativesFiles(launchPack.nativesFiles());
+		logger_.writeToFile();
+
 	}catch(std::exception& e){
 		emit exceptionMessage(QString(e.what()));
 	}

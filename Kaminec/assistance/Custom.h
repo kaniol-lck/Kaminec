@@ -55,6 +55,7 @@ public:
 	getterAndSetter_prefix(GameNativesDirectory, String, gameNativesDirectory, "path/", "<launcher>/natives")
 	getterAndSetter_prefix(UnusedModsDirectory, String, unusedModsDirectory, "path/", "<game>/unused_mods")
 	getterAndSetter_prefix(SavesBackupDirectory, String , savesBackupDirectory, "path/", "<game>/savesBackup")
+	getterAndSetter_prefix(LoggerDirectory, String , loggerDirectory, "path/", "<launcher>/logger")
 
 	//JVM settings
 	void setMemoryAllocateRange(int minimum, int maximum);

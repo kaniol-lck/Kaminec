@@ -5,6 +5,7 @@
 #include <QProcess>
 
 #include "launch/GameParser.h"
+#include "launch/Logger.h"
 
 class Launcher : public QObject
 {
@@ -25,6 +26,7 @@ public slots:
 
 private:
 	QProcess *gameProcess_;
+	Logger logger_;
 };
 
 #endif // LAUNCHER_H

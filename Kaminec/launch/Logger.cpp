@@ -1,22 +1,22 @@
 #include "logger.h"
 
+#include <QDir>
 #include <QTime>
+#include <QDateTime>
+#include <QTimeZone>
 #include <QFile>
 #include <QTextStream>
+#include <QDebug>
 
-Logger::Logger(QObject *parent, const QString &logPath) :
-	QObject(parent),
-	logFile_(logPath)
+#include "assistance/Path.h"
+
+Logger::Logger(QObject *parent = 0) :
+	QObject(parent)
 {}
 
 void Logger::setVersionChain(const QStringList &versionChain)
 {
 	versionChain_ = versionChain;
-}
-
-void Logger::setNativesPath(const QString &nativePath)
-{
-	nativePath_ = nativePath;
 }
 
 void Logger::setClassPaths(const QStringList &classPaths)
@@ -39,7 +39,7 @@ void Logger::setJVMArgs(const QStringList &JVMArgs)
 	JVMArgs_ = JVMArgs;
 }
 
-void Logger::setExtractFiles(const QStringList &extractFiles)
+void Logger::setNativesFiles(const QStringList &extractFiles)
 {
 	extractFiles_ = extractFiles;
 }
@@ -49,7 +49,7 @@ void Logger::startGenStartcode()
 	genStartCodeTime_.start();
 }
 
-void Logger::fisishGenStartcode()
+void Logger::finishGenStartcode()
 {
 	startCode_use_ = genStartCodeTime_.elapsed();
 }
@@ -66,12 +66,23 @@ void Logger::finishGame()
 
 void Logger::writeToFile()
 {
-	logFile_.open(QIODevice::WriteOnly | QIODevice::Text);
+	QDir dir(Path::loggerPath());
+	if(!dir.exists())
+		dir.mkpath(dir.path());
 
-	QTextStream out(&logFile_);
+	auto time = QDateTime::currentDateTime();
+	auto offset = time.offsetFromUtc();
+	auto zone = QString(offset>0?"+":"") + QString::number(offset);
+
+	QFile logFile(QString("%1/%2UTC%3.log").arg(Path::loggerPath(),
+											 time.toString("yyyyMMdd-HHmmss"),
+											 zone));
+
+	if(!logFile.open(QIODevice::WriteOnly | QIODevice::Text)) throw std::runtime_error("Logger error");
+
+	QTextStream out(&logFile);
 	//time
 	out << "version chain:" << versionChain_.join(" -> ") << endl;
-	out << "natives path:" << nativePath_ << endl;
 	out << "class paths:" << classPaths_.join("\n") << endl;
 	out << "game main class:" << gameMainClass_ << endl;
 	out << "game arguments:" << gameArgs_.join("\n") << endl;

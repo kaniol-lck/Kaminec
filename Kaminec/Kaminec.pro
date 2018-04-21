@@ -29,7 +29,6 @@ SOURCES += main.cpp\
 	UI/preference.cpp \
 	UI/validatedialog.cpp \
     assistance/Custom.cpp \
-    assistance/logger.cpp \
     assistance/Path.cpp \
 	assistance/utility.cpp \
     download/DownloadAssets.cpp \
@@ -54,18 +53,18 @@ SOURCES += main.cpp\
     launch/GameParser.cpp \
     launch/LaunchAuth.cpp \
     launch/Launcher.cpp \
-    launch/LaunchJson.cpp \
+	launch/LaunchJson.cpp \
+	launch/Logger.cpp \
     messager/Arguments.cpp \
     messager/FileItem.cpp \
 	messager/Profile.cpp \
-    messager/LaunchPack.cpp
+	messager/LaunchPack.cpp
 
 HEADERS  += UI/kamineclauncher.h \
 	UI/preference.h \
 	UI/validatedialog.h \
     assistance/Custom.h \
     assistance/Gamemode.h \
-    assistance/Logger.h \
     assistance/Path.h \
     assistance/systeminfo.h \
 	assistance/utility.h \
@@ -92,6 +91,7 @@ HEADERS  += UI/kamineclauncher.h \
     launch/LaunchAuth.h \
     launch/Launcher.h \
     launch/LaunchJson.h \
+    launch/Logger.h \
     messager/Arguments.h \
     messager/FileItem.h \
 	messager/Profile.h \

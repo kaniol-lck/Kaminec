@@ -61,6 +61,13 @@ QString Path::objectsPath()
 	return path;
 }
 
+QString Path::loggerPath()
+{
+	auto path = Custom().getLoggerDirectory();
+	replaceAll(path);
+	return path;
+}
+
 QString Path::getJsonPath(const QString& version)
 {
 	return QString("%1/%2/%2.json")

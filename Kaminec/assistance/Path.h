@@ -5,7 +5,7 @@
 
 class Path {
 public:
-
+	//game
 	static QString JavaPath();
 	static QString launcherPath();
 	static QString corePath();
@@ -15,6 +15,9 @@ public:
 	static QString assetsPath();
 	static QString indexesPath();
 	static QString objectsPath();
+
+	//launcher
+	static QString loggerPath();
 
 	static QString getJsonPath(const QString &version);
 	static QString getAssetIndexPath(const QString &index);

@@ -9,7 +9,7 @@ class Logger : public QObject
 {
 	Q_OBJECT
 public:
-	explicit Logger(QObject *parent, const QString &logPath);
+	explicit Logger(QObject *parent);
 
 	void setVersionChain(const QStringList& versionChain);
 	void setNativesPath(const QString& nativePath);
@@ -17,10 +17,10 @@ public:
 	void setGameMainClass(const QString& GameMainClass);
 	void setGameArgs(const QStringList& GameArgs);
 	void setJVMArgs(const QStringList& JVMArgs);
-	void setExtractFiles(const QStringList& extractFiles);
+	void setNativesFiles(const QStringList& extractFiles);
 
 	void startGenStartcode();
-	void fisishGenStartcode();
+	void finishGenStartcode();
 
 	void startGame();
 	void finishGame();
@@ -30,7 +30,6 @@ public:
 signals:
 
 private:
-	QFile logFile_;
 	QStringList versionChain_;
 	QString nativePath_;
 	QStringList classPaths_;
