@@ -28,7 +28,6 @@ class Custom
 public:
 	Custom() = default;
 
-
 	//launcher settings
 	getterAndSetter(SelectedProfileName, String, selectedProfileName, "")
 
@@ -73,9 +72,6 @@ public:
 
 	void setCustomJVMArguments(QStringList arguments);
 	QStringList getCustomJVMArguments() const;
-
-	void setExtraJVMArguments(QStringList arguments);
-	QStringList getExtraJVMArguments() const;
 
 	//game settings
 

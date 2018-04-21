@@ -38,16 +38,6 @@ QStringList Custom::getCustomJVMArguments() const
 	return settings_.value("customJVMArguments").toString().split("\\n");
 }
 
-void Custom::setExtraJVMArguments(QStringList arguments)
-{
-	settings_.setValue("extraJVMArguments", arguments.join("\\n"));
-}
-
-QStringList Custom::getExtraJVMArguments() const
-{
-	return settings_.value("extraJVMArguments").toString().split("\\n");
-}
-
 void Custom::setGameWindowSize(int width, int height)
 {
 	settings_.setValue("GameWindowWidth", width);

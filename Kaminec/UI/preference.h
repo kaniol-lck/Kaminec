@@ -41,8 +41,6 @@ private slots:
 
 	void on_more_pb_toggled(bool checked);
 
-	void on_extraJavaArguments_gb_toggled(bool arg1);
-
 private:
 	Ui::Preference *ui_;
 
