@@ -45,3 +45,8 @@ QString LaunchJson::getAssetsIndexId() const
 {
 	return jsonKit_.assetIndex().id();
 }
+
+QStringList LaunchJson::getVersionChain() const
+{
+	return jsonKit_.versionChain();
+}

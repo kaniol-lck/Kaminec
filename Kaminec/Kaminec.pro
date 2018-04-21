@@ -57,7 +57,8 @@ SOURCES += main.cpp\
     launch/LaunchJson.cpp \
     messager/Arguments.cpp \
     messager/FileItem.cpp \
-	messager/Profile.cpp
+	messager/Profile.cpp \
+    messager/LaunchPack.cpp
 
 HEADERS  += UI/kamineclauncher.h \
 	UI/preference.h \
@@ -93,7 +94,8 @@ HEADERS  += UI/kamineclauncher.h \
     launch/LaunchJson.h \
     messager/Arguments.h \
     messager/FileItem.h \
-	messager/Profile.h
+	messager/Profile.h \
+    messager/LaunchPack.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preference.ui \

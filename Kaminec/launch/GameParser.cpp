@@ -8,43 +8,41 @@ GameParser::GameParser(const Profile &profile, const LaunchAuth &auth):
 	launchJson_(profile_.lastVersionId_)
 {}
 
-QStringList GameParser::getStartcode()
+LaunchPack GameParser::getLaunchPack()
 {
 	if(launchAuth_.getAuthMode()==Mode::Online &&
 	   !launchAuth_.validate())
 		throw std::runtime_error("Invalid account.");
-
-	QStringList startcode;
-	startcode << getJVMArguments();
-	startcode << launchJson_.getMainClass();
-	startcode << getGameArguments();
-
-	return startcode;
+	return LaunchPack(launchAuth_.getAuthMode(),
+					  classPaths(),
+					  JVMConfigure(),
+					  mainClass(),
+					  gameArguments(),
+					  versionChain(),
+					  nativesFiles());
 }
 
-QStringList GameParser::getJVMArguments()
+QStringList GameParser::JVMConfigure()
 {
-	auto JVMArgs = QStringList{
-			  "-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump",
-			  "-XX:+UseG1GC",
-			  "-XX:-UseAdaptiveSizePolicy",
-			  "-XX:-OmitStackTraceInFastThrow",
-			  QString("-Djava.library.path=%1").arg(Path::nativesPath()),
-			  "-Dfml.ignoreInvalidMinecraftCertificates=true",
-			  "-Dfml.ignorePatchDiscrepancies=true",
-			  "-cp"
-		};
-
-	JVMArgs.append(getClassPaths());
-
 	auto range = custom_.getMemoryAllocateRange();
-	JVMArgs<<QString("-Xmn%1m").arg(range.first);
-	JVMArgs<<QString("-Xmx%1m").arg(range.second);
+
+	QStringList JVMArgs{
+		"-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump",
+		"-XX:+UseG1GC",
+		"-XX:-UseAdaptiveSizePolicy",
+		"-XX:-OmitStackTraceInFastThrow",
+		QString("-Djava.library.path=%1").arg(Path::nativesPath()),
+		"-Dfml.ignoreInvalidMinecraftCertificates=true",
+		QString("-Xmn%1m").arg(range.first),
+		QString("-Xmx%1m").arg(range.second),
+		"-Dfml.ignorePatchDiscrepancies=true",
+		"-cp"
+	};
 
 	return JVMArgs;
 }
 
-QStringList GameParser::getGameArguments()
+QStringList GameParser::gameArguments()
 {
 	auto gameArguments = launchJson_.getGameArguments();
 
@@ -68,7 +66,7 @@ QStringList GameParser::getGameArguments()
 	return gameArguments.toStringList();
 }
 
-QString GameParser::getClassPaths()
+QStringList GameParser::classPaths()
 {
 	auto libraryPaths = launchJson_.getLibraryPaths();
 	auto gameJarPath = launchJson_.getGameJarPath();
@@ -82,16 +80,26 @@ QString GameParser::getClassPaths()
 	classPaths << libraryPaths;
 	classPaths << gameJarPath;
 
-	return classPaths.join(";");
+	return classPaths;
 }
 
-QStringList GameParser::getNativesPaths()
+QString GameParser::mainClass()
 {
-	QStringList nativesPaths = launchJson_.getNativesPaths();
+	return launchJson_.getMainClass();
+}
 
-	for(QString& nativesName : nativesPaths){
+QStringList GameParser::versionChain()
+{
+	return launchJson_.getVersionChain();
+}
+
+QStringList GameParser::nativesFiles()
+{
+	QStringList nativesFiles = launchJson_.getNativesPaths();
+
+	for(QString& nativesName : nativesFiles){
 		nativesName.prepend(Path::libsPath() + "/");
 	}
 
-	return nativesPaths;
+	return nativesFiles;
 }

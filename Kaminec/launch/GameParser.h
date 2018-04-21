@@ -5,20 +5,25 @@
 #include "launch/LaunchAuth.h"
 #include "launch/LaunchJson.h"
 #include "assistance/Custom.h"
+#include "messager/LaunchPack.h"
 
 class GameParser
 {
 public:
 	GameParser(const Profile &profile, const LaunchAuth &auth);
 
-	QStringList getStartcode();
+	LaunchPack getLaunchPack();
 
-	QStringList getJVMArguments();
-	QStringList getGameArguments();
+private:
+	QStringList JVMConfigure();
+	QStringList gameArguments();
 
-	QString getClassPaths();
+	QStringList classPaths();
+	QString mainClass();
 
-	QStringList getNativesPaths();
+	QStringList versionChain();
+
+	QStringList nativesFiles();
 
 private:
 	Profile profile_;

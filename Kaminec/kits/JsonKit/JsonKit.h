@@ -33,6 +33,8 @@ public:
 
 	Arguments JVMArguments() const;
 
+	QStringList versionChain() const;
+
 private:
 	QVariant jsonVariant_;
 

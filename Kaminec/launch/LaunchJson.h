@@ -22,6 +22,8 @@ public:
 
 	QString getAssetsIndexId() const;
 
+	QStringList getVersionChain() const;
+
 private:
 	JsonKit jsonKit_;
 

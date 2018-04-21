@@ -21,9 +21,11 @@ void Launcher::start(const Profile &profile, const LaunchAuth &auth)
 	try{
 		GameParser gameParser(profile, auth);
 
-		auto startcode = gameParser.getStartcode();
+		auto launchPack = gameParser.getLaunchPack();
 
-		extractNatives(gameParser.getNativesPaths());
+		auto startcode = launchPack.startCode();
+
+		extractNatives(launchPack.nativesFiles());
 
 		gameProcess_->start(Path::JavaPath(), startcode);
 	}catch(std::exception& e){

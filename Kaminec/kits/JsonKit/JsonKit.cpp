@@ -123,3 +123,13 @@ Arguments JsonKit::JVMArguments() const
 	}
 	return *JVMArguments_;
 }
+
+QStringList JsonKit::versionChain() const
+{
+	QStringList versionList;
+	versionList.append(version_.first);
+	if(inheritedJson_)
+		versionList.append(inheritedJson_->versionChain());
+
+	return versionList;
+}
