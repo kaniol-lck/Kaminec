@@ -1,7 +1,7 @@
 #include "kamineclauncher.h"
 #include "ui_kamineclauncher.h"
 
-#include "UI/Preference.h"
+#include "UI/preference.h"
 #include "assistance/Path.h"
 #include "assistance/gamemode.h"
 

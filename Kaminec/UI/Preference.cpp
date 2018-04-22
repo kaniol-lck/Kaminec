@@ -48,6 +48,10 @@ Preference::Preference(QWidget *parent, ActiveAuth *auth) :
 	ui_->assetsPath_le->setText(custom_.getAssetsDirectory());
 	ui_->indexesPath_le->setText(custom_.getAssetsIndexesDirectory());
 	ui_->objectsPath_le->setText(custom_.getAssetsObjectsDirectory());
+	ui_->unusedModsPath_le->setText(custom_.getUnusedModsDirectory());
+	ui_->savesBackupPath_le->setText(custom_.getSavesBackupDirectory());
+	ui_->loggerPath_le->setText(custom_.getLoggerDirectory());
+	ui_->javaPath_le_2->setText(custom_.getJavaDirectory());
 
 	ui_->fullScreen_checkBox->setChecked(custom_.getGameWindowFullScreen());
 	auto size = custom_.getGameWindowSize();
@@ -123,6 +127,9 @@ void Preference::on_buttonBox_accepted()
 	custom_.setAssetsDirectory(ui_->assetsPath_le->text());
 	custom_.setAssetsIndexesDirectory(ui_->indexesPath_le->text());
 	custom_.setAssetsObjectsDirectory(ui_->objectsPath_le->text());
+	custom_.setUnusedModsDirectory(ui_->unusedModsPath_le->text());
+	custom_.setSavesBackupDirectory(ui_->savesBackupPath_le->text());
+	custom_.setLoggerDirectory(ui_->loggerPath_le->text());
 
 	custom_.setGameWindowFullScreen(ui_->fullScreen_checkBox->isChecked());
 	custom_.setGameWindowSize(ui_->width_sb->value(),
@@ -203,4 +210,104 @@ void Preference::on_more_pb_toggled(bool checked)
 	ui_->customPathHelper_tb->setVisible(checked);
 
 	ui_->more_pb->setText(checked?"Fold":"More");
+}
+
+void Preference::on_javaPath_le_2_textEdited(const QString &arg1)
+{
+	ui_->javaPath_le->setText(arg1);
+}
+
+void Preference::on_javaPath_le_textEdited(const QString &arg1)
+{
+	ui_->javaPath_le_2->setText(arg1);
+}
+
+void Preference::on_javaPath_showPb_2_clicked()
+{
+	auto path = QFileDialog::getExistingDirectory(this, "Please choose the version directory",
+													  ui_->versionsPath_le->text());
+
+	if(path!="")
+		ui_->versionsPath_le->setText(path);
+}
+
+void Preference::on_versionsPath_showPb_clicked()
+{
+	auto path = QFileDialog::getExistingDirectory(this, "Please choose the version directory",
+													  ui_->versionsPath_le->text());
+
+	if(path!="")
+		ui_->versionsPath_le->setText(path);
+}
+
+void Preference::on_libsPath_showPb_clicked()
+{
+	auto path = QFileDialog::getExistingDirectory(this, "Please choose the libraries directory",
+													  ui_->libsPath_le->text());
+
+	if(path!="")
+		ui_->libsPath_le->setText(path);
+}
+
+void Preference::on_nativesPath_showPb_clicked()
+{
+	auto path = QFileDialog::getExistingDirectory(this, "Please choose the natives directory",
+													  ui_->nativesPath_le->text());
+
+	if(path!="")
+		ui_->nativesPath_le->setText(path);
+}
+
+void Preference::on_assetsPath_showPb_clicked()
+{
+	auto path = QFileDialog::getExistingDirectory(this, "Please choose the assets directory",
+													  ui_->assetsPath_le->text());
+
+	if(path!="")
+		ui_->assetsPath_le->setText(path);
+}
+
+void Preference::on_indexesPath_showPb_clicked()
+{
+	auto path = QFileDialog::getExistingDirectory(this, "Please choose the asset indexes directory",
+													  ui_->indexesPath_le->text());
+
+	if(path!="")
+		ui_->indexesPath_le->setText(path);
+}
+
+void Preference::on_objectsPath_showPb_clicked()
+{
+	auto path = QFileDialog::getExistingDirectory(this, "Please choose the asset objects directory",
+													  ui_->objectsPath_le->text());
+
+	if(path!="")
+		ui_->objectsPath_le->setText(path);
+}
+
+void Preference::on_unusedModsPath_showPb_clicked()
+{
+	auto path = QFileDialog::getExistingDirectory(this, "Please choose the unused mods directory",
+													  ui_->unusedModsPath_le->text());
+
+	if(path!="")
+		ui_->unusedModsPath_le->setText(path);
+}
+
+void Preference::on_savesBackupPath_showPb_clicked()
+{
+	auto path = QFileDialog::getExistingDirectory(this, "Please choose the saves backup directory",
+													  ui_->savesBackupPath_le->text());
+
+	if(path!="")
+		ui_->savesBackupPath_le->setText(path);
+}
+
+void Preference::on_loggerPath_showPb_clicked()
+{
+	auto path = QFileDialog::getExistingDirectory(this, "Please choose the logger directory",
+													  ui_->loggerPath_le->text());
+
+	if(path!="")
+		ui_->loggerPath_le->setText(path);
 }
