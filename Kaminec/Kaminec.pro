@@ -61,7 +61,10 @@ SOURCES += main.cpp\
 	messager/LaunchPack.cpp \
     exception/Exception.cpp \
     exception/FileNotFoundException.cpp \
-    exception/JsonParseException.cpp
+    exception/JsonParseException.cpp \
+    exception/DownloadException.cpp \
+    exception/InvalidAccountException.cpp \
+    exception/FileOpenException.cpp
 
 HEADERS  += UI/kamineclauncher.h \
 	UI/preference.h \
@@ -101,7 +104,10 @@ HEADERS  += UI/kamineclauncher.h \
     messager/LaunchPack.h \
     exception/Exception.h \
     exception/FileNotFoundException.h \
-    exception/JsonParseException.h
+    exception/JsonParseException.h \
+    exception/DownloadException.h \
+    exception/InvalidAccountException.h \
+    exception/FileOpenException.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preference.ui \
