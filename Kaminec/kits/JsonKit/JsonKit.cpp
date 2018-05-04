@@ -2,6 +2,7 @@
 
 #include "assistance/Path.h"
 #include "assistance/utility.h"
+#include "assistance/Exceptions.h"
 
 #include <stdexcept>
 #include <QJsonDocument>
@@ -12,9 +13,9 @@ JsonKit::JsonKit(const QString &version)
 
 	//open json file and parse
 	if(!jsonFile.exists())
-		throw std::runtime_error(QString("Json file(%1) does not exist.").arg(jsonFile.fileName()).toStdString());
+		throw FileNotFoundException(jsonFile.fileName());
 	if(!jsonFile.open(QIODevice::ReadOnly | QIODevice::Text))
-		throw std::runtime_error(QString("Could not open Json file(%1).").arg(jsonFile.fileName()).toStdString());
+		throw FileOpenException(jsonFile.fileName());
 
 	QByteArray jsonBytes;
 	jsonBytes.resize(jsonFile.bytesAvailable());
@@ -24,7 +25,7 @@ JsonKit::JsonKit(const QString &version)
 	QJsonParseError ok;
 	jsonVariant_ = QJsonDocument::fromJson(jsonBytes, &ok).toVariant();
 	if(ok.error != QJsonParseError::NoError)
-		throw std::runtime_error(QString("Json file(%1) is not a valid json.").arg(jsonFile.fileName()).toStdString());
+		throw JsonParseException(jsonFile.fileName(), ok.errorString());
 
 	version_ = qMakePair(value(jsonVariant_, "id").toString(),
 						 value(jsonVariant_, "inheritsFrom").toString());

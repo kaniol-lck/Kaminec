@@ -9,6 +9,7 @@
 #include <QDebug>
 
 #include "assistance/Path.h"
+#include "assistance/Exceptions.h"
 
 Logger::Logger(QObject *parent = 0) :
 	QObject(parent)
@@ -78,7 +79,8 @@ void Logger::writeToFile()
 											 time.toString("yyyyMMdd-HHmmss"),
 											 zone));
 
-	if(!logFile.open(QIODevice::WriteOnly | QIODevice::Text)) throw std::runtime_error("Logger error");
+	if(!logFile.open(QIODevice::WriteOnly | QIODevice::Text))
+		throw FileOpenException(logFile.fileName());
 
 	QTextStream out(&logFile);
 	//time

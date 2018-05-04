@@ -107,7 +107,8 @@ HEADERS  += UI/kamineclauncher.h \
     exception/JsonParseException.h \
     exception/DownloadException.h \
     exception/InvalidAccountException.h \
-    exception/FileOpenException.h
+    exception/FileOpenException.h \
+    assistance/Exceptions.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preference.ui \

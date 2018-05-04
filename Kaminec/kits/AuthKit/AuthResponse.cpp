@@ -2,6 +2,7 @@
 
 #include "assistance/utility.h"
 #include "assistance/Custom.h"
+#include "assistance/Exceptions.h"
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -25,7 +26,7 @@ void AuthResponse::authenticateFinished(QNetworkReply *reply) const
 	QJsonParseError ok;
 	auto json = QJsonDocument::fromJson(data,&ok).toVariant();
 	if(ok.error != QJsonParseError::NoError)
-		throw std::runtime_error(QString("Auth json is not a valid json.").toStdString());
+		throw JsonParseException("Auth json is not a valid json.", ok.errorString());//!!
 
 	if(statusCode == 200){
 		//success
@@ -71,7 +72,7 @@ void AuthResponse::refreshFinished(QNetworkReply *reply) const
 	QJsonParseError ok;
 	auto json = QJsonDocument::fromJson(data,&ok).toVariant();
 	if(ok.error != QJsonParseError::NoError)
-		throw std::runtime_error(QString("Auth json is not a valid json.").toStdString());
+		throw JsonParseException("Auth json is not a valid json.", ok.errorString());//!!
 	if(statusCode == 200){
 		//success
 		success_ = true;

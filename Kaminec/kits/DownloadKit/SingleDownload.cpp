@@ -1,5 +1,6 @@
 #include "singledownload.h"
 #include "messager/fileitem.h"
+#include "assistance/Exceptions.h"
 
 #include <QDir>
 #include <QFile>
@@ -31,7 +32,7 @@ void SingleDownload::start(const QList<QStandardItem *> &modelItem, const FileIt
     output_->setFileName(filename);
 	if(!output_->open(QIODevice::ReadWrite)){
         emit finished(index_);
-		throw std::runtime_error(QString("Could not open File(%1)").arg(output_->fileName()).toStdString());
+		throw FileOpenException(output_->fileName());
         return;
     }
 	qDebug()<<"Start download:"<<output_->fileName();
@@ -72,7 +73,7 @@ void SingleDownload::downloadFinished()
     isdownload_ = false;
 
     if(currentDownload_->error()){
-		throw std::runtime_error(QString("Download Error:").append(currentDownload_->errorString()).toStdString());
+		throw DownloadException(currentDownload_->errorString());
 	}else {
         qDebug()<<"Succeed:"<<output_->fileName();
         emit finished(index_);

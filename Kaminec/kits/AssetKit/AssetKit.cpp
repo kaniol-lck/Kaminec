@@ -2,8 +2,8 @@
 
 #include "assistance/utility.h"
 #include "assistance/Path.h"
+#include "assistance/Exceptions.h"
 
-#include <stdexcept>
 #include <QFile>
 #include <QJsonDocument>
 #include <QByteArray>
@@ -13,9 +13,9 @@ AssetKit::AssetKit(const QString &assetIndexId)
 	QFile assetsFile(Path::indexesPath() + QString("/%1.json").arg(assetIndexId));
 
 	if(!assetsFile.exists())
-		throw std::runtime_error(QString("Assets json file(%1) does not exist.").arg(assetsFile.fileName()).toStdString());
+		throw FileNotFoundException(assetsFile.fileName());
 	if(!assetsFile.open(QIODevice::ReadOnly | QIODevice::Text))
-		throw std::runtime_error(QString("Could not be open Assets json file(%1).").arg(assetsFile.fileName()).toStdString());
+		throw FileOpenException(assetsFile.fileName());
 
 	QByteArray assetsBytes;
 	assetsBytes.resize(assetsFile.bytesAvailable());
@@ -25,7 +25,7 @@ AssetKit::AssetKit(const QString &assetIndexId)
 	QJsonParseError ok;
 	assetsVariant_ = QJsonDocument::fromJson(assetsBytes, &ok).toVariant();
 	if(ok.error != QJsonParseError::NoError)
-		throw std::runtime_error(QString("Assets json file(%1) is not a valid json.").arg(assetsFile.fileName()).toStdString());
+		throw JsonParseException(assetsFile.fileName(), ok.errorString());
 
 }
 

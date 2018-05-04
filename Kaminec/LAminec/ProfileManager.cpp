@@ -2,6 +2,7 @@
 
 #include "assistance/Path.h"
 #include "assistance/utility.h"
+#include "assistance/Exceptions.h"
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -28,7 +29,7 @@ ProfileManager::ProfileManager(QObject *parent) :
 		QJsonParseError ok;
 		profilesObject_ = QJsonDocument::fromJson(bytes,&ok).object();
 		if(ok.error != QJsonParseError::NoError)
-			throw std::runtime_error((ok.errorString() + R"("launcher_profiles.json" may be crashed.)").toStdString());
+			throw JsonParseException(profilesFile_.fileName(), ok.errorString());
 	}
 }
 
@@ -166,7 +167,7 @@ void ProfileManager::refresh()
 {
 	profilesFile_.setFileName(Path::corePath() + "/launcher_profiles.json");
 	if(!profilesFile_.open(QIODevice::ReadOnly | QIODevice::Text))
-		throw std::runtime_error(R"("launcher_profiles.json" opened error.)");
+		throw FileOpenException(profilesFile_.fileName());
 	QByteArray bytes = QString::fromLocal8Bit(profilesFile_.readAll()).toUtf8();
 	profilesFile_.close();
 
@@ -177,6 +178,6 @@ void ProfileManager::refresh()
 		QJsonParseError ok;
 		profilesObject_ = QJsonDocument::fromJson(bytes,&ok).object();
 		if(ok.error != QJsonParseError::NoError)
-			throw std::runtime_error((ok.errorString() + R"("launcher_profiles.json" may be crashed.)").toStdString());
+			throw JsonParseException(profilesFile_.fileName(), ok.errorString());
 	}
 }

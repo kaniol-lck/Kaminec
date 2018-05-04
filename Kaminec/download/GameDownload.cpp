@@ -2,8 +2,8 @@
 
 #include "assistance/Path.h"
 #include "messager/fileitem.h"
+#include "assistance/Exceptions.h"
 
-#include <stdexcept>
 #include <QStandardPaths>
 #include <QDir>
 #include <QCoreApplication>
@@ -41,7 +41,7 @@ void GameDownload::init()
 		downloadKit_->waitForFinished();
 
 		if(!tempVersionsFile_.open())
-			throw std::runtime_error("Could not version_manifest.json.");
+			throw FileOpenException(tempVersionsFile_.fileName());
 
 		QByteArray jsonByte;
 		jsonByte.resize(tempVersionsFile_.bytesAvailable());
@@ -51,7 +51,7 @@ void GameDownload::init()
 		QJsonParseError ok;
 		auto jsonDoc = QJsonDocument::fromJson(jsonByte,&ok);
 		if(ok.error != QJsonParseError::NoError)
-			throw std::runtime_error("Json file(version_manifest.json) is not a valid json.");
+			throw JsonParseException(tempVersionsFile_.fileName(), ok.errorString());
 
 		auto jsonMap = jsonDoc.toVariant().toMap();
 		versionList_ = jsonMap.value("versions").toList();

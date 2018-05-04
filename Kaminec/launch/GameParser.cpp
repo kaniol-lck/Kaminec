@@ -1,6 +1,7 @@
 #include "GameParser.h"
 
 #include "assistance/Path.h"
+#include "assistance/Exceptions.h"
 
 GameParser::GameParser(const Profile &profile, const LaunchAuth &auth):
 	profile_(profile),
@@ -12,7 +13,7 @@ LaunchPack GameParser::getLaunchPack()
 {
 	if(launchAuth_.getAuthMode()==Mode::Online &&
 	   !launchAuth_.validate())
-		throw std::runtime_error("Invalid account.");
+		throw InvalidAccountException(Custom().getEmail());
 	return LaunchPack(launchAuth_.getAuthMode(),
 					  classPaths(),
 					  JVMConfigure(),
