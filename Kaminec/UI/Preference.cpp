@@ -63,6 +63,8 @@ Preference::Preference(QWidget *parent, ActiveAuth *auth) :
 	ui_->minMem_sb->setValue(range.first);
 	ui_->maxMem_sb->setValue(range.second);
 
+	ui_->logNumber_spinBox->setValue(custom_.getLogFileNumber());
+
 	//check if you logged in
 	if(custom_.getLogged()){
 		ui_->logName_label->setText("Logon account:" + custom_.getEmail());
@@ -138,6 +140,8 @@ void Preference::on_buttonBox_accepted()
 	custom_.setJavaDirectory(ui_->javaPath_le->text());
 	custom_.setMemoryAllocateRange(ui_->minMem_sb->value(),
 								   ui_->maxMem_sb->value());
+
+	custom_.setLogFileNumber(ui_->logNumber_spinBox->value());
 
 	emit settingfinished();
 }
@@ -310,4 +314,9 @@ void Preference::on_loggerPath_showPb_clicked()
 
 	if(path!="")
 		ui_->loggerPath_le->setText(path);
+}
+
+void Preference::on_logNumber_spinBox_valueChanged(int arg1)
+{
+	ui_->logTip_label->setVisible(arg1 == -1);
 }

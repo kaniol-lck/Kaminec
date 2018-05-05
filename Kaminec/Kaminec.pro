@@ -64,7 +64,8 @@ SOURCES += main.cpp\
     exception/JsonParseException.cpp \
     exception/DownloadException.cpp \
     exception/InvalidAccountException.cpp \
-    exception/FileOpenException.cpp
+    exception/FileOpenException.cpp \
+    LAminec/LogCleaner.cpp
 
 HEADERS  += UI/kamineclauncher.h \
 	UI/preference.h \
@@ -108,7 +109,8 @@ HEADERS  += UI/kamineclauncher.h \
     exception/DownloadException.h \
     exception/InvalidAccountException.h \
     exception/FileOpenException.h \
-    assistance/Exceptions.h
+    assistance/Exceptions.h \
+    LAminec/LogCleaner.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preference.ui \

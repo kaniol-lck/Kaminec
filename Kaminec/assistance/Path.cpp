@@ -14,6 +14,11 @@ QString Path::launcherPath()
 	return QCoreApplication::applicationDirPath();
 }
 
+QString Path::logsPath()
+{
+	return launcherPath() + "/logs";
+}
+
 QString Path::corePath()
 {
 	return Custom().getCoreGameFileDirectory();

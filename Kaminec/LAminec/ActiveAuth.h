@@ -9,8 +9,7 @@
 class ActiveAuth : QObject
 {
 public:
-	ActiveAuth(QObject *parent);
-	~ActiveAuth() = default;
+	ActiveAuth(QObject *parent = nullptr);
 
 	bool authenticate(const QString &username, const QString &password) const;
 	bool refresh() const;

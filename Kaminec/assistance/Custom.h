@@ -30,6 +30,7 @@ public:
 
 	//launcher settings
 	getterAndSetter(SelectedProfileName, String, selectedProfileName, "")
+	getterAndSetter(LogFileNumber, Int, logFileNumber, 10)
 
 	//account settings
 	getterAndSetter(Logged, Bool, logged, false)

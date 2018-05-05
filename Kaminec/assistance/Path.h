@@ -8,6 +8,7 @@ public:
 	//game
 	static QString JavaPath();
 	static QString launcherPath();
+	static QString logsPath();
 	static QString corePath();
 	static QString libsPath();
 	static QString nativesPath();

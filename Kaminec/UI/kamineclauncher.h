@@ -7,6 +7,7 @@
 #include "LAminec/SavesManager.h"
 #include "LAminec/ProfileManager.h"
 #include "LAminec/ModsManager.h"
+#include "LAminec/LogCleaner.h"
 #include "download/GameDownload.h"
 #include "launch/Launcher.h"
 #include "assistance/Custom.h"
@@ -81,11 +82,12 @@ private:
 private:
 	Ui::KaminecLauncher *ui_;
 	ActiveAuth *activeAuth_;
-	SavesManager *savesManager_;
-	ModsManager *modsManager_;
-	GameDownload *gameDownload_;
+	SavesManager savesManager_;
+	ModsManager modsManager_;
+	GameDownload gameDownload_;
 	ProfileManager profileManager_;
-	Launcher *launcher_;
+	LogCleaner logCleaner_;
+	Launcher launcher_;
 
 	int totalCount_;
 

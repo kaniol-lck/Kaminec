@@ -11,7 +11,7 @@ class SavesManager : public QObject
 {
     Q_OBJECT
 public:
-	explicit SavesManager(QObject *parent);
+	explicit SavesManager(QObject *parent = nullptr);
 
     QStandardItemModel* getModel();
     void addSaves();

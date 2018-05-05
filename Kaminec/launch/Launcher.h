@@ -11,7 +11,7 @@ class Launcher : public QObject
 {
 	Q_OBJECT
 public:
-	explicit Launcher(QObject *parent);
+	explicit Launcher(QObject *parent = nullptr);
 
 	void start(const Profile &profile, const LaunchAuth &auth);
 

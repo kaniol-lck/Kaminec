@@ -65,6 +65,8 @@ private slots:
 
 	void on_loggerPath_showPb_clicked();
 
+	void on_logNumber_spinBox_valueChanged(int arg1);
+
 private:
 	Ui::Preference *ui_;
 
