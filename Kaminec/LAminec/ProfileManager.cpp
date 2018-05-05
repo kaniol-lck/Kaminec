@@ -29,7 +29,7 @@ ProfileManager::ProfileManager(QObject *parent) :
 		QJsonParseError ok;
 		profilesObject_ = QJsonDocument::fromJson(bytes,&ok).object();
 		if(ok.error != QJsonParseError::NoError)
-			throw JsonParseException(profilesFile_.fileName(), ok.errorString());
+			throw JsonParseException(profilesFile_.fileName(), ok.errorString(), true);
 	}
 }
 
@@ -178,6 +178,6 @@ void ProfileManager::refresh()
 		QJsonParseError ok;
 		profilesObject_ = QJsonDocument::fromJson(bytes,&ok).object();
 		if(ok.error != QJsonParseError::NoError)
-			throw JsonParseException(profilesFile_.fileName(), ok.errorString());
+			throw JsonParseException(profilesFile_.fileName(), ok.errorString(), true);
 	}
 }

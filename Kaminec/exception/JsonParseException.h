@@ -6,7 +6,8 @@
 class JsonParseException : public Exception
 {
 public:
-	JsonParseException(QString jsonFileName, QString errorString);
+	JsonParseException(QString jsonFileName, QString errorString, bool/*no name for distinction*/);
+	JsonParseException(QString jsonName, QString errorString);
 
 };
 

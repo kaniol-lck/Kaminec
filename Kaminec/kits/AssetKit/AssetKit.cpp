@@ -25,7 +25,7 @@ AssetKit::AssetKit(const QString &assetIndexId)
 	QJsonParseError ok;
 	assetsVariant_ = QJsonDocument::fromJson(assetsBytes, &ok).toVariant();
 	if(ok.error != QJsonParseError::NoError)
-		throw JsonParseException(assetsFile.fileName(), ok.errorString());
+		throw JsonParseException(assetsFile.fileName(), ok.errorString(), true);
 
 }
 

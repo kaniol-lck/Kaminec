@@ -25,7 +25,7 @@ JsonKit::JsonKit(const QString &version)
 	QJsonParseError ok;
 	jsonVariant_ = QJsonDocument::fromJson(jsonBytes, &ok).toVariant();
 	if(ok.error != QJsonParseError::NoError)
-		throw JsonParseException(jsonFile.fileName(), ok.errorString());
+		throw JsonParseException(jsonFile.fileName(), ok.errorString(), true);
 
 	version_ = qMakePair(value(jsonVariant_, "id").toString(),
 						 value(jsonVariant_, "inheritsFrom").toString());

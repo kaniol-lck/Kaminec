@@ -51,7 +51,7 @@ void GameDownload::init()
 		QJsonParseError ok;
 		auto jsonDoc = QJsonDocument::fromJson(jsonByte,&ok);
 		if(ok.error != QJsonParseError::NoError)
-			throw JsonParseException(tempVersionsFile_.fileName(), ok.errorString());
+			throw JsonParseException(tempVersionsFile_.fileName(), ok.errorString(), true);
 
 		auto jsonMap = jsonDoc.toVariant().toMap();
 		versionList_ = jsonMap.value("versions").toList();
