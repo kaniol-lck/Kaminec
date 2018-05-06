@@ -1,0 +1,3 @@
+[submodule "3rd/quazip"]
+	path = 3rd/quazip
+	url = git@github.com:kaniol-lck/quazip.git
