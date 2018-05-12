@@ -6,6 +6,8 @@
 #include <QDir>
 #include <QDebug>
 
+#include <JlCompress.h>
+
 Launcher::Launcher(QObject *parent) :
 	QObject(parent),
 	gameProcess_(new QProcess(this)),
@@ -51,14 +53,10 @@ void Launcher::extractNatives(const QStringList &nativesPaths)
 
 
 	for(auto extractPath : nativesPaths){
-		QFile extractFile(extractPath);
-		if(!extractFile.exists()) continue;
-		QStringList unzipargs;
-		unzipargs << "x"
-				  << extractPath
-				  << "-o" + Path::nativesPath() + "/"
-				  << "-aos";
-		QProcess::startDetached("7za", unzipargs);
+		if(!QFile(extractPath).exists()) continue;
+
+		JlCompress::extractDir(extractPath, Path::nativesPath());
+
 	}
 }
 

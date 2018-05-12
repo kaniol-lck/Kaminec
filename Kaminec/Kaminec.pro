@@ -123,3 +123,6 @@ RC_FILE = resources/icon.rc
 
 DISTFILES += \
     README.md
+
+INCLUDEPATH += $$PWD/../3rd/quazip/include
+LIBS += -L$$PWD/../3rd/quazip/lib/ -lquazip
