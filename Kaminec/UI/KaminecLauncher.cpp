@@ -293,6 +293,7 @@ void KaminecLauncher::on_editProfile_pb_toggled(bool checked)
 {
 	//Accept
 	ui_->profile_cb->setEnabled(!checked);
+	ui_->addProfile_pb->setEnabled(!checked);
 	if(!checked){
 		auto newName = ui_->profileName_le->text();
 		if(newName == "") return;
@@ -317,4 +318,14 @@ void KaminecLauncher::on_editProfile_pb_toggled(bool checked)
 	ui_->gameDir_showPb->setVisible(checked);
 
 	ui_->editProfile_pb->setText(checked?"&OK":"&Edit");
+}
+
+void KaminecLauncher::on_addProfile_pb_clicked()
+{
+	Profile profile;
+	profile.name_ = "New Profile";
+	profileManager_.insertProfile(profile);
+	profileManager_.setSelectedProfile(profile.name_);
+	updateProfiles();
+	on_editProfile_pb_toggled(true);
 }

@@ -70,6 +70,8 @@ private slots:
 
 	void on_editProfile_pb_toggled(bool checked);
 
+	void on_addProfile_pb_clicked();
+
 private:
 	void loadProfiles();
 
