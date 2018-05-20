@@ -7,10 +7,6 @@ version:**beta v0.7.9**
 
 You can find this project on GitHub:[kaniol-lck/Kaminec](www.github.com/kaniol-lck/kaminec).
 
--------
-
-*VERY IMPORTANT*:you must put `7za.exe` in the directory of executable program to let my launcher extract natives.
-
 ------
 
 ## Functionality Table
@@ -29,4 +25,4 @@ You can find this project on GitHub:[kaniol-lck/Kaminec](www.github.com/kaniol-l
 
 ## Current Looks
 
-###### ![](main_window.png)
+![](main_window.png)
