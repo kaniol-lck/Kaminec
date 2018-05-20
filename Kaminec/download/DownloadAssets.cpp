@@ -5,18 +5,18 @@
 QString DownloadAssets::kResourcesDownload = "http://resources.download.minecraft.net/";
 
 DownloadAssets::DownloadAssets(const QString &assetsIndexId) :
-	assetsKit_(assetsIndexId)
+	assetKit_(assetsIndexId)
 {}
 
-QList<FileItem> DownloadAssets::getDownloadAssetsUrls()
+QList<DownloadInfo> DownloadAssets::getAssetsDownloadInfos()
 {
-	QList<FileItem> downloadAssetsUrls;
-	for(const auto& object : assetsKit_.assetObjects()){
-		downloadAssetsUrls.append(FileItem(object.name(),
+	QList<DownloadInfo> assetsDownloadInfos;
+	for(const auto& object : assetKit_.assetObjects()){
+		assetsDownloadInfos.append(DownloadInfo(object.name(),
 										   object.size(),
 										   "NULL",
 										   object.path(),
 										   kResourcesDownload + object.url()));
 	}
-	return downloadAssetsUrls;
+	return assetsDownloadInfos;
 }

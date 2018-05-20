@@ -1,7 +1,7 @@
 #ifndef DOWNLOADASSETS_H
 #define DOWNLOADASSETS_H
 
-#include "messager/fileitem.h"
+#include "messager/DownloadInfo.h"
 #include "kits/AssetKit/AssetKit.h"
 
 #include <QList>
@@ -12,13 +12,12 @@ class DownloadAssets
 public:
 	explicit DownloadAssets(const QString &assetsIndexId);
 
-	QList<FileItem> getDownloadAssetsUrls();
+	QList<DownloadInfo> getAssetsDownloadInfos();
 
 private:
 	static QString kResourcesDownload;
 
-	AssetKit assetsKit_;
-	QVariant assets_;
+	AssetKit assetKit_;
 };
 
 #endif // DOWNLOADASSETS_H

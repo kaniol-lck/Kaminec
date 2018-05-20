@@ -10,6 +10,8 @@
 .
 +--assistance
 |  +--files...
++--check
+|  +--files...
 +--download
 |  +--files...
 +--exception
@@ -59,6 +61,7 @@
 ## Description of These Main Parts
 
 - `assistance/` includes my utilities which helps my work,such as template function `value` used to index `QVariant` object much quicker and more readable.
+- `check/` provides the function of game file checking.
 - `download/` .There is a implementation of universal downloader(with multi-task) to support my download works.Cases to download is downloading game and fixing game file.
 - `exception/`includes a entire exception system to manage all the exceptions that my launcher may encounter.
 - `kits/` is the most important parts of Kaminec Launcher coz it packages those important works of launcher.These kits are:`Assetkit`, `AuthKit`, `DownloadKit`, `JsonKit`, `Ruler`.

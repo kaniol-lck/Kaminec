@@ -1,7 +1,7 @@
-#include "gamedownload.h"
+#include "Downloader.h"
 
 #include "assistance/Path.h"
-#include "messager/fileitem.h"
+#include "messager/DownloadInfo.h"
 #include "assistance/Exceptions.h"
 
 #include <QStandardPaths>
@@ -10,16 +10,16 @@
 #include <QJsonDocument>
 #include <QStandardItem>
 
-QString GameDownload::kVersionManifestDownlaod = "https://launchermeta.mojang.com/mc/game/version_manifest.json";
+QString Downloader::kVersionManifestDownlaod = "https://launchermeta.mojang.com/mc/game/version_manifest.json";
 
-GameDownload::GameDownload(QObject *parent) :
+Downloader::Downloader(QObject *parent) :
 	QObject(parent),
 	tempFileName_(QDir::tempPath() + "/" +
 				 QCoreApplication::applicationName() +"_XXXXXX.json"),
 	downloadKit_(new DownloadKit(this))
 {}
 
-void GameDownload::init()
+void Downloader::init()
 {
 	if(!inited_){
 		inited_ = true;
@@ -33,7 +33,7 @@ void GameDownload::init()
 
 		tempVersionsFile_.open();
 		tempVersionsFile_.close();
-		downloadKit_->append(FileItem(QString("version_manifest.json"),
+		downloadKit_->append(DownloadInfo(QString("version_manifest.json"),
 											0,
 											QString("NULL"),
 											tempVersionsFile_.fileName(),
@@ -67,27 +67,27 @@ void GameDownload::init()
 	}
 }
 
-QStandardItemModel *GameDownload::getVersionsModel()
+QStandardItemModel *Downloader::getVersionsModel()
 {
 	return &model_;
 }
 
-QStandardItemModel *GameDownload::getDownloadModel()
+QStandardItemModel *Downloader::getDownloadModel()
 {
 	return downloadKit_->getModel();
 }
 
-int GameDownload::getTotalCount()
+int Downloader::getTotalCount()
 {
 	return totalCount_;
 }
 
-void GameDownload::download(int index)
+void Downloader::download(int index)
 {
 	//download json file
 	auto version = versionList_.at(index).toMap().value("id").toString();
 
-	downloadKit_->append(FileItem(version + ".json",
+	downloadKit_->append(DownloadInfo(version + ".json",
 									 0,
 									 "NULL",
 									 QString("%1/%2/%2.json")
@@ -98,27 +98,27 @@ void GameDownload::download(int index)
 	//download client
 	DownloadJson downloadJson(version);
 
-	auto clientFileItem = downloadJson.getClientFileItem();
-	clientFileItem.path_.prepend(Path::versionsPath());
-	downloadKit_->append(clientFileItem);
+	auto clientDownloadInfo = downloadJson.getClientDownloadInfo();
+	clientDownloadInfo.path_.prepend(Path::versionsPath());
+	downloadKit_->append(clientDownloadInfo);
 
 	//download libraries
-	auto LibraryFileItems = downloadJson.getLibraryFileItems();
-	for(auto& item:LibraryFileItems){
+	auto LibraryDownloadInfos = downloadJson.getLibraryDownloadInfos();
+	for(auto& item:LibraryDownloadInfos){
 		item.path_.prepend(Path::libsPath()+"/");
 	}
 
-	downloadKit_->append(LibraryFileItems);
+	downloadKit_->append(LibraryDownloadInfos);
 
 	//download asset index
-	auto assetsIndexFileItem = downloadJson.getAssetsIndexFileItem();
-	assetsIndexFileItem.path_.prepend(Path::indexesPath());
-	downloadKit_->append(assetsIndexFileItem);
+	auto assetsIndexDownloadInfo = downloadJson.getAssetsIndexDownloadInfo();
+	assetsIndexDownloadInfo.path_.prepend(Path::indexesPath());
+	downloadKit_->append(assetsIndexDownloadInfo);
 	downloadKit_->waitForFinished();
 
 	//download asset objects
 	DownloadAssets downloadAsset_(downloadJson.getAssetsIndexId());
-	auto downloadAssetUrls = downloadAsset_.getDownloadAssetsUrls();
+	auto downloadAssetUrls = downloadAsset_.getAssetsDownloadInfos();
 	for(auto& item : downloadAssetUrls){
 		item.path_.append(Path::objectsPath() + "/");
 	}

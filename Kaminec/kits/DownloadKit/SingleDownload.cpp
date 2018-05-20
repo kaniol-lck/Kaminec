@@ -1,5 +1,5 @@
 #include "singledownload.h"
-#include "messager/fileitem.h"
+#include "messager/DownloadInfo.h"
 #include "assistance/Exceptions.h"
 
 #include <QDir>
@@ -22,10 +22,10 @@ bool SingleDownload::isDownload() const
     return isdownload_;
 }
 
-void SingleDownload::start(const QList<QStandardItem *> &modelItem, const FileItem &fileItem)
+void SingleDownload::start(const QList<QStandardItem *> &modelItem, const DownloadInfo &downloadInfo)
 {
     modelItem_ = modelItem;
-    QString filename = fileItem.path_;
+    QString filename = downloadInfo.path_;
 	QDir dir = QFileInfo(filename).path();
     if(!dir.exists())
 		dir.mkpath(dir.path());
@@ -37,7 +37,7 @@ void SingleDownload::start(const QList<QStandardItem *> &modelItem, const FileIt
     }
 	qDebug()<<"Start download:"<<output_->fileName();
 
-    QNetworkRequest request(fileItem.url_);
+    QNetworkRequest request(downloadInfo.url_);
     currentDownload_ = manager_->get(request);
     connect(currentDownload_,SIGNAL(downloadProgress(qint64,qint64)),SLOT(downloadProgress(qint64,qint64)));
     connect(currentDownload_,SIGNAL(finished()),SLOT(downloadFinished()));

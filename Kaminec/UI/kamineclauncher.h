@@ -8,7 +8,7 @@
 #include "LAminec/ProfileManager.h"
 #include "LAminec/ModsManager.h"
 #include "LAminec/LogCleaner.h"
-#include "download/GameDownload.h"
+#include "download/Downloader.h"
 #include "launch/Launcher.h"
 #include "assistance/Custom.h"
 
@@ -86,7 +86,7 @@ private:
 	ActiveAuth *activeAuth_;
 	SavesManager savesManager_;
 	ModsManager modsManager_;
-	GameDownload gameDownload_;
+	Downloader gameDownload_;
 	ProfileManager profileManager_;
 	LogCleaner logCleaner_;
 	Launcher launcher_;

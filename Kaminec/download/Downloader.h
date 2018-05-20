@@ -1,5 +1,5 @@
-#ifndef GAMEDOWNLOAD_H
-#define GAMEDOWNLOAD_H
+#ifndef DOWNLOADER_H
+#define DOWNLOADER_H
 
 #include "download/DownloadJson.h"
 #include "download/DownloadAssets.h"
@@ -9,11 +9,11 @@
 #include <QStandardItemModel>
 #include <QTemporaryFile>
 
-class GameDownload : public QObject
+class Downloader : public QObject
 {
 	Q_OBJECT
 public:
-	explicit GameDownload(QObject *parent = nullptr);
+	explicit Downloader(QObject *parent = nullptr);
 	void init();
 
 	QStandardItemModel* getVersionsModel();
@@ -43,4 +43,4 @@ private:
 	int totalCount_;
 };
 
-#endif // GAMEDOWNLOAD_H
+#endif // DOWNLOADER_H

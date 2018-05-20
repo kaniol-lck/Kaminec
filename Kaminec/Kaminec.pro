@@ -30,9 +30,12 @@ SOURCES += main.cpp\
     assistance/Custom.cpp \
     assistance/Path.cpp \
 	assistance/utility.cpp \
+    check/Checker.cpp \
+    check/CheckJson.cpp \
+    check/CheckAssets.cpp \
     download/DownloadAssets.cpp \
 	download/DownloadJson.cpp \
-    download/GameDownload.cpp \
+    download/Downloader.cpp \
     kits/AssetKit/AssetKit.cpp \
     kits/AssetKit/AssetObject.cpp \
     kits/AuthKit/AuthKit.cpp \
@@ -49,22 +52,25 @@ SOURCES += main.cpp\
     LAminec/ModsManager.cpp \
     LAminec/profileManager.cpp \
     LAminec/SavesManager.cpp \
+    LAminec/LogCleaner.cpp \
     launch/GameParser.cpp \
     launch/LaunchAuth.cpp \
     launch/Launcher.cpp \
 	launch/LaunchJson.cpp \
 	launch/Logger.cpp \
     messager/Arguments.cpp \
-    messager/FileItem.cpp \
+    messager/DownloadInfo.cpp \
 	messager/Profile.cpp \
 	messager/LaunchPack.cpp \
+    messager/Deficiency.cpp \
+    messager/CheckInfo.cpp \
     exception/Exception.cpp \
     exception/FileNotFoundException.cpp \
     exception/JsonParseException.cpp \
     exception/DownloadException.cpp \
     exception/InvalidAccountException.cpp \
     exception/FileOpenException.cpp \
-    LAminec/LogCleaner.cpp
+    check/CheckParser.cpp
 
 HEADERS  += UI/kamineclauncher.h \
 	UI/preference.h \
@@ -74,9 +80,13 @@ HEADERS  += UI/kamineclauncher.h \
     assistance/Path.h \
     assistance/systeminfo.h \
 	assistance/utility.h \
+    assistance/Exceptions.h \
+    check/Checker.h \
+    check/CheckJson.h \
+    check/CheckAssets.h \
     download/DownloadAssets.h \
 	download/DownloadJson.h \
-    download/GameDownload.h \
+    download/Downloader.h \
     kits/AssetKit/AssetKit.h \
     kits/AssetKit/AssetObject.h \
     kits/AuthKit/AuthKit.h \
@@ -93,23 +103,25 @@ HEADERS  += UI/kamineclauncher.h \
     LAminec/ModsManager.h \
     LAminec/ProfileManager.h \
     LAminec/SavesManager.h \
+    LAminec/LogCleaner.h \
     launch/GameParser.h \
     launch/LaunchAuth.h \
     launch/Launcher.h \
     launch/LaunchJson.h \
     launch/Logger.h \
     messager/Arguments.h \
-    messager/FileItem.h \
+    messager/DownloadInfo.h \
 	messager/Profile.h \
     messager/LaunchPack.h \
+    messager/Deficiency.h \
+    messager/CheckInfo.h \
     exception/Exception.h \
     exception/FileNotFoundException.h \
     exception/JsonParseException.h \
     exception/DownloadException.h \
     exception/InvalidAccountException.h \
     exception/FileOpenException.h \
-    assistance/Exceptions.h \
-    LAminec/LogCleaner.h
+    check/CheckParser.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preference.ui \

@@ -1,7 +1,7 @@
 #ifndef DOWNLOADKIT_H
 #define DOWNLOADKIT_H
 
-#include "messager/fileitem.h"
+#include "messager/DownloadInfo.h"
 #include "kits/DownloadKit/singledownload.h"
 
 #include <QList>
@@ -17,8 +17,8 @@ class DownloadKit : public QObject
 public:
 	explicit                DownloadKit(QObject *parent = nullptr);
 
-    void                    append(const FileItem &item);
-	void                    append(QList<FileItem> &itemList_);
+    void                    append(const DownloadInfo &item);
+	void                    append(QList<DownloadInfo> &itemList_);
     void                    startDownload();
 
     int                     waitForFinished();
@@ -40,7 +40,7 @@ public slots:
 
 private:
 	QNetworkAccessManager manager_;
-	QQueue<FileItem> downloadQueue_;
+	QQueue<DownloadInfo> downloadQueue_;
 
 	QTime downloadTime_;
 	int totalCount_ = 0;

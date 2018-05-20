@@ -2,20 +2,20 @@
 #define DOWNLOADJSON_H
 
 #include "kits/JsonKit/JsonKit.h"
-#include "messager/FileItem.h"
+#include "messager/DownloadInfo.h"
 
 #include <QList>
 
 class DownloadJson
 {
 public:
-	DownloadJson(const QString &version);
+	explicit DownloadJson(const QString &version);
 
-	QList<FileItem> getLibraryFileItems() const;
+	QList<DownloadInfo> getLibraryDownloadInfos() const;
 
-	FileItem getAssetsIndexFileItem() const;
+	DownloadInfo getAssetsIndexDownloadInfo() const;
 
-	FileItem getClientFileItem() const;
+	DownloadInfo getClientDownloadInfo() const;
 
 	QString getAssetsIndexId() const;
 

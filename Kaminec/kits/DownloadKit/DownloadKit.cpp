@@ -25,7 +25,7 @@ DownloadKit::DownloadKit(QObject *parent) : QObject(parent)
 	}
 }
 
-void DownloadKit::append(const FileItem &item)
+void DownloadKit::append(const DownloadInfo &item)
 {
 
     auto info = item.getInfoList();
@@ -47,7 +47,7 @@ void DownloadKit::append(const FileItem &item)
     startDownload();
 }
 
-void DownloadKit::append(QList<FileItem> &itemList)
+void DownloadKit::append(QList<DownloadInfo> &itemList)
 {
     for(auto &item: itemList)
         append(item);

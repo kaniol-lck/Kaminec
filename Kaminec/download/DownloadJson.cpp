@@ -6,38 +6,38 @@ DownloadJson::DownloadJson(const QString &version) :
 	jsonKit_(version)
 {}
 
-QList<FileItem> DownloadJson::getLibraryFileItems() const
+QList<DownloadInfo> DownloadJson::getLibraryDownloadInfos() const
 {
-	QList<FileItem> libraryFileItems;
+	QList<DownloadInfo> libraryDownloadInfos;
 
 	for(const auto& library : jsonKit_.libraries()){
-		libraryFileItems << FileItem(library.name(),
-									 library.size(),
-									 library.sha1(),
-									 library.path(),
-									 library.url());
+		libraryDownloadInfos << DownloadInfo(library.name(),
+											 library.size(),
+											 library.sha1(),
+											 library.path(),
+											 library.url());
 	}
-	return libraryFileItems;
+	return libraryDownloadInfos;
 }
 
-FileItem DownloadJson::getAssetsIndexFileItem() const
+DownloadInfo DownloadJson::getAssetsIndexDownloadInfo() const
 {
 	auto assetIndex = jsonKit_.assetIndex();
-	return FileItem(assetIndex.id(),
-					assetIndex.size(),
-					assetIndex.sha1(),
-					QString("/%1.json").arg(assetIndex.id()),
-					assetIndex.url());
+	return DownloadInfo(assetIndex.id(),
+						assetIndex.size(),
+						assetIndex.sha1(),
+						QString("/%1.json").arg(assetIndex.id()),
+						assetIndex.url());
 }
 
-FileItem DownloadJson::getClientFileItem() const
+DownloadInfo DownloadJson::getClientDownloadInfo() const
 {
 	auto client = jsonKit_.client();
-	return FileItem(jsonKit_.jarName(),
-					client.size(),
-					client.sha1(),
-					QString("/%1/%1.jar").arg(jsonKit_.jarName()),
-					client.url());
+	return DownloadInfo(jsonKit_.jarName(),
+						client.size(),
+						client.sha1(),
+						QString("/%1/%1.jar").arg(jsonKit_.jarName()),
+						client.url());
 }
 
 QString DownloadJson::getAssetsIndexId() const

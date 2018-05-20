@@ -1,7 +1,7 @@
 #ifndef SINGLEDOWNLOAD_H
 #define SINGLEDOWNLOAD_H
 
-#include "messager/fileitem.h"
+#include "messager/DownloadInfo.h"
 
 #include <QObject>
 #include <QList>
@@ -18,7 +18,7 @@ public:
 
     bool isDownload() const;
 
-	void start(const QList<QStandardItem *> &modelItem, const FileItem &fileItem);
+	void start(const QList<QStandardItem *> &modelItem, const DownloadInfo &downloadInfo);
 
 signals:
     void finished(int) const;
