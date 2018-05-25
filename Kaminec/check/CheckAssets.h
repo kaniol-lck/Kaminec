@@ -9,7 +9,7 @@ class CheckAssets
 public:
 	explicit CheckAssets(const QString &assetsIndexId);
 
-	QList<CheckInfo> getAssetObjectsCheckInfos();
+	QList<CheckInfo> getAssetObjectsCheckInfos() const;
 
 private:
 	AssetKit assetKit_;

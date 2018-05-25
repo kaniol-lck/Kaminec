@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QProcess>
 
-#include "launch/GameParser.h"
+#include "launch/LaunchParser.h"
 #include "launch/Logger.h"
 
 class Launcher : public QObject

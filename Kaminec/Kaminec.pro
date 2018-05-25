@@ -53,7 +53,6 @@ SOURCES += main.cpp\
     LAminec/profileManager.cpp \
     LAminec/SavesManager.cpp \
     LAminec/LogCleaner.cpp \
-    launch/GameParser.cpp \
     launch/LaunchAuth.cpp \
     launch/Launcher.cpp \
 	launch/LaunchJson.cpp \
@@ -70,7 +69,8 @@ SOURCES += main.cpp\
     exception/DownloadException.cpp \
     exception/InvalidAccountException.cpp \
     exception/FileOpenException.cpp \
-    check/CheckParser.cpp
+    check/CheckParser.cpp \
+    launch/LaunchParser.cpp
 
 HEADERS  += UI/kamineclauncher.h \
 	UI/preference.h \
@@ -104,7 +104,6 @@ HEADERS  += UI/kamineclauncher.h \
     LAminec/ProfileManager.h \
     LAminec/SavesManager.h \
     LAminec/LogCleaner.h \
-    launch/GameParser.h \
     launch/LaunchAuth.h \
     launch/Launcher.h \
     launch/LaunchJson.h \
@@ -121,7 +120,8 @@ HEADERS  += UI/kamineclauncher.h \
     exception/DownloadException.h \
     exception/InvalidAccountException.h \
     exception/FileOpenException.h \
-    check/CheckParser.h
+    check/CheckParser.h \
+    launch/LaunchParser.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preference.ui \

@@ -10,13 +10,13 @@ class CheckParser
 public:
 	CheckParser(QString version);
 
-	Deficiency checkClient();
-	QList<Deficiency> checkLibraris();
-	Deficiency checkAssetsIndex();
-	QList<Deficiency> checkAssetObjects();
+	QList<CheckInfo> getCheckInfos();
 
 private:
-	Deficiency checkFile(const CheckInfo &checkInfo) const;
+	CheckInfo getClientCheckInfo() const;
+	QList<CheckInfo> getLibraryCheckInfos() const;
+	CheckInfo getAssetsCheckInfo() const;
+	QList<CheckInfo> getAssetObjectsCheckInfos() const;
 
 private:
 	CheckJson checkJson_;

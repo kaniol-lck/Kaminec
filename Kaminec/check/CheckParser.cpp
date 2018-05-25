@@ -1,61 +1,49 @@
 #include "CheckParser.h"
 
-#include <QFile>
-#include <QCryptographicHash>
+#include "assistance/Path.h"
 
 CheckParser::CheckParser(QString version) :
 	checkJson_(version),
 	checkAssets_(checkJson_.getAssetsIndexId())
 {}
 
-Deficiency CheckParser::checkClient()
+QList<CheckInfo> CheckParser::getCheckInfos()
 {
-	return checkFile(checkJson_.getClientCheckInfo());
+	QList<CheckInfo> checkInfos;
+	checkInfos << getClientCheckInfo();
+	checkInfos << getLibraryCheckInfos();
+	checkInfos << getAssetsCheckInfo();
+	checkInfos << getAssetObjectsCheckInfos();
+	return checkInfos;
 }
 
-QList<Deficiency> CheckParser::checkLibraris()
+CheckInfo CheckParser::getClientCheckInfo() const
 {
-	QList<Deficiency> libraryDeficiencies;
-
-	for(const auto& checkInfo : checkJson_.getLibraryCheckInfos()){
-		auto libraryDeficiency = checkFile(checkInfo);
-		if(!libraryDeficiency.ok_)
-			libraryDeficiencies << libraryDeficiency;
-	}
-
-	return libraryDeficiencies;
+	auto clientCheckinfo = checkJson_.getClientCheckInfo();
+	clientCheckinfo.path_.prepend(Path::versionsPath());
+	return clientCheckinfo;
 }
 
-Deficiency CheckParser::checkAssetsIndex()
+QList<CheckInfo> CheckParser::getLibraryCheckInfos() const
 {
-	return checkFile(checkJson_.getAssetsCheckInfo());
+	auto libraryCheckInfos = checkJson_.getLibraryCheckInfos();
+	for(auto& libraryCheckInfo : libraryCheckInfos)
+		libraryCheckInfo.path_.prepend(Path::libsPath());
+	return libraryCheckInfos;
 }
 
-QList<Deficiency> CheckParser::checkAssetObjects()
+CheckInfo CheckParser::getAssetsCheckInfo() const
 {
-	QList<Deficiency> assetObjectsDeficiencies;
-
-	for(const auto& checkInfo : checkAssets_.getAssetObjectsCheckInfos()){
-		auto assetObjectsDeficiency = checkFile(checkInfo);
-		if(!assetObjectsDeficiency.ok_)
-			assetObjectsDeficiencies << assetObjectsDeficiency;
-	}
-
-	return assetObjectsDeficiencies;
+	auto assetsCheckInfo = checkJson_.getAssetsCheckInfo();
+	assetsCheckInfo.path_.prepend(Path::assetsPath());
+	return assetsCheckInfo;
 }
 
-Deficiency CheckParser::checkFile(const CheckInfo &checkInfo) const
+QList<CheckInfo> CheckParser::getAssetObjectsCheckInfos() const
 {
-	QFile file(checkInfo.fileName_);
-
-	if(!file.exists())
-		return Deficiency(checkInfo, Deficiency::NotExist);
-
-	if(!file.open(QIODevice::ReadOnly))
-		return Deficiency(checkInfo, Deficiency::OpenError);
-
-	if(QCryptographicHash::hash(file.readAll(), checkInfo.checkCodeType_) != checkInfo.checkCode_)
-		return Deficiency(checkInfo, Deficiency::WrongCheckCode);
-
-	return Deficiency(true);
+	auto assetObjectsCheckInfos = checkAssets_.getAssetObjectsCheckInfos();
+	for(auto& assetObjectsCheckInfo : assetObjectsCheckInfos)
+		assetObjectsCheckInfo.path_.prepend(Path::objectsPath());
+	return assetObjectsCheckInfos;
 }
+

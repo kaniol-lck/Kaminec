@@ -1,15 +1,15 @@
-#include "GameParser.h"
+#include "LaunchParser.h"
 
 #include "assistance/Path.h"
 #include "assistance/Exceptions.h"
 
-GameParser::GameParser(const Profile &profile, const LaunchAuth &auth):
+LaunchParser::LaunchParser(const Profile &profile, const LaunchAuth &auth):
 	profile_(profile),
 	launchAuth_(auth),
 	launchJson_(profile_.lastVersionId_)
 {}
 
-LaunchPack GameParser::getLaunchPack()
+LaunchPack LaunchParser::getLaunchPack()
 {
 	if(launchAuth_.getAuthMode()==Mode::Online &&
 	   !launchAuth_.validate())
@@ -23,7 +23,7 @@ LaunchPack GameParser::getLaunchPack()
 					  nativesFiles());
 }
 
-QStringList GameParser::JVMConfigure()
+QStringList LaunchParser::JVMConfigure()
 {
 	auto range = custom_.getMemoryAllocateRange();
 
@@ -43,7 +43,7 @@ QStringList GameParser::JVMConfigure()
 	return JVMArgs;
 }
 
-QStringList GameParser::gameArguments()
+QStringList LaunchParser::gameArguments()
 {
 	auto gameArguments = launchJson_.getGameArguments();
 
@@ -67,7 +67,7 @@ QStringList GameParser::gameArguments()
 	return gameArguments.toStringList();
 }
 
-QStringList GameParser::classPaths()
+QStringList LaunchParser::classPaths()
 {
 	auto libraryPaths = launchJson_.getLibraryPaths();
 	auto gameJarPath = launchJson_.getGameJarPath();
@@ -84,17 +84,17 @@ QStringList GameParser::classPaths()
 	return classPaths;
 }
 
-QString GameParser::mainClass()
+QString LaunchParser::mainClass()
 {
 	return launchJson_.getMainClass();
 }
 
-QStringList GameParser::versionChain()
+QStringList LaunchParser::versionChain()
 {
 	return launchJson_.getVersionChain();
 }
 
-QStringList GameParser::nativesFiles()
+QStringList LaunchParser::nativesFiles()
 {
 	QStringList nativesFiles = launchJson_.getNativesPaths();
 

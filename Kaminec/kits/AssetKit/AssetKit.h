@@ -12,7 +12,7 @@ class AssetKit
 public:
 	AssetKit(const QString &assetIndexId);
 
-	QList<AssetObject> assetObjects();
+	QList<AssetObject> assetObjects() const;
 
 private:
 	QVariant assetsVariant_;

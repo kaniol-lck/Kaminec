@@ -4,7 +4,7 @@ CheckAssets::CheckAssets(const QString &assetsIndexId) :
 	assetKit_(assetsIndexId)
 {}
 
-QList<CheckInfo> CheckAssets::getAssetObjectsCheckInfos()
+QList<CheckInfo> CheckAssets::getAssetObjectsCheckInfos() const
 {
 	QList<CheckInfo> assetObjectsCheckInfos;
 	for(const auto& object : assetKit_.assetObjects()){

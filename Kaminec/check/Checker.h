@@ -3,10 +3,15 @@
 
 #include <QString>
 
+#include "messager/Deficiency.h"
+
 class Checker
 {
 public:
-	void check(const QString &version);
+	QList<Deficiency> check(const QString &version);
+
+private:
+	static Deficiency checkFile(const CheckInfo &checkInfo);
 
 };
 

@@ -23,9 +23,9 @@ void Launcher::start(const Profile &profile, const LaunchAuth &auth)
 {
 	try{
 		logger_.startGenStartcode();
-		GameParser gameParser(profile, auth);
+		LaunchParser launchParser(profile, auth);
 
-		auto launchPack = gameParser.getLaunchPack();
+		auto launchPack = launchParser.getLaunchPack();
 
 		auto startcode = launchPack.startCode();
 

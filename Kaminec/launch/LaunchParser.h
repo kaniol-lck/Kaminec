@@ -1,5 +1,5 @@
-#ifndef GAMEPARSER_H
-#define GAMEPARSER_H
+#ifndef LAUNCHPARSER_H
+#define LAUNCHPARSER_H
 
 #include "messager/Profile.h"
 #include "launch/LaunchAuth.h"
@@ -7,10 +7,10 @@
 #include "assistance/Custom.h"
 #include "messager/LaunchPack.h"
 
-class GameParser
+class LaunchParser
 {
 public:
-	GameParser(const Profile &profile, const LaunchAuth &auth);
+	LaunchParser(const Profile &profile, const LaunchAuth &auth);
 
 	LaunchPack getLaunchPack();
 
@@ -33,4 +33,4 @@ private:
 
 };
 
-#endif // GAMEPARSER_H
+#endif // LAUNCHPARSER_H

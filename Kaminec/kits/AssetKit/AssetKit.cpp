@@ -29,7 +29,7 @@ AssetKit::AssetKit(const QString &assetIndexId)
 
 }
 
-QList<AssetObject> AssetKit::assetObjects()
+QList<AssetObject> AssetKit::assetObjects() const
 {
 	if(!assetObjects_){
 		assetObjects_ = std::make_shared<QList<AssetObject>>();
