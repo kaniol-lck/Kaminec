@@ -28,14 +28,14 @@ QList<CheckInfo> CheckParser::getLibraryCheckInfos() const
 {
 	auto libraryCheckInfos = checkJson_.getLibraryCheckInfos();
 	for(auto& libraryCheckInfo : libraryCheckInfos)
-		libraryCheckInfo.path_.prepend(Path::libsPath());
+		libraryCheckInfo.path_.prepend(Path::libsPath() + "/");
 	return libraryCheckInfos;
 }
 
 CheckInfo CheckParser::getAssetsCheckInfo() const
 {
 	auto assetsCheckInfo = checkJson_.getAssetsCheckInfo();
-	assetsCheckInfo.path_.prepend(Path::assetsPath());
+	assetsCheckInfo.path_.prepend(Path::indexesPath());
 	return assetsCheckInfo;
 }
 
@@ -43,7 +43,7 @@ QList<CheckInfo> CheckParser::getAssetObjectsCheckInfos() const
 {
 	auto assetObjectsCheckInfos = checkAssets_.getAssetObjectsCheckInfos();
 	for(auto& assetObjectsCheckInfo : assetObjectsCheckInfos)
-		assetObjectsCheckInfo.path_.prepend(Path::objectsPath());
+		assetObjectsCheckInfo.path_.prepend(Path::objectsPath() + "/");
 	return assetObjectsCheckInfos;
 }
 

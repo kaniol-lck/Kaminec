@@ -34,6 +34,7 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 	ui_->gameDir_label->setVisible(false);
 	ui_->gameDir_le->setVisible(false);
 	ui_->gameDir_showPb->setVisible(false);
+	ui_->check_pb->setVisible(false);
 
 	loadVersions();
 	loadProfiles();
@@ -136,7 +137,7 @@ void KaminecLauncher::startGame()
 void KaminecLauncher::on_action_preference_triggered()
 {
 	//create preference windows
-	auto preference = new Preference(this, activeAuth_);
+	auto preference = new Preference(this, &activeAuth_);
 	preference->show();
 
 	connect(preference,SIGNAL(settingfinished()),this,SLOT(updateProfiles()));
@@ -316,6 +317,7 @@ void KaminecLauncher::on_editProfile_pb_toggled(bool checked)
 	ui_->gameDir_label->setVisible(checked);
 	ui_->gameDir_le->setVisible(checked);
 	ui_->gameDir_showPb->setVisible(checked);
+	ui_->check_pb->setVisible(checked);
 
 	ui_->editProfile_pb->setText(checked?"&OK":"&Edit");
 }
@@ -328,4 +330,13 @@ void KaminecLauncher::on_addProfile_pb_clicked()
 	profileManager_.setSelectedProfile(profile.name_);
 	updateProfiles();
 	on_editProfile_pb_toggled(true);
+}
+
+void KaminecLauncher::on_check_pb_clicked()
+{
+	QStringList defciencyTexts;
+	for(const auto& defciency : checker_.check(ui_->version_cb->currentText())){
+		defciencyTexts << defciency.path_;
+	}
+	QMessageBox::information(this, "Lost Files", defciencyTexts.join("\n"));
 }

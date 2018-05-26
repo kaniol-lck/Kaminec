@@ -2,6 +2,12 @@
 
 #include "check/CheckParser.h"
 
+#include <QDebug>
+
+Checker::Checker(QObject *parent) :
+	QObject(parent)
+{}
+
 QList<Deficiency> Checker::check(const QString &version)
 {
 	QList<Deficiency> deficiencies;
@@ -19,7 +25,7 @@ QList<Deficiency> Checker::check(const QString &version)
 
 Deficiency Checker::checkFile(const CheckInfo &checkInfo)
 {
-	QFile file(checkInfo.fileName_);
+	QFile file(checkInfo.path_);
 
 	if(!file.exists())
 		return Deficiency(checkInfo, Deficiency::NotExist);
@@ -27,7 +33,7 @@ Deficiency Checker::checkFile(const CheckInfo &checkInfo)
 	if(!file.open(QIODevice::ReadOnly))
 		return Deficiency(checkInfo, Deficiency::OpenError);
 
-	if(QCryptographicHash::hash(file.readAll(), checkInfo.checkCodeType_) != checkInfo.checkCode_)
+	if(QCryptographicHash::hash(file.readAll(), checkInfo.checkCodeType_).toHex() != checkInfo.checkCode_)
 		return Deficiency(checkInfo, Deficiency::WrongCheckCode);
 
 	return Deficiency(true);

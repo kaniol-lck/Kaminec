@@ -11,6 +11,7 @@
 #include "download/Downloader.h"
 #include "launch/Launcher.h"
 #include "assistance/Custom.h"
+#include "check/Checker.h"
 
 namespace Ui {
 class KaminecLauncher;
@@ -72,6 +73,8 @@ private slots:
 
 	void on_addProfile_pb_clicked();
 
+	void on_check_pb_clicked();
+
 private:
 	void loadProfiles();
 
@@ -83,13 +86,14 @@ private:
 
 private:
 	Ui::KaminecLauncher *ui_;
-	ActiveAuth *activeAuth_;
+	ActiveAuth activeAuth_;
 	SavesManager savesManager_;
 	ModsManager modsManager_;
 	Downloader gameDownload_;
 	ProfileManager profileManager_;
 	LogCleaner logCleaner_;
 	Launcher launcher_;
+	Checker checker_;
 
 	int totalCount_;
 

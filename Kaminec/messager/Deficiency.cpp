@@ -12,5 +12,6 @@ Deficiency::Deficiency(const QString &fileName, const QString &path, Type type) 
 
 Deficiency::Deficiency(const CheckInfo &checkInfo, Type type) :
 	fileName_(checkInfo.fileName_),
-	path_(checkInfo.path_)
+	path_(checkInfo.path_),
+	type_(type)
 {}

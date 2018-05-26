@@ -1,13 +1,15 @@
 #ifndef CHECKER_H
 #define CHECKER_H
 
-#include <QString>
-
 #include "messager/Deficiency.h"
 
-class Checker
+#include <QObject>
+#include <QString>
+
+class Checker : QObject
 {
 public:
+	explicit Checker(QObject *parent = nullptr);
 	QList<Deficiency> check(const QString &version);
 
 private:
