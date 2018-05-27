@@ -13,7 +13,8 @@ QList<CheckInfo> CheckJson::getLibraryCheckInfos() const
 									   library.size(),
 									   QCryptographicHash::Sha1,
 									   library.sha1(),
-									   library.path());
+									   library.path(),
+									   library.url());
 	}
 	return libraryCheckInfos;
 }
@@ -25,7 +26,8 @@ CheckInfo CheckJson::getAssetsCheckInfo() const
 					 assetIndex.size(),
 					 QCryptographicHash::Sha1,
 					 assetIndex.sha1(),
-					 QString("/%1.json").arg(assetIndex.id()));
+					 QString("/%1.json").arg(assetIndex.id()),
+					 assetIndex.url());
 }
 
 CheckInfo CheckJson::getClientCheckInfo() const
@@ -35,7 +37,8 @@ CheckInfo CheckJson::getClientCheckInfo() const
 					 client.size(),
 					 QCryptographicHash::Sha1,
 					 client.sha1(),
-					 QString("/%1/%1.jar").arg(jsonKit_.jarName()));
+					 QString("/%1/%1.jar").arg(jsonKit_.jarName()),
+					 client.url());
 }
 
 QString CheckJson::getAssetsIndexId() const

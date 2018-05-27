@@ -11,7 +11,7 @@ struct Deficiency
 
 	Deficiency() = default;
 	Deficiency(bool ok);
-	Deficiency(const QString &fileName, const QString &path, Type type);
+	Deficiency(const QString &fileName, const QString &path, Type type, const QUrl url);
 	Deficiency(const CheckInfo &checkInfo, Type type);
 
 	bool ok_ = false;
@@ -19,6 +19,7 @@ struct Deficiency
 	QString fileName_;
 	QString path_;
 	Type type_;
+	QUrl url_;
 };
 
 #endif // DEFICIENCY_H
