@@ -24,7 +24,7 @@ QString Path::corePath()
 	return Custom().getCoreGameFileDirectory();
 }
 
-QString Path::libsPath()
+QString Path::librariesPath()
 {
 	auto path = Custom().getGameLibrariesDirectory();
 	replaceCore(path);
@@ -52,14 +52,14 @@ QString Path::assetsPath()
 	return path;
 }
 
-QString Path::indexesPath()
+QString Path::assetIndexesPath()
 {
 	auto path = Custom().getAssetsIndexesDirectory();
 	replaceAll(path);
 	return path;
 }
 
-QString Path::objectsPath()
+QString Path::assetObjectsPath()
 {
 	auto path = Custom().getAssetsObjectsDirectory();
 	replaceAll(path);
@@ -82,7 +82,7 @@ QString Path::getJsonPath(const QString& version)
 QString Path::getAssetIndexPath(const QString &index)
 {
 	return QString("%1/2%.json")
-			.arg(indexesPath(), index);
+			.arg(assetIndexesPath(), index);
 }
 
 void Path::replaceLauncher(QString &path)

@@ -9,7 +9,7 @@ LaunchParser::LaunchParser(const Profile &profile, const LaunchAuth &auth):
 	launchJson_(profile_.lastVersionId_)
 {}
 
-LaunchPack LaunchParser::getLaunchPack()
+LaunchPack LaunchParser::getLaunchPack() const
 {
 	if(launchAuth_.getAuthMode()==Mode::Online &&
 	   !launchAuth_.validate())
@@ -23,7 +23,7 @@ LaunchPack LaunchParser::getLaunchPack()
 					  nativesFiles());
 }
 
-QStringList LaunchParser::JVMConfigure()
+QStringList LaunchParser::JVMConfigure() const
 {
 	auto range = custom_.getMemoryAllocateRange();
 
@@ -43,7 +43,7 @@ QStringList LaunchParser::JVMConfigure()
 	return JVMArgs;
 }
 
-QStringList LaunchParser::gameArguments()
+QStringList LaunchParser::gameArguments() const
 {
 	auto gameArguments = launchJson_.getGameArguments();
 
@@ -67,13 +67,13 @@ QStringList LaunchParser::gameArguments()
 	return gameArguments.toStringList();
 }
 
-QStringList LaunchParser::classPaths()
+QStringList LaunchParser::classPaths() const
 {
 	auto libraryPaths = launchJson_.getLibraryPaths();
 	auto gameJarPath = launchJson_.getGameJarPath();
 
 	for(auto& libraryPath : libraryPaths)
-		libraryPath.prepend(Path::libsPath() + "/");
+		libraryPath.prepend(Path::librariesPath() + "/");
 
 	gameJarPath.prepend(Path::versionsPath());
 
@@ -84,22 +84,22 @@ QStringList LaunchParser::classPaths()
 	return classPaths;
 }
 
-QString LaunchParser::mainClass()
+QString LaunchParser::mainClass() const
 {
 	return launchJson_.getMainClass();
 }
 
-QStringList LaunchParser::versionChain()
+QStringList LaunchParser::versionChain() const
 {
 	return launchJson_.getVersionChain();
 }
 
-QStringList LaunchParser::nativesFiles()
+QStringList LaunchParser::nativesFiles() const
 {
 	QStringList nativesFiles = launchJson_.getNativesPaths();
 
 	for(QString& nativesName : nativesFiles){
-		nativesName.prepend(Path::libsPath() + "/");
+		nativesName.prepend(Path::librariesPath() + "/");
 	}
 
 	return nativesFiles;

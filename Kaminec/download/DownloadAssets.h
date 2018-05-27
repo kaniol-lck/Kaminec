@@ -12,7 +12,7 @@ class DownloadAssets
 public:
 	explicit DownloadAssets(const QString &assetsIndexId);
 
-	QList<DownloadInfo> getAssetsDownloadInfos();
+	QList<DownloadInfo> getAssetObjectsDownloadInfos();
 
 private:
 	static QString kResourcesDownload;

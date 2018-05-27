@@ -10,12 +10,12 @@ public:
 	static QString launcherPath();
 	static QString logsPath();
 	static QString corePath();
-	static QString libsPath();
+	static QString librariesPath();
 	static QString nativesPath();
 	static QString versionsPath();
 	static QString assetsPath();
-	static QString indexesPath();
-	static QString objectsPath();
+	static QString assetIndexesPath();
+	static QString assetObjectsPath();
 
 	//launcher
 	static QString loggerPath();

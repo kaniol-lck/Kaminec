@@ -3,12 +3,14 @@
 #include "assistance/Path.h"
 #include "messager/DownloadInfo.h"
 #include "assistance/Exceptions.h"
+#include "download/DownloadParser.h"
 
 #include <QStandardPaths>
 #include <QDir>
 #include <QCoreApplication>
 #include <QJsonDocument>
 #include <QStandardItem>
+#include <QDebug>
 
 QString Downloader::kVersionManifestDownlaod = "https://launchermeta.mojang.com/mc/game/version_manifest.json";
 
@@ -35,7 +37,6 @@ void Downloader::init()
 		tempVersionsFile_.close();
 		downloadKit_->append(DownloadInfo(QString("version_manifest.json"),
 											0,
-											QString("NULL"),
 											tempVersionsFile_.fileName(),
 											kVersionManifestDownlaod));
 		downloadKit_->waitForFinished();
@@ -87,42 +88,25 @@ void Downloader::download(int index)
 	//download json file
 	auto version = versionList_.at(index).toMap().value("id").toString();
 
-	downloadKit_->append(DownloadInfo(version + ".json",
-									 0,
-									 "NULL",
-									 QString("%1/%2/%2.json")
-									 .arg(Path::versionsPath()).arg(version),
-									 versionList_.at(index).toMap().value("url").toUrl()));
+	DownloadParser downloadParser(versionList_, index);
+
+	downloadKit_->append(downloadParser.gameJsonDownloadInfo());
 	downloadKit_->waitForFinished();
+	downloadParser.loadGameJson();
 
 	//download client
-	DownloadJson downloadJson(version);
-
-	auto clientDownloadInfo = downloadJson.getClientDownloadInfo();
-	clientDownloadInfo.path_.prepend(Path::versionsPath());
-	downloadKit_->append(clientDownloadInfo);
+	downloadKit_->append(downloadParser.clientDownloadInfo());
 
 	//download libraries
-	auto LibraryDownloadInfos = downloadJson.getLibraryDownloadInfos();
-	for(auto& item:LibraryDownloadInfos){
-		item.path_.prepend(Path::libsPath()+"/");
-	}
-
-	downloadKit_->append(LibraryDownloadInfos);
+	downloadKit_->append(downloadParser.libraryDownloadInfos());
 
 	//download asset index
-	auto assetsIndexDownloadInfo = downloadJson.getAssetsIndexDownloadInfo();
-	assetsIndexDownloadInfo.path_.prepend(Path::indexesPath());
-	downloadKit_->append(assetsIndexDownloadInfo);
+	downloadKit_->append(downloadParser.assetIndexDownloadInfo());
 	downloadKit_->waitForFinished();
+	downloadParser.loadAssetIndex();
 
 	//download asset objects
-	DownloadAssets downloadAsset_(downloadJson.getAssetsIndexId());
-	auto downloadAssetUrls = downloadAsset_.getAssetsDownloadInfos();
-	for(auto& item : downloadAssetUrls){
-		item.path_.append(Path::objectsPath() + "/");
-	}
-	downloadKit_->append(downloadAssetUrls);
+	downloadKit_->append(downloadParser.assetObjectDownloadInfos());
 
 	totalCount_ = downloadKit_->getTotalCount();
 

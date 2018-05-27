@@ -18,7 +18,7 @@ public:
 	explicit                DownloadKit(QObject *parent = nullptr);
 
     void                    append(const DownloadInfo &item);
-	void                    append(QList<DownloadInfo> &itemList_);
+	void                    append(const QList<DownloadInfo> &itemList_);
     void                    startDownload();
 
     int                     waitForFinished();

@@ -70,7 +70,8 @@ SOURCES += main.cpp\
     exception/InvalidAccountException.cpp \
     exception/FileOpenException.cpp \
     check/CheckParser.cpp \
-    launch/LaunchParser.cpp
+    launch/LaunchParser.cpp \
+    download/DownloadParser.cpp
 
 HEADERS  += UI/kamineclauncher.h \
 	UI/preference.h \
@@ -121,7 +122,8 @@ HEADERS  += UI/kamineclauncher.h \
     exception/InvalidAccountException.h \
     exception/FileOpenException.h \
     check/CheckParser.h \
-    launch/LaunchParser.h
+    launch/LaunchParser.h \
+    download/DownloadParser.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preference.ui \

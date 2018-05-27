@@ -9,13 +9,12 @@ DownloadKit::DownloadKit(QObject *parent) : QObject(parent)
 	for(int index = 0; index!= downloadNumber_;++index){
 		downloaderPool_.append(new SingleDownload(this,&manager_,index));
     }
-	model_.setColumnCount(6);
+	model_.setColumnCount(5);
 	model_.setHeaderData(0,Qt::Horizontal,"filename");
 	model_.setHeaderData(1,Qt::Horizontal,"downloaded size");
 	model_.setHeaderData(2,Qt::Horizontal,"total size");
-	model_.setHeaderData(3,Qt::Horizontal,"sha1");
-	model_.setHeaderData(4,Qt::Horizontal,"path");
-	model_.setHeaderData(5,Qt::Horizontal,"url");
+	model_.setHeaderData(3,Qt::Horizontal,"path");
+	model_.setHeaderData(4,Qt::Horizontal,"url");
 
 
 	//for each downloader
@@ -27,11 +26,10 @@ DownloadKit::DownloadKit(QObject *parent) : QObject(parent)
 
 void DownloadKit::append(const DownloadInfo &item)
 {
-
     auto info = item.getInfoList();
 
 	if(item.size_==0)
-        info.at(2)->setText(QString("unkonwn"));
+		info.at(2)->setText(QString("unkonwn"));
 
 	QFileInfo fileInfo(item.path_);
 	if(!fileInfo.exists() ||
@@ -44,10 +42,10 @@ void DownloadKit::append(const DownloadInfo &item)
 		mutex_.unlock();
 	}
 
-    startDownload();
+	startDownload();
 }
 
-void DownloadKit::append(QList<DownloadInfo> &itemList)
+void DownloadKit::append(const QList<DownloadInfo> &itemList)
 {
     for(auto &item: itemList)
         append(item);
@@ -62,7 +60,7 @@ void DownloadKit::startDownload()
 			//add a task to the free downloader
 			downloaderPool_.at(index)->start(itemList_.takeFirst(),downloadQueue_.dequeue());
 		}
-    }
+	}
 }
 
 int DownloadKit::waitForFinished()

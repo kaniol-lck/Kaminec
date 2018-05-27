@@ -11,7 +11,6 @@ struct DownloadInfo
     DownloadInfo()=default;
 	explicit DownloadInfo(const QString &name,
 						  const int     &size,
-						  const QString &sha1,
 						  const QString &path,
 						  const QUrl &url);
 	explicit DownloadInfo(const QUrl &url, const QString &path);
@@ -20,7 +19,6 @@ struct DownloadInfo
 
 	QString name_;
 	int   size_;
-	QString Sha1_;
 	QString path_;
 	QUrl    url_;
 

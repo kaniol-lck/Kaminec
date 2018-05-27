@@ -51,12 +51,9 @@ void Launcher::extractNatives(const QStringList &nativesPaths)
 {
 	QDir().mkdir(Path::nativesPath());
 
-
 	for(auto extractPath : nativesPaths){
 		if(!QFile(extractPath).exists()) continue;
-
 		JlCompress::extractDir(extractPath, Path::nativesPath());
-
 	}
 }
 

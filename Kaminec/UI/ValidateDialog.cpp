@@ -30,7 +30,7 @@ void ValidateDialog::on_buttonBox_accepted()
 						  ui_->password_le->text())){
 		custom_.setEmail(ui_->email_le->text());
 		custom_.setLogged(true);
-		emit login(custom_.getOfficialName());
+		emit login(custom_.getEmail());
 		this->accept();
 	}
 	else

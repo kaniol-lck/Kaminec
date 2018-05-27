@@ -12,18 +12,18 @@ class LaunchParser
 public:
 	LaunchParser(const Profile &profile, const LaunchAuth &auth);
 
-	LaunchPack getLaunchPack();
+	LaunchPack getLaunchPack() const;
 
 private:
-	QStringList JVMConfigure();
-	QStringList gameArguments();
+	QStringList JVMConfigure() const;
+	QStringList gameArguments() const;
 
-	QStringList classPaths();
-	QString mainClass();
+	QStringList classPaths() const;
+	QString mainClass() const;
 
-	QStringList versionChain();
+	QStringList versionChain() const;
 
-	QStringList nativesFiles();
+	QStringList nativesFiles() const;
 
 private:
 	Profile profile_;

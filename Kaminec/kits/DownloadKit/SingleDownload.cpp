@@ -43,7 +43,7 @@ void SingleDownload::start(const QList<QStandardItem *> &modelItem, const Downlo
     connect(currentDownload_,SIGNAL(finished()),SLOT(downloadFinished()));
     connect(currentDownload_,SIGNAL(readyRead()),SLOT(downloadReadyRead()));
 
-    isdownload_ = true;
+	isdownload_ = true;
 }
 
 void SingleDownload::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
@@ -51,9 +51,8 @@ void SingleDownload::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
     if(isdownload_){
         modelItem_.at(1)->setText(QString::number(bytesReceived));
         if(modelItem_.at(2)->text()=="0")
-            modelItem_.at(2)->setText(QString::number(bytesTotal));
-    }
-
+			modelItem_.at(2)->setText(QString::number(bytesTotal));
+	}
 }
 
 void SingleDownload::downloadReadyRead()
@@ -68,7 +67,7 @@ void SingleDownload::downloadFinished()
     output_->close();
 
     qDebug()<<"downloader "<<index_<<" finished downloading file:"<<output_->fileName();
-    qDebug()<<modelItem_.at(0)->text()<<" from "<<modelItem_.at(5)->text();
+	qDebug()<<modelItem_.at(0)->text()<<" from "<<modelItem_.at(4)->text();
 
     isdownload_ = false;
 
@@ -77,6 +76,5 @@ void SingleDownload::downloadFinished()
 	}else {
         qDebug()<<"Succeed:"<<output_->fileName();
         emit finished(index_);
-    }
-
+	}
 }

@@ -10,7 +10,7 @@
 
 AssetKit::AssetKit(const QString &assetIndexId)
 {
-	QFile assetsFile(Path::indexesPath() + QString("/%1.json").arg(assetIndexId));
+	QFile assetsFile(Path::assetIndexesPath() + QString("/%1.json").arg(assetIndexId));
 
 	if(!assetsFile.exists())
 		throw FileNotFoundException(assetsFile.fileName());

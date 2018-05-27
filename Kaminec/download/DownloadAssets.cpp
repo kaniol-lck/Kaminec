@@ -8,13 +8,12 @@ DownloadAssets::DownloadAssets(const QString &assetsIndexId) :
 	assetKit_(assetsIndexId)
 {}
 
-QList<DownloadInfo> DownloadAssets::getAssetsDownloadInfos()
+QList<DownloadInfo> DownloadAssets::getAssetObjectsDownloadInfos()
 {
 	QList<DownloadInfo> assetsDownloadInfos;
 	for(const auto& object : assetKit_.assetObjects()){
 		assetsDownloadInfos.append(DownloadInfo(object.name(),
 										   object.size(),
-										   "NULL",
 										   object.path(),
 										   kResourcesDownload + object.url()));
 	}
