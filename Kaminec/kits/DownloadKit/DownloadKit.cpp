@@ -26,7 +26,7 @@ DownloadKit::DownloadKit(QObject *parent) : QObject(parent)
 
 void DownloadKit::append(const DownloadInfo &item)
 {
-    auto info = item.getInfoList();
+	auto info = fromDownloadInfo(item);
 
 	if(item.size_==0)
 		info.at(2)->setText(QString("unkonwn"));
@@ -118,4 +118,15 @@ void DownloadKit::startNextDownload(int index)
 
 void DownloadKit::singleFinished(int /*index*/)
 {
+}
+
+QList<QStandardItem *> DownloadKit::fromDownloadInfo(const DownloadInfo &downloadInfo)
+{
+	return QList<QStandardItem*>{
+		new QStandardItem(downloadInfo.name_),
+		new QStandardItem(),
+		new QStandardItem(QString::number(downloadInfo.size_)),
+		new QStandardItem(downloadInfo.path_),
+		new QStandardItem(downloadInfo.url_.toString())
+	};
 }

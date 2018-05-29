@@ -18,14 +18,3 @@ DownloadInfo::DownloadInfo(const QUrl &url, const QString &path):
 			 path,
 			 url)
 {}
-
-QList<QStandardItem *> DownloadInfo::getInfoList() const
-{
-    return QList<QStandardItem*>{
-        new QStandardItem(name_),
-        new QStandardItem(),
-        new QStandardItem(QString::number(size_)),
-        new QStandardItem(path_),
-        new QStandardItem(url_.toString())
-    };
-}

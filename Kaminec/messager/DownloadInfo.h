@@ -15,8 +15,6 @@ struct DownloadInfo
 						  const QUrl &url);
 	explicit DownloadInfo(const QUrl &url, const QString &path);
 
-    QList<QStandardItem *> getInfoList() const;
-
 	QString name_;
 	int   size_;
 	QString path_;

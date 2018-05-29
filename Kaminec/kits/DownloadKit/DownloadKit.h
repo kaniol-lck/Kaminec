@@ -39,6 +39,8 @@ public slots:
     void                    singleFinished(int);
 
 private:
+	static QList<QStandardItem*> fromDownloadInfo(const DownloadInfo &downloadInfo);
+
 	QNetworkAccessManager manager_;
 	QQueue<DownloadInfo> downloadQueue_;
 
