@@ -4,9 +4,20 @@
 
 #include <QUrl>
 
-GameCoreJar::GameCoreJar(const QVariant &gameCoreJarVariant) :
-	gameCoreJarVariant_(gameCoreJarVariant)
+GameCoreJar::GameCoreJar(const QVariant &gameCoreJarVariant, const QString &version) :
+	gameCoreJarVariant_(gameCoreJarVariant),
+	version_(version)
 {}
+
+QString GameCoreJar::name() const
+{
+	return version_;
+}
+
+QString GameCoreJar::path() const
+{
+	return QString("<versions>/%1/%1.jar").arg(version_);
+}
 
 QString GameCoreJar::sha1() const
 {

@@ -6,7 +6,7 @@ LaunchJson::LaunchJson(const QString &version) :
 
 QString LaunchJson::getGameJarPath() const
 {
-	return QString("/%1/%1.jar").arg(jsonKit_.jarName());
+	return jsonKit_.client().path();
 }
 
 QStringList LaunchJson::getLibraryPaths() const

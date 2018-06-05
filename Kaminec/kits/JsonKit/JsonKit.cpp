@@ -27,6 +27,8 @@ JsonKit::JsonKit(const QString &version)
 	if(ok.error != QJsonParseError::NoError)
 		throw JsonParseException(jsonFile.fileName(), ok.errorString(), true);
 
+	needJar_ = jsonVariant_.toMap().contains("jar");
+
 	version_ = qMakePair(value(jsonVariant_, "id").toString(),
 						 value(jsonVariant_, "inheritsFrom").toString());
 
@@ -53,10 +55,10 @@ QPair<QString, QString> JsonKit::version() const
 GameCoreJar JsonKit::client() const
 {
 	if(!gameClient_){
-		if(inheritedJson_)
-			gameClient_ = std::make_shared<GameCoreJar>(inheritedJson_->client());
+		if(needJar_)
+			gameClient_ = std::make_shared<GameCoreJar>(inheritedJson_->client());//Is the content of inheritsFrom the same as jar?
 		else
-			gameClient_ = std::make_shared<GameCoreJar>(value(jsonVariant_, "downloads", "client"));
+			gameClient_ = std::make_shared<GameCoreJar>(value(jsonVariant_, "downloads", "client"), version_.first);
 	}
 	return *gameClient_;
 }
@@ -67,7 +69,7 @@ GameCoreJar JsonKit::server() const
 		if(inheritedJson_)
 			gameServer_ = std::make_shared<GameCoreJar>(inheritedJson_->server());
 		else
-			gameServer_ = std::make_shared<GameCoreJar>(value(jsonVariant_, "downloads", "server"));
+			gameServer_ = std::make_shared<GameCoreJar>(value(jsonVariant_, "downloads", "server"), version_.first);
 	}
 	return *gameServer_;
 }
@@ -83,17 +85,6 @@ QList<Library> JsonKit::libraries() const
 		return *libraries_ + inheritedJson_->libraries();
 	}
 	return *libraries_;
-}
-
-QString JsonKit::jarName() const
-{
-	if(!jarName_){
-		if(jsonVariant_.toMap().contains("jar"))
-			jarName_ = std::make_shared<QString>(value(jsonVariant_, "jar").toString());
-		else
-			jarName_ = std::make_shared<QString>(version_.first);
-	}
-	return *jarName_;
 }
 
 QString JsonKit::mainClass() const

@@ -33,11 +33,11 @@ CheckInfo CheckJson::getAssetsCheckInfo() const
 CheckInfo CheckJson::getClientCheckInfo() const
 {
 	auto client = jsonKit_.client();
-	return CheckInfo(jsonKit_.jarName(),
+	return CheckInfo(client.name(),
 					 client.size(),
 					 QCryptographicHash::Sha1,
 					 client.sha1(),
-					 QString("/%1/%1.jar").arg(jsonKit_.jarName()),
+					 client.path(),
 					 client.url());
 }
 

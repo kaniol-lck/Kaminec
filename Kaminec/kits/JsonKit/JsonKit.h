@@ -25,7 +25,7 @@ public:
 
 	QList<Library> libraries() const;
 
-	QString jarName() const;
+	QString jarPath() const;
 
 	QString mainClass() const;
 
@@ -41,6 +41,8 @@ private:
 	//the first is current version
 	//the second is whom it inherits from
 	QPair<QString, QString> version_;
+
+	bool needJar_;
 
 	std::shared_ptr<JsonKit> inheritedJson_;
 

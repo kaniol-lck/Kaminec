@@ -31,9 +31,9 @@ DownloadInfo DownloadJson::getAssetsIndexDownloadInfo() const
 DownloadInfo DownloadJson::getClientDownloadInfo() const
 {
 	auto client = jsonKit_.client();
-	return DownloadInfo(jsonKit_.jarName(),
+	return DownloadInfo(client.name(),
 						client.size(),
-						QString("/%1/%1.jar").arg(jsonKit_.jarName()),
+						client.path(),
 						client.url());
 }
 

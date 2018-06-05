@@ -1,7 +1,7 @@
 #include "AssetKit.h"
 
 #include "assistance/utility.h"
-#include "assistance/Path.h"
+#include "assistance/PathReplacer.h"
 #include "assistance/Exceptions.h"
 
 #include <QFile>
@@ -10,7 +10,7 @@
 
 AssetKit::AssetKit(const QString &assetIndexId)
 {
-	QFile assetsFile(Path::assetIndexesPath() + QString("/%1.json").arg(assetIndexId));
+	QFile assetsFile(PathReplacer::replace("<indexes>/%1.json").arg(assetIndexId));
 
 	if(!assetsFile.exists())
 		throw FileNotFoundException(assetsFile.fileName());

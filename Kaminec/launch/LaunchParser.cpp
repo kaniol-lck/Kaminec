@@ -1,6 +1,7 @@
 #include "LaunchParser.h"
 
 #include "assistance/Path.h"
+#include "assistance/PathReplacer.h"
 #include "assistance/Exceptions.h"
 
 LaunchParser::LaunchParser(const Profile &profile, const LaunchAuth &auth):
@@ -73,9 +74,9 @@ QStringList LaunchParser::classPaths() const
 	auto gameJarPath = launchJson_.getGameJarPath();
 
 	for(auto& libraryPath : libraryPaths)
-		libraryPath.prepend(Path::librariesPath() + "/");
+		PathReplacer::replace(libraryPath);
 
-	gameJarPath.prepend(Path::versionsPath());
+	PathReplacer::replace(gameJarPath);
 
 	QStringList classPaths;
 	classPaths << libraryPaths;
@@ -99,7 +100,7 @@ QStringList LaunchParser::nativesFiles() const
 	QStringList nativesFiles = launchJson_.getNativesPaths();
 
 	for(QString& nativesName : nativesFiles){
-		nativesName.prepend(Path::librariesPath() + "/");
+		PathReplacer::replace(nativesName);
 	}
 
 	return nativesFiles;

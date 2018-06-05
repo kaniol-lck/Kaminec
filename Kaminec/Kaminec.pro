@@ -71,7 +71,8 @@ SOURCES += main.cpp\
     exception/FileOpenException.cpp \
     check/CheckParser.cpp \
     launch/LaunchParser.cpp \
-    download/DownloadParser.cpp
+    download/DownloadParser.cpp \
+    assistance/PathReplacer.cpp
 
 HEADERS  += UI/kamineclauncher.h \
 	UI/preference.h \
@@ -123,7 +124,8 @@ HEADERS  += UI/kamineclauncher.h \
     exception/FileOpenException.h \
     check/CheckParser.h \
     launch/LaunchParser.h \
-    download/DownloadParser.h
+    download/DownloadParser.h \
+    assistance/PathReplacer.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preference.ui \

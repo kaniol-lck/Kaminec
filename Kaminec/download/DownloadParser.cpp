@@ -1,6 +1,7 @@
 #include "DownloadParser.h"
 
 #include "assistance/Path.h"
+#include "assistance/PathReplacer.h"
 
 #include <cassert>
 
@@ -28,7 +29,7 @@ DownloadInfo DownloadParser::clientDownloadInfo() const
 {
 	assert(downloadJson_);
 	auto downloadInfo = downloadJson_->getClientDownloadInfo();
-	downloadInfo.path_.prepend(Path::versionsPath());
+	PathReplacer::replace(downloadInfo.path_);
 	return downloadInfo;
 }
 
@@ -37,7 +38,7 @@ QList<DownloadInfo> DownloadParser::libraryDownloadInfos() const
 	assert(downloadJson_);
 	auto downloadInfos = downloadJson_->getLibraryDownloadInfos();
 	for(auto& downloadInfo : downloadInfos)
-		downloadInfo.path_.prepend(Path::librariesPath() + "/");
+		PathReplacer::replace(downloadInfo.path_);
 	return downloadInfos;
 }
 
@@ -45,7 +46,7 @@ DownloadInfo DownloadParser::assetIndexDownloadInfo() const
 {
 	assert(downloadJson_);
 	auto downloadInfo = downloadJson_->getAssetsIndexDownloadInfo();
-	downloadInfo.path_.prepend(Path::assetIndexesPath());
+	PathReplacer::replace(downloadInfo.path_);
 	return downloadInfo;
 }
 
@@ -60,6 +61,6 @@ QList<DownloadInfo> DownloadParser::assetObjectDownloadInfos() const
 	assert(downloadAssets_);
 	auto downloadInfos = downloadAssets_->getAssetObjectsDownloadInfos();
 	for(auto& downloadInfo : downloadInfos)
-		downloadInfo.path_.prepend(Path::assetObjectsPath() + "/");
+		PathReplacer::replace(downloadInfo.path_);
 	return downloadInfos;
 }

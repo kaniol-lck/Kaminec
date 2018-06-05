@@ -1,6 +1,6 @@
 #include "profilemanager.h"
 
-#include "assistance/Path.h"
+#include "assistance/PathReplacer.h"
 #include "assistance/utility.h"
 #include "assistance/Exceptions.h"
 
@@ -13,7 +13,7 @@
 
 ProfileManager::ProfileManager(QObject *parent) :
 	QObject(parent),
-	profilesFile_(Path::corePath() + "/launcher_profiles.json")
+	profilesFile_(PathReplacer::replace("<core>/launcher_profiles.json"))
 {
 	if(!profilesFile_.open(QIODevice::ReadOnly | QIODevice::Text)){
 		qDebug()<<"No content,auto make.";
@@ -165,7 +165,7 @@ Profile ProfileManager::getSelectedProfile()
 
 void ProfileManager::refresh()
 {
-	profilesFile_.setFileName(Path::corePath() + "/launcher_profiles.json");
+	profilesFile_.setFileName(PathReplacer::replace("<core>/launcher_profiles.json"));
 	if(!profilesFile_.open(QIODevice::ReadOnly | QIODevice::Text))
 		throw FileOpenException(profilesFile_.fileName());
 	QByteArray bytes = QString::fromLocal8Bit(profilesFile_.readAll()).toUtf8();

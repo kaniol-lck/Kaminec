@@ -48,10 +48,10 @@ QString Library::sha1() const
 QString Library::path() const
 {
 	if(isNatives())
-		return QString("%1/%2/%3/%2-%3-%4.jar")
+		return QString("<libraries>/%1/%2/%3/%2-%3-%4.jar")
 				.arg(package().replace(".", "/"), packageName(), version(), nativeKey());
 	else
-		return QString("%1/%2/%3/%2-%3.jar")
+		return QString("<libraries>/%1/%2/%3/%2-%3.jar")
 				.arg(package().replace(".", "/"), packageName(), version());
 }
 
