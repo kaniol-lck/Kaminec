@@ -8,7 +8,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-Preference::Preference(QWidget *parent, ActiveAuth *auth) :
+Preference::Preference(QWidget *parent, Validator *auth) :
 	QDialog(parent),
 	ui_(new Ui::Preference),
 	activeAuth_(auth)

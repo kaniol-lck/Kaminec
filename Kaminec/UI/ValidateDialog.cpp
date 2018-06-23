@@ -1,9 +1,9 @@
 #include "validatedialog.h"
 #include "ui_validatedialog.h"
 
-#include "LAminec/ActiveAuth.h"
+#include "LAminec/Validator.h"
 
-ValidateDialog::ValidateDialog(QWidget *parent, ActiveAuth *auth) :
+ValidateDialog::ValidateDialog(QWidget *parent, Validator *auth) :
 	QDialog(parent),
 	ui_(new Ui::ValidateDialog),
 	activeAuth_(auth)
@@ -46,4 +46,11 @@ void ValidateDialog::on_showPassword_pb_toggled(bool checked)
 		ui_->password_le->setEchoMode(QLineEdit::Password);
 		ui_->showPassword_pb->setText("&Show Password");
 	}
+}
+
+Account ValidateDialog::authenticate(const QString &email, const QString &password) const
+{
+	QByteArray data = AuthKit::kAuthenticateStyle.arg(email).arg(password).toUtf8();
+
+	return authKit_.authenticate(data);
 }

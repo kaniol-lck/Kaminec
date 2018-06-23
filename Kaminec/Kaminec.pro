@@ -48,7 +48,6 @@ SOURCES += main.cpp\
     kits/JsonKit/Library.cpp \
     kits/Ruler/Rule.cpp \
     kits/Ruler/Ruler.cpp \
-    LAminec/ActiveAuth.cpp \
     LAminec/ModsManager.cpp \
     LAminec/profileManager.cpp \
     LAminec/SavesManager.cpp \
@@ -72,7 +71,10 @@ SOURCES += main.cpp\
     check/CheckParser.cpp \
     launch/LaunchParser.cpp \
     download/DownloadParser.cpp \
-    assistance/PathReplacer.cpp
+    assistance/PathReplacer.cpp \
+    LAminec/AccountKeeper.cpp \
+    messager/Account.cpp \
+    LAminec/AccountPool.cpp
 
 HEADERS  += UI/kamineclauncher.h \
 	UI/preference.h \
@@ -101,7 +103,6 @@ HEADERS  += UI/kamineclauncher.h \
     kits/JsonKit/Library.h \
     kits/Ruler/Rule.h \
     kits/Ruler/Ruler.h \
-    LAminec/ActiveAuth.h \
     LAminec/ModsManager.h \
     LAminec/ProfileManager.h \
     LAminec/SavesManager.h \
@@ -125,7 +126,10 @@ HEADERS  += UI/kamineclauncher.h \
     check/CheckParser.h \
     launch/LaunchParser.h \
     download/DownloadParser.h \
-    assistance/PathReplacer.h
+    assistance/PathReplacer.h \
+    LAminec/AccountKeeper.h \
+    messager/Account.h \
+    LAminec/AccountPool.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preference.ui \

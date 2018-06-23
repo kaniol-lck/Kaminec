@@ -1,7 +1,7 @@
 #ifndef PREFERENCE_H
 #define PREFERENCE_H
 
-#include "LAminec/ActiveAuth.h"
+#include "LAminec/Validator.h"
 #include "assistance/Custom.h"
 
 #include <QDialog>
@@ -15,7 +15,7 @@ class Preference : public QDialog
 	Q_OBJECT
 
 public:
-	explicit Preference(QWidget *parent, ActiveAuth *auth);
+	explicit Preference(QWidget *parent, Validator *auth);
 	~Preference();
 
 private:
@@ -72,7 +72,7 @@ private:
 
 	Custom custom_;
 
-	ActiveAuth *activeAuth_;
+	Validator *activeAuth_;
 };
 
 #endif // PREFERENCE_H
