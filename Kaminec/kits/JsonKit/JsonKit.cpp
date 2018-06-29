@@ -2,7 +2,7 @@
 
 #include "assistance/Path.h"
 #include "assistance/utility.h"
-#include "assistance/Exceptions.h"
+#include "assistance/Exceptions.hpp"
 
 #include <stdexcept>
 #include <QJsonDocument>

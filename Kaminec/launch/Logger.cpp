@@ -9,7 +9,7 @@
 #include <QDebug>
 
 #include "assistance/Path.h"
-#include "assistance/Exceptions.h"
+#include "assistance/Exceptions.hpp"
 
 Logger::Logger(QObject *parent = 0) :
 	QObject(parent)

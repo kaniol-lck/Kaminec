@@ -63,11 +63,7 @@ SOURCES += main.cpp\
     messager/Deficiency.cpp \
     messager/CheckInfo.cpp \
     exception/Exception.cpp \
-    exception/FileNotFoundException.cpp \
     exception/JsonParseException.cpp \
-    exception/DownloadException.cpp \
-    exception/InvalidAccountException.cpp \
-    exception/FileOpenException.cpp \
     check/CheckParser.cpp \
     launch/LaunchParser.cpp \
     download/DownloadParser.cpp \
@@ -84,7 +80,6 @@ HEADERS  += UI/kamineclauncher.h \
     assistance/Path.h \
     assistance/systeminfo.h \
 	assistance/utility.h \
-    assistance/Exceptions.h \
     check/Checker.h \
     check/CheckJson.h \
     check/CheckAssets.h \
@@ -118,18 +113,15 @@ HEADERS  += UI/kamineclauncher.h \
     messager/Deficiency.h \
     messager/CheckInfo.h \
     exception/Exception.h \
-    exception/FileNotFoundException.h \
     exception/JsonParseException.h \
-    exception/DownloadException.h \
-    exception/InvalidAccountException.h \
-    exception/FileOpenException.h \
     check/CheckParser.h \
     launch/LaunchParser.h \
     download/DownloadParser.h \
     assistance/PathReplacer.h \
     LAminec/AccountKeeper.h \
     messager/Account.h \
-    LAminec/AccountPool.h
+    LAminec/AccountPool.h \
+    assistance/Exceptions.hpp
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preference.ui \
