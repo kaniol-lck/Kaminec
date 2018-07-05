@@ -1,7 +1,7 @@
 #include "AccountPool.h"
 
 #include "assistance/PathReplacer.h"
-#include "assistance/Exceptions.hpp"
+#include "exception/Exceptions.hpp"
 
 #include <QJsonDocument>
 #include <QJsonObject>

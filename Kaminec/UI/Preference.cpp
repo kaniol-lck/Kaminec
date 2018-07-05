@@ -8,10 +8,10 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-Preference::Preference(QWidget *parent, Validator *auth) :
+Preference::Preference(QWidget *parent, AccountPool *accountPool) :
 	QDialog(parent),
 	ui_(new Ui::Preference),
-	activeAuth_(auth)
+	accountPool_(accountPool)
 {
 	setWindowFlags(Qt::Dialog);
 	ui_->setupUi(this);
@@ -146,28 +146,6 @@ void Preference::on_buttonBox_accepted()
 	emit settingfinished();
 }
 
-void Preference::on_login_pb_clicked()
-{
-	if(custom_.getLogged()){
-		activeAuth_->invalidate();
-
-		custom_.setLogged(false);
-		ui_->logName_label->setText("You have not logged in.");
-		ui_->login_pb->setText("&Log in");
-	}else {
-		auto validateDialog = new ValidateDialog(this, activeAuth_);
-
-		connect(validateDialog, SIGNAL(login(QString)), this, SLOT(logChanged(QString)));
-
-		validateDialog->show();
-	}
-}
-
-void Preference::logChanged(QString email)
-{
-	ui_->logName_label->setText("Logon account:" + email);
-	ui_->login_pb->setText("&Log out");
-}
 
 void Preference::on_autoName_cb_stateChanged(int arg1)
 {

@@ -10,13 +10,13 @@
 class AuthKit
 {
 public:
-	AuthKit();
+	AuthKit(std::shared_ptr<AuthResponse> authResponse);
 
-	bool authenticate(const QByteArray &data) const;
-	bool validate(const QByteArray &data) const;
-	bool refresh(const QByteArray &data) const;
-	bool signout(const QByteArray &data) const = delete;//we needn't this method currently
-	bool invalidate(const QByteArray &data) const;
+	void authenticate(const QByteArray &data) const;
+	void validate(const QByteArray &data) const;
+	void refresh(const QByteArray &data) const;
+	void signout(const QByteArray &data) const = delete;//we needn't this method currently
+	void invalidate(const QByteArray &data) const;
 
 	static const QString kYggdrasilServer;
 	static const QString kAuthenticateStyle;

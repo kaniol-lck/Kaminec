@@ -121,7 +121,7 @@ HEADERS  += UI/kamineclauncher.h \
     LAminec/AccountKeeper.h \
     messager/Account.h \
     LAminec/AccountPool.h \
-    assistance/Exceptions.hpp
+    exception/Exceptions.hpp
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preference.ui \

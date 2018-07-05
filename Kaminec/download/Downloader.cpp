@@ -2,7 +2,7 @@
 
 #include "assistance/Path.h"
 #include "messager/DownloadInfo.h"
-#include "assistance/Exceptions.hpp"
+#include "exception/Exceptions.hpp"
 #include "download/DownloadParser.h"
 
 #include <QStandardPaths>

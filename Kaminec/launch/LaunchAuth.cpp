@@ -2,7 +2,11 @@
 
 #include "assistance/Custom.h"
 
+#include <QEventLoop>
+
 LaunchAuth::LaunchAuth(Mode authMode) :
+	authResponse_(std::make_shared<AuthResponse>()),
+	authKit_(authResponse_),
 	authMode_(authMode)
 {}
 

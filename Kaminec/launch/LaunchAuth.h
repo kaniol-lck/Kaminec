@@ -21,6 +21,7 @@ public:
 	Mode getAuthMode() const;
 
 private:
+	std::shared_ptr<AuthResponse> authResponse_;
 	AuthKit authKit_;
 	Mode authMode_;
 };

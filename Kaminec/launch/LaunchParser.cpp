@@ -2,7 +2,7 @@
 
 #include "assistance/Path.h"
 #include "assistance/PathReplacer.h"
-#include "assistance/Exceptions.hpp"
+#include "exception/Exceptions.hpp"
 
 LaunchParser::LaunchParser(const Profile &profile, const LaunchAuth &auth):
 	profile_(profile),

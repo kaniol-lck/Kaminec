@@ -1,7 +1,6 @@
 #ifndef VALIDATEDIALOG_H
 #define VALIDATEDIALOG_H
 
-#include "LAminec/Validator.h"
 #include "assistance/Custom.h"
 
 #include <QDialog>
@@ -15,12 +14,11 @@ class ValidateDialog : public QDialog
 	Q_OBJECT
 
 public:
-	explicit ValidateDialog(QWidget *parent, Validator *auth);
+	explicit ValidateDialog(QWidget *parent, const QString &email);
 	~ValidateDialog();
 
 signals:
-
-	void login(QString username);
+	void login(QString email, QString password);
 
 private slots:
 	void on_buttonBox_accepted();
@@ -29,12 +27,6 @@ private slots:
 
 private:
 	Ui::ValidateDialog *ui_;
-
-	Validator *activeAuth_;
-	Custom custom_;
-	AuthKit authKit_;
-
-	Account authenticate(const QString &email, const QString &password) const;
 
 };
 
