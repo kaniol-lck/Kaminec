@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 
-#include "LAminec/Validator.h"
+#include "LAminec/AccountPool.h"
 #include "LAminec/SavesManager.h"
 #include "LAminec/ProfileManager.h"
 #include "LAminec/ModsManager.h"
@@ -86,7 +86,7 @@ private:
 
 private:
 	Ui::KaminecLauncher *ui_;
-	Validator activeAuth_;
+	AccountPool accountPool_;
 	SavesManager savesManager_;
 	ModsManager modsManager_;
 	Downloader gameDownload_;

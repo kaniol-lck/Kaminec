@@ -1,6 +1,6 @@
 #include "singledownload.h"
 #include "messager/DownloadInfo.h"
-#include "assistance/Exceptions.hpp"
+#include "exception/Exceptions.hpp"
 
 #include <QDir>
 #include <QFile>

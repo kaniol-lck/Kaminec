@@ -2,7 +2,7 @@
 
 #include "assistance/utility.h"
 #include "assistance/PathReplacer.h"
-#include "assistance/Exceptions.hpp"
+#include "exception/Exceptions.hpp"
 
 #include <QFile>
 #include <QJsonDocument>

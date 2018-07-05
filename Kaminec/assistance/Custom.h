@@ -32,18 +32,6 @@ public:
 	getterAndSetter(SelectedProfileName, String, selectedProfileName, "")
 	getterAndSetter(LogFileNumber, Int, logFileNumber, 10)
 
-	//account settings
-	getterAndSetter(Logged, Bool, logged, false)
-	getterAndSetter(Email, String, email, "")
-	getterAndSetter(OnlineMode, Bool, onlineMode, false)
-
-	getterAndSetter(PlayerName, String, playerName, "Steve")
-	getterAndSetter(AutoOfficialName, Bool, autoOfficialName, false)
-	getterAndSetter(OfficialName, String, officialName, "")
-	getterAndSetter(Uuid, String, uuid, "")
-	getterAndSetter(AccessToken, String, accessToken, "")
-	getterAndSetter(ClientToken, String, clientToken, "")
-
 	//directory settings
 	getterAndSetter_prefix(CoreGameFileDirectory, String, coreDirectory, "path/", QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/.minecraft")
 	getterAndSetter_prefix(DefaultGameDirectory, String, gameDirectory, "path/", getCoreGameFileDirectory())

@@ -18,6 +18,8 @@ public:
 	void initAccounts();
 	void addAccount(const Account &account);
 
+	Account getSelectedAccount();
+
 private:
 	QFile accountsFile_;
 	QList<AccountKeeper*> validators;

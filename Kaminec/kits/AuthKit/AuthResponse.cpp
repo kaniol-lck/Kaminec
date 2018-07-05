@@ -2,7 +2,7 @@
 
 #include "assistance/utility.h"
 #include "assistance/Custom.h"
-#include "assistance/Exceptions.hpp"
+#include "exception/Exceptions.hpp"
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -13,97 +13,72 @@ AuthResponse::AuthResponse(QObject *parent) :
 	QObject(parent)
 {}
 
-bool AuthResponse::success()
-{
-	return success_;
-}
-
-void AuthResponse::authenticateFinished(QNetworkReply *reply) const
+void AuthResponse::authenticateResponse(QNetworkReply *reply) const
 {
 	auto statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
 	auto json = jsonParse(reply, "Authentication");
 
 	if(statusCode == 200){
-		//success
-		success_ = true;
-
 		//parse json we've got
-		auto uuid = value(json, "selectedProfile", "id").toString();
-		auto accessToken = value(json, "accessToken").toString();
-		auto clientToken = value(json, "clientToken").toString();
-		auto playerName = value(json, "selectedProfile", "name").toString();
+		emit uuidUpdate(value(json, "selectedProfile", "id").toString());
+		emit accessTokenUpdate(value(json, "accessToken").toString());
+		emit clientTokenUpdate(value(json, "clientToken").toString());
+		emit playerNameUpdate(value(json, "selectedProfile", "name").toString());
 
-		//store these information to settings
-		Custom custom;
-		custom.setUuid(uuid);
-		custom.setAccessToken(accessToken);
-		custom.setClientToken(clientToken);
-		custom.setOfficialName(playerName);
-		qDebug()<<"Welcome:"<<playerName;
+		emit authenticateFinished(true);
 	} else{
 		//failure
-		QMessageBox::warning(0,
-							 value(json, "error").toString(),
-							 value(json, "errorMessage").toString());
+		emit authError(value(json, "error").toString(),
+					   value(json, "errorMessage").toString());
+		emit authenticateFinished(false);
 
 	}
 }
 
-void AuthResponse::validateFinished(QNetworkReply *reply) const
+void AuthResponse::validateResponse(QNetworkReply *reply) const
 {
 	auto statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 	if(statusCode == 204){
-		success_ = true;
+		emit validateFinished(true);
 	} else{
-		success_ = false;
+		emit validateFinished(false);
 	}
 }
 
-void AuthResponse::refreshFinished(QNetworkReply *reply) const
+void AuthResponse::refreshResponse(QNetworkReply *reply) const
 {
 	auto statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
 	auto json = jsonParse(reply, "Refreshing");
 	if(statusCode == 200){
-		//success
-		success_ = true;
-
 		//parse json we've got
-		auto uuid = value(json, "selectedProfile", "id").toString();
-		auto accessToken = value(json, "accessToken").toString();
-		auto clientToken = value(json, "clientToken").toString();
-		auto playerName = value(json, "selectedProfile", "name").toString();
+		emit uuidUpdate(value(json, "selectedProfile", "id").toString());
+		emit accessTokenUpdate(value(json, "accessToken").toString());
+		emit clientTokenUpdate(value(json, "clientToken").toString());
+		emit playerNameUpdate(value(json, "selectedProfile", "name").toString());
 
-		//store these information to settings
-		Custom custom;
-		custom.setUuid(uuid);
-		custom.setAccessToken(accessToken);
-		custom. setClientToken(clientToken);
-		custom.setOfficialName(playerName);
-		qDebug()<<"Welcome:"<<playerName;
+		emit refreshFinished(true);
 	} else{
 		//failure
-		success_ = false;
-		QMessageBox::warning(0,
-							 value(json, "error").toString(),
-							 value(json, "errorMessage").toString());
-
+		emit authError(value(json, "error").toString(),
+					   value(json, "errorMessage").toString());
+		emit refreshFinished(false);
 	}
 }
 
-void AuthResponse::signoutFinished(QNetworkReply */*reply*/) const
+void AuthResponse::signoutResponse(QNetworkReply */*reply*/) const
 {
 	/*No Implementation*/
 }
 
-void AuthResponse::invalidateFinished(QNetworkReply *reply) const
+void AuthResponse::invalidateResponse(QNetworkReply *reply) const
 {
 	auto statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 	if(statusCode == 204){
-		success_ = true;
+		emit invalidateFinished(true);
 	} else{
-		success_ = false;
+		emit invalidateFinished(false);
 	}
 }
 

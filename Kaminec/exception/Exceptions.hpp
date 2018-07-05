@@ -17,13 +17,8 @@ DEFINE_EXCEPTION(FileNotFoundException, fileName, "Need %1!", "Please check your
 DEFINE_EXCEPTION(FileOpenException, message, "Cannot open %1!", "Please check if the file is occupied:%1")
 DEFINE_EXCEPTION(InvalidAccountException, accountName, "Invalid Account", "Please check your account:%1.")
 
-class JsonParseException : public Exception
-{
-public:
-	JsonParseException(QString jsonFileName, QString errorString, bool/*no name for distinction*/);
-	JsonParseException(QString jsonName, QString errorString);
+#include "exception/JsonParseException.h"
 
-};
 #undef DEFINE_EXCEPTION
 
 #endif // EXCEPTIONS_H

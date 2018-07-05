@@ -137,7 +137,7 @@ void KaminecLauncher::startGame()
 void KaminecLauncher::on_action_preference_triggered()
 {
 	//create preference windows
-	auto preference = new Preference(this, &activeAuth_);
+	auto preference = new Preference(this, &accountPool_);
 	preference->show();
 
 	connect(preference,SIGNAL(settingfinished()),this,SLOT(updateProfiles()));
