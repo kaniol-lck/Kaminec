@@ -36,13 +36,11 @@ ProfileManager::ProfileManager(QObject *parent) :
 bool ProfileManager::initProfiles(const Profile &profile)
 {
 	profilesObject_ = QJsonObject{
-		{"profiles", QJsonObject{
-				{profile.name_, QJsonObject{
-						{"name", profile.name_},
-						{"lastVersionId", profile.lastVersionId_},
-						{"gameDir", profile.gameDir_}
-					}
-				}
+		"profiles", QJsonObject{
+			profile.name_, QJsonObject{
+				{"name", profile.name_},
+				{"lastVersionId", profile.lastVersionId_},
+				{"gameDir", profile.gameDir_}
 			}
 		}
 	};
