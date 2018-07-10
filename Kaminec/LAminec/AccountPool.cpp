@@ -21,31 +21,51 @@ AccountPool::AccountPool(QObject *parent) :
 	if(bytes.size()==0){
 		qDebug()<<"No content,auto make.";
 		initAccounts();
-	} else{
-		QJsonParseError ok;
-		accountsObject_ = QJsonDocument::fromJson(bytes,&ok).object();
-		if(ok.error != QJsonParseError::NoError)
-			throw JsonParseException(accountsFile_.fileName(), ok.errorString(), true);
+		return;
 	}
+
+	QJsonParseError ok;
+	accountsObject_ = QJsonDocument::fromJson(bytes,&ok).object();
+	auto map = accountsObject_.value("accounts").toVariant().toMap();
+	for(auto it = map.begin(); it != map.end(); it++){
+		Account account(value(it.value(), "mode").toBool()?Mode::Online:Mode::Offline,
+						value(it.value(), "email").toString(),
+						value(it.value(), "uuid").toString(),
+						value(it.value(), "accessToken").toString(),
+						value(it.value(), "clientToken").toString(),
+						value(it.value(), "playername").toString());
+		validators.insert(it.key(), new AccountKeeper(this, account));
+	}
+
+	if(ok.error != QJsonParseError::NoError)
+		throw JsonParseException(accountsFile_.fileName(), ok.errorString(), true);
 }
 
-void AccountPool::initAccounts(const Account &account)
+bool AccountPool::initAccounts(const Account &account)
 {
-	profilesObject_ = QJsonObject{
-		"accounts", QJsonObject{
-			account.id(), QJsonObject{
+	accountsObject_ = QJsonObject{
+		{"accounts", QJsonObject{
+			{account.id(), QJsonObject{
 				{"mode", account.mode() == Mode::Online},
 				{"email", account.email()},
 				{"accessToken", account.accessToken()},
 				{"clientToken", account.clientToken()},
 				{"playername", account.playername()}
-			}
-		}
+			}}
+		}}
 	};
+
+	if(!accountsFile_.open(QIODevice::WriteOnly | QIODevice::Text))return false;
+	QTextStream out(&accountsFile_);
+	auto bytes = QJsonDocument(accountsObject_).toJson();
+	out<<bytes;
+	accountsFile_.close();
+
+	return true;
 }
 Account AccountPool::getAccount(const QString &name)
 {
-	for(const auto& accountVariant : profilesObject_.value("accounts").toVariant().toMap())
+	for(const auto& accountVariant : accountsObject_.value("accounts").toVariant().toMap())
 		if(value(accountVariant, "name").toString() == name)
 			return Account(value(accountVariant, "mode").toBool()? Mode::Online : Mode::Offline,
 						   value(accountVariant, "email").toString(),
@@ -55,12 +75,12 @@ Account AccountPool::getAccount(const QString &name)
 	return Account();
 }
 
-bool AccountPool::setSelectedAccount(const QString &id)
+void AccountPool::setSelectedAccountId(const QString &id)
 {
-	custom_.setSelectedAccountName(id);
+	custom_.setSelectedAccountId(id);
 }
 
-Account AccountPool::getSelectedAccount()
+QString AccountPool::getSelectedAccountId()
 {
-	return getAccount(custom_.getSelectedAccountName());
+	return custom_.getSelectedAccountId();
 }

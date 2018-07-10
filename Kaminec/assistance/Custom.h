@@ -30,7 +30,7 @@ public:
 
 	//launcher settings
 	getterAndSetter(SelectedProfileName, String, selectedProfileName, "")
-	getterAndSetter(SelectedAccountName, String, selectedProfileName, "")
+	getterAndSetter(SelectedAccountId, String, selectedAccountId, "")
 	getterAndSetter(LogFileNumber, Int, logFileNumber, 10)
 
 	//directory settings

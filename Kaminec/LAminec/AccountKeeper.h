@@ -12,10 +12,11 @@ class AccountKeeper : public QObject
 public:
 	explicit AccountKeeper(QObject *parent, const Account &account);
 
-	bool validate();
+	void validate();
 	void refresh();
 
 private:
+	AuthResponse *authResponse_;
 	Account account_;
 	AuthKit authkit_;
 

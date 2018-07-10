@@ -7,7 +7,7 @@ const QString AuthKit::kYggdrasilServer = "https://authserver.mojang.com";
 const QString AuthKit::kAuthenticateStyle = R"({"agent":{"name":"Minecraft","version":1},"requestUser": false,"username":"%1","password":"%2"})";
 const QString AuthKit::kTokenStyle = R"({"accessToken":"%1","clientToken":"%2"})";
 
-AuthKit::AuthKit(std::shared_ptr<AuthResponse> authResponse) :
+AuthKit::AuthKit(AuthResponse *authResponse) :
 	authResponse_(authResponse),
 	manager_(new QNetworkAccessManager)
 {}
@@ -45,11 +45,11 @@ QNetworkRequest AuthKit::makeRequest(const QString& endpoint) const
 void AuthKit::post(const QNetworkRequest &request, const QByteArray &data, const char *slotFunction) const
 {
 	QEventLoop eventloop;
-	QObject::connect(manager_.get(), SIGNAL(finished(QNetworkReply*)), authResponse_.get(), slotFunction);
+	QObject::connect(manager_.get(), SIGNAL(finished(QNetworkReply*)), authResponse_, slotFunction);
 	QObject::connect(manager_.get(), SIGNAL(finished(QNetworkReply*)), &eventloop, SLOT(quit()));
 
 	manager_->post(request, data);
 	eventloop.exec();
-	QObject::disconnect(manager_.get(), SIGNAL(finished(QNetworkReply*)), authResponse_.get(), slotFunction);
+	QObject::disconnect(manager_.get(), SIGNAL(finished(QNetworkReply*)), authResponse_, slotFunction);
 	QObject::disconnect(manager_.get(), SIGNAL(finished(QNetworkReply*)), &eventloop, SLOT(quit()));
 }

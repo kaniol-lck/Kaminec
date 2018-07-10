@@ -2,13 +2,15 @@
 
 AccountKeeper::AccountKeeper(QObject *parent, const Account &account) :
 	QObject(parent),
-	account_(account)
+	authResponse_(new AuthResponse(parent)),
+	account_(account),
+	authkit_(authResponse_)
 {}
 
-bool AccountKeeper::validate()
+void AccountKeeper::validate()
 {
 	QByteArray data = AuthKit::kTokenStyle.arg(account_.accessToken(),
-											   account_.clientToken());
+											   account_.clientToken()).toUtf8();
 	authkit_.validate(data);
 
 }

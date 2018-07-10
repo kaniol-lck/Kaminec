@@ -15,17 +15,20 @@ public:
 	explicit AccountPool(QObject *parent = nullptr);
 
 	void validateAll();
+	Account validate(const QString &id, bool &ok);
 
-	void initAccounts(const Account &account = Account());
+	bool initAccounts(const Account &account = Account());
 	Account getAccount(const QString &name);
-	void addAccount(const Account &account);
 
-	bool setSelectedAccount(const QString &id);
-	Account getSelectedAccount();
+	bool insertAccount(const Account &account);
+	bool removeAccount(const QString &account);
+
+	void setSelectedAccountId(const QString &id);
+	QString getSelectedAccountId();
 
 private:
 	QFile accountsFile_;
-	QList<AccountKeeper*> validators;
+	QMap<QString, AccountKeeper*> validators;
 	QJsonObject accountsObject_;
 	Custom custom_;
 };

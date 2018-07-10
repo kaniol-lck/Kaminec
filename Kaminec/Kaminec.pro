@@ -52,7 +52,6 @@ SOURCES += main.cpp\
     LAminec/profileManager.cpp \
     LAminec/SavesManager.cpp \
     LAminec/LogCleaner.cpp \
-    launch/LaunchAuth.cpp \
     launch/Launcher.cpp \
 	launch/LaunchJson.cpp \
 	launch/Logger.cpp \
@@ -102,7 +101,6 @@ HEADERS  += UI/kamineclauncher.h \
     LAminec/ProfileManager.h \
     LAminec/SavesManager.h \
     LAminec/LogCleaner.h \
-    launch/LaunchAuth.h \
     launch/Launcher.h \
     launch/LaunchJson.h \
     launch/Logger.h \

@@ -251,13 +251,6 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
           </property>
          </spacer>
         </item>
-        <item row="2" column="0">
-         <widget class="QCheckBox" name="isVerified_cb">
-          <property name="text">
-           <string>online</string>
-          </property>
-         </widget>
-        </item>
         <item row="2" column="1">
          <widget class="QPushButton" name="start_pb">
           <property name="sizePolicy">

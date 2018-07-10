@@ -19,11 +19,11 @@ Launcher::Launcher(QObject *parent) :
 	connect(gameProcess_, SIGNAL(finished(int)), this, SLOT(deleteNatives()));
 }
 
-void Launcher::start(const Profile &profile, const LaunchAuth &auth)
+void Launcher::start(const Profile &profile, const Account &account)
 {
 	try{
 		logger_.startGenStartcode();
-		LaunchParser launchParser(profile, auth);
+		LaunchParser launchParser(profile, account);
 
 		auto launchPack = launchParser.getLaunchPack();
 

@@ -13,7 +13,7 @@ class Launcher : public QObject
 public:
 	explicit Launcher(QObject *parent = nullptr);
 
-	void start(const Profile &profile, const LaunchAuth &auth);
+	void start(const Profile &profile, const Account &account);
 
 	void extractNatives(const QStringList &nativesPaths);
 

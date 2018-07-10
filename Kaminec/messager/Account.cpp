@@ -1,12 +1,13 @@
 #include "Account.h"
 
 Account::Account(Mode mode,
-				 const QString &email,
+				 const QString &email, const QString &uuid,
 				 const QString &accessToken,
 				 const QString &clientToken,
 				 const QString &playername) :
 	mode_(mode),
 	email_(email),
+	uuid_(uuid),
 	accessToken_(accessToken),
 	clientToken_(clientToken),
 	playername_(playername)
@@ -14,7 +15,7 @@ Account::Account(Mode mode,
 
 QString Account::id() const
 {
-	return QString("%1_%2_%3").arg(email(), playername(), mode());
+	return QString("%1_%2").arg(playername(), mode()==Mode::Online?"online":"offline");
 }
 
 Mode Account::mode() const

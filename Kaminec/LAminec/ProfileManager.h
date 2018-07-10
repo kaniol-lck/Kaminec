@@ -26,7 +26,7 @@ public:
 	bool removeProfile(const QString &name);
 	bool renameProfile(const QString &oldName, const QString &newName);
 
-	bool setSelectedProfile(const QString &name);
+	void setSelectedProfile(const QString &name);
 	Profile getSelectedProfile();
 
 	//temporary method

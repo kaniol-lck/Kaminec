@@ -39,8 +39,6 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 	loadVersions();
 	loadProfiles();
 
-	ui_->isVerified_cb->setChecked(custom_.getOnlineMode());
-
 	modsManager_.setGameDir(ui_->gameDir_le->text());
 	ui_->versionsList_treeView->setModel(gameDownload_.getVersionsModel());
 
@@ -112,13 +110,12 @@ void KaminecLauncher::on_backupSaves_pb_clicked()
 	savesManager_.backup();
 }
 
-void KaminecLauncher::startGame()
+bool KaminecLauncher::startGame()
 {
 	//declare a Auth for game
-	LaunchAuth auth(ui_->isVerified_cb->isChecked()?
-						Mode::Online :
-						Mode::Offline);
-	custom_.setOnlineMode(auth.getAuthMode() == Mode::Online);
+	bool ok;
+	auto account = accountPool_.validate(accountPool_.getSelectedAccountId(), ok);
+	if(!ok) return false;
 
 	auto profile = profileManager_.getSelectedProfile();
 
@@ -130,8 +127,9 @@ void KaminecLauncher::startGame()
 	ui_->start_pb->setDisabled(true);
 
 	//start
-	launcher_.start(profile, auth);
+	launcher_.start(profile, account);
 
+	return true;
 }
 
 void KaminecLauncher::on_action_preference_triggered()

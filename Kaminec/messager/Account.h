@@ -10,6 +10,7 @@ class Account
 public:
 	Account(Mode mode = Mode::Offline,
 			const QString &email = "",
+			const QString &uuid = "",
 			const QString &accessToken = "",
 			const QString &clientToken = "",
 			const QString &playername = "Steve");
@@ -17,6 +18,7 @@ public:
 	QString id() const;
 	Mode mode() const;
 	QString email() const;
+	QString uuid() const;
 	QString accessToken() const;
 	QString clientToken() const;
 	QString playername() const;
@@ -24,6 +26,7 @@ public:
 private:
 	Mode mode_;
 	QString email_;
+	QString uuid_;
 	QString accessToken_;
 	QString clientToken_;
 	QString playername_;

@@ -4,18 +4,15 @@
 #include "assistance/PathReplacer.h"
 #include "exception/Exceptions.hpp"
 
-LaunchParser::LaunchParser(const Profile &profile, const LaunchAuth &auth):
+LaunchParser::LaunchParser(const Profile &profile, const Account &account):
 	profile_(profile),
-	launchAuth_(auth),
+	account_(account),
 	launchJson_(profile_.lastVersionId_)
 {}
 
 LaunchPack LaunchParser::getLaunchPack() const
 {
-	if(launchAuth_.getAuthMode()==Mode::Online &&
-	   !launchAuth_.validate())
-		throw InvalidAccountException(Custom().getEmail());
-	return LaunchPack(launchAuth_.getAuthMode(),
+	return LaunchPack(account_.mode(),
 					  classPaths(),
 					  JVMConfigure(),
 					  mainClass(),
@@ -49,13 +46,13 @@ QStringList LaunchParser::gameArguments() const
 	auto gameArguments = launchJson_.getGameArguments();
 
 	QMap<QString, QString> replace_list = {
-		{"${auth_player_name}", custom_.getPlayerName()},
+		{"${auth_player_name}", account_.playername()},
 		{"${version_name}", profile_.lastVersionId_},
 		{"${game_directory}", profile_.gameDir_},
 		{"${assets_root}", Path::assetsPath()},
-		{"${auth_uuid}", launchAuth_.getAuthUuid()},
-		{"${auth_access_token}", launchAuth_.getAuthAccessToken()},
-		{"${user_type}", launchAuth_.getUserType()},
+		{"${auth_uuid}", account_.uuid()},
+		{"${auth_access_token}", account_.accessToken()},
+		{"${user_type}", account_.mode()==Mode::Online?"mojang":"Legacy"},
 		{"${assets_index_name}", launchJson_.getAssetsIndexId()},
 		{"${version_type}", "Kaminec Launcher"},
 		{"${user_properties}", "{}"},

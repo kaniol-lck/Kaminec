@@ -38,9 +38,6 @@ Preference::Preference(QWidget *parent, AccountPool *accountPool) :
 
 	//load exsit preference
 
-	ui_->playerName_le->setText(custom_.getPlayerName());
-	ui_->autoName_cb->setChecked(custom_.getAutoOfficialName());
-
 	ui_->corePath_le->setText(custom_.getCoreGameFileDirectory());
 	ui_->versionsPath_le->setText(custom_.getGameVersionsDirectory());
 	ui_->libsPath_le->setText(custom_.getGameLibrariesDirectory());
@@ -64,12 +61,6 @@ Preference::Preference(QWidget *parent, AccountPool *accountPool) :
 	ui_->maxMem_sb->setValue(range.second);
 
 	ui_->logNumber_spinBox->setValue(custom_.getLogFileNumber());
-
-	//check if you logged in
-	if(custom_.getLogged()){
-		ui_->logName_label->setText("Logon account:" + custom_.getEmail());
-		ui_->login_pb->setText("&Log out");
-	}
 
 //	//check if you point out javaPath
 //	if(ui_->javaPath_le->text() == "")
@@ -119,9 +110,6 @@ void Preference::on_javaPath_showPb_clicked()
 
 void Preference::on_buttonBox_accepted()
 {
-	custom_.setPlayerName(ui_->playerName_le->text());
-	custom_.setAutoOfficialName(ui_->autoName_cb->isChecked());
-
 	custom_.setCoreGameFileDirectory(ui_->corePath_le->text());
 	custom_.setGameVersionsDirectory(ui_->versionsPath_le->text());
 	custom_.setGameLibrariesDirectory(ui_->libsPath_le->text());
@@ -144,18 +132,6 @@ void Preference::on_buttonBox_accepted()
 	custom_.setLogFileNumber(ui_->logNumber_spinBox->value());
 
 	emit settingfinished();
-}
-
-
-void Preference::on_autoName_cb_stateChanged(int arg1)
-{
-	if(arg1 == Qt::Checked){
-		ui_->playerName_le->setText(custom_.getOfficialName());
-		ui_->playerName_le->setEnabled(false);
-	} else /*arg1 == Qt::Unchecked*/{
-		ui_->playerName_le->setText(custom_.getPlayerName());
-		ui_->playerName_le->setEnabled(true);
-	}
 }
 
 void Preference::on_fullScreen_checkBox_stateChanged(int arg1)

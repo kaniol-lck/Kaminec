@@ -36,13 +36,13 @@ ProfileManager::ProfileManager(QObject *parent) :
 bool ProfileManager::initProfiles(const Profile &profile)
 {
 	profilesObject_ = QJsonObject{
-		"profiles", QJsonObject{
-			profile.name_, QJsonObject{
+		{"profiles", QJsonObject{
+			{profile.name_, QJsonObject{
 				{"name", profile.name_},
 				{"lastVersionId", profile.lastVersionId_},
 				{"gameDir", profile.gameDir_}
-			}
-		}
+			}}
+		}}
 	};
 
 	if(!profilesFile_.open(QIODevice::WriteOnly | QIODevice::Text))return false;
@@ -150,10 +150,9 @@ bool ProfileManager::renameProfile(const QString &oldName, const QString &newNam
 	return true;
 }
 
-bool ProfileManager::setSelectedProfile(const QString &name)
+void ProfileManager::setSelectedProfile(const QString &name)
 {
 	custom_.setSelectedProfileName(name);
-	return true;
 }
 
 Profile ProfileManager::getSelectedProfile()

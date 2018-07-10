@@ -2,15 +2,15 @@
 #define LAUNCHPARSER_H
 
 #include "messager/Profile.h"
-#include "launch/LaunchAuth.h"
 #include "launch/LaunchJson.h"
 #include "assistance/Custom.h"
 #include "messager/LaunchPack.h"
+#include "messager/Account.h"
 
 class LaunchParser
 {
 public:
-	LaunchParser(const Profile &profile, const LaunchAuth &auth);
+	LaunchParser(const Profile &profile, const Account &account);
 
 	LaunchPack getLaunchPack() const;
 
@@ -27,7 +27,7 @@ private:
 
 private:
 	Profile profile_;
-	LaunchAuth launchAuth_;
+	Account account_;
 	LaunchJson launchJson_;
 	Custom custom_;
 

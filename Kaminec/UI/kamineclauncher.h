@@ -33,7 +33,7 @@ public:
 
     int download();
 
-	void startGame();
+	bool startGame();
 
 	void resizeEvent(QResizeEvent *);
 
