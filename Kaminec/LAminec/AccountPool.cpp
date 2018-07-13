@@ -41,6 +41,17 @@ AccountPool::AccountPool(QObject *parent) :
 		throw JsonParseException(accountsFile_.fileName(), ok.errorString(), true);
 }
 
+Account AccountPool::validate(const QString &id, bool &ok)
+{
+	if(!validators.contains(id)){}
+	if(validators.value(id)->validate()){
+		ok = true;
+		return validators.value(id)->getAccount();
+	}
+	ok = false;
+	return Account();
+}
+
 bool AccountPool::initAccounts(const Account &account)
 {
 	accountsObject_ = QJsonObject{

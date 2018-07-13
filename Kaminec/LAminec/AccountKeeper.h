@@ -12,14 +12,19 @@ class AccountKeeper : public QObject
 public:
 	explicit AccountKeeper(QObject *parent, const Account &account);
 
-	void validate();
+	bool validate();
 	void refresh();
+
+	Account getAccount() const;
+
+public slots:
+	void validateFinished(bool);
 
 private:
 	AuthResponse *authResponse_;
 	Account account_;
 	AuthKit authkit_;
-
+	bool success_;
 };
 
 #endif // ACCOUNTKEEPER_H

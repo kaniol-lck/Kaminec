@@ -28,6 +28,11 @@ QString Account::email() const
 	return email_;
 }
 
+QString Account::uuid() const
+{
+	return uuid_;
+}
+
 QString Account::accessToken() const
 {
 	return accessToken_;

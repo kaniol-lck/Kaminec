@@ -31,10 +31,6 @@ private slots:
 
 	void on_buttonBox_accepted();
 
-	void on_login_pb_clicked();
-
-	void logChanged(QString email);
-
 	void on_fullScreen_checkBox_stateChanged(int arg1);
 
 	void on_more_pb_toggled(bool checked);
