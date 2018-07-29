@@ -94,6 +94,29 @@ Account AccountPool::getAccount(const QString &name)
 	return Account();
 }
 
+bool AccountPool::insertAccount(const Account &account)
+{
+	accountsObject_ = QJsonObject{
+		{"accounts", QJsonObject{
+			{account.id(), QJsonObject{
+				{"mode", account.mode() == Mode::Online},
+				{"email", account.email()},
+				{"accessToken", account.accessToken()},
+				{"clientToken", account.clientToken()},
+				{"playername", account.playername()}
+			}}
+		}}
+	};
+
+	if(!accountsFile_.open(QIODevice::WriteOnly | QIODevice::Text))return false;
+	QTextStream out(&accountsFile_);
+	auto bytes = QJsonDocument(accountsObject_).toJson();
+	out<<bytes;
+	accountsFile_.close();
+
+	return true;
+}
+
 void AccountPool::setSelectedAccountId(const QString &id)
 {
 	custom_.setSelectedAccountId(id);

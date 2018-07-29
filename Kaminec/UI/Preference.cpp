@@ -9,6 +9,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QStandardItemModel>
+#include <QEventLoop>
 
 Preference::Preference(QWidget *parent, AccountPool *accountPool) :
 	QDialog(parent),
@@ -285,4 +286,22 @@ void Preference::on_loggerPath_showPb_clicked()
 void Preference::on_logNumber_spinBox_valueChanged(int arg1)
 {
 	ui_->logTip_label->setVisible(arg1 == -1);
+}
+
+void Preference::on_addAccount_pb_clicked()
+{
+	auto validateDialog = new ValidateDialog(this);
+	QEventLoop eventLoop;
+	connect(validateDialog, SIGNAL(resultAccount(Account)), this, SLOT(receiveAccount(Account)));
+	connect(validateDialog, SIGNAL(resultAccount(Account)), &eventLoop, SLOT(quit()));
+	validateDialog->show();
+	eventLoop.exec();
+	disconnect(validateDialog, SIGNAL(resultAccount(Account)), this, SLOT(receiveAccount(Account)));
+	disconnect(validateDialog, SIGNAL(accepted()), &eventLoop, SLOT(quit()));
+	accountPool_->insertAccount(newAccount_);
+}
+
+void Preference::receiveAccount(const Account &account)
+{
+	newAccount_ = account;
 }

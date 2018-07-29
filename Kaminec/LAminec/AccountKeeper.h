@@ -24,7 +24,7 @@ private:
 	AuthResponse *authResponse_;
 	Account account_;
 	AuthKit authkit_;
-	bool success_;
+	bool success_ = false;
 };
 
 #endif // ACCOUNTKEEPER_H

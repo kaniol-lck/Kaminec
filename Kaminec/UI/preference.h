@@ -62,14 +62,15 @@ private slots:
 
 	void on_logNumber_spinBox_valueChanged(int arg1);
 
+	void on_addAccount_pb_clicked();
+
+	void receiveAccount(const Account &account);
 private:
 	Ui::Preference *ui_;
-
 	Custom custom_;
-
 	AccountPool *accountPool_;
-
 	AccountListWidget *accountListWidget_;
+	Account newAccount_;
 };
 
 #endif // PREFERENCE_H
