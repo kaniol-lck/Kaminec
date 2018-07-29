@@ -3,15 +3,18 @@
 
 #include "assistance/Path.h"
 #include "UI/ValidateDialog.h"
+#include "UI/accountitem.h"
 
 #include <QProcess>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QStandardItemModel>
 
 Preference::Preference(QWidget *parent, AccountPool *accountPool) :
 	QDialog(parent),
 	ui_(new Ui::Preference),
-	accountPool_(accountPool)
+	accountPool_(accountPool),
+	accountListWidget_(new AccountListWidget(this, accountPool))
 {
 	setWindowFlags(Qt::Dialog);
 	ui_->setupUi(this);
@@ -61,6 +64,15 @@ Preference::Preference(QWidget *parent, AccountPool *accountPool) :
 	ui_->maxMem_sb->setValue(range.second);
 
 	ui_->logNumber_spinBox->setValue(custom_.getLogFileNumber());
+
+	auto model = new QStandardItemModel(this);
+	model->appendRow(QList<QStandardItem*>{new QStandardItem(233)});
+	model->appendRow(QList<QStandardItem*>{new QStandardItem(233)});
+	model->appendRow(QList<QStandardItem*>{new QStandardItem(233)});
+	model->appendRow(QList<QStandardItem*>{new QStandardItem(233)});
+	model->appendRow(QList<QStandardItem*>{new QStandardItem(233)});
+
+	ui_->scrollArea->setWidget(accountListWidget_);
 
 //	//check if you point out javaPath
 //	if(ui_->javaPath_le->text() == "")

@@ -25,14 +25,6 @@ public:
     explicit KaminecLauncher(QWidget *parent = 0);
     ~KaminecLauncher();
 
-    void loadProfileJson();
-
-    void saveProfileJson();
-
-	void getCurrentVersionSelect();
-
-    int download();
-
 	bool startGame();
 
 	void resizeEvent(QResizeEvent *);

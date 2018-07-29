@@ -74,6 +74,14 @@ bool AccountPool::initAccounts(const Account &account)
 
 	return true;
 }
+
+QList<Account> AccountPool::getAccounts()
+{
+	QList<Account> accounts;
+	for(auto validator : validators)
+		accounts.append(validator->getAccount());
+	return accounts;
+}
 Account AccountPool::getAccount(const QString &name)
 {
 	for(const auto& accountVariant : accountsObject_.value("accounts").toVariant().toMap())

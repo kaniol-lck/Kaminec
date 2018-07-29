@@ -18,6 +18,7 @@ public:
 	Account validate(const QString &id, bool &ok);
 
 	bool initAccounts(const Account &account = Account());
+	QList<Account> getAccounts();
 	Account getAccount(const QString &name);
 
 	bool insertAccount(const Account &account);
