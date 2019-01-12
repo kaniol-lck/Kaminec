@@ -8,6 +8,7 @@
 #include <QNetworkReply>
 #include <QJsonDocument>
 #include <QMessageBox>
+#include <QDebug>
 
 AuthResponse::AuthResponse(QObject *parent) :
 	QObject(parent)
@@ -21,6 +22,7 @@ void AuthResponse::authenticateResponse(QNetworkReply *reply) const
 
 	if(statusCode == 200){
 		//parse json we've got
+		qDebug()<<value(json, "selectedProfile", "id").toString();
 		emit uuidUpdate(value(json, "selectedProfile", "id").toString());
 		emit accessTokenUpdate(value(json, "accessToken").toString());
 		emit clientTokenUpdate(value(json, "clientToken").toString());

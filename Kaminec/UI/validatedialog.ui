@@ -25,7 +25,7 @@
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="text">
-      <string>LOG IN</string>
+      <string>New Account</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -37,6 +37,9 @@
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Fixed</enum>
+     </property>
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
@@ -44,27 +47,6 @@
       </size>
      </property>
     </spacer>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>playername:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="lineEdit"/>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <widget class="Line" name="line">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -87,6 +69,23 @@
         <bool>false</bool>
        </property>
       </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="playername_label">
+       <property name="text">
+        <string>playername:</string>
+       </property>
+       <property name="buddy">
+        <cstring>playername_le</cstring>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="playername_le"/>
      </item>
     </layout>
    </item>
@@ -163,8 +162,12 @@
   </layout>
  </widget>
  <tabstops>
+  <tabstop>online_rb</tabstop>
+  <tabstop>offline_rb</tabstop>
+  <tabstop>playername_le</tabstop>
   <tabstop>email_le</tabstop>
   <tabstop>password_le</tabstop>
+  <tabstop>login_pb</tabstop>
   <tabstop>showPassword_pb</tabstop>
  </tabstops>
  <resources/>
@@ -176,8 +179,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>257</x>
-     <y>167</y>
+     <x>266</x>
+     <y>264</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -192,8 +195,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>270</x>
-     <y>167</y>
+     <x>279</x>
+     <y>264</y>
     </hint>
     <hint type="destinationlabel">
      <x>279</x>

@@ -52,19 +52,16 @@ Account AccountPool::validate(const QString &id, bool &ok)
 	return Account();
 }
 
-bool AccountPool::initAccounts(const Account &account)
+bool AccountPool::initAccounts()
 {
-	accountsObject_ = QJsonObject{
-		{"accounts", QJsonObject{
-			{account.id(), QJsonObject{
-				{"mode", account.mode() == Mode::Online},
-				{"email", account.email()},
-				{"accessToken", account.accessToken()},
-				{"clientToken", account.clientToken()},
-				{"playername", account.playername()}
-			}}
-		}}
-	};
+	auto accounts = accountsObject_.value("accounts").toObject();
+
+	accounts.insert("default_account", QJsonObject{
+						{"mode", false},
+						{"playername", "Steve"}
+					});
+
+	accountsObject_.insert("accounts", accounts);
 
 	if(!accountsFile_.open(QIODevice::WriteOnly | QIODevice::Text))return false;
 	QTextStream out(&accountsFile_);
@@ -96,17 +93,25 @@ Account AccountPool::getAccount(const QString &name)
 
 bool AccountPool::insertAccount(const Account &account)
 {
-	accountsObject_ = QJsonObject{
-		{"accounts", QJsonObject{
-			{account.id(), QJsonObject{
-				{"mode", account.mode() == Mode::Online},
-				{"email", account.email()},
-				{"accessToken", account.accessToken()},
-				{"clientToken", account.clientToken()},
-				{"playername", account.playername()}
-			}}
-		}}
-	};
+	auto accounts = accountsObject_.value("accounts").toObject();
+
+
+	if(account.mode()==Mode::Online){
+		accounts.insert(account.id(), QJsonObject{
+							{"mode", account.mode() == Mode::Online},
+							{"email", account.email()},
+							{"accessToken", account.accessToken()},
+							{"clientToken", account.clientToken()},
+							{"playername", account.playername()}
+						});
+	} else {
+		accounts.insert(account.id(), QJsonObject{
+							{"mode", account.mode() == Mode::Online},
+							{"playername", account.playername()}
+						});
+	}
+
+	accountsObject_.insert("accounts", accounts);
 
 	if(!accountsFile_.open(QIODevice::WriteOnly | QIODevice::Text))return false;
 	QTextStream out(&accountsFile_);

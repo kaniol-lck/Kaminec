@@ -69,9 +69,7 @@ SOURCES += main.cpp\
     assistance/PathReplacer.cpp \
     LAminec/AccountKeeper.cpp \
     messager/Account.cpp \
-    LAminec/AccountPool.cpp \
-    UI/accountiem.cpp \
-    LAminec/AccountListWidget.cpp
+    LAminec/AccountPool.cpp
 
 HEADERS  += UI/kamineclauncher.h \
 	UI/preference.h \
@@ -121,14 +119,11 @@ HEADERS  += UI/kamineclauncher.h \
     LAminec/AccountKeeper.h \
     messager/Account.h \
     LAminec/AccountPool.h \
-    exception/Exceptions.hpp \
-    UI/accountitem.h \
-    LAminec/AccountListWidget.h
+    exception/Exceptions.hpp
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preference.ui \
-    UI/validatedialog.ui \
-    UI/accountitem.ui
+    UI/validatedialog.ui
 
 RESOURCES += \
 	resources/background.qrc

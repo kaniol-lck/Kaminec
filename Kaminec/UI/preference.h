@@ -3,7 +3,6 @@
 
 #include "LAminec/AccountPool.h"
 #include "assistance/Custom.h"
-#include "LAminec/AccountListWidget.h"
 
 #include <QDialog>
 
@@ -69,8 +68,6 @@ private:
 	Ui::Preference *ui_;
 	Custom custom_;
 	AccountPool *accountPool_;
-	AccountListWidget *accountListWidget_;
-	Account newAccount_;
 };
 
 #endif // PREFERENCE_H

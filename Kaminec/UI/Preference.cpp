@@ -3,7 +3,6 @@
 
 #include "assistance/Path.h"
 #include "UI/ValidateDialog.h"
-#include "UI/accountitem.h"
 
 #include <QProcess>
 #include <QFileDialog>
@@ -14,8 +13,7 @@
 Preference::Preference(QWidget *parent, AccountPool *accountPool) :
 	QDialog(parent),
 	ui_(new Ui::Preference),
-	accountPool_(accountPool),
-	accountListWidget_(new AccountListWidget(this, accountPool))
+	accountPool_(accountPool)
 {
 	setWindowFlags(Qt::Dialog);
 	ui_->setupUi(this);
@@ -73,7 +71,6 @@ Preference::Preference(QWidget *parent, AccountPool *accountPool) :
 	model->appendRow(QList<QStandardItem*>{new QStandardItem(233)});
 	model->appendRow(QList<QStandardItem*>{new QStandardItem(233)});
 
-	ui_->scrollArea->setWidget(accountListWidget_);
 
 //	//check if you point out javaPath
 //	if(ui_->javaPath_le->text() == "")
@@ -291,17 +288,12 @@ void Preference::on_logNumber_spinBox_valueChanged(int arg1)
 void Preference::on_addAccount_pb_clicked()
 {
 	auto validateDialog = new ValidateDialog(this);
-	QEventLoop eventLoop;
 	connect(validateDialog, SIGNAL(resultAccount(Account)), this, SLOT(receiveAccount(Account)));
-	connect(validateDialog, SIGNAL(resultAccount(Account)), &eventLoop, SLOT(quit()));
-	validateDialog->show();
-	eventLoop.exec();
+	validateDialog->exec();
 	disconnect(validateDialog, SIGNAL(resultAccount(Account)), this, SLOT(receiveAccount(Account)));
-	disconnect(validateDialog, SIGNAL(accepted()), &eventLoop, SLOT(quit()));
-	accountPool_->insertAccount(newAccount_);
 }
 
 void Preference::receiveAccount(const Account &account)
 {
-	newAccount_ = account;
+	accountPool_->insertAccount(account);
 }

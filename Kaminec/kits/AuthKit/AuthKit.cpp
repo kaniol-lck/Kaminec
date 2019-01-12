@@ -2,6 +2,8 @@
 
 #include <QObject>
 #include <QEventLoop>
+#include <QTimer>
+#include <QDebug>
 
 const QString AuthKit::kYggdrasilServer = "https://authserver.mojang.com";
 const QString AuthKit::kAuthenticateStyle = R"({"agent":{"name":"Minecraft","version":1},"requestUser": false,"username":"%1","password":"%2"})";
@@ -44,12 +46,24 @@ QNetworkRequest AuthKit::makeRequest(const QString& endpoint) const
 
 void AuthKit::post(const QNetworkRequest &request, const QByteArray &data, const char *slotFunction) const
 {
+	QTimer timer;
+	timer.setInterval(10000);
+	timer.setSingleShot(true);
 	QEventLoop eventloop;
+	QObject::connect(&timer, SIGNAL(timeout()), &eventloop, SLOT(quit()));
 	QObject::connect(manager_.get(), SIGNAL(finished(QNetworkReply*)), authResponse_, slotFunction);
 	QObject::connect(manager_.get(), SIGNAL(finished(QNetworkReply*)), &eventloop, SLOT(quit()));
 
+	timer.start();
 	manager_->post(request, data);
+	qDebug()<<data;
 	eventloop.exec();
+	qDebug() << "finished";
+	if(!timer.isActive()) {
+		timer.stop();
+		qDebug() << "Timeout";
+	}
+
 	QObject::disconnect(manager_.get(), SIGNAL(finished(QNetworkReply*)), authResponse_, slotFunction);
 	QObject::disconnect(manager_.get(), SIGNAL(finished(QNetworkReply*)), &eventloop, SLOT(quit()));
 }
