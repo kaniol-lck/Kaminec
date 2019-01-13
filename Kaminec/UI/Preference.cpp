@@ -64,13 +64,10 @@ Preference::Preference(QWidget *parent, AccountPool *accountPool) :
 
 	ui_->logNumber_spinBox->setValue(custom_.getLogFileNumber());
 
-	auto model = new QStandardItemModel(this);
-	model->appendRow(QList<QStandardItem*>{new QStandardItem(233)});
-	model->appendRow(QList<QStandardItem*>{new QStandardItem(233)});
-	model->appendRow(QList<QStandardItem*>{new QStandardItem(233)});
-	model->appendRow(QList<QStandardItem*>{new QStandardItem(233)});
-	model->appendRow(QList<QStandardItem*>{new QStandardItem(233)});
-
+	for(auto account : accountPool_->getAccounts()){
+		accountsMap.insert(account.id(), account);
+		ui_->accounts_cb->addItem(account.id());
+	}
 
 //	//check if you point out javaPath
 //	if(ui_->javaPath_le->text() == "")
@@ -193,7 +190,7 @@ void Preference::on_javaPath_le_textEdited(const QString &arg1)
 void Preference::on_javaPath_showPb_2_clicked()
 {
 	auto path = QFileDialog::getExistingDirectory(this, "Please choose the version directory",
-													  ui_->versionsPath_le->text());
+												  ui_->versionsPath_le->text());
 
 	if(path!="")
 		ui_->versionsPath_le->setText(path);
@@ -202,7 +199,7 @@ void Preference::on_javaPath_showPb_2_clicked()
 void Preference::on_versionsPath_showPb_clicked()
 {
 	auto path = QFileDialog::getExistingDirectory(this, "Please choose the version directory",
-													  ui_->versionsPath_le->text());
+												  ui_->versionsPath_le->text());
 
 	if(path!="")
 		ui_->versionsPath_le->setText(path);
@@ -211,7 +208,7 @@ void Preference::on_versionsPath_showPb_clicked()
 void Preference::on_libsPath_showPb_clicked()
 {
 	auto path = QFileDialog::getExistingDirectory(this, "Please choose the libraries directory",
-													  ui_->libsPath_le->text());
+												  ui_->libsPath_le->text());
 
 	if(path!="")
 		ui_->libsPath_le->setText(path);
@@ -220,7 +217,7 @@ void Preference::on_libsPath_showPb_clicked()
 void Preference::on_nativesPath_showPb_clicked()
 {
 	auto path = QFileDialog::getExistingDirectory(this, "Please choose the natives directory",
-													  ui_->nativesPath_le->text());
+												  ui_->nativesPath_le->text());
 
 	if(path!="")
 		ui_->nativesPath_le->setText(path);
@@ -229,7 +226,7 @@ void Preference::on_nativesPath_showPb_clicked()
 void Preference::on_assetsPath_showPb_clicked()
 {
 	auto path = QFileDialog::getExistingDirectory(this, "Please choose the assets directory",
-													  ui_->assetsPath_le->text());
+												  ui_->assetsPath_le->text());
 
 	if(path!="")
 		ui_->assetsPath_le->setText(path);
@@ -238,7 +235,7 @@ void Preference::on_assetsPath_showPb_clicked()
 void Preference::on_indexesPath_showPb_clicked()
 {
 	auto path = QFileDialog::getExistingDirectory(this, "Please choose the asset indexes directory",
-													  ui_->indexesPath_le->text());
+												  ui_->indexesPath_le->text());
 
 	if(path!="")
 		ui_->indexesPath_le->setText(path);
@@ -247,7 +244,7 @@ void Preference::on_indexesPath_showPb_clicked()
 void Preference::on_objectsPath_showPb_clicked()
 {
 	auto path = QFileDialog::getExistingDirectory(this, "Please choose the asset objects directory",
-													  ui_->objectsPath_le->text());
+												  ui_->objectsPath_le->text());
 
 	if(path!="")
 		ui_->objectsPath_le->setText(path);
@@ -256,7 +253,7 @@ void Preference::on_objectsPath_showPb_clicked()
 void Preference::on_unusedModsPath_showPb_clicked()
 {
 	auto path = QFileDialog::getExistingDirectory(this, "Please choose the unused mods directory",
-													  ui_->unusedModsPath_le->text());
+												  ui_->unusedModsPath_le->text());
 
 	if(path!="")
 		ui_->unusedModsPath_le->setText(path);
@@ -265,7 +262,7 @@ void Preference::on_unusedModsPath_showPb_clicked()
 void Preference::on_savesBackupPath_showPb_clicked()
 {
 	auto path = QFileDialog::getExistingDirectory(this, "Please choose the saves backup directory",
-													  ui_->savesBackupPath_le->text());
+												  ui_->savesBackupPath_le->text());
 
 	if(path!="")
 		ui_->savesBackupPath_le->setText(path);
@@ -274,7 +271,7 @@ void Preference::on_savesBackupPath_showPb_clicked()
 void Preference::on_loggerPath_showPb_clicked()
 {
 	auto path = QFileDialog::getExistingDirectory(this, "Please choose the logger directory",
-													  ui_->loggerPath_le->text());
+												  ui_->loggerPath_le->text());
 
 	if(path!="")
 		ui_->loggerPath_le->setText(path);
@@ -287,13 +284,22 @@ void Preference::on_logNumber_spinBox_valueChanged(int arg1)
 
 void Preference::on_addAccount_pb_clicked()
 {
-	auto validateDialog = new ValidateDialog(this);
-	connect(validateDialog, SIGNAL(resultAccount(Account)), this, SLOT(receiveAccount(Account)));
-	validateDialog->exec();
-	disconnect(validateDialog, SIGNAL(resultAccount(Account)), this, SLOT(receiveAccount(Account)));
+	auto validateDialog = new ValidateDialog(this, accountPool_);
+	while(validateDialog->exec() != QDialog::Accepted);
 }
 
-void Preference::receiveAccount(const Account &account)
+void Preference::on_accounts_cb_currentIndexChanged(const QString &arg1)
 {
-	accountPool_->insertAccount(account);
+	auto account = accountsMap.value(arg1);
+	ui_->email_label->setVisible(account.mode() == Mode::Online);
+	ui_->email_le->setVisible(account.mode() == Mode::Online);
+	ui_->email_le->setText(account.email());
+	ui_->playerName_le->setText(account.playername());
+}
+
+void Preference::on_deleteAccount_pb_clicked()
+{
+	auto accountId = accountsMap.take(ui_->accounts_cb->currentText()).id();
+	accountPool_->removeAccount(accountId);
+	ui_->accounts_cb->removeItem(ui_->accounts_cb->currentIndex());
 }

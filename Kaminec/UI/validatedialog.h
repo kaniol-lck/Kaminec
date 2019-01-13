@@ -4,6 +4,7 @@
 #include "assistance/Custom.h"
 #include "messager/Account.h"
 #include "kits/AuthKit/AuthKit.h"
+#include "LAminec/AccountPool.h"
 
 #include <QDialog>
 
@@ -16,11 +17,10 @@ class ValidateDialog : public QDialog
 	Q_OBJECT
 
 public:
-	explicit ValidateDialog(QWidget *parent);
+	explicit ValidateDialog(QWidget *parent, AccountPool *accountPool);
 	~ValidateDialog();
 
 signals:
-	void resultAccount(Account account);
 
 private slots:
 	void on_buttonBox_accepted();
@@ -44,6 +44,7 @@ private:
 	Ui::ValidateDialog *ui_;
 	AuthResponse *authResponse_;
 	AuthKit authkit_;
+	AccountPool *accountPool_;
 	//invisible attributes
 	QString uuid_;
 	QString accessToken_;

@@ -3,11 +3,12 @@
 
 #include <QMessageBox>
 
-ValidateDialog::ValidateDialog(QWidget *parent) :
+ValidateDialog::ValidateDialog(QWidget *parent, AccountPool *accountPool) :
 	QDialog(parent),
 	ui_(new Ui::ValidateDialog),
 	authResponse_(new AuthResponse(parent)),
-	authkit_(authResponse_)
+	authkit_(authResponse_),
+	accountPool_(accountPool)
 {
 	ui_->setupUi(this);
 	this->setMinimumHeight(150);
@@ -25,18 +26,20 @@ ValidateDialog::~ValidateDialog()
 
 void ValidateDialog::on_buttonBox_accepted()
 {
-	if(ui_->playername_le->text().isEmpty()){
+	auto mode = ui_->online_rb->isChecked()?Mode::Online:Mode::Offline;
+	auto email = ui_->email_le->text();
+	auto playerName = ui_->playername_le->text();
+
+	if(playerName.isEmpty()){
 		QMessageBox::warning(this, "Warning", "The playername cannot be empty.");
-		exec();
-	} else {
-		accept();
-		emit resultAccount(Account(ui_->online_rb->isChecked()?Mode::Online:Mode::Offline,
-								   ui_->email_le->text(),
-								   uuid_,
-								   accessToken_,
-								   clientToken_,
-								   ui_->playername_le->text()));
+		return;
 	}
+	if(accountPool_->getAccount(playerName, mode).first){
+		QMessageBox::warning(this, "Warning", "The account is already existed.");
+		return;
+	}
+	accept();
+	accountPool_->insertAccount(Account(mode, email, uuid_, accessToken_, clientToken_, playerName));
 }
 
 void ValidateDialog::on_showPassword_pb_toggled(bool checked)
@@ -90,6 +93,8 @@ void ValidateDialog::on_online_rb_clicked()
 	ui_->password_label->setVisible(true);
 	ui_->password_le->setVisible(true);
 	ui_->showPassword_pb->setVisible(true);
+	ui_->login_label->setVisible(true);
+	ui_->login_pb->setVisible(true);
 }
 
 void ValidateDialog::on_offline_rb_clicked()
@@ -100,6 +105,7 @@ void ValidateDialog::on_offline_rb_clicked()
 	ui_->password_label->setVisible(false);
 	ui_->password_le->setVisible(false);
 	ui_->showPassword_pb->setVisible(false);
+	ui_->login_pb->setVisible(false);
 }
 
 void ValidateDialog::uuidUpdate(QString uuid)

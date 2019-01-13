@@ -19,10 +19,10 @@ public:
 
 	bool initAccounts();
 	QList<Account> getAccounts();
-	Account getAccount(const QString &name);
+	QPair<bool, Account> getAccount(const QString &name, Mode mode);
 
 	bool insertAccount(const Account &account);
-	bool removeAccount(const QString &account);
+	bool removeAccount(const QString &accountId);
 
 	void setSelectedAccountId(const QString &id);
 	QString getSelectedAccountId();

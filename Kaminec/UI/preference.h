@@ -63,11 +63,15 @@ private slots:
 
 	void on_addAccount_pb_clicked();
 
-	void receiveAccount(const Account &account);
+	void on_accounts_cb_currentIndexChanged(const QString &arg1);
+
+	void on_deleteAccount_pb_clicked();
+
 private:
 	Ui::Preference *ui_;
 	Custom custom_;
 	AccountPool *accountPool_;
+	QMap<QString, Account> accountsMap;
 };
 
 #endif // PREFERENCE_H

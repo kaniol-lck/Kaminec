@@ -79,22 +79,23 @@ QList<Account> AccountPool::getAccounts()
 		accounts.append(validator->getAccount());
 	return accounts;
 }
-Account AccountPool::getAccount(const QString &name)
+QPair<bool, Account> AccountPool::getAccount(const QString &name, Mode mode)
 {
 	for(const auto& accountVariant : accountsObject_.value("accounts").toVariant().toMap())
-		if(value(accountVariant, "name").toString() == name)
-			return Account(value(accountVariant, "mode").toBool()? Mode::Online : Mode::Offline,
-						   value(accountVariant, "email").toString(),
-						   value(accountVariant, "accessToken").toString(),
-						   value(accountVariant, "clientToken").toString(),
-						   value(accountVariant, "playername").toString());
-	return Account();
+		if(value(accountVariant, "playername").toString() == name &&
+		   value(accountVariant, "mode").toBool() == (mode == Mode::Online))
+			return qMakePair(true,
+							 Account(value(accountVariant, "mode").toBool()? Mode::Online : Mode::Offline,
+									 value(accountVariant, "email").toString(),
+									 value(accountVariant, "accessToken").toString(),
+									 value(accountVariant, "clientToken").toString(),
+									 value(accountVariant, "playername").toString()));
+	return qMakePair(false, Account());
 }
 
 bool AccountPool::insertAccount(const Account &account)
 {
 	auto accounts = accountsObject_.value("accounts").toObject();
-
 
 	if(account.mode()==Mode::Online){
 		accounts.insert(account.id(), QJsonObject{
@@ -110,6 +111,23 @@ bool AccountPool::insertAccount(const Account &account)
 							{"playername", account.playername()}
 						});
 	}
+
+	accountsObject_.insert("accounts", accounts);
+
+	if(!accountsFile_.open(QIODevice::WriteOnly | QIODevice::Text))return false;
+	QTextStream out(&accountsFile_);
+	auto bytes = QJsonDocument(accountsObject_).toJson();
+	out<<bytes;
+	accountsFile_.close();
+
+	return true;
+}
+
+bool AccountPool::removeAccount(const QString &accountId)
+{
+	QJsonObject accounts = accountsObject_.value("accounts").toObject();
+
+	accounts.remove(accountId);
 
 	accountsObject_.insert("accounts", accounts);
 
