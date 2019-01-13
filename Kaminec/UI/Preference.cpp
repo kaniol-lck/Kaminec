@@ -65,7 +65,6 @@ Preference::Preference(QWidget *parent, AccountPool *accountPool) :
 	ui_->logNumber_spinBox->setValue(custom_.getLogFileNumber());
 
 	for(auto account : accountPool_->getAccounts()){
-		accountsMap.insert(account.id(), account);
 		ui_->accounts_cb->addItem(account.id());
 	}
 
@@ -290,7 +289,7 @@ void Preference::on_addAccount_pb_clicked()
 
 void Preference::on_accounts_cb_currentIndexChanged(const QString &arg1)
 {
-	auto account = accountsMap.value(arg1);
+	auto account = accountPool_->getAccount(arg1);
 	ui_->email_label->setVisible(account.mode() == Mode::Online);
 	ui_->email_le->setVisible(account.mode() == Mode::Online);
 	ui_->email_le->setText(account.email());
@@ -299,7 +298,6 @@ void Preference::on_accounts_cb_currentIndexChanged(const QString &arg1)
 
 void Preference::on_deleteAccount_pb_clicked()
 {
-	auto accountId = accountsMap.take(ui_->accounts_cb->currentText()).id();
-	accountPool_->removeAccount(accountId);
+	accountPool_->removeAccount(ui_->accounts_cb->currentText());
 	ui_->accounts_cb->removeItem(ui_->accounts_cb->currentIndex());
 }

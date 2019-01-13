@@ -30,11 +30,13 @@ void ValidateDialog::on_buttonBox_accepted()
 	auto email = ui_->email_le->text();
 	auto playerName = ui_->playername_le->text();
 
+	Account account(mode, email, uuid_, accessToken_, clientToken_, playerName);
+
 	if(playerName.isEmpty()){
 		QMessageBox::warning(this, "Warning", "The playername cannot be empty.");
 		return;
 	}
-	if(accountPool_->getAccount(playerName, mode).first){
+	if(accountPool_->containAccount(account.id())){
 		QMessageBox::warning(this, "Warning", "The account is already existed.");
 		return;
 	}

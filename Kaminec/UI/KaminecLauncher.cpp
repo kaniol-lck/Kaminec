@@ -112,10 +112,8 @@ void KaminecLauncher::on_backupSaves_pb_clicked()
 
 bool KaminecLauncher::startGame()
 {
-	//declare a Auth for game
-	bool ok;
-	auto account = accountPool_.validate(accountPool_.getSelectedAccountId(), ok);
-	if(!ok) return false;
+	//check Auth for game
+	auto account = accountPool_.check(accountPool_.getSelectedAccountId());
 
 	auto profile = profileManager_.getSelectedProfile();
 

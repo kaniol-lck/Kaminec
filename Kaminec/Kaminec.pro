@@ -67,7 +67,6 @@ SOURCES += main.cpp\
     launch/LaunchParser.cpp \
     download/DownloadParser.cpp \
     assistance/PathReplacer.cpp \
-    LAminec/AccountKeeper.cpp \
     messager/Account.cpp \
     LAminec/AccountPool.cpp
 
@@ -116,7 +115,6 @@ HEADERS  += UI/kamineclauncher.h \
     launch/LaunchParser.h \
     download/DownloadParser.h \
     assistance/PathReplacer.h \
-    LAminec/AccountKeeper.h \
     messager/Account.h \
     LAminec/AccountPool.h \
     exception/Exceptions.hpp

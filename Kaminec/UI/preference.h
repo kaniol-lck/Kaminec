@@ -71,7 +71,6 @@ private:
 	Ui::Preference *ui_;
 	Custom custom_;
 	AccountPool *accountPool_;
-	QMap<QString, Account> accountsMap;
 };
 
 #endif // PREFERENCE_H

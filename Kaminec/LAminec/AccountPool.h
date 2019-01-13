@@ -1,8 +1,10 @@
 #ifndef ACCOUNTPOOL_H
 #define ACCOUNTPOOL_H
 
-#include "LAminec/AccountKeeper.h"
 #include "assistance/Custom.h"
+#include "messager/Account.h"
+#include "kits/AuthKit/AuthKit.h"
+#include "kits/AuthKit/AuthResponse.h"
 
 #include <QObject>
 #include <QFile>
@@ -14,12 +16,15 @@ class AccountPool : public QObject
 public:
 	explicit AccountPool(QObject *parent = nullptr);
 
+	Account check(const QString& accountId) const;
+
 	void validateAll();
-	Account validate(const QString &id, bool &ok);
+	bool validate(const Account &account) const;
 
 	bool initAccounts();
-	QList<Account> getAccounts();
-	QPair<bool, Account> getAccount(const QString &name, Mode mode);
+	QMap<QString, Account> getAccounts();
+	Account getAccount(const QString &accountId) const;
+	bool containAccount(const QString &accountId) const;
 
 	bool insertAccount(const Account &account);
 	bool removeAccount(const QString &accountId);
@@ -27,11 +32,17 @@ public:
 	void setSelectedAccountId(const QString &id);
 	QString getSelectedAccountId();
 
+public slots:
+	void validateFinished(bool succuss);
+
 private:
 	QFile accountsFile_;
-	QMap<QString, AccountKeeper*> validators;
+	QMap<QString, Account> accountsMap;
 	QJsonObject accountsObject_;
 	Custom custom_;
+	AuthResponse* authResponse_;
+	AuthKit authKit_;
+	bool success_ = false;
 };
 
 #endif // ACCOUNTPOOL_H

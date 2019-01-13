@@ -6,10 +6,13 @@
 
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QDebug>
 
 AccountPool::AccountPool(QObject *parent) :
 	QObject(parent),
-	accountsFile_(PathReplacer::replace("<launcher>/accounts.json"))
+	accountsFile_(PathReplacer::replace("<launcher>/accounts.json")),
+	authResponse_(new AuthResponse(parent)),
+	authKit_(authResponse_)
 {
 	if(!accountsFile_.open(QIODevice::ReadOnly | QIODevice::Text)){
 		qDebug()<<"No content,auto make.";
@@ -34,22 +37,33 @@ AccountPool::AccountPool(QObject *parent) :
 						value(it.value(), "accessToken").toString(),
 						value(it.value(), "clientToken").toString(),
 						value(it.value(), "playername").toString());
-		validators.insert(it.key(), new AccountKeeper(this, account));
+		accountsMap.insert(it.key(), account);
 	}
 
 	if(ok.error != QJsonParseError::NoError)
 		throw JsonParseException(accountsFile_.fileName(), ok.errorString(), true);
 }
 
-Account AccountPool::validate(const QString &id, bool &ok)
+Account AccountPool::check(const QString &accountId) const
 {
-	if(!validators.contains(id)){}
-	if(validators.value(id)->validate()){
-		ok = true;
-		return validators.value(id)->getAccount();
+	auto account = accountsMap.value(accountId);
+	if(account.mode() == Mode::Online){
+		validate(account);
+	} else{
+
 	}
-	ok = false;
-	return Account();
+	return account;
+}
+
+bool AccountPool::validate(const Account &account) const
+{
+	QByteArray data = AuthKit::kTokenStyle.arg(account.accessToken(),
+											   account.clientToken()).toUtf8();
+	connect(authResponse_, SIGNAL(validateFinished(bool)), this, SLOT(validateFinished(bool)));
+	authKit_.validate(data);
+	disconnect(authResponse_, SIGNAL(validateFinished(bool)), this, SLOT(validateFinished(bool)));
+
+	return success_;
 }
 
 bool AccountPool::initAccounts()
@@ -72,25 +86,28 @@ bool AccountPool::initAccounts()
 	return true;
 }
 
-QList<Account> AccountPool::getAccounts()
+QMap<QString, Account> AccountPool::getAccounts()
 {
-	QList<Account> accounts;
-	for(auto validator : validators)
-		accounts.append(validator->getAccount());
-	return accounts;
+	return accountsMap;
 }
-QPair<bool, Account> AccountPool::getAccount(const QString &name, Mode mode)
+Account AccountPool::getAccount(const QString &accountId) const
 {
-	for(const auto& accountVariant : accountsObject_.value("accounts").toVariant().toMap())
-		if(value(accountVariant, "playername").toString() == name &&
-		   value(accountVariant, "mode").toBool() == (mode == Mode::Online))
-			return qMakePair(true,
-							 Account(value(accountVariant, "mode").toBool()? Mode::Online : Mode::Offline,
-									 value(accountVariant, "email").toString(),
-									 value(accountVariant, "accessToken").toString(),
-									 value(accountVariant, "clientToken").toString(),
-									 value(accountVariant, "playername").toString()));
-	return qMakePair(false, Account());
+	for(auto account : accountsMap)
+		if(account.id() == accountId){
+			return account;
+		}
+	return Account();
+}
+
+bool AccountPool::containAccount(const QString &accountId) const
+{
+	bool isContain = false;
+
+	for(auto account : accountsMap)
+		if(account.id() == accountId){
+			isContain = true;
+		}
+	return isContain;
 }
 
 bool AccountPool::insertAccount(const Account &account)
@@ -148,4 +165,9 @@ void AccountPool::setSelectedAccountId(const QString &id)
 QString AccountPool::getSelectedAccountId()
 {
 	return custom_.getSelectedAccountId();
+}
+
+void AccountPool::validateFinished(bool success)
+{
+	success_ = success;
 }
