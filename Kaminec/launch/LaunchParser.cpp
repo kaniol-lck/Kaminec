@@ -50,13 +50,18 @@ QStringList LaunchParser::gameArguments() const
 		{"${version_name}", profile_.lastVersionId_},
 		{"${game_directory}", profile_.gameDir_},
 		{"${assets_root}", Path::assetsPath()},
-		{"${auth_uuid}", account_.uuid()},
-		{"${auth_access_token}", account_.accessToken()},
-		{"${user_type}", account_.mode()==Mode::Online?"mojang":"Legacy"},
 		{"${assets_index_name}", launchJson_.getAssetsIndexId()},
 		{"${version_type}", "Kaminec Launcher"},
 		{"${user_properties}", "{}"},
 	};
+
+	if(account_.mode()==Mode::Online){
+		replace_list.insert("${auth_uuid}", account_.uuid());
+		replace_list.insert("${auth_access_token}", account_.accessToken());
+		replace_list.insert("${user_type}", "mojang");
+	} else{
+		replace_list.insert("${user_type}", "Legacy");
+	}
 
 	for(auto it = replace_list.begin(); it != replace_list.end(); it++){
 		gameArguments.replace(it.key(), it.value());

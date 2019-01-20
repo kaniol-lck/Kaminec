@@ -41,7 +41,7 @@ void ValidateDialog::on_buttonBox_accepted()
 		return;
 	}
 	accept();
-	accountPool_->insertAccount(Account(mode, email, uuid_, accessToken_, clientToken_, playerName));
+	accountPool_->insertAccount(account);
 }
 
 void ValidateDialog::on_showPassword_pb_toggled(bool checked)
