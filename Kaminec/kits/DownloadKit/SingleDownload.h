@@ -1,7 +1,7 @@
 #ifndef SINGLEDOWNLOAD_H
 #define SINGLEDOWNLOAD_H
 
-#include "messager/DownloadInfo.h"
+#include "messenger/DownloadInfo.h"
 
 #include <QObject>
 #include <QList>

@@ -1,7 +1,7 @@
 #ifndef PROFILEMANAGER_H
 #define PROFILEMANAGER_H
 
-#include "messager/profile.h"
+#include "messenger/profile.h"
 #include "assistance/Custom.h"
 
 #include <QObject>

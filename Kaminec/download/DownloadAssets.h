@@ -1,7 +1,7 @@
 #ifndef DOWNLOADASSETS_H
 #define DOWNLOADASSETS_H
 
-#include "messager/DownloadInfo.h"
+#include "messenger/DownloadInfo.h"
 #include "kits/AssetKit/AssetKit.h"
 
 #include <QList>

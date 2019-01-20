@@ -1,7 +1,7 @@
 #ifndef DEFICIENCY_H
 #define DEFICIENCY_H
 
-#include "messager/CheckInfo.h"
+#include "messenger/CheckInfo.h"
 
 #include <QString>
 

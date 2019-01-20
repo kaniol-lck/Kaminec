@@ -2,7 +2,7 @@
 #define JSONKIT_H
 
 #include "kits/JsonKit/Library.h"
-#include "messager/Arguments.h"
+#include "messenger/Arguments.h"
 #include "kits/JsonKit/AssetIndex.h"
 #include "kits/JsonKit/GameCoreJar.h"
 

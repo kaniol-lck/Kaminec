@@ -1,7 +1,7 @@
 #ifndef DOWNLOADKIT_H
 #define DOWNLOADKIT_H
 
-#include "messager/DownloadInfo.h"
+#include "messenger/DownloadInfo.h"
 #include "kits/DownloadKit/singledownload.h"
 
 #include <QList>

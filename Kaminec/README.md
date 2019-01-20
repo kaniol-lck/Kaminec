@@ -31,7 +31,7 @@
 |  +--files...
 +--launch
 |  +--files...
-+--messager
++--messenger
 |  +--files...
 +--resources
 |  +--res
@@ -52,7 +52,7 @@
 - kits
 - LAminec
 - launch
-- messager
+- messenger
 - resources
 - UI
 
@@ -67,7 +67,7 @@
 - `kits/` is the most important parts of Kaminec Launcher coz it packages those important works of launcher.These kits are:`Assetkit`, `AuthKit`, `DownloadKit`, `JsonKit`, `Ruler`.
 - `LAminec/` is a collection of assorted funtionalities.
 - `launch/` does what a launcher should essentially do.
-- `messager/` includes the simple message classes.
+- `messenger/` includes the simple messenger classes to convey data.
 - `resources/` includes the resource I used in this project.
 - `UI/` is the User Interface of Kaminec Launcher.
 

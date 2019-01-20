@@ -1,7 +1,7 @@
 #ifndef CHECKASSETS_H
 #define CHECKASSETS_H
 
-#include "messager/CheckInfo.h"
+#include "messenger/CheckInfo.h"
 #include "kits/AssetKit/AssetKit.h"
 
 class CheckAssets

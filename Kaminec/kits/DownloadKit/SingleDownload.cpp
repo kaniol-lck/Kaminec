@@ -1,5 +1,5 @@
 #include "singledownload.h"
-#include "messager/DownloadInfo.h"
+#include "messenger/DownloadInfo.h"
 #include "exception/Exceptions.hpp"
 
 #include <QDir>

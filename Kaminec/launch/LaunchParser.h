@@ -1,11 +1,11 @@
 #ifndef LAUNCHPARSER_H
 #define LAUNCHPARSER_H
 
-#include "messager/Profile.h"
+#include "messenger/Profile.h"
 #include "launch/LaunchJson.h"
 #include "assistance/Custom.h"
-#include "messager/LaunchPack.h"
-#include "messager/Account.h"
+#include "messenger/LaunchPack.h"
+#include "messenger/Account.h"
 
 class LaunchParser
 {

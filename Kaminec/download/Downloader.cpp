@@ -1,7 +1,7 @@
 #include "Downloader.h"
 
 #include "assistance/Path.h"
-#include "messager/DownloadInfo.h"
+#include "messenger/DownloadInfo.h"
 #include "exception/Exceptions.hpp"
 #include "download/DownloadParser.h"
 

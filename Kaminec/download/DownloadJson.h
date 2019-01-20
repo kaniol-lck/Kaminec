@@ -2,7 +2,7 @@
 #define DOWNLOADJSON_H
 
 #include "kits/JsonKit/JsonKit.h"
-#include "messager/DownloadInfo.h"
+#include "messenger/DownloadInfo.h"
 
 #include <QList>
 

@@ -1,7 +1,7 @@
 #ifndef CHECKPARSER_H
 #define CHECKPARSER_H
 
-#include "messager/Deficiency.h"
+#include "messenger/Deficiency.h"
 #include "check/CheckJson.h"
 #include "check/CheckAssets.h"
 

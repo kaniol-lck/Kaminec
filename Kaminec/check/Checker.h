@@ -1,7 +1,7 @@
 #ifndef CHECKER_H
 #define CHECKER_H
 
-#include "messager/Deficiency.h"
+#include "messenger/Deficiency.h"
 
 #include <QObject>
 #include <QString>

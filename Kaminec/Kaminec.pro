@@ -55,19 +55,19 @@ SOURCES += main.cpp\
     launch/Launcher.cpp \
 	launch/LaunchJson.cpp \
 	launch/Logger.cpp \
-    messager/Arguments.cpp \
-    messager/DownloadInfo.cpp \
-	messager/Profile.cpp \
-	messager/LaunchPack.cpp \
-    messager/Deficiency.cpp \
-    messager/CheckInfo.cpp \
+    messenger/Arguments.cpp \
+    messenger/DownloadInfo.cpp \
+	messenger/Profile.cpp \
+	messenger/LaunchPack.cpp \
+    messenger/Deficiency.cpp \
+    messenger/CheckInfo.cpp \
     exception/Exception.cpp \
     exception/JsonParseException.cpp \
     check/CheckParser.cpp \
     launch/LaunchParser.cpp \
     download/DownloadParser.cpp \
     assistance/PathReplacer.cpp \
-    messager/Account.cpp \
+    messenger/Account.cpp \
     LAminec/AccountPool.cpp
 
 HEADERS  += UI/kamineclauncher.h \
@@ -103,19 +103,19 @@ HEADERS  += UI/kamineclauncher.h \
     launch/Launcher.h \
     launch/LaunchJson.h \
     launch/Logger.h \
-    messager/Arguments.h \
-    messager/DownloadInfo.h \
-	messager/Profile.h \
-    messager/LaunchPack.h \
-    messager/Deficiency.h \
-    messager/CheckInfo.h \
+    messenger/Arguments.h \
+    messenger/DownloadInfo.h \
+	messenger/Profile.h \
+    messenger/LaunchPack.h \
+    messenger/Deficiency.h \
+    messenger/CheckInfo.h \
     exception/Exception.h \
     exception/JsonParseException.h \
     check/CheckParser.h \
     launch/LaunchParser.h \
     download/DownloadParser.h \
     assistance/PathReplacer.h \
-    messager/Account.h \
+    messenger/Account.h \
     LAminec/AccountPool.h \
     exception/Exceptions.hpp
 

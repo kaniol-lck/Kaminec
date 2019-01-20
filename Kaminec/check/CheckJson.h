@@ -2,7 +2,7 @@
 #define CHECKJSON_H
 
 #include "kits/JsonKit/JsonKit.h"
-#include "messager/CheckInfo.h"
+#include "messenger/CheckInfo.h"
 
 #include <QList>
 
