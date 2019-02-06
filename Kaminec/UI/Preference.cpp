@@ -10,10 +10,11 @@
 #include <QStandardItemModel>
 #include <QEventLoop>
 
-Preference::Preference(QWidget *parent, AccountPool *accountPool) :
+Preference::Preference(QWidget *parent, AccountPool *accountPool, ProfileManager *profileManager) :
 	QDialog(parent),
 	ui_(new Ui::Preference),
-	accountPool_(accountPool)
+	accountPool_(accountPool),
+	profileManager_(profileManager)
 {
 	setWindowFlags(Qt::Dialog);
 	ui_->setupUi(this);
@@ -64,9 +65,17 @@ Preference::Preference(QWidget *parent, AccountPool *accountPool) :
 
 	ui_->logNumber_spinBox->setValue(custom_.getLogFileNumber());
 
+	auto selectedAccountId = accountPool_->getSelectedAccountId();
+
 	for(auto account : accountPool_->getAccounts()){
 		ui_->accounts_cb->addItem(account.id());
 	}
+
+	auto index = ui_->accounts_cb->findText(selectedAccountId, Qt::MatchExactly);
+	ui_->accounts_cb->setCurrentIndex(index);
+
+	ui_->playerName_le->setEnabled(false);
+	ui_->email_le->setEnabled(false);
 
 //	//check if you point out javaPath
 //	if(ui_->javaPath_le->text() == "")
@@ -284,7 +293,10 @@ void Preference::on_logNumber_spinBox_valueChanged(int arg1)
 void Preference::on_addAccount_pb_clicked()
 {
 	auto validateDialog = new ValidateDialog(this, accountPool_);
-	while(validateDialog->exec() != QDialog::Accepted);
+	validateDialog->exec();
+	ui_->accounts_cb->addItem(accountPool_->getSelectedAccountId());
+	auto index = ui_->accounts_cb->findText(accountPool_->getSelectedAccountId(), Qt::MatchExactly);
+	ui_->accounts_cb->setCurrentIndex(index);
 }
 
 void Preference::on_accounts_cb_currentIndexChanged(const QString &arg1)
@@ -294,10 +306,95 @@ void Preference::on_accounts_cb_currentIndexChanged(const QString &arg1)
 	ui_->email_le->setVisible(account.mode() == Mode::Online);
 	ui_->email_le->setText(account.email());
 	ui_->playerName_le->setText(account.playername());
+	accountPool_->setSelectedAccountId(account.id());
+	qDebug()<<account.id();
 }
 
 void Preference::on_deleteAccount_pb_clicked()
 {
 	accountPool_->removeAccount(ui_->accounts_cb->currentText());
 	ui_->accounts_cb->removeItem(ui_->accounts_cb->currentIndex());
+}
+
+void Preference::on_gameDir_showPb_clicked()
+{
+	//ask for game directory
+	auto gameDir = QFileDialog::getExistingDirectory(this,"Please choose the game directory.");
+	if(gameDir!=""){
+		if(gameDir.endsWith("/.minecraft"))
+			ui_->gameDir_le->setText(gameDir);
+		else
+			ui_->gameDir_le->setText(gameDir + "/.minecraft");
+	}
+	return;
+}
+
+void Preference::on_editProfile_pb_toggled(bool checked)
+{
+	//Accept
+	ui_->profile_cb->setEnabled(!checked);
+	ui_->addProfile_pb->setEnabled(!checked);
+	if(!checked){
+		auto newName = ui_->profileName_le->text();
+		if(newName == "") return;
+
+		Profile profile(newName,
+						ui_->version_cb->currentText(),
+						ui_->gameDir_le->text());
+
+		profileManager_->removeProfile(ui_->profile_cb->currentText());
+		profileManager_->insertProfile(profile);
+		ui_->profile_cb->removeItem(ui_->profile_cb->currentIndex());
+		//!!!!!!!!!!!!
+	}
+
+	ui_->profileName_label->setVisible(checked);
+	ui_->profileName_le->setVisible(checked);
+	ui_->version_label->setVisible(checked);
+	ui_->version_cb->setVisible(checked);
+	ui_->gameDir_label->setVisible(checked);
+	ui_->gameDir_le->setVisible(checked);
+	ui_->gameDir_showPb->setVisible(checked);
+	ui_->check_pb->setVisible(checked);
+
+	ui_->editProfile_pb->setText(checked?"&OK":"&Edit");
+}
+
+void Preference::on_check_pb_clicked()
+{
+//	QStringList defciencyTexts;
+//	for(const auto& defciency : checker_.check(ui_->version_cb->currentText())){
+//		defciencyTexts << defciency.path_;
+//	}
+//	QMessageBox::information(this, "Lost Files", defciencyTexts.join("\n"));
+}
+
+void Preference::on_profile_cb_currentIndexChanged(const QString &arg1)
+{
+	auto profile = profileManager_->getProfile(arg1);
+	auto index = ui_->version_cb->findText(profile.lastVersionId(), Qt::MatchExactly);
+	ui_->version_cb->setCurrentIndex(index);
+	ui_->gameDir_le->setText(profile.gameDir());
+}
+
+void Preference::on_addProfile_pb_clicked()
+{/*
+	profileManager_->insertProfile(Profile());
+	ui_->profile_cb->addItem("New Profile");
+	ui_->profile_cb;*/
+}
+
+void Preference::on_editAccount_pb_clicked()
+{
+	auto oldAccountId = accountPool_->getSelectedAccountId();
+	auto oldAccount = accountPool_->getAccount(oldAccountId);
+	auto validateDialog = new ValidateDialog(this, accountPool_, oldAccount);
+	if(validateDialog->exec() == QDialog::Accepted){
+		auto newAccountId = accountPool_->getSelectedAccountId();
+		accountPool_->removeAccount(oldAccountId);
+		ui_->accounts_cb->removeItem(ui_->accounts_cb->findText(oldAccountId, Qt::MatchExactly));
+		ui_->accounts_cb->addItem(newAccountId);
+		auto index = ui_->accounts_cb->findText(newAccountId, Qt::MatchExactly);
+		ui_->accounts_cb->setCurrentIndex(index);
+	};
 }

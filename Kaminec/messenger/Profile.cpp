@@ -7,3 +7,18 @@ Profile::Profile(const QString &name,
 	lastVersionId_(lastVersionId),
 	gameDir_(gameDir)
 {}
+
+QString Profile::name() const
+{
+	return name_;
+}
+
+QString Profile::lastVersionId() const
+{
+	return lastVersionId_;
+}
+
+QString Profile::gameDir() const
+{
+	return gameDir_;
+}

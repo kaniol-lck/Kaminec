@@ -29,6 +29,9 @@ AccountPool::AccountPool(QObject *parent) :
 
 	QJsonParseError ok;
 	accountsObject_ = QJsonDocument::fromJson(bytes,&ok).object();
+	if(ok.error != QJsonParseError::NoError)
+		throw JsonParseException(accountsFile_.fileName(), ok.errorString(), true);
+
 	auto map = accountsObject_.value("accounts").toVariant().toMap();
 	for(auto it = map.begin(); it != map.end(); it++){
 		Account account(value(it.value(), "mode").toBool()?Mode::Online:Mode::Offline,
@@ -66,30 +69,16 @@ bool AccountPool::validate(const Account &account) const
 	return success_;
 }
 
-bool AccountPool::initAccounts()
+void AccountPool::initAccounts()
 {
-	auto accounts = accountsObject_.value("accounts").toObject();
-
-	accounts.insert("default_account", QJsonObject{
-						{"mode", false},
-						{"playername", "Steve"}
-					});
-
-	accountsObject_.insert("accounts", accounts);
-
-	if(!accountsFile_.open(QIODevice::WriteOnly | QIODevice::Text))return false;
-	QTextStream out(&accountsFile_);
-	auto bytes = QJsonDocument(accountsObject_).toJson();
-	out<<bytes;
-	accountsFile_.close();
-
-	return true;
+	insertAccount(Account(Mode::Offline,"", "", "", "", "Steve"));
 }
 
 QMap<QString, Account> AccountPool::getAccounts()
 {
 	return accountsMap;
 }
+
 Account AccountPool::getAccount(const QString &accountId) const
 {
 	for(auto account : accountsMap)
@@ -112,6 +101,8 @@ bool AccountPool::containAccount(const QString &accountId) const
 
 bool AccountPool::insertAccount(const Account &account)
 {
+	accountsMap.insert(account.id(), account);
+
 	auto accounts = accountsObject_.value("accounts").toObject();
 
 	if(account.mode()==Mode::Online){
@@ -153,6 +144,8 @@ bool AccountPool::removeAccount(const QString &accountId)
 	auto bytes = QJsonDocument(accountsObject_).toJson();
 	out<<bytes;
 	accountsFile_.close();
+
+	accountsMap.remove(accountId);
 
 	return true;
 }

@@ -8,12 +8,12 @@
 class Account
 {
 public:
-	Account(Mode mode = Mode::Offline,
-			const QString &email = "",
-			const QString &uuid = "",
-			const QString &accessToken = "",
-			const QString &clientToken = "",
-			const QString &playername = "Steve");
+	explicit Account(Mode mode = Mode::Offline,
+					 const QString &email = "",
+					 const QString &uuid = "",
+					 const QString &accessToken = "",
+					 const QString &clientToken = "",
+					 const QString &playername = "Steve");
 
 	QString id() const;
 	Mode mode() const;

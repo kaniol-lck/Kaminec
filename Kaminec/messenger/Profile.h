@@ -4,13 +4,18 @@
 #include <QString>
 
 
-struct Profile
+class Profile
 {
-    Profile()=default;
-	explicit Profile(const QString &name,
-					 const QString &lastVersionId,
-					 const QString &gameDir);
+public:
+	explicit Profile(const QString &name = "New Profile",
+					 const QString &lastVersionId = "Default",
+					 const QString &gameDir = "");
 
+	QString name() const;
+	QString lastVersionId() const;
+	QString gameDir() const;
+
+private:
 	QString name_;
 	QString lastVersionId_;
 	QString gameDir_;

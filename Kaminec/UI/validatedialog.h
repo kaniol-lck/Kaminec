@@ -18,6 +18,7 @@ class ValidateDialog : public QDialog
 
 public:
 	explicit ValidateDialog(QWidget *parent, AccountPool *accountPool);
+	explicit ValidateDialog(QWidget *parent, AccountPool *accountPool, const Account &account);
 	~ValidateDialog();
 
 signals:
@@ -27,7 +28,7 @@ private slots:
 
 	void on_showPassword_pb_toggled(bool checked);
 
-	void on_login_pb_clicked();
+	void on_log_in_out_pb_clicked();
 
 	void on_online_rb_clicked();
 
@@ -37,7 +38,7 @@ private slots:
 	void accessTokenUpdate(QString accessToken);
 	void clientTokenUpdate(QString clientToken);
 	void playerNameUpdate(QString playername);
-	void authenticateFinished(bool ok);
+	void authFinished(bool ok);
 	void authError(QString error, QString errorMessage);
 
 private:
@@ -49,8 +50,9 @@ private:
 	QString uuid_;
 	QString accessToken_;
 	QString clientToken_;
+	Account account_;
 	bool success_ = false;
-
+	bool isValidated = false;
 };
 
 #endif // VALIDATEDIALOG_H

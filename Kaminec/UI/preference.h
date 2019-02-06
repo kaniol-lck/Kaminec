@@ -2,6 +2,7 @@
 #define PREFERENCE_H
 
 #include "LAminec/AccountPool.h"
+#include "LAminec/ProfileManager.h"
 #include "assistance/Custom.h"
 
 #include <QDialog>
@@ -15,7 +16,7 @@ class Preference : public QDialog
 	Q_OBJECT
 
 public:
-	explicit Preference(QWidget *parent, AccountPool *accountPool);
+	explicit Preference(QWidget *parent, AccountPool *accountPool, ProfileManager *profileManager);
 	~Preference();
 
 private:
@@ -67,10 +68,23 @@ private slots:
 
 	void on_deleteAccount_pb_clicked();
 
+	void on_gameDir_showPb_clicked();
+
+	void on_editProfile_pb_toggled(bool checked);
+
+	void on_check_pb_clicked();
+
+	void on_profile_cb_currentIndexChanged(const QString &arg1);
+
+	void on_addProfile_pb_clicked();
+
+	void on_editAccount_pb_clicked();
+
 private:
 	Ui::Preference *ui_;
 	Custom custom_;
 	AccountPool *accountPool_;
+	ProfileManager *profileManager_;
 };
 
 #endif // PREFERENCE_H

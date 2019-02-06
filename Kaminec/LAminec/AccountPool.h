@@ -21,7 +21,7 @@ public:
 	void validateAll();
 	bool validate(const Account &account) const;
 
-	bool initAccounts();
+	void initAccounts();
 	QMap<QString, Account> getAccounts();
 	Account getAccount(const QString &accountId) const;
 	bool containAccount(const QString &accountId) const;

@@ -25,54 +25,51 @@ ProfileManager::ProfileManager(QObject *parent) :
 	if(bytes.size()==0){
 		qDebug()<<"No content,auto make.";
 		initProfiles();
-	} else{
-		QJsonParseError ok;
-		profilesObject_ = QJsonDocument::fromJson(bytes,&ok).object();
-		if(ok.error != QJsonParseError::NoError)
-			throw JsonParseException(profilesFile_.fileName(), ok.errorString(), true);
+		return;
+	}
+
+	QJsonParseError ok;
+	profilesObject_ = QJsonDocument::fromJson(bytes,&ok).object();
+	if(ok.error != QJsonParseError::NoError)
+		throw JsonParseException(profilesFile_.fileName(), ok.errorString(), true);
+
+	auto map = profilesObject_.value("profiles").toVariant().toMap();
+	for(auto it = map.begin(); it != map.end(); it++){
+		Profile profile(value(it.value(), "name").toString(),
+						value(it.value(), "lastVersionId").toString(),
+						value(it.value(), "gameDir").toString());
+		profilesMap.insert(it.key(), profile);
 	}
 }
 
-bool ProfileManager::initProfiles(const Profile &profile)
+void ProfileManager::initProfiles()
 {
-	profilesObject_ = QJsonObject{
-		{"profiles", QJsonObject{
-			{profile.name_, QJsonObject{
-				{"name", profile.name_},
-				{"lastVersionId", profile.lastVersionId_},
-				{"gameDir", profile.gameDir_}
-			}}
-		}}
-	};
-
-	if(!profilesFile_.open(QIODevice::WriteOnly | QIODevice::Text))return false;
-	QTextStream out(&profilesFile_);
-	auto bytes = QJsonDocument(profilesObject_).toJson();
-	out<<bytes;
-	profilesFile_.close();
-
-	return true;
+	insertProfile(Profile("Default", "Default", "Default"));
 }
 
 Profile ProfileManager::getProfile(const QString &name)
 {
-	for(const auto& profileVariant : profilesObject_.value("profiles").toVariant().toMap())
-		if(value(profileVariant, "name").toString() == name)
-			return Profile(value(profileVariant, "name").toString(),
-						   value(profileVariant, "lastVersionId").toString(),
-						   value(profileVariant, "gameDir").toString());
+	for(auto profile : profilesMap)
+		if(profile.name() == name){
+			return profile;
+		}
 	return Profile();
 }
 
-QList<Profile> ProfileManager::getProfileList()
+QMap<QString, Profile> ProfileManager::getProfiles()
 {
-	QList<Profile> profileList;
-	for(const auto& profileVariant : profilesObject_.value("profiles").toVariant().toMap()){
-		profileList<<Profile(value(profileVariant, "name").toString(),
-							 value(profileVariant, "lastVersionId").toString(),
-							 value(profileVariant, "gameDir").toString());
-	}
-	return profileList;
+	return profilesMap;
+}
+
+bool ProfileManager::containProfile(const QString &name) const
+{
+	bool isContain = false;
+
+	for(auto profile : profilesMap)
+		if(profile.name() == name){
+			isContain = true;
+		}
+	return isContain;
 }
 
 bool ProfileManager::checkVersion(const QString &version)
@@ -93,10 +90,10 @@ bool ProfileManager::insertProfile(const Profile &profile)
 {
 	auto profiles = profilesObject_.value("profiles").toObject();
 
-	profiles.insert(profile.name_, QJsonObject{
-					{"name", profile.name_},
-					{"lastVersionId", profile.lastVersionId_},
-					{"gameDir", profile.gameDir_}
+	profiles.insert(profile.name(), QJsonObject{
+					{"name", profile.name()},
+					{"lastVersionId", profile.lastVersionId()},
+					{"gameDir", profile.gameDir()}
 				});
 
 	profilesObject_.insert("profiles", profiles);
@@ -155,9 +152,9 @@ void ProfileManager::setSelectedProfile(const QString &name)
 	custom_.setSelectedProfileName(name);
 }
 
-Profile ProfileManager::getSelectedProfile()
+QString ProfileManager::getSelectedProfileName()
 {
-	return getProfile(custom_.getSelectedProfileName());
+	return custom_.getSelectedProfileName();
 }
 
 void ProfileManager::refresh()

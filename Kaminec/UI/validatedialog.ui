@@ -6,19 +6,22 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>378</width>
-    <height>274</height>
+    <width>360</width>
+    <height>300</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Log in...</string>
+   <string/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="login_label">
+    <widget class="QLabel" name="hint_label">
      <property name="font">
       <font>
-       <pointsize>25</pointsize>
+       <pointsize>19</pointsize>
+       <weight>75</weight>
+       <italic>false</italic>
+       <bold>true</bold>
       </font>
      </property>
      <property name="layoutDirection">
@@ -43,7 +46,7 @@
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>40</height>
+       <height>10</height>
       </size>
      </property>
     </spacer>
@@ -73,26 +76,21 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QLabel" name="playername_label">
-       <property name="text">
-        <string>playername:</string>
-       </property>
-       <property name="buddy">
-        <cstring>playername_le</cstring>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="playername_le"/>
-     </item>
-    </layout>
-   </item>
-   <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0">
+     <item row="1" column="0">
       <widget class="QLabel" name="email_label">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>50</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="text">
         <string>E-mail:</string>
        </property>
@@ -101,7 +99,10 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
+     <item row="1" column="1" colspan="2">
+      <widget class="QLineEdit" name="email_le"/>
+     </item>
+     <item row="2" column="0">
       <widget class="QLabel" name="password_label">
        <property name="text">
         <string>password:</string>
@@ -111,30 +112,98 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="password_le"/>
+     <item row="2" column="1" colspan="2">
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QLineEdit" name="password_le"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="showPassword_pb">
+         <property name="text">
+          <string>&amp;Show password</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="1" column="2">
-      <widget class="QPushButton" name="showPassword_pb">
-       <property name="text">
-        <string>&amp;Show password</string>
+     <item row="3" column="0">
+      <widget class="QLabel" name="playername_label">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <property name="checkable">
-        <bool>true</bool>
+       <property name="minimumSize">
+        <size>
+         <width>50</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>playername:</string>
+       </property>
+       <property name="buddy">
+        <cstring>playername_le</cstring>
        </property>
       </widget>
      </item>
-     <item row="0" column="1" colspan="2">
-      <widget class="QLineEdit" name="email_le"/>
+     <item row="3" column="1" colspan="2">
+      <widget class="QLineEdit" name="playername_le"/>
      </item>
     </layout>
    </item>
    <item>
-    <widget class="QPushButton" name="login_pb">
-     <property name="text">
-      <string>&amp;Log in</string>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="log_in_out_pb">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>200</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>&amp;Log in</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
    </item>
    <item>
     <spacer name="verticalSpacer_2">
@@ -164,30 +233,12 @@
  <tabstops>
   <tabstop>online_rb</tabstop>
   <tabstop>offline_rb</tabstop>
-  <tabstop>playername_le</tabstop>
   <tabstop>email_le</tabstop>
   <tabstop>password_le</tabstop>
-  <tabstop>login_pb</tabstop>
   <tabstop>showPassword_pb</tabstop>
  </tabstops>
  <resources/>
  <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>ValidateDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>266</x>
-     <y>264</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>176</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
@@ -195,12 +246,12 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>279</x>
-     <y>264</y>
+     <x>313</x>
+     <y>248</y>
     </hint>
     <hint type="destinationlabel">
-     <x>279</x>
-     <y>176</y>
+     <x>296</x>
+     <y>227</y>
     </hint>
    </hints>
   </connection>

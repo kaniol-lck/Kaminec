@@ -14,11 +14,12 @@ class ProfileManager : public QObject
 public:
 	explicit ProfileManager(QObject *parent = nullptr);
 
-	bool initProfiles(const Profile &profile = Profile());
+	void initProfiles();
 
 	Profile getProfile(const QString &name);
-	QList<Profile> getProfileList();
+	QMap<QString, Profile> getProfiles();
 
+	bool containProfile(const QString &name) const;
 	bool checkVersion(const QString &version);
 	bool addVersion(const QString &version, const QString &gamePath);
 
@@ -27,13 +28,14 @@ public:
 	bool renameProfile(const QString &oldName, const QString &newName);
 
 	void setSelectedProfile(const QString &name);
-	Profile getSelectedProfile();
+	QString getSelectedProfileName();
 
 	//temporary method
 	void refresh();
 
 private:
 	QFile profilesFile_;
+	QMap<QString, Profile> profilesMap;
 	QJsonObject profilesObject_;
 	Custom custom_;
 };

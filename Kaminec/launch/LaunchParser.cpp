@@ -7,7 +7,7 @@
 LaunchParser::LaunchParser(const Profile &profile, const Account &account):
 	profile_(profile),
 	account_(account),
-	launchJson_(profile_.lastVersionId_)
+	launchJson_(profile_.lastVersionId())
 {}
 
 LaunchPack LaunchParser::getLaunchPack() const
@@ -47,8 +47,8 @@ QStringList LaunchParser::gameArguments() const
 
 	QMap<QString, QString> replace_list = {
 		{"${auth_player_name}", account_.playername()},
-		{"${version_name}", profile_.lastVersionId_},
-		{"${game_directory}", profile_.gameDir_},
+		{"${version_name}", profile_.lastVersionId()},
+		{"${game_directory}", profile_.gameDir()},
 		{"${assets_root}", Path::assetsPath()},
 		{"${assets_index_name}", launchJson_.getAssetsIndexId()},
 		{"${version_type}", "Kaminec Launcher"},
