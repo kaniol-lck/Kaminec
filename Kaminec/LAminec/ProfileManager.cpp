@@ -35,10 +35,12 @@ ProfileManager::ProfileManager(QObject *parent) :
 
 	auto map = profilesObject_.value("profiles").toVariant().toMap();
 	for(auto it = map.begin(); it != map.end(); it++){
-		Profile profile(value(it.value(), "name").toString(),
-						value(it.value(), "lastVersionId").toString(),
-						value(it.value(), "gameDir").toString());
-		profilesMap.insert(it.key(), profile);
+		if(value(it.value(), "type").toString() == "custom"){
+			Profile profile(value(it.value(), "name").toString(),
+							value(it.value(), "lastVersionId").toString(),
+							value(it.value(), "gameDir").toString());
+			profilesMap.insert(it.key(), profile);
+		}
 	}
 }
 

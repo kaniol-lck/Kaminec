@@ -70,15 +70,17 @@ private slots:
 
 	void on_gameDir_showPb_clicked();
 
-	void on_editProfile_pb_toggled(bool checked);
-
 	void on_check_pb_clicked();
 
-	void on_profile_cb_currentIndexChanged(const QString &arg1);
+	void on_profiles_cb_currentIndexChanged(const QString &arg1);
 
 	void on_addProfile_pb_clicked();
 
 	void on_editAccount_pb_clicked();
+
+	void on_editProfile_pb_clicked();
+
+	void on_deleteProfile_pb_clicked();
 
 private:
 	Ui::Preference *ui_;

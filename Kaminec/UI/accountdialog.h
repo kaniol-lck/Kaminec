@@ -1,5 +1,5 @@
-#ifndef VALIDATEDIALOG_H
-#define VALIDATEDIALOG_H
+#ifndef ACCOUNTDIALOG_H
+#define ACCOUNTDIALOG_H
 
 #include "assistance/Custom.h"
 #include "messenger/Account.h"
@@ -9,19 +9,17 @@
 #include <QDialog>
 
 namespace Ui {
-	class ValidateDialog;
+	class AccountDialog;
 }
 
-class ValidateDialog : public QDialog
+class AccountDialog : public QDialog
 {
 	Q_OBJECT
 
 public:
-	explicit ValidateDialog(QWidget *parent, AccountPool *accountPool);
-	explicit ValidateDialog(QWidget *parent, AccountPool *accountPool, const Account &account);
-	~ValidateDialog();
-
-signals:
+	explicit AccountDialog(QWidget *parent, AccountPool *accountPool);
+	explicit AccountDialog(QWidget *parent, AccountPool *accountPool, const QString &accountId);
+	~AccountDialog();
 
 private slots:
 	void on_buttonBox_accepted();
@@ -42,11 +40,10 @@ private slots:
 	void authError(QString error, QString errorMessage);
 
 private:
-	Ui::ValidateDialog *ui_;
+	Ui::AccountDialog *ui_;
 	AuthResponse *authResponse_;
 	AuthKit authkit_;
 	AccountPool *accountPool_;
-	//invisible attributes
 	QString uuid_;
 	QString accessToken_;
 	QString clientToken_;
@@ -55,4 +52,4 @@ private:
 	bool isValidated = false;
 };
 
-#endif // VALIDATEDIALOG_H
+#endif // ACCOUNTDIALOG_H

@@ -1,11 +1,11 @@
-#include "validatedialog.h"
-#include "ui_validatedialog.h"
+#include "accountdialog.h"
+#include "ui_accountdialog.h"
 
 #include <QMessageBox>
 
-ValidateDialog::ValidateDialog(QWidget *parent, AccountPool *accountPool) :
+AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool) :
 	QDialog(parent),
-	ui_(new Ui::ValidateDialog),
+	ui_(new Ui::AccountDialog),
 	authResponse_(new AuthResponse(parent)),
 	authkit_(authResponse_),
 	accountPool_(accountPool)
@@ -13,23 +13,20 @@ ValidateDialog::ValidateDialog(QWidget *parent, AccountPool *accountPool) :
 	ui_->setupUi(this);
 	ui_->hint_label->setText("Create Account");
 	setWindowTitle("Create Account");
-	this->setMinimumHeight(200);
-	this->setMinimumWidth(360);
-	this->setMaximumHeight(200);
-	this->setMaximumWidth(360);
+	setFixedSize(360,200);
 	ui_->password_le->setEchoMode(QLineEdit::Password);
 	on_online_rb_clicked();
 }
 
-ValidateDialog::ValidateDialog(QWidget *parent, AccountPool *accountPool, const Account &account) :
-	ValidateDialog(parent, accountPool)
+AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool, const QString &accountId) :
+	AccountDialog(parent, accountPool)
 {
-	account_ = account;
+	account_ = accountPool_->getAccount(accountId);
 	ui_->hint_label->setText("Edit Account");
 	setWindowTitle("Edit Account");
-	ui_->email_le->setText(account.email());
-	ui_->playername_le->setText(account.playername());
-	if(account.mode() == Mode::Online){
+	ui_->email_le->setText(account_.email());
+	ui_->playername_le->setText(account_.playername());
+	if(account_.mode() == Mode::Online){
 		isValidated = true;
 		ui_->email_le->setEnabled(false);
 		ui_->playername_label->setVisible(true);
@@ -44,12 +41,12 @@ ValidateDialog::ValidateDialog(QWidget *parent, AccountPool *accountPool, const 
 	}
 }
 
-ValidateDialog::~ValidateDialog()
+AccountDialog::~AccountDialog()
 {
 	delete ui_;
 }
 
-void ValidateDialog::on_buttonBox_accepted()
+void AccountDialog::on_buttonBox_accepted()
 {
 	auto mode = ui_->online_rb->isChecked()?Mode::Online:Mode::Offline;
 	auto email = ui_->email_le->text();
@@ -62,7 +59,7 @@ void ValidateDialog::on_buttonBox_accepted()
 		return;
 	}
 	if(accountPool_->containAccount(account.id())){
-		QMessageBox::warning(this, "Warning", "The account is already existed.");
+		QMessageBox::warning(this, "Warning", "The account already exists.");
 		return;
 	}
 	accept();
@@ -70,7 +67,7 @@ void ValidateDialog::on_buttonBox_accepted()
 	accountPool_->setSelectedAccountId(account.id());
 }
 
-void ValidateDialog::on_showPassword_pb_toggled(bool checked)
+void AccountDialog::on_showPassword_pb_toggled(bool checked)
 {
 	if(checked){
 		ui_->password_le->setEchoMode(QLineEdit::Normal);
@@ -81,7 +78,7 @@ void ValidateDialog::on_showPassword_pb_toggled(bool checked)
 	}
 }
 
-void ValidateDialog::on_log_in_out_pb_clicked()
+void AccountDialog::on_log_in_out_pb_clicked()
 {
 	if(isValidated){
 		//Log out
@@ -139,7 +136,7 @@ void ValidateDialog::on_log_in_out_pb_clicked()
 	}
 }
 
-void ValidateDialog::on_online_rb_clicked()
+void AccountDialog::on_online_rb_clicked()
 {
 	ui_->playername_le->setEnabled(false);
 	ui_->email_label->setVisible(true);
@@ -157,7 +154,7 @@ void ValidateDialog::on_online_rb_clicked()
 	}
 }
 
-void ValidateDialog::on_offline_rb_clicked()
+void AccountDialog::on_offline_rb_clicked()
 {
 	ui_->playername_label->setVisible(true);
 	ui_->playername_le->setVisible(true);
@@ -170,32 +167,32 @@ void ValidateDialog::on_offline_rb_clicked()
 	ui_->log_in_out_pb->setVisible(false);
 }
 
-void ValidateDialog::uuidUpdate(QString uuid)
+void AccountDialog::uuidUpdate(QString uuid)
 {
 	uuid_ = uuid;
 }
 
-void ValidateDialog::accessTokenUpdate(QString accessToken)
+void AccountDialog::accessTokenUpdate(QString accessToken)
 {
 	accessToken_ = accessToken;
 }
 
-void ValidateDialog::clientTokenUpdate(QString clientToken)
+void AccountDialog::clientTokenUpdate(QString clientToken)
 {
 	clientToken_  = clientToken;
 }
 
-void ValidateDialog::playerNameUpdate(QString playername)
+void AccountDialog::playerNameUpdate(QString playername)
 {
 	ui_->playername_le->setText(playername);
 }
 
-void ValidateDialog::authFinished(bool ok)
+void AccountDialog::authFinished(bool ok)
 {
 	success_ = ok;
 }
 
-void ValidateDialog::authError(QString error, QString errorMessage)
+void AccountDialog::authError(QString error, QString errorMessage)
 {
 	QMessageBox::warning(this, error, errorMessage);
 }

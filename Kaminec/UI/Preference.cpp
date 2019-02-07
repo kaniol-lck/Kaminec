@@ -2,7 +2,9 @@
 #include "ui_preference.h"
 
 #include "assistance/Path.h"
-#include "UI/ValidateDialog.h"
+#include "UI/accountdialog.h"
+#include "UI/profileDialog.h"
+#include "LAminec/GameVersionController.h"
 
 #include <QProcess>
 #include <QFileDialog>
@@ -71,8 +73,19 @@ Preference::Preference(QWidget *parent, AccountPool *accountPool, ProfileManager
 		ui_->accounts_cb->addItem(account.id());
 	}
 
-	auto index = ui_->accounts_cb->findText(selectedAccountId, Qt::MatchExactly);
-	ui_->accounts_cb->setCurrentIndex(index);
+	ui_->accounts_cb->setCurrentIndex(ui_->accounts_cb->findText(selectedAccountId, Qt::MatchExactly));
+
+	for(auto version : GameVersionController().getAllVersions()){
+		ui_->version_cb->addItem(version.versionName());
+	}
+
+	auto selectedProfileName = profileManager_->getSelectedProfileName();
+
+	for(auto profile : profileManager_->getProfiles()){
+		ui_->profiles_cb->addItem(profile.name());
+	}
+
+	ui_->profiles_cb->setCurrentIndex(ui_->profiles_cb->findText(selectedProfileName, Qt::MatchExactly));
 
 	ui_->playerName_le->setEnabled(false);
 	ui_->email_le->setEnabled(false);
@@ -292,8 +305,8 @@ void Preference::on_logNumber_spinBox_valueChanged(int arg1)
 
 void Preference::on_addAccount_pb_clicked()
 {
-	auto validateDialog = new ValidateDialog(this, accountPool_);
-	validateDialog->exec();
+	auto accountDialog = new AccountDialog(this, accountPool_);
+	accountDialog->exec();
 	ui_->accounts_cb->addItem(accountPool_->getSelectedAccountId());
 	auto index = ui_->accounts_cb->findText(accountPool_->getSelectedAccountId(), Qt::MatchExactly);
 	ui_->accounts_cb->setCurrentIndex(index);
@@ -307,7 +320,6 @@ void Preference::on_accounts_cb_currentIndexChanged(const QString &arg1)
 	ui_->email_le->setText(account.email());
 	ui_->playerName_le->setText(account.playername());
 	accountPool_->setSelectedAccountId(account.id());
-	qDebug()<<account.id();
 }
 
 void Preference::on_deleteAccount_pb_clicked()
@@ -329,37 +341,6 @@ void Preference::on_gameDir_showPb_clicked()
 	return;
 }
 
-void Preference::on_editProfile_pb_toggled(bool checked)
-{
-	//Accept
-	ui_->profile_cb->setEnabled(!checked);
-	ui_->addProfile_pb->setEnabled(!checked);
-	if(!checked){
-		auto newName = ui_->profileName_le->text();
-		if(newName == "") return;
-
-		Profile profile(newName,
-						ui_->version_cb->currentText(),
-						ui_->gameDir_le->text());
-
-		profileManager_->removeProfile(ui_->profile_cb->currentText());
-		profileManager_->insertProfile(profile);
-		ui_->profile_cb->removeItem(ui_->profile_cb->currentIndex());
-		//!!!!!!!!!!!!
-	}
-
-	ui_->profileName_label->setVisible(checked);
-	ui_->profileName_le->setVisible(checked);
-	ui_->version_label->setVisible(checked);
-	ui_->version_cb->setVisible(checked);
-	ui_->gameDir_label->setVisible(checked);
-	ui_->gameDir_le->setVisible(checked);
-	ui_->gameDir_showPb->setVisible(checked);
-	ui_->check_pb->setVisible(checked);
-
-	ui_->editProfile_pb->setText(checked?"&OK":"&Edit");
-}
-
 void Preference::on_check_pb_clicked()
 {
 //	QStringList defciencyTexts;
@@ -369,27 +350,30 @@ void Preference::on_check_pb_clicked()
 //	QMessageBox::information(this, "Lost Files", defciencyTexts.join("\n"));
 }
 
-void Preference::on_profile_cb_currentIndexChanged(const QString &arg1)
+void Preference::on_profiles_cb_currentIndexChanged(const QString &arg1)
 {
 	auto profile = profileManager_->getProfile(arg1);
 	auto index = ui_->version_cb->findText(profile.lastVersionId(), Qt::MatchExactly);
+	ui_->profileName_le->setText(profile.name());
 	ui_->version_cb->setCurrentIndex(index);
 	ui_->gameDir_le->setText(profile.gameDir());
+	profileManager_->setSelectedProfile(arg1);
 }
 
 void Preference::on_addProfile_pb_clicked()
-{/*
-	profileManager_->insertProfile(Profile());
-	ui_->profile_cb->addItem("New Profile");
-	ui_->profile_cb;*/
+{
+	auto profileDialog = new ProfileDialog(this, profileManager_);
+	profileDialog->exec();
+	ui_->profiles_cb->addItem(profileManager_->getSelectedProfileName());
+	auto index = ui_->profiles_cb->findText(profileManager_->getSelectedProfileName(), Qt::MatchExactly);
+	ui_->profiles_cb->setCurrentIndex(index);
 }
 
 void Preference::on_editAccount_pb_clicked()
 {
-	auto oldAccountId = accountPool_->getSelectedAccountId();
-	auto oldAccount = accountPool_->getAccount(oldAccountId);
-	auto validateDialog = new ValidateDialog(this, accountPool_, oldAccount);
-	if(validateDialog->exec() == QDialog::Accepted){
+	auto oldAccountId = ui_->accounts_cb->currentText();
+	auto accountDialog = new AccountDialog(this, accountPool_, oldAccountId);
+	if(accountDialog->exec() == QDialog::Accepted){
 		auto newAccountId = accountPool_->getSelectedAccountId();
 		accountPool_->removeAccount(oldAccountId);
 		ui_->accounts_cb->removeItem(ui_->accounts_cb->findText(oldAccountId, Qt::MatchExactly));
@@ -397,4 +381,26 @@ void Preference::on_editAccount_pb_clicked()
 		auto index = ui_->accounts_cb->findText(newAccountId, Qt::MatchExactly);
 		ui_->accounts_cb->setCurrentIndex(index);
 	};
+}
+
+void Preference::on_editProfile_pb_clicked()
+{
+	auto oldProfileName = ui_->profiles_cb->currentText();
+	auto profileDialog = new ProfileDialog(this, profileManager_, oldProfileName);
+	if(profileDialog->exec() == QDialog::Accepted){
+		auto newProfileName = profileManager_->getSelectedProfileName();
+		ui_->profiles_cb->removeItem(ui_->profiles_cb->findText(oldProfileName, Qt::MatchExactly));
+		ui_->profiles_cb->addItem(newProfileName);
+		auto index = ui_->profiles_cb->findText(newProfileName, Qt::MatchExactly);
+		ui_->profiles_cb->setCurrentIndex(index);
+	}
+	ui_->profiles_cb->addItem(profileManager_->getSelectedProfileName());
+	auto index = ui_->profiles_cb->findText(profileManager_->getSelectedProfileName(), Qt::MatchExactly);
+	ui_->profiles_cb->setCurrentIndex(index);
+}
+
+void Preference::on_deleteProfile_pb_clicked()
+{
+	profileManager_->removeProfile(ui_->profiles_cb->currentText());
+	ui_->profiles_cb->removeItem(ui_->profiles_cb->currentIndex());
 }

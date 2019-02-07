@@ -26,7 +26,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
 	UI/kamineclauncher.cpp \
 	UI/preference.cpp \
-	UI/validatedialog.cpp \
+	UI/accountdialog.cpp \
     assistance/Custom.cpp \
     assistance/Path.cpp \
 	assistance/utility.cpp \
@@ -68,11 +68,14 @@ SOURCES += main.cpp\
     download/DownloadParser.cpp \
     assistance/PathReplacer.cpp \
     messenger/Account.cpp \
-    LAminec/AccountPool.cpp
+    LAminec/AccountPool.cpp \
+    UI/profiledialog.cpp \
+    LAminec/GameVersionController.cpp \
+    messenger/GameVersion.cpp
 
 HEADERS  += UI/kamineclauncher.h \
 	UI/preference.h \
-	UI/validatedialog.h \
+	UI/accountdialog.h \
     assistance/Custom.h \
     assistance/Gamemode.h \
     assistance/Path.h \
@@ -117,11 +120,15 @@ HEADERS  += UI/kamineclauncher.h \
     assistance/PathReplacer.h \
     messenger/Account.h \
     LAminec/AccountPool.h \
-    exception/Exceptions.hpp
+    exception/Exceptions.hpp \
+    UI/profiledialog.h \
+    LAminec/GameVersionController.h \
+    messenger/GameVersion.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preference.ui \
-    UI/validatedialog.ui
+    UI/accountdialog.ui \
+    UI/profiledialog.ui
 
 RESOURCES += \
 	resources/background.qrc
