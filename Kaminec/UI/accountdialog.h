@@ -7,6 +7,7 @@
 #include "LAminec/AccountPool.h"
 
 #include <QDialog>
+#include <memory>
 
 namespace Ui {
 	class AccountDialog;
@@ -20,6 +21,9 @@ public:
 	explicit AccountDialog(QWidget *parent, AccountPool *accountPool);
 	explicit AccountDialog(QWidget *parent, AccountPool *accountPool, const QString &accountId);
 	~AccountDialog();
+
+signals:
+	void newAccount(Account account);
 
 private slots:
 	void on_buttonBox_accepted();
@@ -47,7 +51,7 @@ private:
 	QString uuid_;
 	QString accessToken_;
 	QString clientToken_;
-	Account account_;
+	std::shared_ptr<Account> oldAccount_;
 	bool success_ = false;
 	bool isValidated = false;
 };

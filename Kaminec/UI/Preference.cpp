@@ -67,14 +67,6 @@ Preference::Preference(QWidget *parent, AccountPool *accountPool, ProfileManager
 
 	ui_->logNumber_spinBox->setValue(custom_.getLogFileNumber());
 
-	auto selectedAccountId = accountPool_->getSelectedAccountId();
-
-	for(auto account : accountPool_->getAccounts()){
-		ui_->accounts_cb->addItem(account.id());
-	}
-
-	ui_->accounts_cb->setCurrentIndex(ui_->accounts_cb->findText(selectedAccountId, Qt::MatchExactly));
-
 	for(auto version : GameVersionController().getAllVersions()){
 		ui_->version_cb->addItem(version.versionName());
 	}
@@ -87,8 +79,18 @@ Preference::Preference(QWidget *parent, AccountPool *accountPool, ProfileManager
 
 	ui_->profiles_cb->setCurrentIndex(ui_->profiles_cb->findText(selectedProfileName, Qt::MatchExactly));
 
-	ui_->playerName_le->setEnabled(false);
-	ui_->email_le->setEnabled(false);
+	ui_->accounts_tableView->setModel(accountPool_->getAccountsModel());
+
+	ui_->accounts_tableView->verticalHeader()->setDefaultSectionSize(25);
+	ui_->accounts_tableView->verticalHeader()->setVisible(false);
+	ui_->accounts_tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+	ui_->accounts_tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
+	ui_->accounts_tableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
+	ui_->accounts_tableView->setColumnWidth(0,100);
+	ui_->accounts_tableView->setColumnWidth(1,50);
+	ui_->accounts_tableView->setShowGrid(false);
+	ui_->accounts_tableView->horizontalHeader()->setHighlightSections(false);
+	ui_->accounts_tableView->setMouseTracking(true);
 
 //	//check if you point out javaPath
 //	if(ui_->javaPath_le->text() == "")
@@ -307,25 +309,14 @@ void Preference::on_addAccount_pb_clicked()
 {
 	auto accountDialog = new AccountDialog(this, accountPool_);
 	accountDialog->exec();
-	ui_->accounts_cb->addItem(accountPool_->getSelectedAccountId());
-	auto index = ui_->accounts_cb->findText(accountPool_->getSelectedAccountId(), Qt::MatchExactly);
-	ui_->accounts_cb->setCurrentIndex(index);
-}
-
-void Preference::on_accounts_cb_currentIndexChanged(const QString &arg1)
-{
-	auto account = accountPool_->getAccount(arg1);
-	ui_->email_label->setVisible(account.mode() == Mode::Online);
-	ui_->email_le->setVisible(account.mode() == Mode::Online);
-	ui_->email_le->setText(account.email());
-	ui_->playerName_le->setText(account.playername());
-	accountPool_->setSelectedAccountId(account.id());
 }
 
 void Preference::on_deleteAccount_pb_clicked()
 {
-	accountPool_->removeAccount(ui_->accounts_cb->currentText());
-	ui_->accounts_cb->removeItem(ui_->accounts_cb->currentIndex());
+	auto index = ui_->accounts_tableView->currentIndex();
+	if(index.isValid()){
+		accountPool_->removeAccount(accountPool_->idFromIndex(index));
+	}
 }
 
 void Preference::on_gameDir_showPb_clicked()
@@ -371,16 +362,12 @@ void Preference::on_addProfile_pb_clicked()
 
 void Preference::on_editAccount_pb_clicked()
 {
-	auto oldAccountId = ui_->accounts_cb->currentText();
-	auto accountDialog = new AccountDialog(this, accountPool_, oldAccountId);
-	if(accountDialog->exec() == QDialog::Accepted){
-		auto newAccountId = accountPool_->getSelectedAccountId();
-		accountPool_->removeAccount(oldAccountId);
-		ui_->accounts_cb->removeItem(ui_->accounts_cb->findText(oldAccountId, Qt::MatchExactly));
-		ui_->accounts_cb->addItem(newAccountId);
-		auto index = ui_->accounts_cb->findText(newAccountId, Qt::MatchExactly);
-		ui_->accounts_cb->setCurrentIndex(index);
-	};
+	auto index = ui_->accounts_tableView->currentIndex();
+	if(index.isValid()){
+		auto oldAccountId = accountPool_->idFromIndex(index);
+		auto accountDialog = new AccountDialog(this, accountPool_, oldAccountId);
+		accountDialog->exec();
+	}
 }
 
 void Preference::on_editProfile_pb_clicked()
@@ -403,4 +390,9 @@ void Preference::on_deleteProfile_pb_clicked()
 {
 	profileManager_->removeProfile(ui_->profiles_cb->currentText());
 	ui_->profiles_cb->removeItem(ui_->profiles_cb->currentIndex());
+}
+
+void Preference::on_setActive_pb_clicked()
+{
+	accountPool_->setSelectedAccountId(accountPool_->idFromIndex(ui_->accounts_tableView->currentIndex()));
 }

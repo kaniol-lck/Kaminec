@@ -21,13 +21,16 @@ AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool) :
 AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool, const QString &accountId) :
 	AccountDialog(parent, accountPool)
 {
-	account_ = accountPool_->getAccount(accountId);
+	oldAccount_ = std::make_shared<Account>(accountPool_->getAccount(accountId));
 	ui_->hint_label->setText("Edit Account");
 	setWindowTitle("Edit Account");
-	ui_->email_le->setText(account_.email());
-	ui_->playername_le->setText(account_.playername());
-	if(account_.mode() == Mode::Online){
+	ui_->email_le->setText(oldAccount_->email());
+	ui_->playername_le->setText(oldAccount_->playername());
+	if(oldAccount_->mode() == Mode::Online){
 		isValidated = true;
+		uuid_ = oldAccount_->uuid();
+		accessToken_ = oldAccount_->accessToken();
+		clientToken_ = oldAccount_->clientToken();
 		ui_->email_le->setEnabled(false);
 		ui_->playername_label->setVisible(true);
 		ui_->playername_le->setVisible(true);
@@ -58,13 +61,19 @@ void AccountDialog::on_buttonBox_accepted()
 		QMessageBox::warning(this, "Warning", "The playername cannot be empty.");
 		return;
 	}
-	if(accountPool_->containAccount(account.id())){
-		QMessageBox::warning(this, "Warning", "The account already exists.");
-		return;
+
+	if(oldAccount_){
+		accountPool_->removeAccount(oldAccount_->id());
+		accountPool_->insertAccount(account);
+	} else{
+		if(accountPool_->containAccount(account.id())){
+			QMessageBox::warning(this, "Warning", "The account already exists.");
+			return;
+		}
+		accountPool_->insertAccount(account);
 	}
 	accept();
-	accountPool_->insertAccount(account);
-	accountPool_->setSelectedAccountId(account.id());
+	return;
 }
 
 void AccountDialog::on_showPassword_pb_toggled(bool checked)
@@ -82,7 +91,7 @@ void AccountDialog::on_log_in_out_pb_clicked()
 {
 	if(isValidated){
 		//Log out
-		QByteArray data = AuthKit::kTokenStyle.arg(account_.accessToken(), account_.clientToken()).toUtf8();
+		QByteArray data = AuthKit::kTokenStyle.arg(accessToken_, clientToken_).toUtf8();
 		ui_->log_in_out_pb->setEnabled(false);
 		connect(authResponse_, SIGNAL(authError(QString,QString)), this, SLOT(authError(QString,QString)));
 		connect(authResponse_, SIGNAL(invalidateFinished(bool)), this, SLOT(authFinished(bool)));

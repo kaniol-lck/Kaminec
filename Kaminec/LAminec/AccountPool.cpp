@@ -14,6 +14,11 @@ AccountPool::AccountPool(QObject *parent) :
 	authResponse_(new AuthResponse(parent)),
 	authKit_(authResponse_)
 {
+	model_.setColumnCount(3);
+	model_.setHeaderData(0, Qt::Horizontal, "playername");
+	model_.setHeaderData(1, Qt::Horizontal, "mode");
+	model_.setHeaderData(2, Qt::Horizontal, "email");
+
 	if(!accountsFile_.open(QIODevice::ReadOnly | QIODevice::Text)){
 		qDebug()<<"No content,auto make.";
 		initAccounts();
@@ -40,7 +45,10 @@ AccountPool::AccountPool(QObject *parent) :
 						value(it.value(), "accessToken").toString(),
 						value(it.value(), "clientToken").toString(),
 						value(it.value(), "playername").toString());
-		accountsMap.insert(it.key(), account);
+		accountsMap_.insert(it.key(), account);
+		accountIdList.append(it.key());
+
+		model_.appendRow(account2itemList(account));
 	}
 
 	if(ok.error != QJsonParseError::NoError)
@@ -49,7 +57,7 @@ AccountPool::AccountPool(QObject *parent) :
 
 Account AccountPool::check(const QString &accountId) const
 {
-	auto account = accountsMap.value(accountId);
+	auto account = accountsMap_.value(accountId);
 	if(account.mode() == Mode::Online){
 		validate(account);
 	} else{
@@ -76,12 +84,22 @@ void AccountPool::initAccounts()
 
 QMap<QString, Account> AccountPool::getAccounts()
 {
-	return accountsMap;
+	return accountsMap_;
+}
+
+QStandardItemModel *AccountPool::getAccountsModel()
+{
+	return &model_;
+}
+
+QString AccountPool::idFromIndex(const QModelIndex &index)
+{
+	return accountIdList.value(index.row());
 }
 
 Account AccountPool::getAccount(const QString &accountId) const
 {
-	for(auto account : accountsMap)
+	for(auto account : accountsMap_)
 		if(account.id() == accountId){
 			return account;
 		}
@@ -90,18 +108,14 @@ Account AccountPool::getAccount(const QString &accountId) const
 
 bool AccountPool::containAccount(const QString &accountId) const
 {
-	bool isContain = false;
-
-	for(auto account : accountsMap)
-		if(account.id() == accountId){
-			isContain = true;
-		}
-	return isContain;
+	return accountIdList.contains(accountId);
 }
 
 bool AccountPool::insertAccount(const Account &account)
 {
-	accountsMap.insert(account.id(), account);
+	accountsMap_.insert(account.id(), account);
+	accountIdList.append(account.id());
+	model_.appendRow(account2itemList(account));
 
 	auto accounts = accountsObject_.value("accounts").toObject();
 
@@ -145,19 +159,40 @@ bool AccountPool::removeAccount(const QString &accountId)
 	out<<bytes;
 	accountsFile_.close();
 
-	accountsMap.remove(accountId);
-
+	auto index = accountIdList.indexOf(accountId);
+	model_.removeRow(index);
+	accountIdList.removeAt(index);
+	accountsMap_.remove(accountId);
 	return true;
 }
 
-void AccountPool::setSelectedAccountId(const QString &id)
+void AccountPool::setSelectedAccountId(const QString &accountId)
 {
-	custom_.setSelectedAccountId(id);
+	auto oldAccountId = getSelectedAccountId();
+	custom_.setSelectedAccountId(accountId);
+
+	auto row = accountIdList.indexOf(oldAccountId);
+	model_.item(row, 0)->setCheckState(Qt::Unchecked);//remove check state
+
+	row = accountIdList.indexOf(accountId);
+	model_.item(row, 0)->setCheckState(Qt::Checked);//set check state
 }
 
 QString AccountPool::getSelectedAccountId()
 {
 	return custom_.getSelectedAccountId();
+}
+
+QList<QStandardItem *> AccountPool::account2itemList(const Account &account)
+{
+	auto playernameItem = new QStandardItem(account.playername());
+	auto modelItem = new QStandardItem(account.mode() == Mode::Online?"online":"offline");
+	auto emailItem = new QStandardItem(account.email());
+	modelItem->setTextAlignment(Qt::AlignHCenter);
+	playernameItem->setCheckable(false);
+	playernameItem->setCheckState(getSelectedAccountId()==account.id()?Qt::Checked:Qt::Unchecked);
+
+	return QList<QStandardItem*>{ playernameItem, modelItem, emailItem };
 }
 
 void AccountPool::validateFinished(bool success)

@@ -64,8 +64,6 @@ private slots:
 
 	void on_addAccount_pb_clicked();
 
-	void on_accounts_cb_currentIndexChanged(const QString &arg1);
-
 	void on_deleteAccount_pb_clicked();
 
 	void on_gameDir_showPb_clicked();
@@ -81,6 +79,8 @@ private slots:
 	void on_editProfile_pb_clicked();
 
 	void on_deleteProfile_pb_clicked();
+
+	void on_setActive_pb_clicked();
 
 private:
 	Ui::Preference *ui_;

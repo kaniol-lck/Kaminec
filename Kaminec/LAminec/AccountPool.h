@@ -9,6 +9,7 @@
 #include <QObject>
 #include <QFile>
 #include <QJsonObject>
+#include <QStandardItemModel>
 
 class AccountPool : public QObject
 {
@@ -23,21 +24,27 @@ public:
 
 	void initAccounts();
 	QMap<QString, Account> getAccounts();
+	QStandardItemModel* getAccountsModel();
+	QString idFromIndex(const QModelIndex &index);
 	Account getAccount(const QString &accountId) const;
 	bool containAccount(const QString &accountId) const;
 
 	bool insertAccount(const Account &account);
 	bool removeAccount(const QString &accountId);
 
-	void setSelectedAccountId(const QString &id);
+	void setSelectedAccountId(const QString &accountId);
 	QString getSelectedAccountId();
+
+	QList<QStandardItem*> account2itemList(const Account &account);
 
 public slots:
 	void validateFinished(bool succuss);
 
 private:
 	QFile accountsFile_;
-	QMap<QString, Account> accountsMap;
+	QMap<QString, Account> accountsMap_;
+	QStringList accountIdList;
+	QStandardItemModel model_;
 	QJsonObject accountsObject_;
 	Custom custom_;
 	AuthResponse* authResponse_;
