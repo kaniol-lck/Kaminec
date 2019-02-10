@@ -82,6 +82,8 @@ private slots:
 
 	void on_setActive_pb_clicked();
 
+	void accountSortRecord();
+
 private:
 	Ui::Preference *ui_;
 	Custom custom_;

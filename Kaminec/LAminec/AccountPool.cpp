@@ -15,18 +15,17 @@ AccountPool::AccountPool(QObject *parent) :
 	authKit_(authResponse_)
 {
 	model_.setColumnCount(3);
-	model_.setHeaderData(0, Qt::Horizontal, "playername");
-	model_.setHeaderData(1, Qt::Horizontal, "mode");
-	model_.setHeaderData(2, Qt::Horizontal, "email");
+	model_.setHeaderData(Column::Playername, Qt::Horizontal, "playername");
+	model_.setHeaderData(Column::Mode, Qt::Horizontal, "mode");
+	model_.setHeaderData(Column::Email, Qt::Horizontal, "email");
 
-	if(!accountsFile_.open(QIODevice::ReadOnly | QIODevice::Text)){
-		qDebug()<<"No content,auto make.";
-		initAccounts();
-	}
+	if(!accountsFile_.open(QIODevice::ReadOnly | QIODevice::Text))
+		throw FileOpenException(accountsFile_.fileName());
+
 	QByteArray bytes = QString::fromLocal8Bit(accountsFile_.readAll()).toUtf8();
 	accountsFile_.close();
 
-	if(bytes.size()==0){
+	if(bytes.isEmpty()){
 		qDebug()<<"No content,auto make.";
 		initAccounts();
 		return;
@@ -37,19 +36,26 @@ AccountPool::AccountPool(QObject *parent) :
 	if(ok.error != QJsonParseError::NoError)
 		throw JsonParseException(accountsFile_.fileName(), ok.errorString(), true);
 
-	auto map = accountsObject_.value("accounts").toVariant().toMap();
-	for(auto it = map.begin(); it != map.end(); it++){
-		Account account(value(it.value(), "mode").toBool()?Mode::Online:Mode::Offline,
-						value(it.value(), "email").toString(),
-						value(it.value(), "uuid").toString(),
-						value(it.value(), "accessToken").toString(),
-						value(it.value(), "clientToken").toString(),
-						value(it.value(), "playername").toString());
-		accountsMap_.insert(it.key(), account);
-		accountIdList.append(it.key());
-
+	auto accountsVariant = accountsObject_.value("accounts").toVariant();
+	for(auto it : accountsVariant.toMap()){
+		Account account(value(it, "mode").toBool()?Mode::Online:Mode::Offline,
+						value(it, "email").toString(),
+						value(it, "uuid").toString(),
+						value(it, "accessToken").toString(),
+						value(it, "clientToken").toString(),
+						value(it, "playername").toString());
+		accountsMap_.insert(account.id(), account);
 		model_.appendRow(account2itemList(account));
 	}
+
+	auto accountSorting = getAccountSorting();
+	auto accountAscending = getAccountAscending();
+	if(accountSorting == "byPlayerName")
+		model_.sort(Column::Playername, accountAscending?Qt::AscendingOrder:Qt::DescendingOrder);
+	else if(accountSorting == "byMode")
+		model_.sort(Column::Mode, accountAscending?Qt::AscendingOrder:Qt::DescendingOrder);
+	else if(accountSorting == "byEmail")
+		model_.sort(Column::Email, accountAscending?Qt::AscendingOrder:Qt::DescendingOrder);
 
 	if(ok.error != QJsonParseError::NoError)
 		throw JsonParseException(accountsFile_.fileName(), ok.errorString(), true);
@@ -94,7 +100,7 @@ QStandardItemModel *AccountPool::getAccountsModel()
 
 QString AccountPool::idFromIndex(const QModelIndex &index)
 {
-	return accountIdList.value(index.row());
+	return model_.item(index.row(), Column::Id)->data(Qt::DisplayRole).toString();
 }
 
 Account AccountPool::getAccount(const QString &accountId) const
@@ -108,13 +114,15 @@ Account AccountPool::getAccount(const QString &accountId) const
 
 bool AccountPool::containAccount(const QString &accountId) const
 {
-	return accountIdList.contains(accountId);
+	for(auto account :accountsMap_)
+		if(account.id() == accountId)
+			return true;
+	return false;
 }
 
 bool AccountPool::insertAccount(const Account &account)
 {
 	accountsMap_.insert(account.id(), account);
-	accountIdList.append(account.id());
 	model_.appendRow(account2itemList(account));
 
 	auto accounts = accountsObject_.value("accounts").toObject();
@@ -136,11 +144,7 @@ bool AccountPool::insertAccount(const Account &account)
 
 	accountsObject_.insert("accounts", accounts);
 
-	if(!accountsFile_.open(QIODevice::WriteOnly | QIODevice::Text))return false;
-	QTextStream out(&accountsFile_);
-	auto bytes = QJsonDocument(accountsObject_).toJson();
-	out<<bytes;
-	accountsFile_.close();
+	writeToFile();
 
 	return true;
 }
@@ -153,15 +157,10 @@ bool AccountPool::removeAccount(const QString &accountId)
 
 	accountsObject_.insert("accounts", accounts);
 
-	if(!accountsFile_.open(QIODevice::WriteOnly | QIODevice::Text))return false;
-	QTextStream out(&accountsFile_);
-	auto bytes = QJsonDocument(accountsObject_).toJson();
-	out<<bytes;
-	accountsFile_.close();
+	writeToFile();
 
-	auto index = accountIdList.indexOf(accountId);
-	model_.removeRow(index);
-	accountIdList.removeAt(index);
+	auto row = model_.findItems(accountId, Qt::MatchExactly, Column::Id).first()->row();
+	model_.removeRow(row);
 	accountsMap_.remove(accountId);
 	return true;
 }
@@ -169,33 +168,84 @@ bool AccountPool::removeAccount(const QString &accountId)
 void AccountPool::setSelectedAccountId(const QString &accountId)
 {
 	auto oldAccountId = getSelectedAccountId();
-	custom_.setSelectedAccountId(accountId);
+	accountsObject_.insert("selectedAccountId", QJsonValue(accountId));
 
-	auto row = accountIdList.indexOf(oldAccountId);
-	model_.item(row, 0)->setCheckState(Qt::Unchecked);//remove check state
+	writeToFile();
 
-	row = accountIdList.indexOf(accountId);
-	model_.item(row, 0)->setCheckState(Qt::Checked);//set check state
+	auto row = model_.findItems(oldAccountId, Qt::MatchExactly, Column::Id).first()->row();
+	model_.item(row, Column::Playername)->setCheckState(Qt::Unchecked);//remove check state
+
+	row = model_.findItems(accountId, Qt::MatchExactly, Column::Id).first()->row();
+	model_.item(row, Column::Playername)->setCheckState(Qt::Checked);//set check state
 }
 
 QString AccountPool::getSelectedAccountId()
 {
-	return custom_.getSelectedAccountId();
+	return accountsObject_.value("selectedAccountId").toString();
+}
+
+void AccountPool::setAccountSorting(QString accountSorting)
+{
+	auto settings = accountsObject_.value("settings").toObject();
+	settings.insert("accountSorting", accountSorting);
+	accountsObject_.insert("settings", settings);
+
+	writeToFile();
+}
+
+QString AccountPool::getAccountSorting()
+{
+	return accountsObject_.value("settings").toObject().value("accountAscending").toString();
+}
+
+void AccountPool::setAccountAscending(bool accountAscending)
+{
+	auto settings = accountsObject_.value("settings").toObject();
+	settings.insert("accountAscending", accountAscending);
+	accountsObject_.insert("settings", settings);
+
+	writeToFile();
+}
+
+bool AccountPool::getAccountAscending()
+{
+	return accountsObject_.value("settings").toObject().value("accountAscending").toBool();
 }
 
 QList<QStandardItem *> AccountPool::account2itemList(const Account &account)
 {
 	auto playernameItem = new QStandardItem(account.playername());
-	auto modelItem = new QStandardItem(account.mode() == Mode::Online?"online":"offline");
+	auto modeItem = new QStandardItem(account.mode() == Mode::Online?"online":"offline");
 	auto emailItem = new QStandardItem(account.email());
-	modelItem->setTextAlignment(Qt::AlignHCenter);
+	auto idItem = new QStandardItem(account.id());
+	modeItem->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 	playernameItem->setCheckable(false);
 	playernameItem->setCheckState(getSelectedAccountId()==account.id()?Qt::Checked:Qt::Unchecked);
 
-	return QList<QStandardItem*>{ playernameItem, modelItem, emailItem };
+	return QList<QStandardItem*>{ playernameItem, modeItem, emailItem, idItem };
+}
+
+void AccountPool::writeToFile()
+{
+	if(!accountsFile_.open(QIODevice::WriteOnly | QIODevice::Text))
+		throw FileOpenException(accountsFile_.fileName());
+	QTextStream out(&accountsFile_);
+	auto bytes = QJsonDocument(accountsObject_).toJson();
+	out<<bytes;
+	accountsFile_.close();
 }
 
 void AccountPool::validateFinished(bool success)
 {
 	success_ = success;
+}
+
+void AccountPool::sortRecord(int column)
+{
+	if(column == Column::Playername)
+		setAccountSorting("byPlayerName");
+	else if(column == Column::Mode)
+		setAccountSorting("byMode");
+	else if(column == Column::Email)
+		setAccountSorting("byEmail");
 }

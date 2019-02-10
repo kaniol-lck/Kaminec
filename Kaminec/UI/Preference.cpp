@@ -82,16 +82,16 @@ Preference::Preference(QWidget *parent, AccountPool *accountPool, ProfileManager
 	ui_->accounts_tableView->setModel(accountPool_->getAccountsModel());
 
 	ui_->accounts_tableView->verticalHeader()->setDefaultSectionSize(25);
-	ui_->accounts_tableView->verticalHeader()->setVisible(false);
 	ui_->accounts_tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 	ui_->accounts_tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
 	ui_->accounts_tableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
 	ui_->accounts_tableView->setColumnWidth(0,100);
 	ui_->accounts_tableView->setColumnWidth(1,50);
-	ui_->accounts_tableView->setShowGrid(false);
-	ui_->accounts_tableView->horizontalHeader()->setHighlightSections(false);
-	ui_->accounts_tableView->setMouseTracking(true);
+	ui_->accounts_tableView->horizontalHeader()->setSortIndicatorShown(true);
+	ui_->accounts_tableView->hideColumn(3);
 
+	connect(ui_->accounts_tableView->horizontalHeader(), SIGNAL(sectionClicked(int)), accountPool_, SLOT(sortRecord(int)));
+	connect(ui_->accounts_tableView->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(accountSortRecord()));
 //	//check if you point out javaPath
 //	if(ui_->javaPath_le->text() == "")
 //		ui_->javaPath_le->setText(getAutoJavaPath());
@@ -395,4 +395,9 @@ void Preference::on_deleteProfile_pb_clicked()
 void Preference::on_setActive_pb_clicked()
 {
 	accountPool_->setSelectedAccountId(accountPool_->idFromIndex(ui_->accounts_tableView->currentIndex()));
+}
+
+void Preference::accountSortRecord()
+{
+	accountPool_->setAccountAscending(ui_->accounts_tableView->horizontalHeader()->sortIndicatorOrder() == Qt::AscendingOrder);
 }
