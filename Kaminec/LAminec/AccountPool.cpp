@@ -19,7 +19,7 @@ AccountPool::AccountPool(QObject *parent) :
 	model_.setHeaderData(Column::Mode, Qt::Horizontal, "mode");
 	model_.setHeaderData(Column::Email, Qt::Horizontal, "email");
 
-	if(!accountsFile_.open(QIODevice::ReadOnly | QIODevice::Text))
+	if(!accountsFile_.open(QIODevice::ReadWrite | QIODevice::Text))
 		throw FileOpenException(accountsFile_.fileName());
 
 	QByteArray bytes = QString::fromLocal8Bit(accountsFile_.readAll()).toUtf8();
@@ -85,7 +85,11 @@ bool AccountPool::validate(const Account &account) const
 
 void AccountPool::initAccounts()
 {
-	insertAccount(Account(Mode::Offline,"", "", "", "", "Steve"));
+	Account account;
+	insertAccount(account);
+	setSelectedAccountId(account.id());
+	setAccountSorting("ByPlayerName");
+	setAccountAscending(true);
 }
 
 QMap<QString, Account> AccountPool::getAccounts()
@@ -172,11 +176,13 @@ void AccountPool::setSelectedAccountId(const QString &accountId)
 
 	writeToFile();
 
-	auto row = model_.findItems(oldAccountId, Qt::MatchExactly, Column::Id).first()->row();
-	model_.item(row, Column::Playername)->setCheckState(Qt::Unchecked);//remove check state
+	auto items = model_.findItems(oldAccountId, Qt::MatchExactly, Column::Id);
+	if(!items.isEmpty())
+		model_.item(items.first()->row(), Column::Playername)->setCheckState(Qt::Unchecked);//remove check state
 
-	row = model_.findItems(accountId, Qt::MatchExactly, Column::Id).first()->row();
-	model_.item(row, Column::Playername)->setCheckState(Qt::Checked);//set check state
+	items = model_.findItems(accountId, Qt::MatchExactly, Column::Id);
+	if(!items.isEmpty())
+		model_.item(items.first()->row(), Column::Playername)->setCheckState(Qt::Checked);//set check state
 }
 
 QString AccountPool::getSelectedAccountId()

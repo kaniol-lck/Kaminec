@@ -162,7 +162,7 @@ QString ProfileManager::getSelectedProfileName()
 void ProfileManager::refresh()
 {
 	profilesFile_.setFileName(PathReplacer::replace("<core>/launcher_profiles.json"));
-	if(!profilesFile_.open(QIODevice::ReadOnly | QIODevice::Text))
+	if(!profilesFile_.open(QIODevice::ReadWrite | QIODevice::Text))
 		throw FileOpenException(profilesFile_.fileName());
 	QByteArray bytes = QString::fromLocal8Bit(profilesFile_.readAll()).toUtf8();
 	profilesFile_.close();
