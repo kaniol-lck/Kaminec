@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Preference</class>
- <widget class="QDialog" name="Preference">
+ <class>Preferences</class>
+ <widget class="QDialog" name="Preferences">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Preference</string>
+   <string>Preferences</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_20">
    <item row="0" column="0">
@@ -1091,7 +1091,7 @@ p, li { white-space: pre-wrap; }
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>Preference</receiver>
+   <receiver>Preferences</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -1107,7 +1107,7 @@ p, li { white-space: pre-wrap; }
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>Preference</receiver>
+   <receiver>Preferences</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

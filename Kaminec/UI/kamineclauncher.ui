@@ -247,7 +247,7 @@ font: 18pt &quot;Minecraft&quot;;</string>
      <string>&amp;Tools</string>
     </property>
     <addaction name="separator"/>
-    <addaction name="action_preference"/>
+    <addaction name="action_preferences"/>
    </widget>
    <addaction name="menu_Tools"/>
   </widget>
@@ -258,15 +258,15 @@ font: 18pt &quot;Minecraft&quot;;</string>
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="action_preference"/>
+   <addaction name="action_preferences"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="action_preference">
+  <action name="action_preferences">
    <property name="text">
-    <string>&amp;Preference</string>
+    <string>&amp;Preferences</string>
    </property>
    <property name="toolTip">
-    <string>Preference</string>
+    <string>Preferences</string>
    </property>
   </action>
  </widget>

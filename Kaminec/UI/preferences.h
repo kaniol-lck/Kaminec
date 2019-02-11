@@ -1,5 +1,5 @@
-#ifndef PREFERENCE_H
-#define PREFERENCE_H
+#ifndef PREFERENCES_H
+#define PREFERENCES_H
 
 #include "LAminec/AccountPool.h"
 #include "LAminec/ProfileManager.h"
@@ -8,16 +8,16 @@
 #include <QDialog>
 
 namespace Ui {
-	class Preference;
+	class Preferences;
 }
 
-class Preference : public QDialog
+class Preferences : public QDialog
 {
 	Q_OBJECT
 
 public:
-	explicit Preference(QWidget *parent, AccountPool *accountPool, ProfileManager *profileManager);
-	~Preference();
+	explicit Preferences(QWidget *parent, AccountPool *accountPool, ProfileManager *profileManager);
+	~Preferences();
 
 private:
 	QString getAutoJavaPath();
@@ -83,10 +83,10 @@ private slots:
 	void profileSortRecord();
 
 private:
-	Ui::Preference *ui_;
+	Ui::Preferences *ui_;
 	Custom custom_;
 	AccountPool *accountPool_;
 	ProfileManager *profileManager_;
 };
 
-#endif // PREFERENCE_H
+#endif // PREFERENCES_H

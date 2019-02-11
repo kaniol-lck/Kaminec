@@ -45,7 +45,7 @@ private slots:
 
 	void on_backupSaves_pb_clicked();
 
-	void on_action_preference_triggered();
+	void on_action_preferences_triggered();
 
 	void on_moduleSwitch_currentChanged(int index);
 

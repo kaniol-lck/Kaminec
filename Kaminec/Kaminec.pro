@@ -25,7 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
 	UI/kamineclauncher.cpp \
-	UI/preference.cpp \
+	UI/preferences.cpp \
 	UI/accountdialog.cpp \
     assistance/Custom.cpp \
     assistance/Path.cpp \
@@ -74,7 +74,7 @@ SOURCES += main.cpp\
     messenger/GameVersion.cpp
 
 HEADERS  += UI/kamineclauncher.h \
-	UI/preference.h \
+	UI/preferences.h \
 	UI/accountdialog.h \
     assistance/Custom.h \
     assistance/Gamemode.h \
@@ -126,7 +126,7 @@ HEADERS  += UI/kamineclauncher.h \
     messenger/GameVersion.h
 
 FORMS    += UI/kamineclauncher.ui \
-    UI/preference.ui \
+    UI/preferences.ui \
     UI/accountdialog.ui \
     UI/profiledialog.ui
 

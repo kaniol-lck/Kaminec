@@ -1,7 +1,7 @@
 #include "kamineclauncher.h"
 #include "ui_kamineclauncher.h"
 
-#include "UI/preference.h"
+#include "UI/preferences.h"
 #include "assistance/Path.h"
 #include "assistance/gamemode.h"
 
@@ -116,11 +116,11 @@ bool KaminecLauncher::startGame()
 	return true;
 }
 
-void KaminecLauncher::on_action_preference_triggered()
+void KaminecLauncher::on_action_preferences_triggered()
 {
-	//create preference windows
-	auto preference = new Preference(this, &accountPool_, &profileManager_);
-	preference->show();
+	//create preferences windows
+	auto preferences = new Preferences(this, &accountPool_, &profileManager_);
+	preferences->show();
 }
 
 void KaminecLauncher::on_moduleSwitch_currentChanged(int index)

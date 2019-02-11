@@ -1,5 +1,5 @@
-#include "preference.h"
-#include "ui_preference.h"
+#include "preferences.h"
+#include "ui_preferences.h"
 
 #include "assistance/Path.h"
 #include "UI/accountdialog.h"
@@ -12,9 +12,9 @@
 #include <QStandardItemModel>
 #include <QEventLoop>
 
-Preference::Preference(QWidget *parent, AccountPool *accountPool, ProfileManager *profileManager) :
+Preferences::Preferences(QWidget *parent, AccountPool *accountPool, ProfileManager *profileManager) :
 	QDialog(parent),
-	ui_(new Ui::Preference),
+	ui_(new Ui::Preferences),
 	accountPool_(accountPool),
 	profileManager_(profileManager)
 {
@@ -98,12 +98,12 @@ Preference::Preference(QWidget *parent, AccountPool *accountPool, ProfileManager
 //		ui_->javaPath_le->setText(getAutoJavaPath());
 }
 
-Preference::~Preference()
+Preferences::~Preferences()
 {
 	delete ui_;
 }
 
-QString Preference::getAutoJavaPath()
+QString Preferences::getAutoJavaPath()
 {
 	auto environment = QProcess::systemEnvironment();
 	auto PATH = environment.at(environment.indexOf(QRegExp("PATH=.*"))).split(";");
@@ -118,7 +118,7 @@ QString Preference::getAutoJavaPath()
 	return javaPath;
 }
 
-void Preference::on_corePath_showPb_clicked()
+void Preferences::on_corePath_showPb_clicked()
 {
 	auto corePath = QFileDialog::getExistingDirectory(0, "Please choose the upper directory,we will automaticly create \".minecraft\" folder",
 													  ui_->corePath_le->text());
@@ -130,7 +130,7 @@ void Preference::on_corePath_showPb_clicked()
 	}
 }
 
-void Preference::on_javaPath_showPb_clicked()
+void Preferences::on_javaPath_showPb_clicked()
 {
 	auto javaPath = QFileDialog::getOpenFileName(this,
 												 "Choose javaw,exe...",
@@ -139,7 +139,7 @@ void Preference::on_javaPath_showPb_clicked()
 		ui_->javaPath_le->setText(javaPath);
 }
 
-void Preference::on_buttonBox_accepted()
+void Preferences::on_buttonBox_accepted()
 {
 	custom_.setCoreGameFileDirectory(ui_->corePath_le->text());
 	custom_.setGameVersionsDirectory(ui_->versionsPath_le->text());
@@ -165,7 +165,7 @@ void Preference::on_buttonBox_accepted()
 	emit settingfinished();
 }
 
-void Preference::on_fullScreen_checkBox_stateChanged(int arg1)
+void Preferences::on_fullScreen_checkBox_stateChanged(int arg1)
 {
 	if(arg1 == Qt::Checked){
 		ui_->width_sb->setEnabled(false);
@@ -176,7 +176,7 @@ void Preference::on_fullScreen_checkBox_stateChanged(int arg1)
 	}
 }
 
-void Preference::on_more_pb_toggled(bool checked)
+void Preferences::on_more_pb_toggled(bool checked)
 {
 	ui_->versionsPath_label->setVisible(checked);
 	ui_->versionsPath_le->setVisible(checked);
@@ -201,17 +201,17 @@ void Preference::on_more_pb_toggled(bool checked)
 	ui_->more_pb->setText(checked?"Fold":"More");
 }
 
-void Preference::on_javaPath_le_2_textEdited(const QString &arg1)
+void Preferences::on_javaPath_le_2_textEdited(const QString &arg1)
 {
 	ui_->javaPath_le->setText(arg1);
 }
 
-void Preference::on_javaPath_le_textEdited(const QString &arg1)
+void Preferences::on_javaPath_le_textEdited(const QString &arg1)
 {
 	ui_->javaPath_le_2->setText(arg1);
 }
 
-void Preference::on_javaPath_showPb_2_clicked()
+void Preferences::on_javaPath_showPb_2_clicked()
 {
 	auto path = QFileDialog::getExistingDirectory(this, "Please choose the version directory",
 												  ui_->versionsPath_le->text());
@@ -220,7 +220,7 @@ void Preference::on_javaPath_showPb_2_clicked()
 		ui_->versionsPath_le->setText(path);
 }
 
-void Preference::on_versionsPath_showPb_clicked()
+void Preferences::on_versionsPath_showPb_clicked()
 {
 	auto path = QFileDialog::getExistingDirectory(this, "Please choose the version directory",
 												  ui_->versionsPath_le->text());
@@ -229,7 +229,7 @@ void Preference::on_versionsPath_showPb_clicked()
 		ui_->versionsPath_le->setText(path);
 }
 
-void Preference::on_libsPath_showPb_clicked()
+void Preferences::on_libsPath_showPb_clicked()
 {
 	auto path = QFileDialog::getExistingDirectory(this, "Please choose the libraries directory",
 												  ui_->libsPath_le->text());
@@ -238,7 +238,7 @@ void Preference::on_libsPath_showPb_clicked()
 		ui_->libsPath_le->setText(path);
 }
 
-void Preference::on_nativesPath_showPb_clicked()
+void Preferences::on_nativesPath_showPb_clicked()
 {
 	auto path = QFileDialog::getExistingDirectory(this, "Please choose the natives directory",
 												  ui_->nativesPath_le->text());
@@ -247,7 +247,7 @@ void Preference::on_nativesPath_showPb_clicked()
 		ui_->nativesPath_le->setText(path);
 }
 
-void Preference::on_assetsPath_showPb_clicked()
+void Preferences::on_assetsPath_showPb_clicked()
 {
 	auto path = QFileDialog::getExistingDirectory(this, "Please choose the assets directory",
 												  ui_->assetsPath_le->text());
@@ -256,7 +256,7 @@ void Preference::on_assetsPath_showPb_clicked()
 		ui_->assetsPath_le->setText(path);
 }
 
-void Preference::on_indexesPath_showPb_clicked()
+void Preferences::on_indexesPath_showPb_clicked()
 {
 	auto path = QFileDialog::getExistingDirectory(this, "Please choose the asset indexes directory",
 												  ui_->indexesPath_le->text());
@@ -265,7 +265,7 @@ void Preference::on_indexesPath_showPb_clicked()
 		ui_->indexesPath_le->setText(path);
 }
 
-void Preference::on_objectsPath_showPb_clicked()
+void Preferences::on_objectsPath_showPb_clicked()
 {
 	auto path = QFileDialog::getExistingDirectory(this, "Please choose the asset objects directory",
 												  ui_->objectsPath_le->text());
@@ -274,7 +274,7 @@ void Preference::on_objectsPath_showPb_clicked()
 		ui_->objectsPath_le->setText(path);
 }
 
-void Preference::on_unusedModsPath_showPb_clicked()
+void Preferences::on_unusedModsPath_showPb_clicked()
 {
 	auto path = QFileDialog::getExistingDirectory(this, "Please choose the unused mods directory",
 												  ui_->unusedModsPath_le->text());
@@ -283,7 +283,7 @@ void Preference::on_unusedModsPath_showPb_clicked()
 		ui_->unusedModsPath_le->setText(path);
 }
 
-void Preference::on_savesBackupPath_showPb_clicked()
+void Preferences::on_savesBackupPath_showPb_clicked()
 {
 	auto path = QFileDialog::getExistingDirectory(this, "Please choose the saves backup directory",
 												  ui_->savesBackupPath_le->text());
@@ -292,7 +292,7 @@ void Preference::on_savesBackupPath_showPb_clicked()
 		ui_->savesBackupPath_le->setText(path);
 }
 
-void Preference::on_loggerPath_showPb_clicked()
+void Preferences::on_loggerPath_showPb_clicked()
 {
 	auto path = QFileDialog::getExistingDirectory(this, "Please choose the logger directory",
 												  ui_->loggerPath_le->text());
@@ -301,18 +301,18 @@ void Preference::on_loggerPath_showPb_clicked()
 		ui_->loggerPath_le->setText(path);
 }
 
-void Preference::on_logNumber_spinBox_valueChanged(int arg1)
+void Preferences::on_logNumber_spinBox_valueChanged(int arg1)
 {
 	ui_->logTip_label->setVisible(arg1 == -1);
 }
 
-void Preference::on_addAccount_pb_clicked()
+void Preferences::on_addAccount_pb_clicked()
 {
 	auto accountDialog = new AccountDialog(this, accountPool_);
 	accountDialog->exec();
 }
 
-void Preference::on_deleteAccount_pb_clicked()
+void Preferences::on_deleteAccount_pb_clicked()
 {
 	auto index = ui_->accounts_tableView->currentIndex();
 	if(index.isValid()){
@@ -320,13 +320,13 @@ void Preference::on_deleteAccount_pb_clicked()
 	}
 }
 
-void Preference::on_addProfile_pb_clicked()
+void Preferences::on_addProfile_pb_clicked()
 {
 	auto profileDialog = new ProfileDialog(this, profileManager_);
 	profileDialog->exec();
 }
 
-void Preference::on_editAccount_pb_clicked()
+void Preferences::on_editAccount_pb_clicked()
 {
 	auto index = ui_->accounts_tableView->currentIndex();
 	if(index.isValid()){
@@ -336,7 +336,7 @@ void Preference::on_editAccount_pb_clicked()
 	}
 }
 
-void Preference::on_editProfile_pb_clicked()
+void Preferences::on_editProfile_pb_clicked()
 {
 	auto index = ui_->profiles_tableView->currentIndex();
 	if(index.isValid()){
@@ -346,12 +346,12 @@ void Preference::on_editProfile_pb_clicked()
 	}
 }
 
-void Preference::on_setProfileActive_pb_clicked()
+void Preferences::on_setProfileActive_pb_clicked()
 {
 	profileManager_->setSelectedProfileName(profileManager_->nameFromIndex(ui_->profiles_tableView->currentIndex()));
 }
 
-void Preference::on_deleteProfile_pb_clicked()
+void Preferences::on_deleteProfile_pb_clicked()
 {
 	auto index = ui_->profiles_tableView->currentIndex();
 	if(index.isValid()){
@@ -359,17 +359,17 @@ void Preference::on_deleteProfile_pb_clicked()
 	}
 }
 
-void Preference::on_setAccountActive_pb_clicked()
+void Preferences::on_setAccountActive_pb_clicked()
 {
 	accountPool_->setSelectedAccountId(accountPool_->idFromIndex(ui_->accounts_tableView->currentIndex()));
 }
 
-void Preference::accountSortRecord()
+void Preferences::accountSortRecord()
 {
 	accountPool_->setAccountAscending(ui_->accounts_tableView->horizontalHeader()->sortIndicatorOrder() == Qt::AscendingOrder);
 }
 
-void Preference::profileSortRecord()
+void Preferences::profileSortRecord()
 {
 	profileManager_->setProfileAscending(ui_->profiles_tableView->horizontalHeader()->sortIndicatorOrder() == Qt::AscendingOrder);
 }
