@@ -57,8 +57,9 @@ AccountPool::AccountPool(QObject *parent) :
 	else if(accountSorting == "byEmail")
 		model_.sort(Column::Email, accountAscending?Qt::AscendingOrder:Qt::DescendingOrder);
 
-	if(ok.error != QJsonParseError::NoError)
-		throw JsonParseException(accountsFile_.fileName(), ok.errorString(), true);
+	auto items = model_.findItems(getSelectedAccountId(), Qt::MatchExactly, Column::Id);
+	if(!items.isEmpty())
+		model_.item(items.first()->row(), Column::Playername)->setCheckState(Qt::Checked);//set check state
 }
 
 Account AccountPool::check(const QString &accountId) const
@@ -87,7 +88,6 @@ void AccountPool::initAccounts()
 {
 	Account account;
 	insertAccount(account);
-	setSelectedAccountId(account.id());
 	setAccountSorting("ByPlayerName");
 	setAccountAscending(true);
 }
@@ -124,9 +124,8 @@ bool AccountPool::containAccount(const QString &accountId) const
 	return false;
 }
 
-bool AccountPool::insertAccount(const Account &account)
+void AccountPool::insertAccount(const Account &account)
 {
-	accountsMap_.insert(account.id(), account);
 	model_.appendRow(account2itemList(account));
 
 	auto accounts = accountsObject_.value("accounts").toObject();
@@ -145,28 +144,34 @@ bool AccountPool::insertAccount(const Account &account)
 							{"playername", account.playername()}
 						});
 	}
-
 	accountsObject_.insert("accounts", accounts);
-
 	writeToFile();
 
-	return true;
+	if(accountsMap_.isEmpty())
+		setSelectedAccountId(account.id());
+	accountsMap_.insert(account.id(), account);
 }
 
-bool AccountPool::removeAccount(const QString &accountId)
+void AccountPool::removeAccount(const QString &accountId)
 {
+	//if the account to be removed is selected, set the first in remains as the selected
+	if(getSelectedAccountId() == accountId && accountsMap_.count() > 1){
+		auto items = model_.findItems(accountId, Qt::MatchExactly, Column::Id);
+		if(!items.isEmpty()){
+			auto row = items.first()->row()==1?2:1;
+			model_.item(row, Column::Playername)->setCheckState(Qt::Checked);
+			accountsObject_.insert("selectedAccountId", model_.item(row, Column::Id)->data(Qt::DisplayRole).toString());
+			writeToFile();
+		}
+	}
+
 	QJsonObject accounts = accountsObject_.value("accounts").toObject();
-
 	accounts.remove(accountId);
-
 	accountsObject_.insert("accounts", accounts);
-
 	writeToFile();
-
 	auto row = model_.findItems(accountId, Qt::MatchExactly, Column::Id).first()->row();
 	model_.removeRow(row);
 	accountsMap_.remove(accountId);
-	return true;
 }
 
 void AccountPool::setSelectedAccountId(const QString &accountId)
@@ -187,7 +192,14 @@ void AccountPool::setSelectedAccountId(const QString &accountId)
 
 QString AccountPool::getSelectedAccountId()
 {
-	return accountsObject_.value("selectedAccountId").toString();
+	if(!accountsObject_.contains("selectedAccountId")) return "";
+	auto selectedAccountId = accountsObject_.value("selectedAccountId").toString();
+	if(!accountsMap_.contains(selectedAccountId) && model_.rowCount() != 0){
+		selectedAccountId = idFromIndex(model_.index(0,0));
+		accountsObject_.insert("selectedAccountId", QJsonValue(selectedAccountId));
+		writeToFile();//set the first account as selected
+	}
+	return selectedAccountId;
 }
 
 void AccountPool::setAccountSorting(QString accountSorting)
@@ -226,7 +238,7 @@ QList<QStandardItem *> AccountPool::account2itemList(const Account &account)
 	auto idItem = new QStandardItem(account.id());
 	modeItem->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 	playernameItem->setCheckable(false);
-	playernameItem->setCheckState(getSelectedAccountId()==account.id()?Qt::Checked:Qt::Unchecked);
+	playernameItem->setCheckState(Qt::Unchecked);
 
 	return QList<QStandardItem*>{ playernameItem, modeItem, emailItem, idItem };
 }

@@ -29,8 +29,8 @@ public:
 	Account getAccount(const QString &accountId) const;
 	bool containAccount(const QString &accountId) const;
 
-	bool insertAccount(const Account &account);
-	bool removeAccount(const QString &accountId);
+	void insertAccount(const Account &account);
+	void removeAccount(const QString &accountId);
 
 	void setSelectedAccountId(const QString &accountId);
 	QString getSelectedAccountId();
