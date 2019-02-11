@@ -190,7 +190,6 @@ QList<QStandardItem *> ProfileManager::profile2itemList(const Profile &profile)
 	auto nameItem = new QStandardItem(profile.name());
 	auto lastVersionIdItem = new QStandardItem(profile.lastVersionId());
 	auto gameDirItem = new QStandardItem(profile.gameDir());
-	lastVersionIdItem->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 	nameItem->setCheckable(false);
 	nameItem->setCheckState(Qt::Unchecked);
 

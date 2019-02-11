@@ -51,10 +51,6 @@ void ProfileDialog::on_buttonBox_accepted()
 		QMessageBox::warning(this, "Warning", "The game directory cannot be empty.");
 		return;
 	}
-	if(profileManager_->containProfile(profile.name())){
-		QMessageBox::warning(this, "Warning", "The profile already exists.");
-		return;
-	}
 
 	if(oldProfile_){
 		profileManager_->removeProfile(oldProfile_->name());

@@ -73,8 +73,8 @@ Preferences::Preferences(QWidget *parent, AccountPool *accountPool, ProfileManag
 	ui_->accounts_tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 	ui_->accounts_tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
 	ui_->accounts_tableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
-	ui_->accounts_tableView->setColumnWidth(0,100);
-	ui_->accounts_tableView->setColumnWidth(1,50);
+	ui_->accounts_tableView->setColumnWidth(0, 100);
+	ui_->accounts_tableView->setColumnWidth(1, 50);
 	ui_->accounts_tableView->horizontalHeader()->setSortIndicatorShown(true);
 	ui_->accounts_tableView->hideColumn(3);
 
@@ -84,8 +84,8 @@ Preferences::Preferences(QWidget *parent, AccountPool *accountPool, ProfileManag
 	ui_->profiles_tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 	ui_->profiles_tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
 	ui_->profiles_tableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
-	ui_->profiles_tableView->setColumnWidth(0,100);
-	ui_->profiles_tableView->setColumnWidth(1,50);
+	ui_->profiles_tableView->setColumnWidth(0, 100);
+	ui_->profiles_tableView->setColumnWidth(1, 100);
 	ui_->profiles_tableView->horizontalHeader()->setSortIndicatorShown(true);
 
 	connect(ui_->accounts_tableView->horizontalHeader(), SIGNAL(sectionClicked(int)), accountPool_, SLOT(sortRecord(int)));
