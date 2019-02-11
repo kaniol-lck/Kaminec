@@ -48,14 +48,7 @@ AccountPool::AccountPool(QObject *parent) :
 		model_.appendRow(account2itemList(account));
 	}
 
-	auto accountSorting = getAccountSorting();
-	auto accountAscending = getAccountAscending();
-	if(accountSorting == "byPlayerName")
-		model_.sort(Column::Playername, accountAscending?Qt::AscendingOrder:Qt::DescendingOrder);
-	else if(accountSorting == "byMode")
-		model_.sort(Column::Mode, accountAscending?Qt::AscendingOrder:Qt::DescendingOrder);
-	else if(accountSorting == "byEmail")
-		model_.sort(Column::Email, accountAscending?Qt::AscendingOrder:Qt::DescendingOrder);
+	sort(getAccountSorting(), getAccountAscending());
 
 	auto items = model_.findItems(getSelectedAccountId(), Qt::MatchExactly, Column::Id);
 	if(!items.isEmpty())
@@ -92,7 +85,7 @@ void AccountPool::initAccounts()
 	setAccountAscending(true);
 }
 
-QMap<QString, Account> AccountPool::getAccounts()
+QMap<QString, Account> AccountPool::getAccounts() const
 {
 	return accountsMap_;
 }
@@ -102,26 +95,19 @@ QStandardItemModel *AccountPool::getAccountsModel()
 	return &model_;
 }
 
-QString AccountPool::idFromIndex(const QModelIndex &index)
+QString AccountPool::idFromIndex(const QModelIndex &index) const
 {
 	return model_.item(index.row(), Column::Id)->data(Qt::DisplayRole).toString();
 }
 
 Account AccountPool::getAccount(const QString &accountId) const
 {
-	for(auto account : accountsMap_)
-		if(account.id() == accountId){
-			return account;
-		}
-	return Account();
+	return accountsMap_.value(accountId);
 }
 
 bool AccountPool::containAccount(const QString &accountId) const
 {
-	for(auto account :accountsMap_)
-		if(account.id() == accountId)
-			return true;
-	return false;
+	return accountsMap_.contains(accountId);
 }
 
 void AccountPool::insertAccount(const Account &account)
@@ -150,6 +136,7 @@ void AccountPool::insertAccount(const Account &account)
 	if(accountsMap_.isEmpty())
 		setSelectedAccountId(account.id());
 	accountsMap_.insert(account.id(), account);
+	sort(getAccountSorting(), getAccountAscending());
 }
 
 void AccountPool::removeAccount(const QString &accountId)
@@ -211,7 +198,7 @@ void AccountPool::setAccountSorting(QString accountSorting)
 	writeToFile();
 }
 
-QString AccountPool::getAccountSorting()
+QString AccountPool::getAccountSorting() const
 {
 	return accountsObject_.value("settings").toObject().value("accountAscending").toString();
 }
@@ -225,7 +212,7 @@ void AccountPool::setAccountAscending(bool accountAscending)
 	writeToFile();
 }
 
-bool AccountPool::getAccountAscending()
+bool AccountPool::getAccountAscending() const
 {
 	return accountsObject_.value("settings").toObject().value("accountAscending").toBool();
 }
@@ -241,6 +228,16 @@ QList<QStandardItem *> AccountPool::account2itemList(const Account &account)
 	playernameItem->setCheckState(Qt::Unchecked);
 
 	return QList<QStandardItem*>{ playernameItem, modeItem, emailItem, idItem };
+}
+
+void AccountPool::sort(const QString &accountSorting, bool accountAscending)
+{
+	if(accountSorting == "byPlayerName")
+		model_.sort(Column::Playername, accountAscending?Qt::AscendingOrder:Qt::DescendingOrder);
+	else if(accountSorting == "byMode")
+		model_.sort(Column::Mode, accountAscending?Qt::AscendingOrder:Qt::DescendingOrder);
+	else if(accountSorting == "byEmail")
+		model_.sort(Column::Email, accountAscending?Qt::AscendingOrder:Qt::DescendingOrder);
 }
 
 void AccountPool::writeToFile()

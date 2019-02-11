@@ -1,7 +1,6 @@
 #ifndef ACCOUNTPOOL_H
 #define ACCOUNTPOOL_H
 
-#include "assistance/Custom.h"
 #include "messenger/Account.h"
 #include "kits/AuthKit/AuthKit.h"
 #include "kits/AuthKit/AuthResponse.h"
@@ -18,15 +17,14 @@ public:
 	explicit AccountPool(QObject *parent = nullptr);
 
 	Account check(const QString& accountId) const;
-
-	void validateAll();
 	bool validate(const Account &account) const;
 
-	void initAccounts();
-	QMap<QString, Account> getAccounts();
 	QStandardItemModel* getAccountsModel();
-	QString idFromIndex(const QModelIndex &index);
+
+	void initAccounts();
+
 	Account getAccount(const QString &accountId) const;
+	QMap<QString, Account> getAccounts() const;
 	bool containAccount(const QString &accountId) const;
 
 	void insertAccount(const Account &account);
@@ -36,31 +34,34 @@ public:
 	QString getSelectedAccountId();
 
 	void setAccountSorting(QString accountSorting);
-	QString getAccountSorting();
+	QString getAccountSorting() const;
 
 	void setAccountAscending(bool accountAscending);
-	bool getAccountAscending();
+	bool getAccountAscending() const;
 
-	QList<QStandardItem*> account2itemList(const Account &account);
+	QString idFromIndex(const QModelIndex &index) const;
+	static QList<QStandardItem*> account2itemList(const Account &account);
+
+	void sort(const QString &accountSorting, bool accountAscending);
 
 	void writeToFile();
 
-public slots:
+private slots:
 	void validateFinished(bool succuss);
 
+public slots:
 	void sortRecord(int column);
 
 private:
 	QFile accountsFile_;
-	QMap<QString, Account> accountsMap_;
 	QJsonObject accountsObject_;
-	Custom custom_;
+	QMap<QString, Account> accountsMap_;
 	AuthResponse* authResponse_;
 	AuthKit authKit_;
 	bool success_ = false;
 
 	QStandardItemModel model_;
-	enum Column{ Playername, Mode, Email, Id};
+	enum Column{ Playername, Mode, Email, Id };
 };
 
 #endif // ACCOUNTPOOL_H

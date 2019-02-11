@@ -66,23 +66,21 @@ private slots:
 
 	void on_deleteAccount_pb_clicked();
 
-	void on_gameDir_showPb_clicked();
+	void on_editAccount_pb_clicked();
 
-	void on_check_pb_clicked();
-
-	void on_profiles_cb_currentIndexChanged(const QString &arg1);
+	void on_setAccountActive_pb_clicked();
 
 	void on_addProfile_pb_clicked();
 
-	void on_editAccount_pb_clicked();
+	void on_deleteProfile_pb_clicked();
 
 	void on_editProfile_pb_clicked();
 
-	void on_deleteProfile_pb_clicked();
-
-	void on_setActive_pb_clicked();
+	void on_setProfileActive_pb_clicked();
 
 	void accountSortRecord();
+
+	void profileSortRecord();
 
 private:
 	Ui::Preference *ui_;

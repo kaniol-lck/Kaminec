@@ -67,18 +67,6 @@ Preference::Preference(QWidget *parent, AccountPool *accountPool, ProfileManager
 
 	ui_->logNumber_spinBox->setValue(custom_.getLogFileNumber());
 
-	for(auto version : GameVersionController().getAllVersions()){
-		ui_->version_cb->addItem(version.versionName());
-	}
-
-	auto selectedProfileName = profileManager_->getSelectedProfileName();
-
-	for(auto profile : profileManager_->getProfiles()){
-		ui_->profiles_cb->addItem(profile.name());
-	}
-
-	ui_->profiles_cb->setCurrentIndex(ui_->profiles_cb->findText(selectedProfileName, Qt::MatchExactly));
-
 	ui_->accounts_tableView->setModel(accountPool_->getAccountsModel());
 
 	ui_->accounts_tableView->verticalHeader()->setDefaultSectionSize(25);
@@ -89,6 +77,19 @@ Preference::Preference(QWidget *parent, AccountPool *accountPool, ProfileManager
 	ui_->accounts_tableView->setColumnWidth(1,50);
 	ui_->accounts_tableView->horizontalHeader()->setSortIndicatorShown(true);
 	ui_->accounts_tableView->hideColumn(3);
+
+	ui_->profiles_tableView->setModel(profileManager_->getProfilesModel());
+
+	ui_->profiles_tableView->verticalHeader()->setDefaultSectionSize(25);
+	ui_->profiles_tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+	ui_->profiles_tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
+	ui_->profiles_tableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
+	ui_->profiles_tableView->setColumnWidth(0,100);
+	ui_->profiles_tableView->setColumnWidth(1,50);
+	ui_->profiles_tableView->horizontalHeader()->setSortIndicatorShown(true);
+
+	connect(ui_->accounts_tableView->horizontalHeader(), SIGNAL(sectionClicked(int)), accountPool_, SLOT(sortRecord(int)));
+	connect(ui_->accounts_tableView->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(accountSortRecord()));
 
 	connect(ui_->accounts_tableView->horizontalHeader(), SIGNAL(sectionClicked(int)), accountPool_, SLOT(sortRecord(int)));
 	connect(ui_->accounts_tableView->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(accountSortRecord()));
@@ -319,45 +320,10 @@ void Preference::on_deleteAccount_pb_clicked()
 	}
 }
 
-void Preference::on_gameDir_showPb_clicked()
-{
-	//ask for game directory
-	auto gameDir = QFileDialog::getExistingDirectory(this,"Please choose the game directory.");
-	if(gameDir!=""){
-		if(gameDir.endsWith("/.minecraft"))
-			ui_->gameDir_le->setText(gameDir);
-		else
-			ui_->gameDir_le->setText(gameDir + "/.minecraft");
-	}
-	return;
-}
-
-void Preference::on_check_pb_clicked()
-{
-//	QStringList defciencyTexts;
-//	for(const auto& defciency : checker_.check(ui_->version_cb->currentText())){
-//		defciencyTexts << defciency.path_;
-//	}
-//	QMessageBox::information(this, "Lost Files", defciencyTexts.join("\n"));
-}
-
-void Preference::on_profiles_cb_currentIndexChanged(const QString &arg1)
-{
-	auto profile = profileManager_->getProfile(arg1);
-	auto index = ui_->version_cb->findText(profile.lastVersionId(), Qt::MatchExactly);
-	ui_->profileName_le->setText(profile.name());
-	ui_->version_cb->setCurrentIndex(index);
-	ui_->gameDir_le->setText(profile.gameDir());
-	profileManager_->setSelectedProfile(arg1);
-}
-
 void Preference::on_addProfile_pb_clicked()
 {
 	auto profileDialog = new ProfileDialog(this, profileManager_);
 	profileDialog->exec();
-	ui_->profiles_cb->addItem(profileManager_->getSelectedProfileName());
-	auto index = ui_->profiles_cb->findText(profileManager_->getSelectedProfileName(), Qt::MatchExactly);
-	ui_->profiles_cb->setCurrentIndex(index);
 }
 
 void Preference::on_editAccount_pb_clicked()
@@ -372,27 +338,28 @@ void Preference::on_editAccount_pb_clicked()
 
 void Preference::on_editProfile_pb_clicked()
 {
-	auto oldProfileName = ui_->profiles_cb->currentText();
-	auto profileDialog = new ProfileDialog(this, profileManager_, oldProfileName);
-	if(profileDialog->exec() == QDialog::Accepted){
-		auto newProfileName = profileManager_->getSelectedProfileName();
-		ui_->profiles_cb->removeItem(ui_->profiles_cb->findText(oldProfileName, Qt::MatchExactly));
-		ui_->profiles_cb->addItem(newProfileName);
-		auto index = ui_->profiles_cb->findText(newProfileName, Qt::MatchExactly);
-		ui_->profiles_cb->setCurrentIndex(index);
+	auto index = ui_->profiles_tableView->currentIndex();
+	if(index.isValid()){
+		auto oldProfileId = profileManager_->nameFromIndex(index);
+		auto profileDialog = new ProfileDialog(this, profileManager_, oldProfileId);
+		profileDialog->exec();
 	}
-	ui_->profiles_cb->addItem(profileManager_->getSelectedProfileName());
-	auto index = ui_->profiles_cb->findText(profileManager_->getSelectedProfileName(), Qt::MatchExactly);
-	ui_->profiles_cb->setCurrentIndex(index);
+}
+
+void Preference::on_setProfileActive_pb_clicked()
+{
+	profileManager_->setSelectedProfileName(profileManager_->nameFromIndex(ui_->profiles_tableView->currentIndex()));
 }
 
 void Preference::on_deleteProfile_pb_clicked()
 {
-	profileManager_->removeProfile(ui_->profiles_cb->currentText());
-	ui_->profiles_cb->removeItem(ui_->profiles_cb->currentIndex());
+	auto index = ui_->profiles_tableView->currentIndex();
+	if(index.isValid()){
+		profileManager_->removeProfile(profileManager_->nameFromIndex(index));
+	}
 }
 
-void Preference::on_setActive_pb_clicked()
+void Preference::on_setAccountActive_pb_clicked()
 {
 	accountPool_->setSelectedAccountId(accountPool_->idFromIndex(ui_->accounts_tableView->currentIndex()));
 }
@@ -400,4 +367,9 @@ void Preference::on_setActive_pb_clicked()
 void Preference::accountSortRecord()
 {
 	accountPool_->setAccountAscending(ui_->accounts_tableView->horizontalHeader()->sortIndicatorOrder() == Qt::AscendingOrder);
+}
+
+void Preference::profileSortRecord()
+{
+	profileManager_->setProfileAscending(ui_->profiles_tableView->horizontalHeader()->sortIndicatorOrder() == Qt::AscendingOrder);
 }

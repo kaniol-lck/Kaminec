@@ -2,11 +2,11 @@
 #define PROFILEMANAGER_H
 
 #include "messenger/profile.h"
-#include "assistance/Custom.h"
 
 #include <QObject>
 #include <QFile>
 #include <QJsonObject>
+#include <QStandardItemModel>
 
 class ProfileManager : public QObject
 {
@@ -14,30 +14,43 @@ class ProfileManager : public QObject
 public:
 	explicit ProfileManager(QObject *parent = nullptr);
 
+	QStandardItemModel* getProfilesModel();
+
 	void initProfiles();
 
-	Profile getProfile(const QString &name);
-	QMap<QString, Profile> getProfiles();
-
+	Profile getProfile(const QString &name) const;
+	QMap<QString, Profile> getProfiles() const;
 	bool containProfile(const QString &name) const;
-	bool checkVersion(const QString &version);
-	bool addVersion(const QString &version, const QString &gamePath);
 
 	bool insertProfile(const Profile &profile);
 	bool removeProfile(const QString &name);
-	bool renameProfile(const QString &oldName, const QString &newName);
 
-	void setSelectedProfile(const QString &name);
+	void setSelectedProfileName(const QString &name);
 	QString getSelectedProfileName();
 
-	//temporary method
-	void refresh();
+	void setProfileSorting(QString profileSorting);
+	QString getProfileSorting() const;
+
+	void setProfileAscending(bool profileAscending);
+	bool getProfileAscending() const;
+
+	QString nameFromIndex(const QModelIndex &index) const;
+	static QList<QStandardItem*> profile2itemList(const Profile &profile);
+
+	void sort(const QString &accountSorting, bool accountAscending);
+
+	void writeToFile();
+
+public slots:
+	void sortRecord(int column);
 
 private:
 	QFile profilesFile_;
-	QMap<QString, Profile> profilesMap;
 	QJsonObject profilesObject_;
-	Custom custom_;
+	QMap<QString, Profile> profilesMap_;
+
+	QStandardItemModel model_;
+	enum Column{ Name, LastVersionId, GameDir };
 };
 
 #endif // PROFILEMANAGER_H

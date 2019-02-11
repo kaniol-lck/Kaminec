@@ -22,12 +22,12 @@ ProfileDialog::ProfileDialog(QWidget *parent, ProfileManager *profilemanager) :
 ProfileDialog::ProfileDialog(QWidget *parent, ProfileManager *profilemanager, const QString &profileName) :
 	ProfileDialog(parent, profilemanager)
 {
-	profile_ = profileManager_->getProfile(profileName);
+	oldProfile_ =  std::make_shared<Profile>(profileManager_->getProfile(profileName));
 	ui_->hint_label->setText("Edit Profile");
 	setWindowTitle("Edit Profile");
-	ui_->profileName_le->setText(profile_.name());
-	ui_->gameDir_le->setText(profile_.gameDir());
-	ui_->version_cb->setCurrentIndex(ui_->version_cb->findText(profile_.lastVersionId(), Qt::MatchExactly));
+	ui_->profileName_le->setText(oldProfile_->name());
+	ui_->gameDir_le->setText(oldProfile_->gameDir());
+	ui_->version_cb->setCurrentIndex(ui_->version_cb->findText(oldProfile_->lastVersionId(), Qt::MatchExactly));
 }
 
 ProfileDialog::~ProfileDialog()
@@ -55,7 +55,18 @@ void ProfileDialog::on_buttonBox_accepted()
 		QMessageBox::warning(this, "Warning", "The profile already exists.");
 		return;
 	}
+
+	if(oldProfile_){
+		profileManager_->removeProfile(oldProfile_->name());
+		profileManager_->insertProfile(profile);
+		profileManager_->setSelectedProfileName(profile.name());
+	} else{
+		if(profileManager_->containProfile(profile.name())){
+			QMessageBox::warning(this, "Warning", "The profile already exists.");
+			return;
+		}
+		profileManager_->insertProfile(profile);
+	}
 	accept();
-	profileManager_->insertProfile(profile);
-	profileManager_->setSelectedProfile(profile.name());
+	return;
 }

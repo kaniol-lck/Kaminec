@@ -4,6 +4,7 @@
 #include "LAminec/ProfileManager.h"
 
 #include <QDialog>
+#include <memory>
 
 namespace Ui {
 	class ProfileDialog;
@@ -24,7 +25,7 @@ private slots:
 private:
 	Ui::ProfileDialog *ui_;
 	ProfileManager *profileManager_;
-	Profile profile_;
+	std::shared_ptr<Profile> oldProfile_;
 
 };
 

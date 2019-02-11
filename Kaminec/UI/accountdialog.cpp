@@ -65,6 +65,7 @@ void AccountDialog::on_buttonBox_accepted()
 	if(oldAccount_){
 		accountPool_->removeAccount(oldAccount_->id());
 		accountPool_->insertAccount(account);
+		accountPool_->setSelectedAccountId(account.id());
 	} else{
 		if(accountPool_->containAccount(account.id())){
 			QMessageBox::warning(this, "Warning", "The account already exists.");
