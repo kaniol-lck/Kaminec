@@ -41,7 +41,7 @@ void ProfileDialog::on_buttonBox_accepted()
 	auto version = ui_->version_cb->currentText();
 	auto gameDir = ui_->gameDir_le->text();
 
-	Profile profile(name, version, gameDir);
+	Profile profile(name, ProfileType::Custom, version, gameDir, QDateTime::currentDateTime());
 
 	if(name.isEmpty()){
 		QMessageBox::warning(this, "Warning", "The profile name cannot be empty.");

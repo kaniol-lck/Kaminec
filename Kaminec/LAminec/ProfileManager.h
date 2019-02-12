@@ -22,8 +22,9 @@ public:
 	QMap<QString, Profile> getProfiles() const;
 	bool containProfile(const QString &name) const;
 
-	bool insertProfile(const Profile &profile);
-	bool removeProfile(const QString &name);
+	void insertProfile(const Profile &profile);
+	void removeProfile(const QString &name);
+	void editProfile(const QString &oldProfileName, Profile profile);
 
 	void setSelectedProfileName(const QString &name);
 	QString getSelectedProfileName();
@@ -36,6 +37,7 @@ public:
 
 	QString nameFromIndex(const QModelIndex &index) const;
 	static QList<QStandardItem*> profile2itemList(const Profile &profile);
+	static QJsonObject profile2object(const Profile &profile);
 
 	void sort(const QString &accountSorting, bool accountAscending);
 
@@ -50,7 +52,7 @@ private:
 	QMap<QString, Profile> profilesMap_;
 
 	QStandardItemModel model_;
-	enum Column{ Name, LastVersionId, GameDir };
+	enum Column{ Name, LastVersionId, GameDir , Created, LastUsed };
 };
 
 #endif // PROFILEMANAGER_H

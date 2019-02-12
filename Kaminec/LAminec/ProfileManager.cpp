@@ -15,10 +15,12 @@ ProfileManager::ProfileManager(QObject *parent) :
 	QObject(parent),
 	profilesFile_(PathReplacer::replace("<core>/launcher_profiles.json"))
 {
-	model_.setColumnCount(3);
+	model_.setColumnCount(5);
 	model_.setHeaderData(Column::Name, Qt::Horizontal, "name");
 	model_.setHeaderData(Column::LastVersionId, Qt::Horizontal, "lastVersionId");
 	model_.setHeaderData(Column::GameDir, Qt::Horizontal, "game directroy");
+	model_.setHeaderData(Column::Created, Qt::Horizontal, "created");
+	model_.setHeaderData(Column::LastUsed, Qt::Horizontal, "lastUsed");
 
 	if(!profilesFile_.open(QIODevice::ReadWrite | QIODevice::Text))
 		throw FileOpenException(profilesFile_.fileName());
@@ -39,9 +41,21 @@ ProfileManager::ProfileManager(QObject *parent) :
 
 	auto profilesVariant = profilesObject_.value("profiles").toVariant();
 	for(auto it : profilesVariant.toMap()){
+		auto typeStr = value(it, "type").toString();
+		ProfileType type;
+		if(typeStr == "custom")
+			type = ProfileType::Custom;
+		else if(typeStr == "latest-release")
+			type = ProfileType::LatestRelease;
+		else if(typeStr == "latest-snapshot")
+			type = ProfileType::LatestSnapshot;
+
 		Profile profile(value(it, "name").toString(),
+						type,
 						value(it, "lastVersionId").toString(),
-						value(it, "gameDir").toString());
+						value(it, "gameDir").toString(),
+						QDateTime::fromString(value(it, "created").toString(), Qt::ISODateWithMs),
+						QDateTime::fromString(value(it, "lastUsed").toString(), Qt::ISODateWithMs));
 		if(!profile.name().isEmpty()){
 			profilesMap_.insert(profile.name(), profile);
 			model_.appendRow(profile2itemList(profile));
@@ -83,16 +97,11 @@ bool ProfileManager::containProfile(const QString &name) const
 	return profilesMap_.contains(name);
 }
 
-bool ProfileManager::insertProfile(const Profile &profile)
+void ProfileManager::insertProfile(const Profile &profile)
 {
 	model_.appendRow(profile2itemList(profile));
 	auto profiles = profilesObject_.value("profiles").toObject();
-
-	profiles.insert(profile.name(), QJsonObject{
-						{"name", profile.name()},
-						{"lastVersionId", profile.lastVersionId()},
-						{"gameDir", profile.gameDir()}
-					});
+	profiles.insert(profile.name(), profile2object(profile));
 	profilesObject_.insert("profiles", profiles);
 	writeToFile();
 
@@ -102,7 +111,7 @@ bool ProfileManager::insertProfile(const Profile &profile)
 	sort(getProfileSorting(), getProfileAscending());
 }
 
-bool ProfileManager::removeProfile(const QString &profileName)
+void ProfileManager::removeProfile(const QString &profileName)
 {
 	//if the profile to be removed is selected, set the first in remains as the selected
 	if(getSelectedProfileName() == profileName && profilesMap_.count() > 1){
@@ -119,9 +128,26 @@ bool ProfileManager::removeProfile(const QString &profileName)
 	profiles.remove(profileName);
 	profilesObject_.insert("profiles", profiles);
 	writeToFile();
-	auto row = model_.findItems(profileName, Qt::MatchExactly, Column::Name).first()->row();
-	model_.removeRow(row);
+	model_.removeRow(model_.findItems(profileName, Qt::MatchExactly, Column::Name).first()->row());
 	profilesMap_.remove(profileName);
+}
+
+void ProfileManager::editProfile(const QString &oldProfileName, Profile newProfile)
+{
+	auto oldProfile = profilesMap_.take(oldProfileName);
+	newProfile.setlastUsed(oldProfile.created());
+	profilesMap_.insert(newProfile.name(), newProfile);
+
+	if(profilesObject_.value("selectedProfileName").toString() == oldProfileName)
+		profilesObject_.insert("selectedprofileName", newProfile.name());
+	QJsonObject profiles = profilesObject_.value("profiles").toObject();
+	profiles.remove(oldProfileName);
+	profiles.insert(newProfile.name(), profile2object(newProfile));
+	profilesObject_.insert("profiles", profiles);
+	writeToFile();
+
+	model_.removeRow(model_.findItems(oldProfileName, Qt::MatchExactly, Column::Name).first()->row());
+	model_.appendRow(profile2itemList(newProfile));
 }
 
 void ProfileManager::setSelectedProfileName(const QString &profileName)
@@ -190,10 +216,33 @@ QList<QStandardItem *> ProfileManager::profile2itemList(const Profile &profile)
 	auto nameItem = new QStandardItem(profile.name());
 	auto lastVersionIdItem = new QStandardItem(profile.lastVersionId());
 	auto gameDirItem = new QStandardItem(profile.gameDir());
+	auto createdItem = new QStandardItem(profile.created().toString(Qt::ISODateWithMs));
+	auto lastUsedItem = new QStandardItem(profile.lastUsed().toString(Qt::ISODateWithMs));
 	nameItem->setCheckable(false);
 	nameItem->setCheckState(Qt::Unchecked);
 
-	return QList<QStandardItem*>{ nameItem, lastVersionIdItem, gameDirItem };
+	return QList<QStandardItem*>{ nameItem, lastVersionIdItem, gameDirItem, createdItem, lastUsedItem };
+}
+
+QJsonObject ProfileManager::profile2object(const Profile &profile)
+{
+	if(profile.type() == ProfileType::Custom)
+		return QJsonObject{
+			{"name", profile.name()},
+			{"type", "custom"},
+			{"lastVersionId", profile.lastVersionId()},
+			{"gameDir", profile.gameDir()},
+			{"created", profile.created().toString(Qt::ISODateWithMs)},
+			{"lastUsed", profile.lastUsed().toString(Qt::ISODateWithMs)}
+		};
+	else
+		return QJsonObject{
+			{"name", profile.name()},
+			{"type", profile.type() == ProfileType::LatestRelease?"latest-release":"latest-snapshot"},
+			{"gameDir", profile.gameDir()},
+			{"created", profile.created().toString(Qt::ISODateWithMs)},
+			{"lastUsed", profile.lastUsed().toString(Qt::ISODateWithMs)}
+		};
 }
 
 void ProfileManager::sort(const QString &accountSorting, bool accountAscending)
@@ -204,6 +253,10 @@ void ProfileManager::sort(const QString &accountSorting, bool accountAscending)
 		model_.sort(Column::LastVersionId, accountAscending?Qt::AscendingOrder:Qt::DescendingOrder);
 	else if(accountSorting == "byGameDir")
 		model_.sort(Column::GameDir, accountAscending?Qt::AscendingOrder:Qt::DescendingOrder);
+	else if(accountSorting == "byCreated")
+		model_.sort(Column::Created, accountAscending?Qt::AscendingOrder:Qt::DescendingOrder);
+	else if(accountSorting == "byLastUsed")
+		model_.sort(Column::LastUsed, accountAscending?Qt::AscendingOrder:Qt::DescendingOrder);
 }
 
 void ProfileManager::writeToFile()
@@ -224,4 +277,8 @@ void ProfileManager::sortRecord(int column)
 		setProfileSorting("byLastVersionId");
 	else if(column == Column::GameDir)
 		setProfileSorting("byGameDir");
+	else if(column == Column::Created)
+		setProfileSorting("byCreated");
+	else if(column == Column::LastUsed)
+		setProfileSorting("byLastUsed");
 }
