@@ -33,6 +33,9 @@ public:
 	void setSelectedAccountId(const QString &accountId);
 	QString getSelectedAccountId();
 
+	void setClientToken(const QString &clientToken);
+	QString getClientToken() const;
+
 	void setAccountSorting(QString accountSorting);
 	QString getAccountSorting() const;
 
@@ -41,10 +44,13 @@ public:
 
 	QString idFromIndex(const QModelIndex &index) const;
 	static QList<QStandardItem*> account2itemList(const Account &account);
+	static QJsonObject account2object(const Account &account);
 
 	void sort(const QString &accountSorting, bool accountAscending);
 
 	void writeToFile();
+
+	enum Column{ Playername, Mode, Email, Created, LastUsed, Uuid };
 
 private slots:
 	void validateFinished(bool succuss);
@@ -59,9 +65,7 @@ private:
 	AuthResponse* authResponse_;
 	AuthKit authKit_;
 	bool success_ = false;
-
 	QStandardItemModel model_;
-	enum Column{ Playername, Mode, Email, Id };
 };
 
 #endif // ACCOUNTPOOL_H

@@ -1,22 +1,21 @@
 #include "Account.h"
 
-Account::Account(Mode mode,
-				 const QString &email, const QString &uuid,
+
+Account::Account(const QString &playername,
+				 Mode mode,
+				 const QString &email,
+				 const QString &uuid,
 				 const QString &accessToken,
-				 const QString &clientToken,
-				 const QString &playername) :
+				 const QDateTime &created,
+				 const QDateTime &lastUsed) :
+	playername_(playername),
 	mode_(mode),
 	email_(email),
 	uuid_(uuid),
 	accessToken_(accessToken),
-	clientToken_(clientToken),
-	playername_(playername)
+	created_(created),
+	lastUsed_(lastUsed)
 {}
-
-QString Account::id() const
-{
-	return QString("%1_%2").arg(playername(), mode()==Mode::Online?"online":"offline");
-}
 
 Mode Account::mode() const
 {
@@ -38,12 +37,22 @@ QString Account::accessToken() const
 	return accessToken_;
 }
 
-QString Account::clientToken() const
-{
-	return clientToken_;
-}
-
 QString Account::playername() const
 {
 	return playername_;
+}
+
+QDateTime Account::created() const
+{
+	return created_;
+}
+
+QDateTime Account::lastUsed() const
+{
+	return lastUsed_;
+}
+
+void Account::setLastUsed(const QDateTime &lastUsed)
+{
+	lastUsed_ = lastUsed;
 }

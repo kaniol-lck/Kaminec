@@ -3,34 +3,38 @@
 
 #include "assistance/Gamemode.h"
 
-#include <QString>
+#include <QDateTime>
+#include <QUuid>
 
 class Account
 {
 public:
-	explicit Account(Mode mode = Mode::Offline,
+	explicit Account(const QString &playername = "Steve",
+					 Mode mode = Mode::Offline,
 					 const QString &email = "",
-					 const QString &uuid = "",
+					 const QString &uuid = QUuid::createUuid().toString().replace("-", "").replace("{", "").replace("}", ""),
 					 const QString &accessToken = "",
-					 const QString &clientToken = "",
-					 const QString &playername = "Steve");
+					 const QDateTime &created = QDateTime::currentDateTime(),
+					 const QDateTime &lastUsed = QDateTime());
 
-	QString id() const;
+	QString playername() const;
 	Mode mode() const;
 	QString email() const;
 	QString uuid() const;
 	QString accessToken() const;
-	QString clientToken() const;
-	QString playername() const;
+	QDateTime created() const;
+	QDateTime lastUsed() const;
+
+	void setLastUsed(const QDateTime &lastUsed);
 
 private:
+	QString playername_;
 	Mode mode_;
 	QString email_;
 	QString uuid_;
 	QString accessToken_;
-	QString clientToken_;
-	QString playername_;
-
+	QDateTime created_;
+	QDateTime lastUsed_;
 };
 
 #endif // ACCOUNT_H

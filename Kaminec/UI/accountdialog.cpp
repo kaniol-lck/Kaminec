@@ -2,6 +2,7 @@
 #include "ui_accountdialog.h"
 
 #include <QMessageBox>
+#include <QUuid>
 
 AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool) :
 	QDialog(parent),
@@ -30,7 +31,7 @@ AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool, const QS
 		isValidated = true;
 		uuid_ = oldAccount_->uuid();
 		accessToken_ = oldAccount_->accessToken();
-		clientToken_ = oldAccount_->clientToken();
+		clientToken_ = accountPool_->getClientToken();
 		ui_->email_le->setEnabled(false);
 		ui_->playername_label->setVisible(true);
 		ui_->playername_le->setVisible(true);
@@ -51,23 +52,32 @@ AccountDialog::~AccountDialog()
 
 void AccountDialog::on_buttonBox_accepted()
 {
-	auto mode = ui_->online_rb->isChecked()?Mode::Online:Mode::Offline;
-	auto email = ui_->email_le->text();
-	auto playerName = ui_->playername_le->text();
-
-	Account account(mode, email, uuid_, accessToken_, clientToken_, playerName);
+	Mode mode = ui_->online_rb->isChecked()?Mode::Online:Mode::Offline;
+	QString email = ui_->email_le->text();
+	QString playerName = ui_->playername_le->text();
+	QString uuid;
+	QString accessToken;
 
 	if(playerName.isEmpty()){
 		QMessageBox::warning(this, "Warning", "The playername cannot be empty.");
 		return;
 	}
 
-	if(oldAccount_){
-		accountPool_->removeAccount(oldAccount_->id());
-		accountPool_->insertAccount(account);
-		accountPool_->setSelectedAccountId(account.id());
+	if(mode == Mode::Offline){
+		uuid = "";
 	} else{
-		if(accountPool_->containAccount(account.id())){
+		uuid = uuid_;
+		accessToken = accessToken_;
+	}
+
+	Account account(playerName, mode, email, uuid_, accessToken_);
+
+	if(oldAccount_){
+		accountPool_->removeAccount(oldAccount_->uuid());
+		accountPool_->insertAccount(account);
+		accountPool_->setSelectedAccountId(account.uuid());
+	} else{
+		if(accountPool_->containAccount(account.uuid())){
 			QMessageBox::warning(this, "Warning", "The account already exists.");
 			return;
 		}

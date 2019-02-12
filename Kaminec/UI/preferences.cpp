@@ -76,7 +76,7 @@ Preferences::Preferences(QWidget *parent, AccountPool *accountPool, ProfileManag
 	ui_->accounts_tableView->setColumnWidth(0, 100);
 	ui_->accounts_tableView->setColumnWidth(1, 50);
 	ui_->accounts_tableView->horizontalHeader()->setSortIndicatorShown(true);
-	ui_->accounts_tableView->hideColumn(3);
+	ui_->accounts_tableView->hideColumn(AccountPool::Column::Uuid);
 
 	ui_->profiles_tableView->setModel(profileManager_->getProfilesModel());
 
