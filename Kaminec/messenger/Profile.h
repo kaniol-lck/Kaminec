@@ -23,7 +23,7 @@ public:
 	QDateTime created() const;
 	QDateTime lastUsed() const;
 
-	void setlastUsed(const QDateTime &lastUsed);
+	void setLastUsed(const QDateTime &lastUsed);
 
 private:
 	QString name_;

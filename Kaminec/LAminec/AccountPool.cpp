@@ -155,6 +155,24 @@ void AccountPool::removeAccount(const QString &accountId)
 	accountsMap_.remove(accountId);
 }
 
+void AccountPool::editAccount(const QString &oldAccountUuid, Account newAccount)
+{
+	auto oldaccount = accountsMap_.take(oldAccountUuid);
+	newAccount.setLastUsed(oldaccount.created());
+	accountsMap_.insert(newAccount.uuid(), newAccount);
+
+	if(accountsObject_.value("selectedaccountName").toString() == oldAccountUuid)
+		accountsObject_.insert("selectedaccountName", newAccount.uuid());
+	QJsonObject accounts = accountsObject_.value("accounts").toObject();
+	accounts.remove(oldAccountUuid);
+	accounts.insert(newAccount.uuid(), account2object(newAccount));
+	accountsObject_.insert("accounts", accounts);
+	writeToFile();
+
+	model_.removeRow(model_.findItems(oldAccountUuid, Qt::MatchExactly, Column::Uuid).first()->row());
+	model_.appendRow(account2itemList(newAccount));
+}
+
 void AccountPool::setSelectedAccountId(const QString &accountId)
 {
 	auto oldAccountId = getSelectedAccountId();

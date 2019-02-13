@@ -53,9 +53,7 @@ void ProfileDialog::on_buttonBox_accepted()
 	}
 
 	if(oldProfile_){
-		profileManager_->removeProfile(oldProfile_->name());
-		profileManager_->insertProfile(profile);
-		profileManager_->setSelectedProfileName(profile.name());
+		profileManager_->editProfile(oldProfile_->name(), profile);
 	} else{
 		if(profileManager_->containProfile(profile.name())){
 			QMessageBox::warning(this, "Warning", "The profile already exists.");

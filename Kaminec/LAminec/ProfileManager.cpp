@@ -135,7 +135,7 @@ void ProfileManager::removeProfile(const QString &profileName)
 void ProfileManager::editProfile(const QString &oldProfileName, Profile newProfile)
 {
 	auto oldProfile = profilesMap_.take(oldProfileName);
-	newProfile.setlastUsed(oldProfile.created());
+	newProfile.setLastUsed(oldProfile.created());
 	profilesMap_.insert(newProfile.name(), newProfile);
 
 	if(profilesObject_.value("selectedProfileName").toString() == oldProfileName)

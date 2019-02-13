@@ -44,7 +44,7 @@ QDateTime Profile::lastUsed() const
 	return lastUsed_;
 }
 
-void Profile::setlastUsed(const QDateTime &lastUsed)
+void Profile::setLastUsed(const QDateTime &lastUsed)
 {
 	lastUsed_ = lastUsed;
 }

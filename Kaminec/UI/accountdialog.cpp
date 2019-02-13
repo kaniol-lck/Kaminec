@@ -73,9 +73,7 @@ void AccountDialog::on_buttonBox_accepted()
 	Account account(playerName, mode, email, uuid_, accessToken_);
 
 	if(oldAccount_){
-		accountPool_->removeAccount(oldAccount_->uuid());
-		accountPool_->insertAccount(account);
-		accountPool_->setSelectedAccountId(account.uuid());
+		accountPool_->editAccount(oldAccount_->uuid(), account);
 	} else{
 		if(accountPool_->containAccount(account.uuid())){
 			QMessageBox::warning(this, "Warning", "The account already exists.");

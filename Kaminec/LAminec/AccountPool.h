@@ -29,6 +29,7 @@ public:
 
 	void insertAccount(const Account &account);
 	void removeAccount(const QString &accountId);
+	void editAccount(const QString &oldAccountUuid, Account newAccount);
 
 	void setSelectedAccountId(const QString &accountId);
 	QString getSelectedAccountId();

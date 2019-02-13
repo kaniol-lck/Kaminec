@@ -24,7 +24,7 @@ public:
 
 	void insertProfile(const Profile &profile);
 	void removeProfile(const QString &name);
-	void editProfile(const QString &oldProfileName, Profile profile);
+	void editProfile(const QString &oldProfileName, Profile newProfile);
 
 	void setSelectedProfileName(const QString &name);
 	QString getSelectedProfileName();
@@ -43,6 +43,8 @@ public:
 
 	void writeToFile();
 
+	enum Column{ Name, LastVersionId, GameDir , Created, LastUsed };
+
 public slots:
 	void sortRecord(int column);
 
@@ -52,7 +54,6 @@ private:
 	QMap<QString, Profile> profilesMap_;
 
 	QStandardItemModel model_;
-	enum Column{ Name, LastVersionId, GameDir , Created, LastUsed };
 };
 
 #endif // PROFILEMANAGER_H
