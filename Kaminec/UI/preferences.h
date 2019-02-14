@@ -88,6 +88,8 @@ private slots:
 
 	void on_fixProfile_pb_clicked();
 
+	void on_defaultGamePath_showPb_clicked();
+
 private:
 	Ui::Preferences *ui_;
 	Custom custom_;

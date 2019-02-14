@@ -29,7 +29,7 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -655,6 +655,30 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
             </item>
             <item>
              <layout class="QGridLayout" name="gridLayout_12">
+              <item row="8" column="2">
+               <widget class="QPushButton" name="indexesPath_showPb">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>Show...</string>
+                </property>
+               </widget>
+              </item>
+              <item row="7" column="1">
+               <widget class="QLineEdit" name="assetsPath_le">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="corePath_le">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
               <item row="0" column="0">
                <widget class="QLabel" name="corePath_label">
                 <property name="enabled">
@@ -668,13 +692,6 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
                 </property>
                </widget>
               </item>
-              <item row="0" column="1">
-               <widget class="QLineEdit" name="corePath_le">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
               <item row="0" column="2">
                <widget class="QPushButton" name="corePath_showPb">
                 <property name="enabled">
@@ -685,20 +702,7 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
                 </property>
                </widget>
               </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="libsPath_label">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="text">
-                 <string>libraries path:</string>
-                </property>
-                <property name="buddy">
-                 <cstring>libsPath_le</cstring>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
+              <item row="4" column="0">
                <widget class="QLabel" name="versionsPath_label">
                 <property name="enabled">
                  <bool>true</bool>
@@ -711,7 +715,20 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
                 </property>
                </widget>
               </item>
-              <item row="2" column="2">
+              <item row="5" column="0">
+               <widget class="QLabel" name="libsPath_label">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>libraries path:</string>
+                </property>
+                <property name="buddy">
+                 <cstring>libsPath_le</cstring>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="2">
                <widget class="QPushButton" name="libsPath_showPb">
                 <property name="enabled">
                  <bool>true</bool>
@@ -721,34 +738,21 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
                 </property>
                </widget>
               </item>
-              <item row="1" column="1">
+              <item row="4" column="1">
                <widget class="QLineEdit" name="versionsPath_le">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
                </widget>
               </item>
-              <item row="3" column="0">
-               <widget class="QLabel" name="nativesPath_label">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="text">
-                 <string>natives path:</string>
-                </property>
-                <property name="buddy">
-                 <cstring>nativesPath_le</cstring>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="1">
+              <item row="6" column="1">
                <widget class="QLineEdit" name="nativesPath_le">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
                </widget>
               </item>
-              <item row="4" column="0">
+              <item row="7" column="0">
                <widget class="QLabel" name="assetsPath_label">
                 <property name="enabled">
                  <bool>true</bool>
@@ -761,17 +765,20 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
                 </property>
                </widget>
               </item>
-              <item row="1" column="2">
-               <widget class="QPushButton" name="versionsPath_showPb">
+              <item row="6" column="0">
+               <widget class="QLabel" name="nativesPath_label">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
                 <property name="text">
-                 <string>Show...</string>
+                 <string>natives path:</string>
+                </property>
+                <property name="buddy">
+                 <cstring>nativesPath_le</cstring>
                 </property>
                </widget>
               </item>
-              <item row="3" column="2">
+              <item row="6" column="2">
                <widget class="QPushButton" name="nativesPath_showPb">
                 <property name="enabled">
                  <bool>true</bool>
@@ -781,21 +788,31 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
                 </property>
                </widget>
               </item>
-              <item row="2" column="1">
+              <item row="5" column="1">
                <widget class="QLineEdit" name="libsPath_le">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
                </widget>
               </item>
-              <item row="5" column="1">
+              <item row="4" column="2">
+               <widget class="QPushButton" name="versionsPath_showPb">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>Show...</string>
+                </property>
+               </widget>
+              </item>
+              <item row="8" column="1">
                <widget class="QLineEdit" name="indexesPath_le">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
                </widget>
               </item>
-              <item row="6" column="0">
+              <item row="9" column="0">
                <widget class="QLabel" name="objectsPath_label">
                 <property name="enabled">
                  <bool>true</bool>
@@ -808,14 +825,14 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
                 </property>
                </widget>
               </item>
-              <item row="6" column="1">
+              <item row="9" column="1">
                <widget class="QLineEdit" name="objectsPath_le">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
                </widget>
               </item>
-              <item row="6" column="2">
+              <item row="9" column="2">
                <widget class="QPushButton" name="objectsPath_showPb">
                 <property name="enabled">
                  <bool>true</bool>
@@ -825,7 +842,7 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
                 </property>
                </widget>
               </item>
-              <item row="4" column="2">
+              <item row="7" column="2">
                <widget class="QPushButton" name="assetsPath_showPb">
                 <property name="enabled">
                  <bool>true</bool>
@@ -835,7 +852,7 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
                 </property>
                </widget>
               </item>
-              <item row="5" column="0">
+              <item row="8" column="0">
                <widget class="QLabel" name="indexesPath_label">
                 <property name="enabled">
                  <bool>true</bool>
@@ -848,8 +865,8 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
                 </property>
                </widget>
               </item>
-              <item row="5" column="2">
-               <widget class="QPushButton" name="indexesPath_showPb">
+              <item row="1" column="2" rowspan="3">
+               <widget class="QPushButton" name="defaultGamePath_showPb">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
@@ -858,8 +875,21 @@ QTabBar::tab:selected {color: black; border: 1px solid; background-color: rgb(25
                 </property>
                </widget>
               </item>
-              <item row="4" column="1">
-               <widget class="QLineEdit" name="assetsPath_le">
+              <item row="1" column="0" rowspan="3">
+               <widget class="QLabel" name="defaultGamePath_label">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>default game path:</string>
+                </property>
+                <property name="buddy">
+                 <cstring>corePath_le</cstring>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1" rowspan="3">
+               <widget class="QLineEdit" name="defaultGamePath_le">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>

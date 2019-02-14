@@ -2,6 +2,7 @@
 #define PROFILE_H
 
 #include "messenger/GameVersion.h"
+#include "assistance/Custom.h"
 
 #include <QDateTime>
 
@@ -13,7 +14,7 @@ public:
 	explicit Profile(const QString &name = "New Profile",
 					 ProfileType type = ProfileType::Custom,
 					 const GameVersion &lastVersionId = GameVersion(""),
-					 const QString &gameDir = "",
+					 const QString &gameDir = Custom().getDefaultGameDirectory(),
 					 QDateTime created = QDateTime::currentDateTime(),
 					 QDateTime lastUsed = QDateTime());
 

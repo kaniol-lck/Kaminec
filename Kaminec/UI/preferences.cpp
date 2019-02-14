@@ -48,6 +48,7 @@ Preferences::Preferences(QWidget *parent, AccountPool *accountPool, ProfileManag
 	//load exsit preference
 
 	ui_->corePath_le->setText(custom_.getCoreGameFileDirectory());
+	ui_->defaultGamePath_le->setText(custom_.getDefaultGameDirectory());
 	ui_->versionsPath_le->setText(custom_.getGameVersionsDirectory());
 	ui_->libsPath_le->setText(custom_.getGameLibrariesDirectory());
 	ui_->nativesPath_le->setText(custom_.getGameNativesDirectory());
@@ -146,6 +147,7 @@ void Preferences::on_javaPath_showPb_clicked()
 void Preferences::on_buttonBox_accepted()
 {
 	custom_.setCoreGameFileDirectory(ui_->corePath_le->text());
+	custom_.setDefaultGameDirectory(ui_->defaultGamePath_le->text());
 	custom_.setGameVersionsDirectory(ui_->versionsPath_le->text());
 	custom_.setGameLibrariesDirectory(ui_->libsPath_le->text());
 	custom_.setGameNativesDirectory(ui_->nativesPath_le->text());
@@ -391,4 +393,16 @@ void Preferences::on_profiles_tableView_doubleClicked(const QModelIndex &index)
 void Preferences::on_fixProfile_pb_clicked()
 {
 	profileManager_->fixProfiles(GameVersionController().getGameVersions());
+}
+
+void Preferences::on_defaultGamePath_showPb_clicked()
+{
+	auto defaultGamePath = QFileDialog::getExistingDirectory(0, "Please choose the upper directory,we will automaticly create \".minecraft\" folder",
+													  ui_->corePath_le->text());
+	if(defaultGamePath!=""){
+		if(defaultGamePath.endsWith("/.minecraft"))
+			ui_->defaultGamePath_le->setText(defaultGamePath);
+		else
+			ui_->defaultGamePath_le->setText(defaultGamePath + "/.minecraft");
+	}
 }
