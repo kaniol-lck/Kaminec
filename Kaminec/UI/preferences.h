@@ -86,6 +86,8 @@ private slots:
 
 	void on_profiles_tableView_doubleClicked(const QModelIndex &index);
 
+	void on_fixProfile_pb_clicked();
+
 private:
 	Ui::Preferences *ui_;
 	Custom custom_;

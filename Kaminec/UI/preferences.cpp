@@ -40,9 +40,9 @@ Preferences::Preferences(QWidget *parent, AccountPool *accountPool, ProfileManag
 	ui_->objectsPath_le->setVisible(false);
 	ui_->objectsPath_showPb->setVisible(false);
 	ui_->customPathHelper_tb->setVisible(false);
-	ui_->addAccount_pb->setVisible(false);
+	ui_->setAccountActive_pb->setVisible(false);
 	ui_->deleteAccount_pb->setVisible(false);
-	ui_->addProfile_pb->setVisible(false);
+	ui_->setProfileActive_pb->setVisible(false);
 	ui_->deleteProfile_pb->setVisible(false);
 
 	//load exsit preference
@@ -360,7 +360,7 @@ void Preferences::profileSortRecord()
 
 void Preferences::on_accounts_tableView_pressed(const QModelIndex &/*index*/)
 {
-	ui_->addAccount_pb->setVisible(true);
+	ui_->setAccountActive_pb->setVisible(true);
 	ui_->deleteAccount_pb->setVisible(true);
 }
 
@@ -375,7 +375,7 @@ void Preferences::on_accounts_tableView_doubleClicked(const QModelIndex &index)
 
 void Preferences::on_profiles_tableView_pressed(const QModelIndex &/*index*/)
 {
-	ui_->addProfile_pb->setVisible(true);
+	ui_->setProfileActive_pb->setVisible(true);
 	ui_->deleteProfile_pb->setVisible(true);
 }
 
@@ -386,4 +386,9 @@ void Preferences::on_profiles_tableView_doubleClicked(const QModelIndex &index)
 		auto profileDialog = new ProfileDialog(this, profileManager_, oldProfileName);
 		profileDialog->exec();
 	}
+}
+
+void Preferences::on_fixProfile_pb_clicked()
+{
+	profileManager_->fixProfiles(GameVersionController().getGameVersions());
 }

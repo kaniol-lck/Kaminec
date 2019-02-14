@@ -41,6 +41,8 @@ public:
 
 	void sort(const QString &accountSorting, bool accountAscending);
 
+	void fixProfiles(QList<GameVersion> gameVersions);
+
 	void writeToFile();
 
 	enum Column{ Name, LastVersionId, GameDir , Created, LastUsed };

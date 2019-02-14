@@ -3,11 +3,16 @@
 
 #include "messenger/GameVersion.h"
 
+#include <QList>
+
 class GameVersionController
 {
 public:
 	GameVersionController();
-	QList<GameVersion> getAllVersions();
+	QList<GameVersion> getGameVersions() const;
+
+private:
+	QList<GameVersion> gameVersions_;
 };
 
 #endif // GAMEVERSIONCONTROLLER_H

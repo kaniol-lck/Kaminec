@@ -3,6 +3,7 @@
 #include "assistance/PathReplacer.h"
 #include "assistance/utility.h"
 #include "exception/Exceptions.hpp"
+#include "messenger/GameVersion.h"
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -52,7 +53,7 @@ ProfileManager::ProfileManager(QObject *parent) :
 
 		Profile profile(value(it, "name").toString(),
 						type,
-						value(it, "lastVersionId").toString(),
+						GameVersion(value(it, "lastVersionId").toString()),
 						value(it, "gameDir").toString(),
 						QDateTime::fromString(value(it, "created").toString(), Qt::ISODateWithMs),
 						QDateTime::fromString(value(it, "lastUsed").toString(), Qt::ISODateWithMs));
@@ -214,7 +215,7 @@ QString ProfileManager::nameFromIndex(const QModelIndex &index) const
 QList<QStandardItem *> ProfileManager::profile2itemList(const Profile &profile)
 {
 	auto nameItem = new QStandardItem(profile.name());
-	auto lastVersionIdItem = new QStandardItem(profile.lastVersionId());
+	auto lastVersionIdItem = new QStandardItem(profile.lastVersionId().versionName());
 	auto gameDirItem = new QStandardItem(profile.gameDir());
 	auto createdItem = new QStandardItem(profile.created().toString(Qt::ISODateWithMs));
 	auto lastUsedItem = new QStandardItem(profile.lastUsed().toString(Qt::ISODateWithMs));
@@ -230,7 +231,7 @@ QJsonObject ProfileManager::profile2object(const Profile &profile)
 		return QJsonObject{
 			{"name", profile.name()},
 			{"type", "custom"},
-			{"lastVersionId", profile.lastVersionId()},
+			{"lastVersionId", profile.lastVersionId().versionName()},
 			{"gameDir", profile.gameDir()},
 			{"created", profile.created().toString(Qt::ISODateWithMs)},
 			{"lastUsed", profile.lastUsed().toString(Qt::ISODateWithMs)}
@@ -257,6 +258,21 @@ void ProfileManager::sort(const QString &accountSorting, bool accountAscending)
 		model_.sort(Column::Created, accountAscending?Qt::AscendingOrder:Qt::DescendingOrder);
 	else if(accountSorting == "byLastUsed")
 		model_.sort(Column::LastUsed, accountAscending?Qt::AscendingOrder:Qt::DescendingOrder);
+}
+
+void ProfileManager::fixProfiles(QList<GameVersion> gameVersions)
+{
+	QStringList homelessVersionNames;
+	for(auto gameVersion : gameVersions)
+		homelessVersionNames << gameVersion.versionName();
+	for(auto profile : getProfiles()){
+		auto index = homelessVersionNames.indexOf(profile.lastVersionId().versionName());
+		if(index != 1)
+			homelessVersionNames.removeAt(index);
+	}
+	for(auto homelessVersionName : homelessVersionNames){
+		insertProfile(Profile(homelessVersionName, ProfileType::Custom, GameVersion(homelessVersionName)));
+	}
 }
 
 void ProfileManager::writeToFile()

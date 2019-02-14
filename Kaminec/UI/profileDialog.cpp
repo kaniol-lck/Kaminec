@@ -13,10 +13,9 @@ ProfileDialog::ProfileDialog(QWidget *parent, ProfileManager *profilemanager) :
 	ui_->setupUi(this);
 	ui_->hint_label->setText("Create Profile");
 	setWindowTitle("Create Profile");
-	setFixedSize(360, 200);
-	for(auto version : GameVersionController().getAllVersions()){
+	setFixedSize(360, 175);
+	for(auto version : GameVersionController().getGameVersions())
 		ui_->version_cb->addItem(version.versionName());
-	}
 }
 
 ProfileDialog::ProfileDialog(QWidget *parent, ProfileManager *profilemanager, const QString &profileName) :
@@ -27,7 +26,7 @@ ProfileDialog::ProfileDialog(QWidget *parent, ProfileManager *profilemanager, co
 	setWindowTitle("Edit Profile");
 	ui_->profileName_le->setText(oldProfile_->name());
 	ui_->gameDir_le->setText(oldProfile_->gameDir());
-	ui_->version_cb->setCurrentIndex(ui_->version_cb->findText(oldProfile_->lastVersionId(), Qt::MatchExactly));
+	ui_->version_cb->setCurrentIndex(ui_->version_cb->findText(oldProfile_->lastVersionId().versionName(), Qt::MatchExactly));
 }
 
 ProfileDialog::~ProfileDialog()
@@ -41,7 +40,7 @@ void ProfileDialog::on_buttonBox_accepted()
 	auto version = ui_->version_cb->currentText();
 	auto gameDir = ui_->gameDir_le->text();
 
-	Profile profile(name, ProfileType::Custom, version, gameDir, QDateTime::currentDateTime());
+	Profile profile(name, ProfileType::Custom, GameVersion(version), gameDir, QDateTime::currentDateTime());
 
 	if(name.isEmpty()){
 		QMessageBox::warning(this, "Warning", "The profile name cannot be empty.");

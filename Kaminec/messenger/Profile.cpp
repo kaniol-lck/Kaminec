@@ -2,7 +2,7 @@
 
 Profile::Profile(const QString &name,
 				 ProfileType type,
-				 const QString &lastVersionId,
+				 const GameVersion &lastVersionId,
 				 const QString &gameDir,
 				 QDateTime created,
 				 QDateTime lastUsed) :
@@ -24,7 +24,7 @@ ProfileType Profile::type() const
 	return type_;
 }
 
-QString Profile::lastVersionId() const
+GameVersion Profile::lastVersionId() const
 {
 	return lastVersionId_;
 }

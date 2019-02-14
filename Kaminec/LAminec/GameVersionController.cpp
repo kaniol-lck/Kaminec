@@ -5,14 +5,13 @@
 #include <QDir>
 
 GameVersionController::GameVersionController()
-{}
-
-QList<GameVersion> GameVersionController::getAllVersions()
 {
-	QList<GameVersion> versions;
 	QDir versionsDir(Path::versionsPath());
-	for(auto versionName : versionsDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System)){
-		versions << GameVersion(versionName);
-	}
-	return versions;
+	for(auto versionName : versionsDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System))
+		gameVersions_ << GameVersion(versionName);
+}
+
+QList<GameVersion> GameVersionController::getGameVersions() const
+{
+	return gameVersions_;
 }
