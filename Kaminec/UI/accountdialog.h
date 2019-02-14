@@ -19,7 +19,7 @@ class AccountDialog : public QDialog
 
 public:
 	explicit AccountDialog(QWidget *parent, AccountPool *accountPool);
-	explicit AccountDialog(QWidget *parent, AccountPool *accountPool, const QString &accountId);
+	explicit AccountDialog(QWidget *parent, AccountPool *accountPool, const QString &accountUuid);
 	~AccountDialog();
 
 signals:

@@ -66,21 +66,25 @@ private slots:
 
 	void on_deleteAccount_pb_clicked();
 
-	void on_editAccount_pb_clicked();
-
 	void on_setAccountActive_pb_clicked();
 
 	void on_addProfile_pb_clicked();
 
 	void on_deleteProfile_pb_clicked();
 
-	void on_editProfile_pb_clicked();
-
 	void on_setProfileActive_pb_clicked();
 
 	void accountSortRecord();
 
 	void profileSortRecord();
+
+	void on_accounts_tableView_pressed(const QModelIndex &);
+
+	void on_accounts_tableView_doubleClicked(const QModelIndex &index);
+
+	void on_profiles_tableView_pressed(const QModelIndex &);
+
+	void on_profiles_tableView_doubleClicked(const QModelIndex &index);
 
 private:
 	Ui::Preferences *ui_;

@@ -16,23 +16,23 @@ class AccountPool : public QObject
 public:
 	explicit AccountPool(QObject *parent = nullptr);
 
-	Account check(const QString& accountId) const;
+	Account check(const QString& accountUuid) const;
 	bool validate(const Account &account) const;
 
 	QStandardItemModel* getAccountsModel();
 
 	void initAccounts();
 
-	Account getAccount(const QString &accountId) const;
+	Account getAccount(const QString &accountUuid) const;
 	QMap<QString, Account> getAccounts() const;
-	bool containAccount(const QString &accountId) const;
+	bool containAccount(const QString &accountUuid) const;
 
 	void insertAccount(const Account &account);
-	void removeAccount(const QString &accountId);
+	void removeAccount(const QString &accountUuid);
 	void editAccount(const QString &oldAccountUuid, Account newAccount);
 
-	void setSelectedAccountId(const QString &accountId);
-	QString getSelectedAccountId();
+	void setSelectedAccountUuid(const QString &accountUuid);
+	QString getSelectedAccountUuid();
 
 	void setClientToken(const QString &clientToken);
 	QString getClientToken() const;
@@ -43,7 +43,7 @@ public:
 	void setAccountAscending(bool accountAscending);
 	bool getAccountAscending() const;
 
-	QString idFromIndex(const QModelIndex &index) const;
+	QString uuidFromIndex(const QModelIndex &index) const;
 	static QList<QStandardItem*> account2itemList(const Account &account);
 	static QJsonObject account2object(const Account &account);
 

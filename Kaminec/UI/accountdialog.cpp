@@ -19,10 +19,10 @@ AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool) :
 	on_online_rb_clicked();
 }
 
-AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool, const QString &accountId) :
+AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool, const QString &accountUuid) :
 	AccountDialog(parent, accountPool)
 {
-	oldAccount_ = std::make_shared<Account>(accountPool_->getAccount(accountId));
+	oldAccount_ = std::make_shared<Account>(accountPool_->getAccount(accountUuid));
 	ui_->hint_label->setText("Edit Account");
 	setWindowTitle("Edit Account");
 	ui_->email_le->setText(oldAccount_->email());

@@ -40,6 +40,10 @@ Preferences::Preferences(QWidget *parent, AccountPool *accountPool, ProfileManag
 	ui_->objectsPath_le->setVisible(false);
 	ui_->objectsPath_showPb->setVisible(false);
 	ui_->customPathHelper_tb->setVisible(false);
+	ui_->addAccount_pb->setVisible(false);
+	ui_->deleteAccount_pb->setVisible(false);
+	ui_->addProfile_pb->setVisible(false);
+	ui_->deleteProfile_pb->setVisible(false);
 
 	//load exsit preference
 
@@ -316,7 +320,7 @@ void Preferences::on_deleteAccount_pb_clicked()
 {
 	auto index = ui_->accounts_tableView->currentIndex();
 	if(index.isValid()){
-		accountPool_->removeAccount(accountPool_->idFromIndex(index));
+		accountPool_->removeAccount(accountPool_->uuidFromIndex(index));
 	}
 }
 
@@ -324,26 +328,6 @@ void Preferences::on_addProfile_pb_clicked()
 {
 	auto profileDialog = new ProfileDialog(this, profileManager_);
 	profileDialog->exec();
-}
-
-void Preferences::on_editAccount_pb_clicked()
-{
-	auto index = ui_->accounts_tableView->currentIndex();
-	if(index.isValid()){
-		auto oldAccountId = accountPool_->idFromIndex(index);
-		auto accountDialog = new AccountDialog(this, accountPool_, oldAccountId);
-		accountDialog->exec();
-	}
-}
-
-void Preferences::on_editProfile_pb_clicked()
-{
-	auto index = ui_->profiles_tableView->currentIndex();
-	if(index.isValid()){
-		auto oldProfileId = profileManager_->nameFromIndex(index);
-		auto profileDialog = new ProfileDialog(this, profileManager_, oldProfileId);
-		profileDialog->exec();
-	}
 }
 
 void Preferences::on_setProfileActive_pb_clicked()
@@ -361,7 +345,7 @@ void Preferences::on_deleteProfile_pb_clicked()
 
 void Preferences::on_setAccountActive_pb_clicked()
 {
-	accountPool_->setSelectedAccountId(accountPool_->idFromIndex(ui_->accounts_tableView->currentIndex()));
+	accountPool_->setSelectedAccountUuid(accountPool_->uuidFromIndex(ui_->accounts_tableView->currentIndex()));
 }
 
 void Preferences::accountSortRecord()
@@ -372,4 +356,34 @@ void Preferences::accountSortRecord()
 void Preferences::profileSortRecord()
 {
 	profileManager_->setProfileAscending(ui_->profiles_tableView->horizontalHeader()->sortIndicatorOrder() == Qt::AscendingOrder);
+}
+
+void Preferences::on_accounts_tableView_pressed(const QModelIndex &/*index*/)
+{
+	ui_->addAccount_pb->setVisible(true);
+	ui_->deleteAccount_pb->setVisible(true);
+}
+
+void Preferences::on_accounts_tableView_doubleClicked(const QModelIndex &index)
+{
+	if(index.isValid()){
+		auto oldAccountUuid = accountPool_->uuidFromIndex(index);
+		auto accountDialog = new AccountDialog(this, accountPool_, oldAccountUuid);
+		accountDialog->exec();
+	}
+}
+
+void Preferences::on_profiles_tableView_pressed(const QModelIndex &/*index*/)
+{
+	ui_->addProfile_pb->setVisible(true);
+	ui_->deleteProfile_pb->setVisible(true);
+}
+
+void Preferences::on_profiles_tableView_doubleClicked(const QModelIndex &index)
+{
+	if(index.isValid()){
+		auto oldProfileName = profileManager_->nameFromIndex(index);
+		auto profileDialog = new ProfileDialog(this, profileManager_, oldProfileName);
+		profileDialog->exec();
+	}
 }
