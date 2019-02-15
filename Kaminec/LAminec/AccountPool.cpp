@@ -44,7 +44,7 @@ AccountPool::AccountPool(QObject *parent) :
 		::Mode mode;
 		if(modeStr == "online")
 			mode = Mode::Online;
-		else if(modeStr == "offline")
+		else/* if(modeStr == "offline")*/
 			mode = Mode::Offline;
 
 		Account account(value(it, "playername").toString(),

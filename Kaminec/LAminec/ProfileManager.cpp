@@ -48,7 +48,7 @@ ProfileManager::ProfileManager(QObject *parent) :
 			type = ProfileType::Custom;
 		else if(typeStr == "latest-release")
 			type = ProfileType::LatestRelease;
-		else if(typeStr == "latest-snapshot")
+		else/* if(typeStr == "latest-snapshot")*/
 			type = ProfileType::LatestSnapshot;
 
 		Profile profile(value(it, "name").toString(),

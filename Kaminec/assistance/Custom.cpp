@@ -1,5 +1,9 @@
 #include "Custom.h"
 
+Custom::Custom() :
+	settings_("./Kaminec_settings.ini", QSettings::IniFormat)
+{}
+
 void Custom::setMemoryAllocateRange(int minimum, int maximum)
 {
 	settings_.setValue("minMem", minimum);

@@ -26,7 +26,7 @@
 class Custom
 {
 public:
-	Custom() = default;
+	Custom();
 
 	//launcher settings
 	getterAndSetter(LogFileNumber, Int, logFileNumber, 10)
