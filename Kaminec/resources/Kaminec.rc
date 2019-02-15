@@ -24,8 +24,7 @@ VS_VERSION_INFO VERSIONINFO
             BEGIN
                 VALUE "CompanyName", "kaniol\0"
                 VALUE "FileDescription", "kaniol's Minecraft Launcher\0"
-                VALUE "FileVersion", "beta v0.8.2\0"
-                VALUE "ProductVersion", "1\0"
+                VALUE "ProductVersion", "beta v0.8.2\0"
                 VALUE "ProductName", "Kaminec Launcher\0"
            END
         END

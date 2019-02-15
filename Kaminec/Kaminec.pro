@@ -133,7 +133,7 @@ FORMS    += UI/kamineclauncher.ui \
 RESOURCES += \
 	resources/background.qrc
 
-RC_FILE = resources/icon.rc
+RC_FILE = resources/Kaminec.rc
 
 DISTFILES += \
     README.md

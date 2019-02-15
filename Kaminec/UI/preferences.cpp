@@ -82,6 +82,8 @@ Preferences::Preferences(QWidget *parent, AccountPool *accountPool, ProfileManag
 	ui_->accounts_tableView->setColumnWidth(1, 50);
 	ui_->accounts_tableView->horizontalHeader()->setSortIndicatorShown(true);
 	ui_->accounts_tableView->hideColumn(AccountPool::Column::Uuid);
+	ui_->accounts_tableView->hideColumn(AccountPool::Column::Created);
+	ui_->accounts_tableView->hideColumn(AccountPool::Column::LastUsed);
 
 	ui_->profiles_tableView->setModel(profileManager_->getProfilesModel());
 
@@ -92,6 +94,8 @@ Preferences::Preferences(QWidget *parent, AccountPool *accountPool, ProfileManag
 	ui_->profiles_tableView->setColumnWidth(0, 100);
 	ui_->profiles_tableView->setColumnWidth(1, 100);
 	ui_->profiles_tableView->horizontalHeader()->setSortIndicatorShown(true);
+	ui_->profiles_tableView->hideColumn(ProfileManager::Column::Created);
+	ui_->profiles_tableView->hideColumn(ProfileManager::Column::LastUsed);
 
 	connect(ui_->accounts_tableView->horizontalHeader(), SIGNAL(sectionClicked(int)), accountPool_, SLOT(sortRecord(int)));
 	connect(ui_->accounts_tableView->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(accountSortRecord()));
