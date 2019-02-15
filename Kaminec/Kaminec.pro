@@ -71,7 +71,13 @@ SOURCES += main.cpp\
     LAminec/AccountPool.cpp \
     UI/profiledialog.cpp \
     LAminec/GameVersionController.cpp \
-    messenger/GameVersion.cpp
+    messenger/GameVersion.cpp \
+    UI/preferences_tabs/javatab.cpp \
+    UI/preferences_tabs/accounttab.cpp \
+    UI/preferences_tabs/profiletab.cpp \
+    UI/preferences_tabs/gametab.cpp \
+    UI/preferences_tabs/pathtab.cpp \
+    UI/preferences_tabs/laminectab.cpp
 
 HEADERS  += UI/kamineclauncher.h \
 	UI/preferences.h \
@@ -123,12 +129,24 @@ HEADERS  += UI/kamineclauncher.h \
     exception/Exceptions.hpp \
     UI/profiledialog.h \
     LAminec/GameVersionController.h \
-    messenger/GameVersion.h
+    messenger/GameVersion.h \
+    UI/preferences_tabs/javatab.h \
+    UI/preferences_tabs/accounttab.h \
+    UI/preferences_tabs/profiletab.h \
+    UI/preferences_tabs/gametab.h \
+    UI/preferences_tabs/pathtab.h \
+    UI/preferences_tabs/laminectab.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preferences.ui \
     UI/accountdialog.ui \
-    UI/profiledialog.ui
+    UI/profiledialog.ui \
+    UI/preferences_tabs/javatab.ui \
+    UI/preferences_tabs/accounttab.ui \
+    UI/preferences_tabs/profiletab.ui \
+    UI/preferences_tabs/gametab.ui \
+    UI/preferences_tabs/pathtab.ui \
+    UI/preferences_tabs/laminectab.ui
 
 RESOURCES += \
 	resources/background.qrc
