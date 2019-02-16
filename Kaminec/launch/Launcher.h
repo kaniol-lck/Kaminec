@@ -19,6 +19,7 @@ public:
 
 signals:
 	void finished(int);
+	void stateChanged(QProcess::ProcessState);
 	void exceptionMessage(QString);
 
 public slots:

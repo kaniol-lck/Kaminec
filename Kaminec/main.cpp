@@ -1,4 +1,4 @@
-#include "UI/KaminecLauncher.h"
+#include "UI/kamineclauncher.h"
 
 #include <QApplication>
 

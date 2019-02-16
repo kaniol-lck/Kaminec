@@ -32,7 +32,10 @@ void Launcher::start(const Profile &profile, const Account &account)
 		logger_.finishGenStartcode();
 
 		extractNatives(launchPack.nativesFiles());
-		gameProcess_->start(Path::JavaPath(), startcode);
+
+		gameProcess_->setProgram(Path::JavaPath());
+		gameProcess_->setArguments(startcode);
+		gameProcess_->startDetached();
 
 		logger_.setVersionChain(launchPack.versionChain());
 		logger_.setClassPaths(launchPack.classPaths());

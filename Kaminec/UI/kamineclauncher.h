@@ -3,18 +3,11 @@
 
 #include <QMainWindow>
 
-#include "LAminec/AccountPool.h"
-#include "LAminec/SavesManager.h"
-#include "LAminec/ProfileManager.h"
-#include "LAminec/ModsManager.h"
-#include "LAminec/LogCleaner.h"
-#include "download/Downloader.h"
-#include "launch/Launcher.h"
-#include "assistance/Custom.h"
-#include "check/Checker.h"
+#include "UI/downloadprogressdialog.h"
+#include "UI/kamineclauncher_tabs/startgametab.h"
 
 namespace Ui {
-class KaminecLauncher;
+	class KaminecLauncher;
 }
 
 class KaminecLauncher : public QMainWindow
@@ -30,47 +23,22 @@ public:
 	void resizeEvent(QResizeEvent *);
 
 private slots:
-
-    void on_start_pb_clicked();
-
-	void updateDownloadCount(int downloaded);
-
-    void gameFinished();
-
-	void downloadFinished();
-
-    void on_addSaves_pb_clicked();
-
-    void on_deleteSaves_pb_clicked();
-
-	void on_backupSaves_pb_clicked();
-
 	void on_action_preferences_triggered();
 
-	void on_moduleSwitch_currentChanged(int index);
-
-	void on_download_pb_clicked();
-
-	void exceptionMessage(QString message);
+	void on_action_Download_Progress_triggered();
 
 private:
 	void setBackGround();
 
 private:
 	Ui::KaminecLauncher *ui_;
+	Downloader downloader_;
 	AccountPool accountPool_;
-	SavesManager savesManager_;
-	ModsManager modsManager_;
-	Downloader gameDownload_;
 	ProfileManager profileManager_;
-	LogCleaner logCleaner_;
 	Launcher launcher_;
-	Checker checker_;
+	DownloadProgressDialog downloadProgressDialog_;
 
-	int totalCount_;
-
-	Custom custom_;
-
+	StartGameTab *startGameTab_;
 };
 
 #endif // KAMINECLAUNCHER_H

@@ -3,10 +3,8 @@
 #include <QDir>
 #include <QTime>
 #include <QDateTime>
-#include <QTimeZone>
 #include <QFile>
 #include <QTextStream>
-#include <QDebug>
 
 #include "assistance/Path.h"
 #include "exception/Exceptions.hpp"
@@ -71,13 +69,9 @@ void Logger::writeToFile()
 	if(!dir.exists())
 		dir.mkpath(dir.path());
 
-	auto time = QDateTime::currentDateTime();
-	auto offset = time.offsetFromUtc();
-	auto zone = QString(offset>0?"+":"") + QString::number(offset);
-
-	QFile logFile(QString("%1/%2UTC%3.log").arg(Path::loggerPath(),
-											 time.toString("yyyyMMdd-HHmmss"),
-											 zone));
+	QFile logFile(QString("%1/%2.log")
+				  .arg(Path::loggerPath(),
+					   QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs).replace(":", "")));
 
 	if(!logFile.open(QIODevice::WriteOnly | QIODevice::Text))
 		throw FileOpenException(logFile.fileName());
@@ -92,4 +86,5 @@ void Logger::writeToFile()
 	out << "extract files:" << extractFiles_.join("\n") << endl;
 	out << "generate startcode time:" << QString::number(startCode_use_) << "ms" << endl;
 	out << "play game time:" << QString::number(game_use_) << "ms" << endl;
+	logFile.close();
 }
