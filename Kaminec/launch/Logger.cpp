@@ -36,7 +36,7 @@ void Logger::finishGenStartcode()
 	if(!logFile_.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
 		throw FileOpenException(logFile_.fileName());
 	QTextStream out(&logFile_);
-	out << "generate startcode time:" << formatTime(gameTime_.elapsed()) << endl;
+	out << "generate startcode time:" << formatTime(genStartCodeTime_.elapsed()) << endl;
 	logFile_.close();
 }
 

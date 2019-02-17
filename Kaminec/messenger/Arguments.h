@@ -11,15 +11,18 @@ public:
 	Arguments() = default;
 	Arguments(const QString &arguments);
 	Arguments(const QStringList &arguments);
-	Arguments(const QVariant &arguments);
 
 	void replace(const QString &before, const QString& after);
 
 	void setOption(const QString &optionName, const QString& optionContent);
 	void setOption(const QString &optionName);
 
+	void append(Arguments arguments);
+
 	QStringList toStringList() const;
 	QString toString() const;
+
+	static Arguments fromVariant(const QVariant &arguments);
 
 private:
 	QList<QStringList> arguments_;

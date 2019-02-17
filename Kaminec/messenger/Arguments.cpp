@@ -3,7 +3,6 @@
 #include "kits/Ruler/Ruler.h"
 
 #include <QString>
-#include <QDebug>
 
 Arguments::Arguments(const QString &arguments) :
 	//split the arguments with whitespace
@@ -24,22 +23,6 @@ Arguments::Arguments(const QStringList &arguments)
 		} else{
 			arguments_.last().append(argument);
 		}
-	}
-}
-
-Arguments::Arguments(const QVariant &arguments)
-{
-	for(const auto& argument : arguments.toList()){
-		if(argument.toMap().contains("rules")){
-			Ruler ruler(value(argument, "rules"));
-			if(ruler.isAllow()){
-				if(value(argument, "value").toString() != "")
-					arguments_.append(value(argument, "value").toStringList());
-				else
-					arguments_.append(value(argument, "value").toStringList());
-			}
-		} else
-			arguments_.append(argument.toStringList());
 	}
 }
 
@@ -68,6 +51,11 @@ void Arguments::setOption(const QString &optionName)
 	arguments_.append(QStringList{optionName});
 }
 
+void Arguments::append(Arguments arguments)
+{
+	arguments_.append(arguments.arguments_);
+}
+
 QStringList Arguments::toStringList() const
 {
 	QStringList list;
@@ -79,9 +67,25 @@ QStringList Arguments::toStringList() const
 QString Arguments::toString() const
 {
 	QStringList list;
-	for(auto option : arguments_){
-		qDebug()<<option;
+	for(auto option : arguments_)
 		list << option.join(" ");
-	}
 	return list.join("\n");
+}
+
+Arguments Arguments::fromVariant(const QVariant &argumentsVariant)
+{
+	QStringList arguments;
+	for(const auto& argument : argumentsVariant.toList()){
+		if(argument.toMap().contains("rules")){
+			Ruler ruler(value(argument, "rules"));
+			if(ruler.isAllow()){
+				if(value(argument, "value").toString() != "")
+					arguments.append(value(argument, "value").toStringList());
+				else
+					arguments.append(value(argument, "value").toStringList());
+			}
+		} else
+			arguments.append(argument.toStringList());
+	}
+	return Arguments(arguments);
 }

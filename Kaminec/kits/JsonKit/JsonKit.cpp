@@ -82,7 +82,7 @@ QList<Library> JsonKit::libraries() const
 			libraries_->append(Library(libraryVariant));
 	}
 	if(inheritedJson_){
-		return *libraries_ + inheritedJson_->libraries();
+		libraries_->append(inheritedJson_->libraries());
 	}
 	return *libraries_;
 }
@@ -99,10 +99,13 @@ Arguments JsonKit::minecraftArguments() const
 	if(!minecraftArguments_){
 		if(jsonVariant_.toMap().contains("arguments") &&
 		   value(jsonVariant_, "arguments").toMap().contains("game")){
-			minecraftArguments_ = std::make_shared<Arguments>(value(jsonVariant_, "arguments", "game"));
+			minecraftArguments_ = std::make_shared<Arguments>(Arguments::fromVariant(value(jsonVariant_, "arguments", "game")));
 		} else {
 			minecraftArguments_ = std::make_shared<Arguments>(value(jsonVariant_, "minecraftArguments").toString());
 		}
+	}
+	if(inheritedJson_){
+		minecraftArguments_->append(inheritedJson_->minecraftArguments());
 	}
 	return *minecraftArguments_;
 }
@@ -110,7 +113,10 @@ Arguments JsonKit::minecraftArguments() const
 Arguments JsonKit::JVMArguments() const
 {
 	if(!JVMArguments_){
-		minecraftArguments_ = std::make_shared<Arguments>(value(jsonVariant_, "arguments", "jvm").toStringList());
+		JVMArguments_ = std::make_shared<Arguments>(value(jsonVariant_, "arguments", "jvm").toStringList());
+	}
+	if(inheritedJson_){
+		JVMArguments_->append(inheritedJson_->JVMArguments());
 	}
 	return *JVMArguments_;
 }

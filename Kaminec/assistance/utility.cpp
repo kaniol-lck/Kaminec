@@ -40,9 +40,9 @@ QString formatTime(int ms)
 	ms %= ss;
 	auto milliSecond = QString::number(ms);
 
-	return QString("%1%2%3%4").arg(day=="0"?"" : day + "d",
-								   hour=="0"?"" : hour + "h",
-								   minute=="0"?"" : minute + "m",
-								   second=="0"?"" : second + "s",
-								   milliSecond=="0"?"" : milliSecond + "ms");
+	return QString("%1%2%3%4%5").arg(day=="0"?"" : day + "d",
+									 hour=="0"?"" : hour + "h",
+									 minute=="0"?"" : minute + "m",
+									 second=="0"?"" : second + "s",
+									 milliSecond=="0"?"" : milliSecond + "ms");
 }
