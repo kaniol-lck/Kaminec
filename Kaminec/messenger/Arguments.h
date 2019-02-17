@@ -2,6 +2,8 @@
 #define ARGUMENTS_H
 
 #include <QList>
+#include <QStringList>
+#include <memory>
 
 class Arguments
 {
@@ -13,16 +15,14 @@ public:
 
 	void replace(const QString &before, const QString& after);
 
-	bool setOption(const QString &optionName, const QString& optionContent);
-
-	void addOption(const QString &optionName);
-	void addOption(const QString &optionName, const QString& optionContent);
+	void setOption(const QString &optionName, const QString& optionContent);
+	void setOption(const QString &optionName);
 
 	QStringList toStringList() const;
+	QString toString() const;
 
 private:
-	QStringList arguments_;
-	QList<int> optionGroupMark_;
+	QList<QStringList> arguments_;
 };
 
 #endif // ARGUMENTS_H

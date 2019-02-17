@@ -3,6 +3,7 @@
 
 #include "kits/JsonKit/Library.h"
 #include "messenger/Arguments.h"
+#include "messenger/GameVersion.h"
 #include "kits/JsonKit/AssetIndex.h"
 #include "kits/JsonKit/GameCoreJar.h"
 
@@ -17,7 +18,7 @@ public:
 
 	AssetIndex assetIndex() const;
 
-	QPair<QString, QString> version() const;
+	QPair<GameVersion, GameVersion> version() const;
 
 	GameCoreJar client() const;
 
@@ -33,14 +34,14 @@ public:
 
 	Arguments JVMArguments() const;
 
-	QStringList versionChain() const;
+	QList<GameVersion> versionChain() const;
 
 private:
 	QVariant jsonVariant_;
 
 	//the first is current version
 	//the second is whom it inherits from
-	QPair<QString, QString> version_;
+	QPair<GameVersion, GameVersion> version_;
 
 	bool needJar_;
 

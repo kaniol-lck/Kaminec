@@ -24,6 +24,7 @@ private slots:
 
 	void stateChanged(QProcess::ProcessState newState);
 	void gameFinished(int i);
+	void exceptionMessage(QString message);
 
 private:
 	Ui::StartGameTab *ui_;

@@ -8,7 +8,7 @@ enum class VersionType{ SnapShot, Release };
 class GameVersion
 {
 public:
-	explicit GameVersion(const QString &versionName);
+	explicit GameVersion(const QString &versionName = "");
 	QString versionName() const;
 
 private:

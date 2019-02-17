@@ -21,27 +21,25 @@ LaunchPack LaunchParser::getLaunchPack() const
 					  nativesFiles());
 }
 
-QStringList LaunchParser::JVMConfigure() const
+Arguments LaunchParser::JVMConfigure() const
 {
 	auto range = custom_.getMemoryAllocateRange();
 
-	QStringList JVMArgs{
-		"-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump",
-		"-XX:+UseG1GC",
-		"-XX:-UseAdaptiveSizePolicy",
-		"-XX:-OmitStackTraceInFastThrow",
-		QString("-Djava.library.path=%1").arg(Path::nativesPath()),
-		"-Dfml.ignoreInvalidMinecraftCertificates=true",
-		QString("-Xmn%1m").arg(range.first),
-		QString("-Xmx%1m").arg(range.second),
-		"-Dfml.ignorePatchDiscrepancies=true",
-		"-cp"
-	};
+	Arguments JVMArgs;
+		JVMArgs.setOption("-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump");
+		JVMArgs.setOption("-XX:+UseG1GC");
+		JVMArgs.setOption("-XX:-UseAdaptiveSizePolicy");
+		JVMArgs.setOption("-XX:-OmitStackTraceInFastThrow");
+		JVMArgs.setOption(QString("-Djava.library.path=%1").arg(Path::nativesPath()));
+		JVMArgs.setOption("-Dfml.ignoreInvalidMinecraftCertificates=true");
+		JVMArgs.setOption(QString("-Xmn%1m").arg(range.first));
+		JVMArgs.setOption(QString("-Xmx%1m").arg(range.second));
+		JVMArgs.setOption("-Dfml.ignorePatchDiscrepancies=true");
 
 	return JVMArgs;
 }
 
-QStringList LaunchParser::gameArguments() const
+Arguments LaunchParser::gameArguments() const
 {
 	auto gameArguments = launchJson_.getGameArguments();
 
@@ -67,7 +65,7 @@ QStringList LaunchParser::gameArguments() const
 		gameArguments.replace(it.key(), it.value());
 	}
 
-	return gameArguments.toStringList();
+	return gameArguments;
 }
 
 QStringList LaunchParser::classPaths() const
@@ -92,7 +90,7 @@ QString LaunchParser::mainClass() const
 	return launchJson_.getMainClass();
 }
 
-QStringList LaunchParser::versionChain() const
+QList<GameVersion> LaunchParser::versionChain() const
 {
 	return launchJson_.getVersionChain();
 }

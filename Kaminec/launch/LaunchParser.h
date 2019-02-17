@@ -15,13 +15,13 @@ public:
 	LaunchPack getLaunchPack() const;
 
 private:
-	QStringList JVMConfigure() const;
-	QStringList gameArguments() const;
+	Arguments JVMConfigure() const;
+	Arguments gameArguments() const;
 
 	QStringList classPaths() const;
 	QString mainClass() const;
 
-	QStringList versionChain() const;
+	QList<GameVersion> versionChain() const;
 
 	QStringList nativesFiles() const;
 

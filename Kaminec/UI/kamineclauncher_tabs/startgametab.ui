@@ -58,7 +58,7 @@ selection-background-color: rgb(255, 255, 255);
 font: 18pt &quot;Minecraft&quot;;</string>
      </property>
      <property name="text">
-      <string>&amp;Start</string>
+      <string>&amp;Launch</string>
      </property>
     </widget>
    </item>

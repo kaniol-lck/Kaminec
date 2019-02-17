@@ -29,11 +29,11 @@ JsonKit::JsonKit(const QString &version)
 
 	needJar_ = jsonVariant_.toMap().contains("jar");
 
-	version_ = qMakePair(value(jsonVariant_, "id").toString(),
-						 value(jsonVariant_, "inheritsFrom").toString());
+	version_ = qMakePair(GameVersion(value(jsonVariant_, "id").toString()),
+						 GameVersion(value(jsonVariant_, "inheritsFrom").toString()));
 
-	if(version_.second != "")
-		inheritedJson_ = std::make_shared<JsonKit>(version_.second);
+	if(version_.second.versionName() != "")
+		inheritedJson_ = std::make_shared<JsonKit>(version_.second.versionName());
 }
 
 AssetIndex JsonKit::assetIndex() const
@@ -47,7 +47,7 @@ AssetIndex JsonKit::assetIndex() const
 	return *assetIndex_;
 }
 
-QPair<QString, QString> JsonKit::version() const
+QPair<GameVersion, GameVersion> JsonKit::version() const
 {
 	return version_;
 }
@@ -58,7 +58,7 @@ GameCoreJar JsonKit::client() const
 		if(needJar_)
 			gameClient_ = std::make_shared<GameCoreJar>(inheritedJson_->client());//Is the content of inheritsFrom the same as jar?
 		else
-			gameClient_ = std::make_shared<GameCoreJar>(value(jsonVariant_, "downloads", "client"), version_.first);
+			gameClient_ = std::make_shared<GameCoreJar>(value(jsonVariant_, "downloads", "client"), version_.first.versionName());
 	}
 	return *gameClient_;
 }
@@ -69,7 +69,7 @@ GameCoreJar JsonKit::server() const
 		if(inheritedJson_)
 			gameServer_ = std::make_shared<GameCoreJar>(inheritedJson_->server());
 		else
-			gameServer_ = std::make_shared<GameCoreJar>(value(jsonVariant_, "downloads", "server"), version_.first);
+			gameServer_ = std::make_shared<GameCoreJar>(value(jsonVariant_, "downloads", "server"), version_.first.versionName());
 	}
 	return *gameServer_;
 }
@@ -100,8 +100,7 @@ Arguments JsonKit::minecraftArguments() const
 		if(jsonVariant_.toMap().contains("arguments") &&
 		   value(jsonVariant_, "arguments").toMap().contains("game")){
 			minecraftArguments_ = std::make_shared<Arguments>(value(jsonVariant_, "arguments", "game"));
-		}
-		else {
+		} else {
 			minecraftArguments_ = std::make_shared<Arguments>(value(jsonVariant_, "minecraftArguments").toString());
 		}
 	}
@@ -111,14 +110,14 @@ Arguments JsonKit::minecraftArguments() const
 Arguments JsonKit::JVMArguments() const
 {
 	if(!JVMArguments_){
-			minecraftArguments_ = std::make_shared<Arguments>(value(jsonVariant_, "arguments", "jvm").toStringList());
+		minecraftArguments_ = std::make_shared<Arguments>(value(jsonVariant_, "arguments", "jvm").toStringList());
 	}
 	return *JVMArguments_;
 }
 
-QStringList JsonKit::versionChain() const
+QList<GameVersion> JsonKit::versionChain() const
 {
-	QStringList versionList;
+	QList<GameVersion> versionList;
 	versionList.append(version_.first);
 	if(inheritedJson_)
 		versionList.append(inheritedJson_->versionChain());

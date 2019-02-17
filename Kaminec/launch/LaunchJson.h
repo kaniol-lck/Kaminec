@@ -22,7 +22,7 @@ public:
 
 	QString getAssetsIndexId() const;
 
-	QStringList getVersionChain() const;
+	QList<GameVersion> getVersionChain() const;
 
 private:
 	JsonKit jsonKit_;

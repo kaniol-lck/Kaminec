@@ -2,6 +2,9 @@
 
 #include "kits/Ruler/Ruler.h"
 
+#include <QString>
+#include <QDebug>
+
 Arguments::Arguments(const QString &arguments) :
 	//split the arguments with whitespace
 	Arguments(arguments.split(" "))
@@ -14,13 +17,12 @@ Arguments::Arguments(const QStringList &arguments)
 	 *"${auth_player_name} ${auth_session} --gameDir ${game_directory} --assetsDir ${game_assets}"
 	 */
 
-	arguments_ = arguments;
-
-	for(auto i = 0; i != arguments_.size(); i++){
-		if(arguments_.at(i).startsWith("--")||
-		   optionGroupMark_.isEmpty()||
-		   !arguments_.at(optionGroupMark_.last()).startsWith("--")){
-			optionGroupMark_.append(i);
+	for(QString argument : arguments){
+		if(argument.startsWith("--") || argument.isEmpty() ||
+		   !arguments_.last().first().startsWith("--")){
+			arguments_.append(QStringList(argument));
+		} else{
+			arguments_.last().append(argument);
 		}
 	}
 }
@@ -32,55 +34,54 @@ Arguments::Arguments(const QVariant &arguments)
 			Ruler ruler(value(argument, "rules"));
 			if(ruler.isAllow()){
 				if(value(argument, "value").toString() != "")
-					arguments_.append(value(argument, "value").toString());
+					arguments_.append(value(argument, "value").toStringList());
 				else
 					arguments_.append(value(argument, "value").toStringList());
 			}
 		} else
-			arguments_.append(argument.toString());
+			arguments_.append(argument.toStringList());
 	}
 }
 
 void Arguments::replace(const QString &before, const QString &after)
 {
-	for(auto& argument : arguments_)
-		argument.replace(before, after);
+	for(auto& option : arguments_)
+		for(auto& argument : option)
+			argument.replace(before, after);
 }
 
-bool Arguments::setOption(const QString &optionName, const QString &optionContent)
+void Arguments::setOption(const QString &optionName, const QString &optionContent)
 {
-	for(auto it = optionGroupMark_.begin(); it != optionGroupMark_.end(); it++){
-		//found this option
-		if(arguments_.at(*it) == optionName){
-			//if this option have only one argument
-			if(*it == arguments_.size()-1 ||
-			   *it == *(it+1) - 1){
-				arguments_.insert(*it, optionContent);
-				for(; it != optionGroupMark_.end(); it++)
-					*it += 1;
-			}
-			else
-				arguments_.replace(*it+1, optionContent);
-			return true;
+	for(auto option : arguments_)
+		if(option.first() == optionName){
+			option[1] = optionContent;
+			return;
 		}
-	}
-	//this option is not exist
-	return false;
+	arguments_.append(QStringList{optionName, optionContent});
 }
 
-void Arguments::addOption(const QString &optionName)
+void Arguments::setOption(const QString &optionName)
 {
-	optionGroupMark_.append(arguments_.size()+1);
-	arguments_.append(optionName);
-}
-
-void Arguments::addOption(const QString &optionName, const QString &optionContent)
-{
-	addOption(optionName);
-	arguments_.append(optionContent);
+	for(auto option : arguments_)
+		if(option.first() == optionName)
+			return;
+	arguments_.append(QStringList{optionName});
 }
 
 QStringList Arguments::toStringList() const
 {
-	return arguments_;
+	QStringList list;
+	for(auto option : arguments_)
+		list << option;
+	return list;
+}
+
+QString Arguments::toString() const
+{
+	QStringList list;
+	for(auto option : arguments_){
+		qDebug()<<option;
+		list << option.join(" ");
+	}
+	return list.join("\n");
 }

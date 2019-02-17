@@ -23,7 +23,7 @@ signals:
 	void exceptionMessage(QString);
 
 public slots:
-	void deleteNatives();
+	void gameFinished();
 
 private:
 	QProcess *gameProcess_;

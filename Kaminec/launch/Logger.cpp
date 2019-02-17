@@ -5,42 +5,25 @@
 #include <QDateTime>
 #include <QFile>
 #include <QTextStream>
+#include <QDebug>
 
 #include "assistance/Path.h"
 #include "exception/Exceptions.hpp"
+#include "assistance/utility.h"
 
 Logger::Logger(QObject *parent = 0) :
 	QObject(parent)
-{}
-
-void Logger::setVersionChain(const QStringList &versionChain)
 {
-	versionChain_ = versionChain;
+	QDir dir(Path::loggerPath());
+	if(!dir.exists())
+		dir.mkpath(dir.path());
 }
 
-void Logger::setClassPaths(const QStringList &classPaths)
+void Logger::startLog()
 {
-	classPaths_ = classPaths;
-}
-
-void Logger::setGameMainClass(const QString &GameMainClass)
-{
-	gameMainClass_ = GameMainClass;
-}
-
-void Logger::setGameArgs(const QStringList &GameArgs)
-{
-	gameArgs_ = GameArgs;
-}
-
-void Logger::setJVMArgs(const QStringList &JVMArgs)
-{
-	JVMArgs_ = JVMArgs;
-}
-
-void Logger::setNativesFiles(const QStringList &extractFiles)
-{
-	extractFiles_ = extractFiles;
+	logFile_.setFileName(QString("%1/%2.log")
+						 .arg(Path::loggerPath(),
+							  QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs).replace(":", "")));
 }
 
 void Logger::startGenStartcode()
@@ -50,7 +33,11 @@ void Logger::startGenStartcode()
 
 void Logger::finishGenStartcode()
 {
-	startCode_use_ = genStartCodeTime_.elapsed();
+	if(!logFile_.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
+		throw FileOpenException(logFile_.fileName());
+	QTextStream out(&logFile_);
+	out << "generate startcode time:" << formatTime(gameTime_.elapsed()) << endl;
+	logFile_.close();
 }
 
 void Logger::startGame()
@@ -60,31 +47,38 @@ void Logger::startGame()
 
 void Logger::finishGame()
 {
-	game_use_ = gameTime_.elapsed();
+	if(!logFile_.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
+		throw FileOpenException(logFile_.fileName());
+	QTextStream out(&logFile_);
+	out << "game time:" << formatTime(gameTime_.elapsed()) << endl;
+	logFile_.close();
 }
 
-void Logger::writeToFile()
+void Logger::logLaunchPack(const LaunchPack &launchPack)
 {
-	QDir dir(Path::loggerPath());
-	if(!dir.exists())
-		dir.mkpath(dir.path());
-
-	QFile logFile(QString("%1/%2.log")
-				  .arg(Path::loggerPath(),
-					   QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs).replace(":", "")));
-
-	if(!logFile.open(QIODevice::WriteOnly | QIODevice::Text))
-		throw FileOpenException(logFile.fileName());
-
-	QTextStream out(&logFile);
+	if(!logFile_.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
+		throw FileOpenException(logFile_.fileName());
+	QTextStream out(&logFile_);
 	//time
-	out << "version chain:" << versionChain_.join(" -> ") << endl;
-	out << "class paths:" << classPaths_.join("\n") << endl;
-	out << "game main class:" << gameMainClass_ << endl;
-	out << "game arguments:" << gameArgs_.join("\n") << endl;
-	out << "JVM arguments:" << JVMArgs_.join("\n") << endl;
-	out << "extract files:" << extractFiles_.join("\n") << endl;
-	out << "generate startcode time:" << QString::number(startCode_use_) << "ms" << endl;
-	out << "play game time:" << QString::number(game_use_) << "ms" << endl;
-	logFile.close();
+	out << "version chain:" << endl;
+	out << versionChain2String(launchPack.versionChain()) << endl << endl;
+	out << "class paths:" << endl;
+	out << launchPack.classPaths().join("\n") << endl << endl;
+	out << "game main class:" << endl;
+	out << launchPack.mainClass() << endl << endl;
+	out << "game arguments:" << endl;
+	out << launchPack.gameArguments().toString() << endl << endl;
+	out << "JVM arguments:" << endl;
+	out << launchPack.JVMConfigure().toString() << endl << endl;
+	out << "extract files:" << endl;
+	out << launchPack.nativesFiles().join("\n") << endl << endl;
+	logFile_.close();
+}
+
+QString Logger::versionChain2String(QList<GameVersion> versionChain)
+{
+	QStringList gameVersionNameList;
+	for(auto gameVersion : versionChain)
+		gameVersionNameList << gameVersion.versionName();
+	return gameVersionNameList.join(" -> ");
 }

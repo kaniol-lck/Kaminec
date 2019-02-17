@@ -1,9 +1,12 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
+#include "messenger/LaunchPack.h"
+
 #include <QObject>
 #include <QFile>
 #include <QTime>
+#include <memory>
 
 class Logger : public QObject
 {
@@ -11,13 +14,7 @@ class Logger : public QObject
 public:
 	explicit Logger(QObject *parent);
 
-	void setVersionChain(const QStringList& versionChain);
-	void setNativesPath(const QString& nativePath);
-	void setClassPaths(const QStringList& classPaths);
-	void setGameMainClass(const QString& GameMainClass);
-	void setGameArgs(const QStringList& GameArgs);
-	void setJVMArgs(const QStringList& JVMArgs);
-	void setNativesFiles(const QStringList& extractFiles);
+	void startLog();
 
 	void startGenStartcode();
 	void finishGenStartcode();
@@ -25,21 +22,14 @@ public:
 	void startGame();
 	void finishGame();
 
-	void writeToFile();
+	void logLaunchPack(const LaunchPack &launchPack);
+
+	static QString versionChain2String(QList<GameVersion> versionChain);
 	
 signals:
 
 private:
-	QStringList versionChain_;
-	QString nativePath_;
-	QStringList classPaths_;
-	QString gameMainClass_;
-	QStringList gameArgs_;
-	QStringList JVMArgs_;
-	QStringList extractFiles_;
-
-	int startCode_use_;
-	int game_use_ = 0;
+	QFile logFile_;
 
 	QTime genStartCodeTime_;
 	QTime gameTime_;

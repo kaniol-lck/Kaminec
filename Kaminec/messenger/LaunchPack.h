@@ -1,25 +1,26 @@
 #ifndef LAUNCHPACK_H
 #define LAUNCHPACK_H
 
-#include <QStringList>
-
 #include "assistance/Gamemode.h"
+#include "messenger/Arguments.h"
+#include "messenger/GameVersion.h"
 
 class LaunchPack
 {
 public:
-	LaunchPack(Mode mode, QStringList classPaths,
-			   QStringList JVMConfigure,
+	LaunchPack(Mode mode,
+			   QStringList classPaths,
+			   Arguments JVMConfigure,
 			   QString mainClass,
-			   QStringList gameArguments,
-			   QStringList versionChain,
+			   Arguments gameArguments,
+			   QList<GameVersion> versionChain,
 			   QStringList nativesFiles);
 
 	QStringList classPaths() const;
-	QStringList JVMConfigure() const;
+	Arguments JVMConfigure() const;
 	QString mainClass() const;
-	QStringList gameArguments() const;
-	QStringList versionChain() const;
+	Arguments gameArguments() const;
+	QList<GameVersion> versionChain() const;
 	QStringList nativesFiles() const;
 
 	QStringList startCode() const;
@@ -27,10 +28,10 @@ public:
 private:
 	Mode mode_;
 	QStringList classPaths_;
-	QStringList JVMConfigure_;
+	Arguments JVMConfigure_;
 	QString mainClass_;
-	QStringList gameArguments_;
-	QStringList versionChain_;
+	Arguments gameArguments_;
+	QList<GameVersion> versionChain_;
 	QStringList nativesFiles_;
 
 };

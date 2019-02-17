@@ -8,8 +8,12 @@
 KaminecLauncher::KaminecLauncher(QWidget *parent) :
     QMainWindow(parent),
 	ui_(new Ui::KaminecLauncher),
-	downloadProgressDialog_(0, &downloader_),
-	startGameTab_(new StartGameTab(this, &launcher_, &accountPool_, &profileManager_))
+	downloader_(new Downloader(this)),
+	accountPool_(new AccountPool(this)),
+	profileManager_(new ProfileManager(this)),
+	launcher_(new Launcher(this)),
+	downloadProgressDialog_(new DownloadProgressDialog(this, downloader_)),
+	startGameTab_(new StartGameTab(this, launcher_, accountPool_, profileManager_))
 {
 	//setup ui
 	ui_->setupUi(this);
@@ -25,7 +29,7 @@ KaminecLauncher::~KaminecLauncher()
 void KaminecLauncher::on_action_preferences_triggered()
 {
 	//create preferences windows
-	auto preferences = new Preferences(this, &accountPool_, &profileManager_);
+	auto preferences = new Preferences(this, accountPool_, profileManager_);
 	preferences->show();
 }
 
@@ -40,7 +44,7 @@ void KaminecLauncher::setBackGround()
 
 void KaminecLauncher::on_action_Download_Progress_triggered()
 {
-	downloadProgressDialog_.show();
+	downloadProgressDialog_->show();
 }
 
 void KaminecLauncher::resizeEvent(QResizeEvent *)

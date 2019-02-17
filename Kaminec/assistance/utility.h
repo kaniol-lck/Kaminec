@@ -18,4 +18,6 @@ inline QVariant value(const Container& c, const  QString& s, const list&... Args
 
 bool deleteDirectory(const QString &path);
 
+QString formatTime(int ms);
+
 #endif // UTILITY_H

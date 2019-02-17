@@ -16,12 +16,13 @@ Launcher::Launcher(QObject *parent) :
 	//forward finished infomation
 	connect(gameProcess_, SIGNAL(finished(int)), this, SIGNAL(finished(int)));
 	//delete natives after playing
-	connect(gameProcess_, SIGNAL(finished(int)), this, SLOT(deleteNatives()));
+	connect(gameProcess_, SIGNAL(finished(int)), this, SLOT(gameFinished()));
 }
 
 void Launcher::start(const Profile &profile, const Account &account)
 {
 	try{
+		logger_.startLog();
 		logger_.startGenStartcode();
 		LaunchParser launchParser(profile, account);
 
@@ -35,15 +36,10 @@ void Launcher::start(const Profile &profile, const Account &account)
 
 		gameProcess_->setProgram(Path::JavaPath());
 		gameProcess_->setArguments(startcode);
-		gameProcess_->startDetached();
+		gameProcess_->start();
+		logger_.startGame();
 
-		logger_.setVersionChain(launchPack.versionChain());
-		logger_.setClassPaths(launchPack.classPaths());
-		logger_.setGameMainClass(launchPack.mainClass());
-		logger_.setGameArgs(launchPack.gameArguments());
-		logger_.setJVMArgs(launchPack.JVMConfigure());
-		logger_.setNativesFiles(launchPack.nativesFiles());
-		logger_.writeToFile();
+		logger_.logLaunchPack(launchPack);
 
 	}catch(std::exception& e){
 		emit exceptionMessage(QString(e.what()));
@@ -60,7 +56,8 @@ void Launcher::extractNatives(const QStringList &nativesPaths)
 	}
 }
 
-void Launcher::deleteNatives()
+void Launcher::gameFinished()
 {
 	deleteDirectory(Path::nativesPath());
+	logger_.finishGame();
 }

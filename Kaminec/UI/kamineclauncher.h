@@ -32,11 +32,11 @@ private:
 
 private:
 	Ui::KaminecLauncher *ui_;
-	Downloader downloader_;
-	AccountPool accountPool_;
-	ProfileManager profileManager_;
-	Launcher launcher_;
-	DownloadProgressDialog downloadProgressDialog_;
+	Downloader *downloader_;
+	AccountPool *accountPool_;
+	ProfileManager *profileManager_;
+	Launcher *launcher_;
+	DownloadProgressDialog *downloadProgressDialog_;
 
 	StartGameTab *startGameTab_;
 };
