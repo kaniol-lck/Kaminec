@@ -79,7 +79,8 @@ SOURCES += main.cpp\
     UI/preferences_tabs/pathtab.cpp \
     UI/preferences_tabs/laminectab.cpp \
     UI/kamineclauncher_tabs/startgametab.cpp \
-    UI/downloadprogressdialog.cpp
+    UI/downloadprogressdialog.cpp \
+    UI/preferences_tabs/themetab.cpp
 
 HEADERS  += UI/kamineclauncher.h \
 	UI/preferences.h \
@@ -139,7 +140,8 @@ HEADERS  += UI/kamineclauncher.h \
     UI/preferences_tabs/pathtab.h \
     UI/preferences_tabs/laminectab.h \
     UI/kamineclauncher_tabs/startgametab.h \
-    UI/downloadprogressdialog.h
+    UI/downloadprogressdialog.h \
+    UI/preferences_tabs/themetab.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preferences.ui \
@@ -152,7 +154,8 @@ FORMS    += UI/kamineclauncher.ui \
     UI/preferences_tabs/pathtab.ui \
     UI/preferences_tabs/laminectab.ui \
     UI/kamineclauncher_tabs/startgametab.ui \
-    UI/downloadprogressdialog.ui
+    UI/downloadprogressdialog.ui \
+    UI/preferences_tabs/themetab.ui
 
 RESOURCES += \
 	resources/background.qrc

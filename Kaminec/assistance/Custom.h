@@ -30,6 +30,7 @@ public:
 
 	//launcher settings
 	getterAndSetter(LogFileNumber, Int, logFileNumber, 10)
+	getterAndSetter(Font, String, font, "")
 
 	//directory settings
 	getterAndSetter_prefix(CoreGameFileDirectory, String, coreDirectory, "path/", QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/.minecraft")

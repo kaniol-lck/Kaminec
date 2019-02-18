@@ -5,6 +5,7 @@
 #include "UI/preferences_tabs/gametab.h"
 #include "UI/preferences_tabs/pathtab.h"
 #include "UI/preferences_tabs/laminectab.h"
+#include "UI/preferences_tabs/themetab.h"
 #include "LAminec/AccountPool.h"
 #include "LAminec/ProfileManager.h"
 #include "assistance/Custom.h"
@@ -38,6 +39,7 @@ private:
 	GameTab *gameTab_;
 	PathTab *pathTab_;
 	LAminecTab *lAminecTab_;
+	ThemeTab *themeTab_;
 };
 
 #endif // PREFERENCES_H
