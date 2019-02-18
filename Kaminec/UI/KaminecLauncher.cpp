@@ -13,11 +13,16 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 	profileManager_(new ProfileManager(this)),
 	launcher_(new Launcher(this)),
 	downloadProgressDialog_(new DownloadProgressDialog(this, downloader_)),
-	startGameTab_(new StartGameTab(this, launcher_, accountPool_, profileManager_))
+	startGameTab_(new StartGameTab(this, launcher_, accountPool_, profileManager_)),
+	accounttab_(new AccountTab(this, accountPool_)),
+	profiletab_(new ProfileTab(this, profileManager_))
 {
 	//setup ui
 	ui_->setupUi(this);
+	setFixedSize(960,540);
 	ui_->moduleSwitch->addTab(startGameTab_, "&Start Game");
+	ui_->moduleSwitch->addTab(accounttab_, "&Account");
+	ui_->moduleSwitch->addTab(profiletab_, "&Profile");
 }
 
 KaminecLauncher::~KaminecLauncher()

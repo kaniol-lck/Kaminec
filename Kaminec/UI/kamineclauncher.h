@@ -5,6 +5,8 @@
 
 #include "UI/downloadprogressdialog.h"
 #include "UI/kamineclauncher_tabs/startgametab.h"
+#include "UI/kamineclauncher_tabs/accounttab.h"
+#include "UI/kamineclauncher_tabs/profiletab.h"
 
 namespace Ui {
 	class KaminecLauncher;
@@ -39,6 +41,8 @@ private:
 	DownloadProgressDialog *downloadProgressDialog_;
 
 	StartGameTab *startGameTab_;
+	AccountTab *accounttab_;
+	ProfileTab *profiletab_;
 };
 
 #endif // KAMINECLAUNCHER_H

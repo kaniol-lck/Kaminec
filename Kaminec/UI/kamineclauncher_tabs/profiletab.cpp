@@ -10,12 +10,12 @@ ProfileTab::ProfileTab(QWidget *parent, ProfileManager *profileManager) :
 	profileManager_(profileManager)
 {
 	ui_->setupUi(this);
-	ui_->setProfileActive_pb->setVisible(false);
-	ui_->deleteProfile_pb->setVisible(false);
+	ui_->setProfileActive_pb->setEnabled(false);
+	ui_->deleteProfile_pb->setEnabled(false);
 
 	ui_->profiles_tableView->setModel(profileManager_->getProfilesModel());
 
-	ui_->profiles_tableView->verticalHeader()->setDefaultSectionSize(25);
+	ui_->profiles_tableView->verticalHeader()->setDefaultSectionSize(40);
 	ui_->profiles_tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 	ui_->profiles_tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
 	ui_->profiles_tableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
@@ -27,7 +27,6 @@ ProfileTab::ProfileTab(QWidget *parent, ProfileManager *profileManager) :
 
 	connect(ui_->profiles_tableView->horizontalHeader(), SIGNAL(sectionClicked(int)), profileManager_, SLOT(sortRecord(int)));
 	connect(ui_->profiles_tableView->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(profileSortRecord()));
-
 }
 
 ProfileTab::~ProfileTab()
@@ -67,15 +66,19 @@ void ProfileTab::profileSortRecord()
 
 void ProfileTab::on_profiles_tableView_pressed(const QModelIndex &)
 {
-	ui_->setProfileActive_pb->setVisible(true);
-	ui_->deleteProfile_pb->setVisible(true);
+	ui_->setProfileActive_pb->setEnabled(true);
+	ui_->deleteProfile_pb->setEnabled(true);
 }
 
 void ProfileTab::on_profiles_tableView_doubleClicked(const QModelIndex &index)
 {
 	if(index.isValid()){
 		auto oldProfileName = profileManager_->nameFromIndex(index);
-		auto profileDialog = new ProfileDialog(this, profileManager_, oldProfileName);
-		profileDialog->exec();
+		if(index.column() == 0){
+			profileManager_->setSelectedProfileName(oldProfileName);
+		} else{
+			auto profileDialog = new ProfileDialog(this, profileManager_, oldProfileName);
+			profileDialog->exec();
+		}
 	}
 }

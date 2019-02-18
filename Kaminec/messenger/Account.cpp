@@ -15,7 +15,9 @@ Account::Account(const QString &playername,
 	accessToken_(accessToken),
 	created_(created),
 	lastUsed_(lastUsed)
-{}
+{
+	uuid_ = QUuid::createUuid().toString().replace("-", "").replace("{", "").replace("}", "");
+}
 
 Mode Account::mode() const
 {

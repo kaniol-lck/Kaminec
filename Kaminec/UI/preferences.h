@@ -2,8 +2,6 @@
 #define PREFERENCES_H
 
 #include "UI/preferences_tabs/javatab.h"
-#include "UI/preferences_tabs/accounttab.h"
-#include "UI/preferences_tabs/profiletab.h"
 #include "UI/preferences_tabs/gametab.h"
 #include "UI/preferences_tabs/pathtab.h"
 #include "UI/preferences_tabs/laminectab.h"
@@ -37,8 +35,6 @@ private:
 	ProfileManager *profileManager_;
 
 	JavaTab *javaTab_;
-	AccountTab *accountTab_;
-	ProfileTab *profileTab_;
 	GameTab *gameTab_;
 	PathTab *pathTab_;
 	LAminecTab *lAminecTab_;

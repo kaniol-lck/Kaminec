@@ -15,16 +15,12 @@ Preferences::Preferences(QWidget *parent, AccountPool *accountPool, ProfileManag
 	accountPool_(accountPool),
 	profileManager_(profileManager),
 	javaTab_(new JavaTab(this)),
-	accountTab_(new AccountTab(this, accountPool_)),
-	profileTab_(new ProfileTab(this, profileManager_)),
 	gameTab_(new GameTab(this)),
 	pathTab_(new PathTab(this)),
 	lAminecTab_(new LAminecTab(this))
 {
 	ui_->setupUi(this);
 	ui_->preferencesSwitch->addTab(javaTab_, "&Java");
-	ui_->preferencesSwitch->addTab(accountTab_, "&Account");
-	ui_->preferencesSwitch->addTab(profileTab_, "&Profile");
 	ui_->preferencesSwitch->addTab(gameTab_, "&Game");
 	ui_->preferencesSwitch->addTab(pathTab_, "&Path");
 	ui_->preferencesSwitch->addTab(lAminecTab_, "&LAminec");

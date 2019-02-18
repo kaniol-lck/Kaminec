@@ -12,7 +12,7 @@ public:
 	explicit Account(const QString &playername = "Steve",
 					 Mode mode = Mode::Offline,
 					 const QString &email = "",
-					 const QString &uuid = QUuid::createUuid().toString().replace("-", "").replace("{", "").replace("}", ""),
+					 const QString &uuid = "",
 					 const QString &accessToken = "",
 					 const QDateTime &created = QDateTime::currentDateTime(),
 					 const QDateTime &lastUsed = QDateTime());

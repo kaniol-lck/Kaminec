@@ -52,10 +52,18 @@
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: rgba(255, 255, 255, 63);
-color: rgb(255, 255, 255);
-selection-background-color: rgb(255, 255, 255);
-font: 18pt &quot;Minecraft&quot;;</string>
+      <string notr="true">QPushButton{
+	color: rgb(255, 255, 255);
+	border: 0px;
+	background-color: rgba(255, 255, 255, 63);
+}
+QPushButton:hover{
+	background-color: rgba(255, 255, 255, 79);
+}
+QPushButton:disabled{
+	color: rgb(63, 63, 63);
+	background-color: rgba(127, 127, 127, 191);
+}</string>
      </property>
      <property name="text">
       <string>&amp;Launch</string>

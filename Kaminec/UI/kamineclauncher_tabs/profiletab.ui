@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ProfileTab</class>
+ <widget class="QWidget" name="ProfileTab">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <widget class="QTableView" name="profiles_tableView">
+     <property name="styleSheet">
+      <string notr="true">QTableView {
+    color: white;
+	background-color: rgba(255, 255, 255, 63);
+	alternate-background-color: rgba(191, 191, 191, 63);
+    selection-color: rgb(0, 0, 0);
+	selection-background-color: rgba(255, 255, 255, 191);
+	border: none;
+}
+
+QHeaderView {
+	color: black;
+	background-color: rgba(127, 127, 127, 191);
+    border: none;
+	min-height: 40px;
+	border-bottom: 1px solid rgba(191, 191, 191, 191);
+}
+
+QHeaderView:section {
+	color: black;
+	background-color: rgba(127, 127, 127, 191);
+    border: none;
+	min-height: 40px;
+	border-bottom: 1px solid rgba(191, 191, 191, 191);
+}
+
+</string>
+     </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::SingleSelection</enum>
+     </property>
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
+     <property name="showGrid">
+      <bool>false</bool>
+     </property>
+     <property name="sortingEnabled">
+      <bool>true</bool>
+     </property>
+     <attribute name="horizontalHeaderHighlightSections">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
+    </widget>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QPushButton" name="addProfile_pb">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>120</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Minecraft</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton{
+	color: rgb(255, 255, 255);
+	border: 0px;
+	background-color: rgba(255, 255, 255, 63);
+}
+QPushButton:hover{
+	background-color: rgba(255, 255, 255, 79);
+}
+QPushButton:disabled{
+	color: rgb(63, 63, 63);
+	background-color: rgba(127, 127, 127, 191);
+}</string>
+       </property>
+       <property name="text">
+        <string>&amp;Add</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="setProfileActive_pb">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>120</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Minecraft</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton{
+	color: rgb(255, 255, 255);
+	border: 0px;
+	background-color: rgba(255, 255, 255, 63);
+}
+QPushButton:hover{
+	background-color: rgba(255, 255, 255, 79);
+}
+QPushButton:disabled{
+	color: rgb(63, 63, 63);
+	background-color: rgba(127, 127, 127, 191);
+}</string>
+       </property>
+       <property name="text">
+        <string>&amp;Set Active</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="deleteProfile_pb">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Minecraft</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton{
+	color: rgb(255, 255, 255);
+	border: 0px;
+	background-color: rgba(255, 255, 255, 63);
+}
+QPushButton:hover{
+	background-color: rgba(255, 255, 255, 79);
+}
+QPushButton:disabled{
+	color: rgb(63, 63, 63);
+	background-color: rgba(127, 127, 127, 191);
+}</string>
+       </property>
+       <property name="text">
+        <string>&amp;Delete</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="fixProfile_pb">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Minecraft</family>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton{
+	color: rgb(255, 255, 255);
+	border: 0px;
+	background-color: rgba(255, 255, 255, 63);
+}
+QPushButton:hover{
+	background-color: rgba(255, 255, 255, 79);
+}
+QPushButton:disabled{
+	color: rgb(63, 63, 63);
+	background-color: rgba(127, 127, 127, 191);
+}</string>
+       </property>
+       <property name="text">
+        <string>&amp;Fix</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
