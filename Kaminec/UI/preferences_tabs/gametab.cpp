@@ -6,7 +6,8 @@ GameTab::GameTab(QWidget *parent) :
 	ui_(new Ui::GameTab)
 {
 	ui_->setupUi(this);
-	ui_->fullScreen_checkBox->setChecked(custom_.getGameWindowFullScreen());
+	ui_->fullScreen_checkBox->setChecked(custom_.getFullScreen());
+	ui_->customizeResolution_gb->setChecked(custom_.getCustomizeResolution());
 	auto size = custom_.getGameWindowSize();
 	ui_->width_sb->setValue(size.first);
 	ui_->height_sb->setValue(size.second);
@@ -14,7 +15,8 @@ GameTab::GameTab(QWidget *parent) :
 
 void GameTab::accepted()
 {
-	custom_.setGameWindowFullScreen(ui_->fullScreen_checkBox->isChecked());
+	custom_.setFullScreen(ui_->fullScreen_checkBox->isChecked());
+	custom_.setCustomizeResolution(ui_->customizeResolution_gb->isChecked());
 	custom_.setGameWindowSize(ui_->width_sb->value(),
 							  ui_->height_sb->value());
 }
@@ -26,11 +28,8 @@ GameTab::~GameTab()
 
 void GameTab::on_fullScreen_checkBox_stateChanged(int arg1)
 {
-	if(arg1 == Qt::Checked){
-		ui_->width_sb->setEnabled(false);
-		ui_->height_sb->setEnabled(false);
-	} else /*arg1 == Qt::Unchecked*/{
-		ui_->width_sb->setEnabled(true);
-		ui_->height_sb->setEnabled(true);
-	}
+	if(arg1 == Qt::Checked)
+		ui_->customizeResolution_gb->setEnabled(false);
+	else if(arg1 == Qt::Unchecked)
+		ui_->customizeResolution_gb->setEnabled(true);
 }

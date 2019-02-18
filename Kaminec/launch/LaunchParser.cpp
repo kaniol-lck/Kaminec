@@ -42,24 +42,29 @@ Arguments LaunchParser::JVMConfigure() const
 Arguments LaunchParser::gameArguments() const
 {
 	auto gameArguments = launchJson_.getGameArguments();
-
+	auto size = custom_.getGameWindowSize();
 	QMap<QString, QString> replace_list = {
 		{"${auth_player_name}", account_.playername()},
+		{"${auth_uuid}", account_.uuid()},
 		{"${version_name}", profile_.lastVersionId().versionName()},
 		{"${game_directory}", profile_.gameDir()},
 		{"${assets_root}", Path::assetsPath()},
 		{"${assets_index_name}", launchJson_.getAssetsIndexId()},
 		{"${version_type}", "Kaminec Launcher"},
 		{"${user_properties}", "{}"},
+		{"${resolution_width}", QString::number(size.first)},
+		{"${resolution_height}", QString::number(size.second)},
 	};
 
 	if(account_.mode()==Mode::Online){
-		replace_list.insert("${auth_uuid}", account_.uuid());
 		replace_list.insert("${auth_access_token}", account_.accessToken());
 		replace_list.insert("${user_type}", "mojang");
 	} else{
 		replace_list.insert("${user_type}", "Legacy");
 	}
+
+	if(custom_.getFullScreen())
+		gameArguments.setOption("--fullscreen");
 
 	for(auto it = replace_list.begin(); it != replace_list.end(); it++){
 		gameArguments.replace(it.key(), it.value());

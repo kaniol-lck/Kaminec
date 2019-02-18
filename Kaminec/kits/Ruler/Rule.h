@@ -14,6 +14,8 @@ public:
 
 	Action ruleAction() const;
 
+	static bool checkFeature(const QString &key);
+
 private:
 	Action action_;
 

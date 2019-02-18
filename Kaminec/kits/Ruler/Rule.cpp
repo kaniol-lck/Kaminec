@@ -21,7 +21,7 @@ Rule::Rule(const QVariant &rule)
 	if(rule.toMap().contains("features")){
 		auto featuresMap = value(rule, "features").toMap();
 		for(auto it = featuresMap.begin(); it != featuresMap.end(); it++){
-			if(Custom().checkFeature(it.key()) != it.value().toBool())
+			if(checkFeature(it.key()) != it.value().toBool())
 				action_ = false;
 		}
 	}
@@ -30,4 +30,12 @@ Rule::Rule(const QVariant &rule)
 Rule::Action Rule::ruleAction() const
 {
 	return action_;
+}
+
+bool Rule::checkFeature(const QString &key)
+{
+	if(key == "has_custom_resolution")
+		return Custom().getCustomizeResolution() &&
+				!Custom().getFullScreen();
+	return false;
 }

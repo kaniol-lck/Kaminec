@@ -60,8 +60,3 @@ QPair<int, int> Custom::getGameWindowSize() const
 }
 
 //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-
-bool Custom::checkFeature(QString featureName)
-{
-	return settings_.value(featureName, false).toBool();
-}

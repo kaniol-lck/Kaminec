@@ -65,8 +65,8 @@ public:
 
 	//game settings
 
-	getterAndSetter(GameWindowFullScreen, Bool, gameWindowFullScreen, false)
-	getterAndSetter(CustomGameWindowSize, Bool, customGameWindowSize, false)
+	getterAndSetter(FullScreen, Bool, fullScreen, false)
+	getterAndSetter(CustomizeResolution, Bool, customizeResolution, false)
 
 	void setGameWindowSize(int width, int height);
 	void setGameWindowSize(QPair<int, int> size);
@@ -74,10 +74,6 @@ public:
 
 	getterAndSetter(ServerSocket, String, serverSocket, "")
 	getterAndSetter(ServerMode, Bool, serverMode, false)
-
-	//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
-
-	bool checkFeature(QString featureName);
 
 private:
 	QSettings settings_;
