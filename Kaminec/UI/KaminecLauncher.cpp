@@ -5,6 +5,8 @@
 #include "assistance/Path.h"
 #include "assistance/gamemode.h"
 
+#include <QGraphicsEffect>
+
 KaminecLauncher::KaminecLauncher(QWidget *parent) :
     QMainWindow(parent),
 	ui_(new Ui::KaminecLauncher),
@@ -20,6 +22,13 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 	//setup ui
 	ui_->setupUi(this);
 	setFixedSize(960,540);
+
+	QGraphicsDropShadowEffect *shadowEffect = new QGraphicsDropShadowEffect();
+	shadowEffect->setBlurRadius(4);
+	shadowEffect->setColor(QColor(0, 0, 0, 160));
+	shadowEffect->setOffset(2);
+	ui_->moduleSwitch->setGraphicsEffect(shadowEffect);
+
 	ui_->moduleSwitch->addTab(startGameTab_, "&Start Game");
 	ui_->moduleSwitch->addTab(accounttab_, "&Account");
 	ui_->moduleSwitch->addTab(profiletab_, "&Profile");

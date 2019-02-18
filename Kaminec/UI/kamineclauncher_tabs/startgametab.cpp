@@ -24,8 +24,18 @@ StartGameTab::~StartGameTab()
 
 void StartGameTab::on_start_pb_clicked()
 {
-	auto account = accountPool_->check(accountPool_->getSelectedAccountUuid());
-	auto profile = profileManager_->getProfile(profileManager_->getSelectedProfileName());
+	auto selectedAccountUuid = accountPool_->getSelectedAccountUuid();
+	if(!accountPool_->containAccount(selectedAccountUuid)){
+		QMessageBox::warning(this, "Launch Error", "Please create your account first.");
+		return;
+	}
+	auto selectedProfileName = profileManager_->getSelectedProfileName();
+	if(!profileManager_->containProfile(selectedProfileName)){
+		QMessageBox::warning(this, "Launch Error", "Please create your profile first.");
+		return;
+	}
+	auto account = accountPool_->check(selectedAccountUuid);
+	auto profile = profileManager_->getProfile(selectedProfileName);
 
 	launcher_->start(profile, account);
 	ui_->start_pb->setText("Gaming...");

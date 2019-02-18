@@ -12,18 +12,21 @@ ProfileTab::ProfileTab(QWidget *parent, ProfileManager *profileManager) :
 	ui_->setupUi(this);
 	ui_->setProfileActive_pb->setEnabled(false);
 	ui_->deleteProfile_pb->setEnabled(false);
-
 	ui_->profiles_tableView->setModel(profileManager_->getProfilesModel());
 
 	ui_->profiles_tableView->verticalHeader()->setDefaultSectionSize(40);
 	ui_->profiles_tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 	ui_->profiles_tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
 	ui_->profiles_tableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
-	ui_->profiles_tableView->setColumnWidth(0, 100);
-	ui_->profiles_tableView->setColumnWidth(1, 100);
+	ui_->profiles_tableView->setColumnWidth(0, 200);
+	ui_->profiles_tableView->setColumnWidth(1, 200);
 	ui_->profiles_tableView->horizontalHeader()->setSortIndicatorShown(true);
 	ui_->profiles_tableView->hideColumn(ProfileManager::Column::Created);
 	ui_->profiles_tableView->hideColumn(ProfileManager::Column::LastUsed);
+
+	auto font = ui_->profiles_tableView->horizontalHeader()->font();
+	font.setPointSize(13);
+	ui_->profiles_tableView->horizontalHeader()->setFont(font);
 
 	connect(ui_->profiles_tableView->horizontalHeader(), SIGNAL(sectionClicked(int)), profileManager_, SLOT(sortRecord(int)));
 	connect(ui_->profiles_tableView->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(profileSortRecord()));

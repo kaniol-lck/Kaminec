@@ -17,11 +17,11 @@ ProfileManager::ProfileManager(QObject *parent) :
 	profilesFile_(PathReplacer::replace("<core>/launcher_profiles.json"))
 {
 	model_.setColumnCount(5);
-	model_.setHeaderData(Column::Name, Qt::Horizontal, "name");
-	model_.setHeaderData(Column::LastVersionId, Qt::Horizontal, "lastVersionId");
-	model_.setHeaderData(Column::GameDir, Qt::Horizontal, "game directroy");
-	model_.setHeaderData(Column::Created, Qt::Horizontal, "created");
-	model_.setHeaderData(Column::LastUsed, Qt::Horizontal, "lastUsed");
+	model_.setHeaderData(Column::Name, Qt::Horizontal, "Name");
+	model_.setHeaderData(Column::LastVersionId, Qt::Horizontal, "Version");
+	model_.setHeaderData(Column::GameDir, Qt::Horizontal, "Game Directroy");
+	model_.setHeaderData(Column::Created, Qt::Horizontal, "Created");
+	model_.setHeaderData(Column::LastUsed, Qt::Horizontal, "LastUsed");
 
 	if(!profilesFile_.open(QIODevice::ReadWrite | QIODevice::Text))
 		throw FileOpenException(profilesFile_.fileName());
@@ -30,8 +30,8 @@ ProfileManager::ProfileManager(QObject *parent) :
 	profilesFile_.close();
 
 	if(bytes.isEmpty()){
-		qDebug()<<"No content,auto make.";
-		initProfiles();
+//		qDebug()<<"No content,auto make.";
+//		initProfiles();
 		return;
 	}
 

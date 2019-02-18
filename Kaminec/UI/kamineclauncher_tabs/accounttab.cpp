@@ -17,12 +17,16 @@ AccountTab::AccountTab(QWidget *parent, AccountPool *accountPool) :
 	ui_->accounts_tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 	ui_->accounts_tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
 	ui_->accounts_tableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
-	ui_->accounts_tableView->setColumnWidth(0, 100);
-	ui_->accounts_tableView->setColumnWidth(1, 50);
+	ui_->accounts_tableView->setColumnWidth(0, 200);
+	ui_->accounts_tableView->setColumnWidth(1, 100);
 	ui_->accounts_tableView->horizontalHeader()->setSortIndicatorShown(true);
 	ui_->accounts_tableView->hideColumn(AccountPool::Column::Uuid);
 	ui_->accounts_tableView->hideColumn(AccountPool::Column::Created);
 	ui_->accounts_tableView->hideColumn(AccountPool::Column::LastUsed);
+
+	auto font = ui_->accounts_tableView->horizontalHeader()->font();
+	font.setPointSize(13);
+	ui_->accounts_tableView->horizontalHeader()->setFont(font);
 
 	connect(ui_->accounts_tableView->horizontalHeader(), SIGNAL(sectionClicked(int)), accountPool_, SLOT(sortRecord(int)));
 	connect(ui_->accounts_tableView->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(accountSortRecord()));

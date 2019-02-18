@@ -16,9 +16,14 @@
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
     <widget class="QTableView" name="profiles_tableView">
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
      <property name="styleSheet">
       <string notr="true">QTableView {
-    color: white;
+    color: rgb(255, 255, 255);
 	background-color: rgba(255, 255, 255, 63);
 	alternate-background-color: rgba(191, 191, 191, 63);
     selection-color: rgb(0, 0, 0);
@@ -27,19 +32,19 @@
 }
 
 QHeaderView {
-	color: black;
-	background-color: rgba(127, 127, 127, 191);
+	color: rgb(127, 127, 127);
+	background-color: rgba(191, 191, 191, 127);
     border: none;
 	min-height: 40px;
-	border-bottom: 1px solid rgba(191, 191, 191, 191);
+	border-bottom: 1px solid rgba(191, 191, 191, 127);
 }
 
 QHeaderView:section {
 	color: black;
-	background-color: rgba(127, 127, 127, 191);
+	background-color: rgba(191, 191, 191, 127);
     border: none;
 	min-height: 40px;
-	border-bottom: 1px solid rgba(191, 191, 191, 191);
+	border-bottom: 1px solid rgba(191, 191, 191, 127);
 }
 
 </string>
@@ -85,8 +90,9 @@ QHeaderView:section {
        </property>
        <property name="font">
         <font>
-         <family>Minecraft</family>
-         <pointsize>12</pointsize>
+         <pointsize>14</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
         </font>
        </property>
        <property name="styleSheet">
@@ -124,8 +130,9 @@ QPushButton:disabled{
        </property>
        <property name="font">
         <font>
-         <family>Minecraft</family>
-         <pointsize>12</pointsize>
+         <pointsize>14</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
         </font>
        </property>
        <property name="styleSheet">
@@ -157,8 +164,9 @@ QPushButton:disabled{
        </property>
        <property name="font">
         <font>
-         <family>Minecraft</family>
-         <pointsize>12</pointsize>
+         <pointsize>14</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
         </font>
        </property>
        <property name="styleSheet">
@@ -196,8 +204,9 @@ QPushButton:disabled{
        </property>
        <property name="font">
         <font>
-         <family>Minecraft</family>
-         <pointsize>12</pointsize>
+         <pointsize>14</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
         </font>
        </property>
        <property name="styleSheet">
