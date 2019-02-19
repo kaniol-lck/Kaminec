@@ -198,6 +198,17 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>javaPath_le</tabstop>
+  <tabstop>autoJava_pb</tabstop>
+  <tabstop>javaPath_showPb</tabstop>
+  <tabstop>officialPolicy_rb</tabstop>
+  <tabstop>KaminecPolicy_rb</tabstop>
+  <tabstop>CustomPolicy_rb</tabstop>
+  <tabstop>customJavaArg_te</tabstop>
+  <tabstop>minMem_sb</tabstop>
+  <tabstop>maxMem_sb</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -28,6 +28,9 @@
        <property name="text">
         <string>Language:</string>
        </property>
+       <property name="buddy">
+        <cstring>lang_cb</cstring>
+       </property>
       </widget>
      </item>
      <item row="1" column="2" colspan="2">
@@ -49,6 +52,9 @@
        <property name="text">
         <string>Font:</string>
        </property>
+       <property name="buddy">
+        <cstring>fontComboBox</cstring>
+       </property>
       </widget>
      </item>
     </layout>
@@ -68,6 +74,11 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>fontComboBox</tabstop>
+  <tabstop>font_pb</tabstop>
+  <tabstop>lang_cb</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

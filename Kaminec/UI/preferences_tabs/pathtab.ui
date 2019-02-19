@@ -473,6 +473,36 @@ p, li { white-space: pre-wrap; }
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>defaultPath_checkBox</tabstop>
+  <tabstop>more_pb</tabstop>
+  <tabstop>javaPath_le_2</tabstop>
+  <tabstop>autoJava_pb_2</tabstop>
+  <tabstop>javaPath_showPb_2</tabstop>
+  <tabstop>corePath_le</tabstop>
+  <tabstop>corePath_showPb</tabstop>
+  <tabstop>defaultGamePath_le</tabstop>
+  <tabstop>defaultGamePath_showPb</tabstop>
+  <tabstop>versionsPath_le</tabstop>
+  <tabstop>versionsPath_showPb</tabstop>
+  <tabstop>libsPath_le</tabstop>
+  <tabstop>libsPath_showPb</tabstop>
+  <tabstop>nativesPath_le</tabstop>
+  <tabstop>nativesPath_showPb</tabstop>
+  <tabstop>assetsPath_le</tabstop>
+  <tabstop>assetsPath_showPb</tabstop>
+  <tabstop>indexesPath_le</tabstop>
+  <tabstop>indexesPath_showPb</tabstop>
+  <tabstop>objectsPath_le</tabstop>
+  <tabstop>objectsPath_showPb</tabstop>
+  <tabstop>unusedModsPath_le</tabstop>
+  <tabstop>unusedModsPath_showPb</tabstop>
+  <tabstop>savesBackupPath_le</tabstop>
+  <tabstop>savesBackupPath_showPb</tabstop>
+  <tabstop>loggerPath_le</tabstop>
+  <tabstop>loggerPath_showPb</tabstop>
+  <tabstop>customPathHelper_tb</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

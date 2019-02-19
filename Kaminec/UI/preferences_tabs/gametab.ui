@@ -153,6 +153,15 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>fullScreen_checkBox</tabstop>
+  <tabstop>customizeResolution_gb</tabstop>
+  <tabstop>width_sb</tabstop>
+  <tabstop>height_sb</tabstop>
+  <tabstop>serverMode_gb</tabstop>
+  <tabstop>ip_le</tabstop>
+  <tabstop>port_le</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
