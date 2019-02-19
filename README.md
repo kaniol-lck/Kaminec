@@ -2,8 +2,9 @@
 
 version:**beta v0.8.5**
 
+[中文README 点击就送](README_zh_CN.md)
+
 > *This is a launcher of Minecraft called Kaminec.*
->
 
 You can find this project on GitHub:[kaniol-lck/Kaminec](www.github.com/kaniol-lck/kaminec).
 
@@ -11,16 +12,16 @@ You can find this project on GitHub:[kaniol-lck/Kaminec](www.github.com/kaniol-l
 
 ## Functionality Table
 
-- Basic launch arguments  generate
-- Custom Path choose
-- Json Manager
-- Profile Manager(background)
-- Download manager(MultiTask)
-- Saves Manager(auto backup)
-- Mods Manager
+- Basic Launch Arguments Generation
+- Customized Path choice
+- Json Management
 - Account manage
+- Profile Management
+- Multi-Task Download
+- Saves Management(Auto Backup)
+- Mods Management
 - Logger
-- Game file check
+- Game Files Check
 
 
 ## Current Looks
