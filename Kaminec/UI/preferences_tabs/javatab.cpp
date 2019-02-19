@@ -32,7 +32,7 @@ JavaTab::~JavaTab()
 void JavaTab::on_javaPath_showPb_clicked()
 {
 	auto javaPath = QFileDialog::getOpenFileName(this,
-												 "Choose javaw,exe...",
+												 tr("Choose javaw,exe..."),
 												 "C:/","javaw(javaw.exe)");
 	if(javaPath!="")
 		ui_->javaPath_le->setText(javaPath);

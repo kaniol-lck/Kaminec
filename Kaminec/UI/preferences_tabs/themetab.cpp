@@ -21,7 +21,7 @@ ThemeTab::~ThemeTab()
 void ThemeTab::on_font_pb_clicked()
 {
 	bool ok;
-	auto font = QFontDialog::getFont(&ok, qApp->font(), this, "Choose font for Launcher...");
+	auto font = QFontDialog::getFont(&ok, qApp->font(), this, tr("Choose font for Launcher..."));
 	qApp->setFont(font);
 	ui_->font_le->setText(font.family());
 	Custom().setFont(font.toString());

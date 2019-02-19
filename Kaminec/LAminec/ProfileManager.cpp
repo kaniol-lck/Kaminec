@@ -17,11 +17,11 @@ ProfileManager::ProfileManager(QObject *parent) :
 	profilesFile_(PathReplacer::replace("<core>/launcher_profiles.json"))
 {
 	model_.setColumnCount(5);
-	model_.setHeaderData(Column::Name, Qt::Horizontal, "Name");
-	model_.setHeaderData(Column::LastVersionId, Qt::Horizontal, "Version");
-	model_.setHeaderData(Column::GameDir, Qt::Horizontal, "Game Directroy");
-	model_.setHeaderData(Column::Created, Qt::Horizontal, "Created");
-	model_.setHeaderData(Column::LastUsed, Qt::Horizontal, "LastUsed");
+	model_.setHeaderData(Column::Name, Qt::Horizontal, tr("Name"));
+	model_.setHeaderData(Column::LastVersionId, Qt::Horizontal, tr("Version"));
+	model_.setHeaderData(Column::GameDir, Qt::Horizontal, tr("Game Directroy"));
+	model_.setHeaderData(Column::Created, Qt::Horizontal, tr("Created"));
+	model_.setHeaderData(Column::LastUsed, Qt::Horizontal, tr("LastUsed"));
 
 	if(!profilesFile_.open(QIODevice::ReadWrite | QIODevice::Text))
 		throw FileOpenException(profilesFile_.fileName());

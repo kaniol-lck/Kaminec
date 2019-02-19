@@ -23,15 +23,21 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 	ui_->setupUi(this);
 	setFixedSize(960,540);
 
-	QGraphicsDropShadowEffect *shadowEffect = new QGraphicsDropShadowEffect();
+	auto *shadowEffect = new QGraphicsDropShadowEffect();
 	shadowEffect->setBlurRadius(4);
 	shadowEffect->setColor(QColor(0, 0, 0, 160));
 	shadowEffect->setOffset(2);
 	ui_->moduleSwitch->setGraphicsEffect(shadowEffect);
 
-	ui_->moduleSwitch->addTab(startGameTab_, "&Start Game");
-	ui_->moduleSwitch->addTab(accounttab_, "&Account");
-	ui_->moduleSwitch->addTab(profiletab_, "&Profile");
+	auto *shadowEffect2 = new QGraphicsDropShadowEffect();
+	shadowEffect2->setBlurRadius(4);
+	shadowEffect2->setColor(QColor(0, 0, 0, 160));
+	shadowEffect2->setOffset(2);
+	ui_->mainToolBar->setGraphicsEffect(shadowEffect2);
+
+	ui_->moduleSwitch->addTab(startGameTab_, tr("&Start Game"));
+	ui_->moduleSwitch->addTab(accounttab_, tr("&Account"));
+	ui_->moduleSwitch->addTab(profiletab_, tr("&Profile"));
 }
 
 KaminecLauncher::~KaminecLauncher()

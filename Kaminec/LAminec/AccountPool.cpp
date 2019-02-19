@@ -15,11 +15,11 @@ AccountPool::AccountPool(QObject *parent) :
 	authKit_(authResponse_)
 {
 	model_.setColumnCount(6);
-	model_.setHeaderData(Column::Playername, Qt::Horizontal, "playername");
-	model_.setHeaderData(Column::Mode, Qt::Horizontal, "mode");
-	model_.setHeaderData(Column::Email, Qt::Horizontal, "email");
-	model_.setHeaderData(Column::Created, Qt::Horizontal, "created");
-	model_.setHeaderData(Column::LastUsed, Qt::Horizontal, "lastUsed");
+	model_.setHeaderData(Column::Playername, Qt::Horizontal, tr("Playername"));
+	model_.setHeaderData(Column::Mode, Qt::Horizontal, tr("Mode"));
+	model_.setHeaderData(Column::Email, Qt::Horizontal, tr("Email"));
+	model_.setHeaderData(Column::Created, Qt::Horizontal, tr("Created"));
+	model_.setHeaderData(Column::LastUsed, Qt::Horizontal, tr("lastUsed"));
 
 	if(!accountsFile_.open(QIODevice::ReadWrite | QIODevice::Text))
 		throw FileOpenException(accountsFile_.fileName());

@@ -26,19 +26,19 @@ void StartGameTab::on_start_pb_clicked()
 {
 	auto selectedAccountUuid = accountPool_->getSelectedAccountUuid();
 	if(!accountPool_->containAccount(selectedAccountUuid)){
-		QMessageBox::warning(this, "Launch Error", "Please create your account first.");
+		QMessageBox::warning(this, tr("Launch Error"), tr("Please create your account first."));
 		return;
 	}
 	auto selectedProfileName = profileManager_->getSelectedProfileName();
 	if(!profileManager_->containProfile(selectedProfileName)){
-		QMessageBox::warning(this, "Launch Error", "Please create your profile first.");
+		QMessageBox::warning(this, tr("Launch Error"), tr("Please create your profile first."));
 		return;
 	}
 	auto account = accountPool_->check(selectedAccountUuid);
 	auto profile = profileManager_->getProfile(selectedProfileName);
 
 	launcher_->start(profile, account);
-	ui_->start_pb->setText("Gaming...");
+	ui_->start_pb->setText(tr("Gaming..."));
 	ui_->start_pb->setEnabled(false);
 }
 
@@ -46,24 +46,24 @@ void StartGameTab::stateChanged(QProcess::ProcessState newState)
 {
 	qDebug()<<newState;
 	if(newState == QProcess::Starting){
-		ui_->start_pb->setText("Launching Java...");
+		ui_->start_pb->setText(tr("Launching Java..."));
 		ui_->start_pb->setEnabled(false);
 	} else if(newState == QProcess::Running){
-		ui_->start_pb->setText("Gaming...");
+		ui_->start_pb->setText(tr("Gaming..."));
 		ui_->start_pb->setEnabled(false);
 	} else /*if(newState == QProcess::NotRunning)*/{
-		ui_->start_pb->setText("&Launch");
+		ui_->start_pb->setText(tr("&Launch"));
 		ui_->start_pb->setEnabled(true);
 	}
 }
 
 void StartGameTab::gameFinished(int /*i*/)
 {
-	ui_->start_pb->setText("&Launch");
+	ui_->start_pb->setText(tr("&Launch"));
 	ui_->start_pb->setEnabled(true);
 }
 
 void StartGameTab::exceptionMessage(QString message)
 {
-	QMessageBox::warning(this, "error", message);
+	QMessageBox::warning(this, tr("error"), message);
 }

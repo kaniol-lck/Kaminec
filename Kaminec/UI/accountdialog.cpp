@@ -12,8 +12,8 @@ AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool) :
 	accountPool_(accountPool)
 {
 	ui_->setupUi(this);
-	ui_->hint_label->setText("Create Account");
-	setWindowTitle("Create Account");
+	ui_->hint_label->setText(tr("Create Account"));
+	setWindowTitle(tr("Create Account"));
 	setFixedSize(360,200);
 	ui_->password_le->setEchoMode(QLineEdit::Password);
 	on_online_rb_clicked();
@@ -23,8 +23,8 @@ AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool, const QS
 	AccountDialog(parent, accountPool)
 {
 	oldAccount_ = std::make_shared<Account>(accountPool_->getAccount(accountUuid));
-	ui_->hint_label->setText("Edit Account");
-	setWindowTitle("Edit Account");
+	ui_->hint_label->setText(tr("Edit Account"));
+	setWindowTitle(tr("Edit Account"));
 	ui_->email_le->setText(oldAccount_->email());
 	ui_->playername_le->setText(oldAccount_->playername());
 	if(oldAccount_->mode() == Mode::Online){
@@ -38,7 +38,7 @@ AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool, const QS
 		ui_->password_label->setVisible(false);
 		ui_->password_le->setVisible(false);
 		ui_->showPassword_pb->setVisible(false);
-		ui_->log_in_out_pb->setText("&Log out");
+		ui_->log_in_out_pb->setText(tr("&Log out"));
 	} else{
 		ui_->offline_rb->setChecked(true);
 		on_offline_rb_clicked();
@@ -59,7 +59,7 @@ void AccountDialog::on_buttonBox_accepted()
 	QString accessToken;
 
 	if(playerName.isEmpty()){
-		QMessageBox::warning(this, "Warning", "The playername cannot be empty.");
+		QMessageBox::warning(this, tr("Warning"), tr("The playername cannot be empty."));
 		return;
 	}
 
@@ -76,7 +76,7 @@ void AccountDialog::on_buttonBox_accepted()
 		accountPool_->editAccount(oldAccount_->uuid(), account);
 	} else{
 		if(accountPool_->containAccount(account.uuid())){
-			QMessageBox::warning(this, "Warning", "The account already exists.");
+			QMessageBox::warning(this, tr("Warning"), tr("The account already exists."));
 			return;
 		}
 		accountPool_->insertAccount(account);
@@ -89,10 +89,10 @@ void AccountDialog::on_showPassword_pb_toggled(bool checked)
 {
 	if(checked){
 		ui_->password_le->setEchoMode(QLineEdit::Normal);
-		ui_->showPassword_pb->setText("&Hide Password");
+		ui_->showPassword_pb->setText(tr("&Hide Password"));
 	}else{
 		ui_->password_le->setEchoMode(QLineEdit::Password);
-		ui_->showPassword_pb->setText("&Show Password");
+		ui_->showPassword_pb->setText(tr("&Show Password"));
 	}
 }
 
@@ -114,7 +114,7 @@ void AccountDialog::on_log_in_out_pb_clicked()
 			ui_->password_label->setVisible(true);
 			ui_->password_le->setVisible(true);
 			ui_->showPassword_pb->setVisible(true);
-			ui_->log_in_out_pb->setText("&Log in");
+			ui_->log_in_out_pb->setText(tr("&Log in"));
 			ui_->playername_le->setText("");
 			isValidated = false;
 		} else{
@@ -146,7 +146,7 @@ void AccountDialog::on_log_in_out_pb_clicked()
 			ui_->password_label->setVisible(false);
 			ui_->password_le->setVisible(false);
 			ui_->showPassword_pb->setVisible(false);
-			ui_->log_in_out_pb->setText("&Log out");
+			ui_->log_in_out_pb->setText(tr("&Log out"));
 			isValidated = true;
 		} else{
 			//		QMessageBox::warning(this, "Error", "");

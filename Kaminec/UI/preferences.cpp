@@ -21,11 +21,11 @@ Preferences::Preferences(QWidget *parent, AccountPool *accountPool, ProfileManag
 	themeTab_(new ThemeTab(this))
 {
 	ui_->setupUi(this);
-	ui_->preferencesSwitch->addTab(javaTab_, "&Java");
-	ui_->preferencesSwitch->addTab(gameTab_, "&Game");
-	ui_->preferencesSwitch->addTab(pathTab_, "&Path");
-	ui_->preferencesSwitch->addTab(lAminecTab_, "&LAminec");
-	ui_->preferencesSwitch->addTab(themeTab_, "&Theme");
+	ui_->preferencesSwitch->addTab(javaTab_, tr("&Java"));
+	ui_->preferencesSwitch->addTab(gameTab_, tr("&Game"));
+	ui_->preferencesSwitch->addTab(pathTab_, tr("&Path"));
+	ui_->preferencesSwitch->addTab(lAminecTab_, tr("&LAminec"));
+	ui_->preferencesSwitch->addTab(themeTab_, tr("&Theme"));
 }
 
 Preferences::~Preferences()
