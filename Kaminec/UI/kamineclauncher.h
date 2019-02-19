@@ -24,6 +24,8 @@ public:
 
 	void resizeEvent(QResizeEvent *);
 
+	void changeEvent(QEvent *event);
+
 private slots:
 	void on_action_preferences_triggered();
 
@@ -31,6 +33,7 @@ private slots:
 
 private:
 	void setBackGround();
+	void retranslateUi();
 
 private:
 	Ui::KaminecLauncher *ui_;

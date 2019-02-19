@@ -1,16 +1,42 @@
 #include "themetab.h"
 #include "ui_themetab.h"
 
-#include <QFontDialog>
+#include "assistance/languages.hpp"
 
-#include "assistance/Custom.h"
+#include <QFontDialog>
+#include <QTranslator>
 
 ThemeTab::ThemeTab(QWidget *parent) :
 	QWidget(parent),
 	ui_(new Ui::ThemeTab)
 {
 	ui_->setupUi(this);
-	ui_->font_le->setText(qApp->font().family());
+	ui_->fontComboBox->setCurrentFont(qApp->font());
+
+	auto index = languages.indexOf(custom_.getLanguage());
+	for(auto l : languages_display)
+		ui_->lang_cb->addItem(l);
+	ui_->lang_cb->setCurrentIndex(index);
+}
+
+void ThemeTab::accepted()
+{
+	auto lang = languages.at(ui_->lang_cb->currentIndex());
+	if(lang != custom_.getLanguage()){
+		custom_.setLanguage(lang);
+		auto translator = new QTranslator();
+		if(lang == "en_US"){
+			qApp->removeTranslator(translator);
+			return;
+		}
+		if(!translator->load(QCoreApplication::applicationDirPath()+"/languages/"+lang+".qm"))
+			return;
+		qApp->installTranslator(translator);
+	}
+
+	auto font = ui_->fontComboBox->currentFont();
+	qApp->setFont(font);
+	custom_.setFont(font.toString());
 }
 
 ThemeTab::~ThemeTab()
@@ -22,7 +48,6 @@ void ThemeTab::on_font_pb_clicked()
 {
 	bool ok;
 	auto font = QFontDialog::getFont(&ok, qApp->font(), this, tr("Choose font for Launcher..."));
-	qApp->setFont(font);
-	ui_->font_le->setText(font.family());
-	Custom().setFont(font.toString());
+	if(ok)
+		ui_->fontComboBox->setCurrentFont(font);
 }

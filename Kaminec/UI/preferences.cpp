@@ -21,11 +21,11 @@ Preferences::Preferences(QWidget *parent, AccountPool *accountPool, ProfileManag
 	themeTab_(new ThemeTab(this))
 {
 	ui_->setupUi(this);
-	ui_->preferencesSwitch->addTab(javaTab_, tr("&Java"));
-	ui_->preferencesSwitch->addTab(gameTab_, tr("&Game"));
-	ui_->preferencesSwitch->addTab(pathTab_, tr("&Path"));
-	ui_->preferencesSwitch->addTab(lAminecTab_, tr("&LAminec"));
-	ui_->preferencesSwitch->addTab(themeTab_, tr("&Theme"));
+	ui_->preferencesSwitch->addTab(javaTab_, tr("Java"));
+	ui_->preferencesSwitch->addTab(gameTab_, tr("Game"));
+	ui_->preferencesSwitch->addTab(pathTab_, tr("Path"));
+	ui_->preferencesSwitch->addTab(lAminecTab_, tr("LAminec"));
+	ui_->preferencesSwitch->addTab(themeTab_, tr("Theme"));
 }
 
 Preferences::~Preferences()
@@ -39,6 +39,7 @@ void Preferences::on_buttonBox_accepted()
 	gameTab_->accepted();
 	pathTab_->accepted();
 	lAminecTab_->accepted();
+	themeTab_->accepted();
 
 	emit settingfinished();
 }

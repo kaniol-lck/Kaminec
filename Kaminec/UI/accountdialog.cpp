@@ -38,7 +38,7 @@ AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool, const QS
 		ui_->password_label->setVisible(false);
 		ui_->password_le->setVisible(false);
 		ui_->showPassword_pb->setVisible(false);
-		ui_->log_in_out_pb->setText(tr("&Log out"));
+		ui_->log_in_out_pb->setText(tr("Log out"));
 	} else{
 		ui_->offline_rb->setChecked(true);
 		on_offline_rb_clicked();
@@ -89,10 +89,10 @@ void AccountDialog::on_showPassword_pb_toggled(bool checked)
 {
 	if(checked){
 		ui_->password_le->setEchoMode(QLineEdit::Normal);
-		ui_->showPassword_pb->setText(tr("&Hide Password"));
+		ui_->showPassword_pb->setText(tr("Hide Password"));
 	}else{
 		ui_->password_le->setEchoMode(QLineEdit::Password);
-		ui_->showPassword_pb->setText(tr("&Show Password"));
+		ui_->showPassword_pb->setText(tr("Show Password"));
 	}
 }
 
@@ -114,7 +114,7 @@ void AccountDialog::on_log_in_out_pb_clicked()
 			ui_->password_label->setVisible(true);
 			ui_->password_le->setVisible(true);
 			ui_->showPassword_pb->setVisible(true);
-			ui_->log_in_out_pb->setText(tr("&Log in"));
+			ui_->log_in_out_pb->setText(tr("Log in"));
 			ui_->playername_le->setText("");
 			isValidated = false;
 		} else{
@@ -146,7 +146,7 @@ void AccountDialog::on_log_in_out_pb_clicked()
 			ui_->password_label->setVisible(false);
 			ui_->password_le->setVisible(false);
 			ui_->showPassword_pb->setVisible(false);
-			ui_->log_in_out_pb->setText(tr("&Log out"));
+			ui_->log_in_out_pb->setText(tr("Log out"));
 			isValidated = true;
 		} else{
 			//		QMessageBox::warning(this, "Error", "");

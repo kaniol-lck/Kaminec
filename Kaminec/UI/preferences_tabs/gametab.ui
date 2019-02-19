@@ -11,20 +11,20 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string notr="true">Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QCheckBox" name="fullScreen_checkBox">
      <property name="text">
-      <string>Full Screen</string>
+      <string>Launch in Full Screen</string>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QGroupBox" name="customizeResolution_gb">
      <property name="title">
-      <string>Customize resolution</string>
+      <string>Customize Resolution</string>
      </property>
      <property name="checkable">
       <bool>true</bool>
@@ -38,7 +38,7 @@
         <item>
          <widget class="QLabel" name="width_label">
           <property name="text">
-           <string>width:</string>
+           <string>Width:</string>
           </property>
           <property name="buddy">
            <cstring>width_sb</cstring>
@@ -65,7 +65,7 @@
         <item>
          <widget class="QLabel" name="height_label">
           <property name="text">
-           <string>height:</string>
+           <string>Height:</string>
           </property>
           <property name="buddy">
            <cstring>height_sb</cstring>
@@ -112,7 +112,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="ip_label">
         <property name="text">
-         <string>ip:</string>
+         <string>IP:</string>
         </property>
         <property name="buddy">
          <cstring>ip_le</cstring>
@@ -125,7 +125,7 @@
       <item row="0" column="2">
        <widget class="QLabel" name="port_label">
         <property name="text">
-         <string>port:</string>
+         <string>Port:</string>
         </property>
         <property name="buddy">
          <cstring>port_le</cstring>

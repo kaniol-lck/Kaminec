@@ -52,14 +52,14 @@ void StartGameTab::stateChanged(QProcess::ProcessState newState)
 		ui_->start_pb->setText(tr("Gaming..."));
 		ui_->start_pb->setEnabled(false);
 	} else /*if(newState == QProcess::NotRunning)*/{
-		ui_->start_pb->setText(tr("&Launch"));
+		ui_->start_pb->setText(tr("Launch"));
 		ui_->start_pb->setEnabled(true);
 	}
 }
 
 void StartGameTab::gameFinished(int /*i*/)
 {
-	ui_->start_pb->setText(tr("&Launch"));
+	ui_->start_pb->setText(tr("Launch"));
 	ui_->start_pb->setEnabled(true);
 }
 

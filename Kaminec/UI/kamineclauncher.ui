@@ -44,26 +44,26 @@
 }
 
 QTabBar::tab {
-	min-height:100px;
+	min-width:100px;
 	border: 0px solid;
 	padding:3px;
 }
 
 QTabBar::tab:!selected {
 	color: white; 
+	margin-top: 5px;
 	margin-left: 5px;
-	margin-bottom: 5px;
-	background-color: rgb(255,255,255,15);
+	background-color: rgb(255,255,255,0);
 }
 
 QTabBar::tab:selected {
 	color: white; 
-	margin-bottom: 5px;
-	background-color: rgb(255,255,255,63);
+	margin-left: 5px;
+	background-color: rgb(255,255,255,15);
 }</string>
       </property>
       <property name="tabPosition">
-       <enum>QTabWidget::West</enum>
+       <enum>QTabWidget::North</enum>
       </property>
       <property name="tabShape">
        <enum>QTabWidget::Rounded</enum>
@@ -116,6 +116,9 @@ QToolBar::separator {
    <addaction name="menu_Tools"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="styleSheet">
     <string notr="true">QToolBar {
     background-color: rgba(191, 191, 191, 127);
@@ -135,8 +138,14 @@ QToolBar::separator {
 }
 </string>
    </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonIconOnly</enum>
+   </property>
    <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
+    <enum>LeftToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
     <bool>false</bool>
@@ -144,7 +153,11 @@ QToolBar::separator {
    <addaction name="action_Download_Progress"/>
    <addaction name="action_preferences"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QStatusBar" name="statusBar">
+   <property name="styleSheet">
+    <string notr="true">background-color: rgba(63, 63, 63, 127);</string>
+   </property>
+  </widget>
   <action name="action_preferences">
    <property name="text">
     <string>&amp;Preferences</string>

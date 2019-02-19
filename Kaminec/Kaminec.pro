@@ -141,7 +141,8 @@ HEADERS  += UI/kamineclauncher.h \
     UI/preferences_tabs/laminectab.h \
     UI/kamineclauncher_tabs/startgametab.h \
     UI/downloadprogressdialog.h \
-    UI/preferences_tabs/themetab.h
+    UI/preferences_tabs/themetab.h \
+    assistance/languages.hpp
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preferences.ui \
@@ -156,6 +157,9 @@ FORMS    += UI/kamineclauncher.ui \
     UI/kamineclauncher_tabs/startgametab.ui \
     UI/downloadprogressdialog.ui \
     UI/preferences_tabs/themetab.ui
+
+TRANSLATIONS = languages/en_US.ts \
+			   languages/zh_CN.ts
 
 RESOURCES += \
 	resources/background.qrc

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string/>
+   <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -56,7 +56,7 @@
      <item>
       <widget class="QRadioButton" name="online_rb">
        <property name="text">
-        <string>online</string>
+        <string>Online</string>
        </property>
        <property name="checked">
         <bool>true</bool>
@@ -66,7 +66,7 @@
      <item>
       <widget class="QRadioButton" name="offline_rb">
        <property name="text">
-        <string>offline</string>
+        <string>Offline</string>
        </property>
        <property name="checked">
         <bool>false</bool>
@@ -92,7 +92,7 @@
         </size>
        </property>
        <property name="text">
-        <string>E-mail:</string>
+        <string>Email:</string>
        </property>
        <property name="buddy">
         <cstring>email_le</cstring>
@@ -105,7 +105,7 @@
      <item row="2" column="0">
       <widget class="QLabel" name="password_label">
        <property name="text">
-        <string>password:</string>
+        <string>Password:</string>
        </property>
        <property name="buddy">
         <cstring>password_le</cstring>
@@ -120,7 +120,7 @@
        <item>
         <widget class="QPushButton" name="showPassword_pb">
          <property name="text">
-          <string>&amp;Show password</string>
+          <string>Show Password</string>
          </property>
          <property name="checkable">
           <bool>true</bool>
@@ -144,7 +144,7 @@
         </size>
        </property>
        <property name="text">
-        <string>playername:</string>
+        <string>Playername:</string>
        </property>
        <property name="buddy">
         <cstring>playername_le</cstring>
@@ -186,7 +186,7 @@
         </size>
        </property>
        <property name="text">
-        <string>&amp;Log in</string>
+        <string>Log in</string>
        </property>
       </widget>
      </item>

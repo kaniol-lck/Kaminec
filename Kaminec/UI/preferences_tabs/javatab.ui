@@ -11,13 +11,13 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string notr="true">Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QGroupBox" name="groupBox_5">
      <property name="title">
-      <string>JVM settings:</string>
+      <string>JVM settings</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
@@ -25,7 +25,7 @@
         <item>
          <widget class="QLabel" name="javaPath_label">
           <property name="text">
-           <string>Java path:</string>
+           <string>Java Path:</string>
           </property>
           <property name="buddy">
            <cstring>javaPath_le</cstring>
@@ -38,7 +38,7 @@
         <item>
          <widget class="QPushButton" name="autoJava_pb">
           <property name="text">
-           <string>&amp;Auto</string>
+           <string>Auto</string>
           </property>
          </widget>
         </item>
@@ -54,7 +54,7 @@
       <item>
        <widget class="QGroupBox" name="groupBox_7">
         <property name="title">
-         <string>Arguments Policy:</string>
+         <string>Arguments Policy</string>
         </property>
         <property name="checkable">
          <bool>false</bool>
@@ -111,7 +111,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>custom Java argument:</string>
+           <string>Custom Java Arguments:</string>
           </property>
           <property name="buddy">
            <cstring>customJavaArg_te</cstring>
@@ -133,7 +133,7 @@
       <item>
        <widget class="QGroupBox" name="groupBox">
         <property name="title">
-         <string>memory settings:</string>
+         <string>Memory Settings</string>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_6">
          <item>
@@ -141,7 +141,7 @@
            <item>
             <widget class="QLabel" name="minMem_label">
              <property name="text">
-              <string>minimum memory allocate:</string>
+              <string>Minimum Memory Allocate:</string>
              </property>
              <property name="buddy">
               <cstring>minMem_sb</cstring>
@@ -168,7 +168,7 @@
            <item>
             <widget class="QLabel" name="maxMem_label">
              <property name="text">
-              <string>maximum memory allocate:</string>
+              <string>Maximum Memory Allocate:</string>
              </property>
              <property name="buddy">
               <cstring>maxMem_sb</cstring>

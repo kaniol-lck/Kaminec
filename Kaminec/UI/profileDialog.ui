@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string notr="true">Dialog</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -70,7 +70,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Exsit &amp;version:</string>
+        <string>Exsited Version:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -92,7 +92,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>&amp;Name;</string>
+        <string>Name:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -117,7 +117,7 @@
         </size>
        </property>
        <property name="text">
-        <string>&amp;Game directory:</string>
+        <string>Game Directory:</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -151,7 +151,7 @@
        <item>
         <widget class="QPushButton" name="check_pb">
          <property name="text">
-          <string>&amp;Check</string>
+          <string>Check</string>
          </property>
         </widget>
        </item>

@@ -35,9 +35,9 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 	shadowEffect2->setOffset(2);
 	ui_->mainToolBar->setGraphicsEffect(shadowEffect2);
 
-	ui_->moduleSwitch->addTab(startGameTab_, tr("&Start Game"));
-	ui_->moduleSwitch->addTab(accounttab_, tr("&Account"));
-	ui_->moduleSwitch->addTab(profiletab_, tr("&Profile"));
+	ui_->moduleSwitch->addTab(startGameTab_, tr("Start Game"));
+	ui_->moduleSwitch->addTab(accounttab_, tr("Account"));
+	ui_->moduleSwitch->addTab(profiletab_, tr("Profile"));
 }
 
 KaminecLauncher::~KaminecLauncher()
@@ -50,7 +50,7 @@ void KaminecLauncher::on_action_preferences_triggered()
 {
 	//create preferences windows
 	auto preferences = new Preferences(this, accountPool_, profileManager_);
-	preferences->show();
+	preferences->exec();
 }
 
 void KaminecLauncher::setBackGround()
@@ -62,6 +62,13 @@ void KaminecLauncher::setBackGround()
 	this->setPalette(palette);
 }
 
+void KaminecLauncher::retranslateUi()
+{
+	ui_->moduleSwitch->setTabText(0, tr("Start Game"));
+	ui_->moduleSwitch->setTabText(1, tr("Account"));
+	ui_->moduleSwitch->setTabText(2, tr("Profile"));
+}
+
 void KaminecLauncher::on_action_Download_Progress_triggered()
 {
 	downloadProgressDialog_->show();
@@ -71,4 +78,13 @@ void KaminecLauncher::resizeEvent(QResizeEvent *)
 {
 	//reset background when resize this window
 	setBackGround();
+}
+
+void KaminecLauncher::changeEvent(QEvent *event)
+{
+	if (event->type() == QEvent::LanguageChange){
+		ui_->retranslateUi(this);
+		retranslateUi();
+	}else
+		QMainWindow::changeEvent(event);
 }
