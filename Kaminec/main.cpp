@@ -2,7 +2,6 @@
 
 #include <QApplication>
 #include <QTranslator>
-#include <QDebug>
 
 #include "assistance/Custom.h"
 
@@ -16,9 +15,9 @@ int main(int argc, char *argv[])
 	if(font.fromString(Custom().getFont()))
 		qApp->setFont(font);
 
-	auto lang = Custom().getLanguage();
+	QString lang = Custom().getLanguage();
 	QTranslator translator;
-	if(lang != "en_US" && translator.load(QCoreApplication::applicationDirPath()+"/languages/"+lang+".qm"))
+	if(translator.load(QCoreApplication::applicationDirPath()+"/languages/"+lang+".qm"))
 		qApp->installTranslator(&translator);
 
 	KaminecLauncher w;

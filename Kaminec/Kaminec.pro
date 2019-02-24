@@ -77,10 +77,10 @@ SOURCES += main.cpp\
     UI/kamineclauncher_tabs/profiletab.cpp \
     UI/preferences_tabs/gametab.cpp \
     UI/preferences_tabs/pathtab.cpp \
-    UI/preferences_tabs/laminectab.cpp \
     UI/kamineclauncher_tabs/startgametab.cpp \
     UI/downloadprogressdialog.cpp \
-    UI/preferences_tabs/themetab.cpp
+    UI/preferences_tabs/themetab.cpp \
+    UI/preferences_tabs/launchertab.cpp
 
 HEADERS  += UI/kamineclauncher.h \
 	UI/preferences.h \
@@ -138,11 +138,11 @@ HEADERS  += UI/kamineclauncher.h \
     UI/kamineclauncher_tabs/profiletab.h \
     UI/preferences_tabs/gametab.h \
     UI/preferences_tabs/pathtab.h \
-    UI/preferences_tabs/laminectab.h \
     UI/kamineclauncher_tabs/startgametab.h \
     UI/downloadprogressdialog.h \
     UI/preferences_tabs/themetab.h \
-    assistance/languages.hpp
+    assistance/languages.hpp \
+    UI/preferences_tabs/launchertab.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preferences.ui \
@@ -153,10 +153,10 @@ FORMS    += UI/kamineclauncher.ui \
     UI/kamineclauncher_tabs/profiletab.ui \
     UI/preferences_tabs/gametab.ui \
     UI/preferences_tabs/pathtab.ui \
-    UI/preferences_tabs/laminectab.ui \
     UI/kamineclauncher_tabs/startgametab.ui \
     UI/downloadprogressdialog.ui \
-    UI/preferences_tabs/themetab.ui
+    UI/preferences_tabs/themetab.ui \
+    UI/preferences_tabs/launchertab.ui
 
 TRANSLATIONS = ../Kaminec_translate/languages/en_US.ts \
 			   ../Kaminec_translate/languages/zh_CN.ts

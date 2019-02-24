@@ -42,6 +42,18 @@ QStringList Custom::getCustomJVMArguments() const
 	return settings_.value("customJVMArguments").toString().split("\\n");
 }
 
+void Custom::setLanguage(QString &language)
+{
+	settings_.setValue("language", language);
+}
+
+QString Custom::getLanguage() const
+{
+	auto index = languages_code.indexOf(QLocale().country());
+	if(index == -1) index = 0;
+	return settings_.value("language", languages.at(index)).toString();
+}
+
 void Custom::setGameWindowSize(int width, int height)
 {
 	settings_.setValue("GameWindowWidth", width);

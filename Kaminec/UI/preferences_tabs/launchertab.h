@@ -6,25 +6,25 @@
 #include <QWidget>
 
 namespace Ui {
-	class LAminecTab;
+	class LauncherTab;
 }
 
-class LAminecTab : public QWidget
+class LauncherTab : public QWidget
 {
 	Q_OBJECT
 
 public:
-	explicit LAminecTab(QWidget *parent = 0);
+	explicit LauncherTab(QWidget *parent = 0);
 
 	void accepted();
 
-	~LAminecTab();
+	~LauncherTab();
 
 private slots:
 	void on_logNumber_spinBox_valueChanged(int arg1);
 
 private:
-	Ui::LAminecTab *ui_;
+	Ui::LauncherTab *ui_;
 	Custom custom_;
 };
 

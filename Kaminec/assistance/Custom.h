@@ -5,6 +5,8 @@
 #include <QCoreApplication>
 #include <QStandardPaths>
 
+#include "assistance/languages.hpp"
+
 #define getterAndSetter(name, type, key, defaultValue) \
 	void set##name(const decltype(QVariant().to##type()) &key){\
 		settings_.setValue(#key, key);\
@@ -31,7 +33,6 @@ public:
 	//launcher settings
 	getterAndSetter(LogFileNumber, Int, logFileNumber, 10)
 	getterAndSetter(Font, String, font, "")
-	getterAndSetter(Language, String, language, "")
 
 	//directory settings
 	getterAndSetter_prefix(CoreGameFileDirectory, String, coreDirectory, "path/", QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/.minecraft")
@@ -63,6 +64,9 @@ public:
 
 	void setCustomJVMArguments(QStringList arguments);
 	QStringList getCustomJVMArguments() const;
+
+	void setLanguage(QString &language);
+	QString getLanguage() const;
 
 	//game settings
 

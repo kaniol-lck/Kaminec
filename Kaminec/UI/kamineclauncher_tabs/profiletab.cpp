@@ -37,6 +37,14 @@ ProfileTab::~ProfileTab()
 	delete ui_;
 }
 
+void ProfileTab::changeEvent(QEvent *event)
+{
+	if (event->type() == QEvent::LanguageChange){
+		ui_->retranslateUi(this);
+	}else
+		QWidget::changeEvent(event);
+}
+
 void ProfileTab::on_addProfile_pb_clicked()
 {
 	auto profileDialog = new ProfileDialog(this, profileManager_);

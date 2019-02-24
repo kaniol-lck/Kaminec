@@ -37,6 +37,14 @@ AccountTab::~AccountTab()
 	delete ui_;
 }
 
+void AccountTab::changeEvent(QEvent *event)
+{
+	if (event->type() == QEvent::LanguageChange){
+		ui_->retranslateUi(this);
+	}else
+		QWidget::changeEvent(event);
+}
+
 void AccountTab::on_addAccount_pb_clicked()
 {
 	auto accountDialog = new AccountDialog(this, accountPool_);

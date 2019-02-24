@@ -17,6 +17,8 @@ public:
 	explicit AccountTab(QWidget *parent, AccountPool *accountPool);
 	~AccountTab();
 
+	void changeEvent(QEvent *event);
+
 private slots:
 	void on_addAccount_pb_clicked();
 

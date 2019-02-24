@@ -22,6 +22,14 @@ StartGameTab::~StartGameTab()
 	delete ui_;
 }
 
+void StartGameTab::changeEvent(QEvent *event)
+{
+	if (event->type() == QEvent::LanguageChange){
+		ui_->retranslateUi(this);
+	}else
+		QWidget::changeEvent(event);
+}
+
 void StartGameTab::on_start_pb_clicked()
 {
 	auto selectedAccountUuid = accountPool_->getSelectedAccountUuid();

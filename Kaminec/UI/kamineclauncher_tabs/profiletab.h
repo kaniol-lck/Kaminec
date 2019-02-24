@@ -17,6 +17,8 @@ public:
 	explicit ProfileTab(QWidget *parent, ProfileManager *profileManager);
 	~ProfileTab();
 
+	void changeEvent(QEvent *event);
+
 private slots:
 	void on_addProfile_pb_clicked();
 

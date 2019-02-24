@@ -19,6 +19,8 @@ public:
 	explicit StartGameTab(QWidget *parent, Launcher *launcher, AccountPool *accountPool, ProfileManager *profileManager);
 	~StartGameTab();
 
+	void changeEvent(QEvent *event);
+
 private slots:
 	void on_start_pb_clicked();
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LAminecTab</class>
- <widget class="QWidget" name="LAminecTab">
+ <class>LauncherTab</class>
+ <widget class="QWidget" name="LauncherTab">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -53,6 +53,27 @@
       </item>
      </layout>
     </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="lang_label">
+       <property name="text">
+        <string>Language:</string>
+       </property>
+       <property name="buddy">
+        <cstring>lang_cb</cstring>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="lang_cb">
+       <property name="whatsThis">
+        <string notr="true"/>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <spacer name="verticalSpacer_4">
