@@ -1,3 +1,7 @@
 [submodule "3rd/quazip"]
 	path = 3rd/quazip
 	url = git@github.com:kaniol-lck/quazip.git
+
+[submodule "Kaminec_translate"]
+	path = Kaminec_translate
+	url = git@github.com:kaniol-lck/Kaminec_translate.git

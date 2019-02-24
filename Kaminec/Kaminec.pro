@@ -158,8 +158,8 @@ FORMS    += UI/kamineclauncher.ui \
     UI/downloadprogressdialog.ui \
     UI/preferences_tabs/themetab.ui
 
-TRANSLATIONS = languages/en_US.ts \
-			   languages/zh_CN.ts
+TRANSLATIONS = ../Kaminec_translate/languages/en_US.ts \
+			   ../Kaminec_translate/languages/zh_CN.ts
 
 RESOURCES += \
 	resources/background.qrc
