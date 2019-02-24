@@ -32,8 +32,8 @@ void StartGameTab::changeEvent(QEvent *event)
 
 void StartGameTab::on_start_pb_clicked()
 {
-	auto selectedAccountUuid = accountPool_->getSelectedAccountUuid();
-	if(!accountPool_->containAccount(selectedAccountUuid)){
+	auto selectedaccountName = accountPool_->getSelectedAccountName();
+	if(!accountPool_->containAccount(selectedaccountName)){
 		QMessageBox::warning(this, tr("Launch Error"), tr("Please create your account first."));
 		return;
 	}
@@ -42,7 +42,7 @@ void StartGameTab::on_start_pb_clicked()
 		QMessageBox::warning(this, tr("Launch Error"), tr("Please create your profile first."));
 		return;
 	}
-	auto account = accountPool_->check(selectedAccountUuid);
+	auto account = accountPool_->check(selectedaccountName);
 	auto profile = profileManager_->getProfile(selectedProfileName);
 
 	launcher_->start(profile, account);

@@ -19,7 +19,7 @@ class AccountDialog : public QDialog
 
 public:
 	explicit AccountDialog(QWidget *parent, AccountPool *accountPool);
-	explicit AccountDialog(QWidget *parent, AccountPool *accountPool, const QString &accountUuid);
+	explicit AccountDialog(QWidget *parent, AccountPool *accountPool, const QString &accountName);
 	~AccountDialog();
 
 signals:
@@ -32,9 +32,9 @@ private slots:
 
 	void on_log_in_out_pb_clicked();
 
-	void on_online_rb_clicked();
+	void on_certified_rb_clicked();
 
-	void on_offline_rb_clicked();
+	void on_uncertified_rb_clicked();
 
 	void uuidUpdate(QString uuid);
 	void accessTokenUpdate(QString accessToken);

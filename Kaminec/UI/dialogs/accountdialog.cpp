@@ -2,7 +2,6 @@
 #include "ui_accountdialog.h"
 
 #include <QMessageBox>
-#include <QUuid>
 
 AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool) :
 	QDialog(parent),
@@ -14,20 +13,20 @@ AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool) :
 	ui_->setupUi(this);
 	ui_->hint_label->setText(tr("Create Account"));
 	setWindowTitle(tr("Create Account"));
-	setFixedSize(360,200);
+	setFixedSize(360,240);
 	ui_->password_le->setEchoMode(QLineEdit::Password);
-	on_online_rb_clicked();
+	on_certified_rb_clicked();
 }
 
-AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool, const QString &accountUuid) :
+AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool, const QString &accountName) :
 	AccountDialog(parent, accountPool)
 {
-	oldAccount_ = std::make_shared<Account>(accountPool_->getAccount(accountUuid));
+	oldAccount_ = std::make_shared<Account>(accountPool_->getAccount(accountName));
 	ui_->hint_label->setText(tr("Edit Account"));
 	setWindowTitle(tr("Edit Account"));
 	ui_->email_le->setText(oldAccount_->email());
 	ui_->playername_le->setText(oldAccount_->playername());
-	if(oldAccount_->mode() == Mode::Online){
+	if(oldAccount_->mode() == Mode::Certified){
 		isValidated = true;
 		uuid_ = oldAccount_->uuid();
 		accessToken_ = oldAccount_->accessToken();
@@ -40,8 +39,8 @@ AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool, const QS
 		ui_->showPassword_pb->setVisible(false);
 		ui_->log_in_out_pb->setText(tr("Log out"));
 	} else{
-		ui_->offline_rb->setChecked(true);
-		on_offline_rb_clicked();
+		ui_->uncertified_rb->setChecked(true);
+		on_uncertified_rb_clicked();
 	}
 }
 
@@ -52,7 +51,7 @@ AccountDialog::~AccountDialog()
 
 void AccountDialog::on_buttonBox_accepted()
 {
-	Mode mode = ui_->online_rb->isChecked()?Mode::Online:Mode::Offline;
+	Mode mode = ui_->certified_rb->isChecked()?Mode::Certified:Mode::Uncertified;
 	QString email = ui_->email_le->text();
 	QString playerName = ui_->playername_le->text();
 	QString uuid;
@@ -63,7 +62,7 @@ void AccountDialog::on_buttonBox_accepted()
 		return;
 	}
 
-	if(mode == Mode::Offline){
+	if(mode == Mode::Uncertified){
 		uuid = "";
 	} else{
 		uuid = uuid_;
@@ -73,9 +72,9 @@ void AccountDialog::on_buttonBox_accepted()
 	Account account(playerName, mode, email, uuid_, accessToken_);
 
 	if(oldAccount_){
-		accountPool_->editAccount(oldAccount_->uuid(), account);
+		accountPool_->editAccount(oldAccount_->name(), account);
 	} else{
-		if(accountPool_->containAccount(account.uuid())){
+		if(accountPool_->containAccount(account.name())){
 			QMessageBox::warning(this, tr("Warning"), tr("The account already exists."));
 			return;
 		}
@@ -154,7 +153,7 @@ void AccountDialog::on_log_in_out_pb_clicked()
 	}
 }
 
-void AccountDialog::on_online_rb_clicked()
+void AccountDialog::on_certified_rb_clicked()
 {
 	ui_->playername_le->setEnabled(false);
 	ui_->email_label->setVisible(true);
@@ -172,7 +171,7 @@ void AccountDialog::on_online_rb_clicked()
 	}
 }
 
-void AccountDialog::on_offline_rb_clicked()
+void AccountDialog::on_uncertified_rb_clicked()
 {
 	ui_->playername_label->setVisible(true);
 	ui_->playername_le->setVisible(true);

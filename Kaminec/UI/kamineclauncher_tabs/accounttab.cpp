@@ -1,7 +1,7 @@
 #include "accounttab.h"
 #include "ui_accounttab.h"
 
-#include "UI/accountdialog.h"
+#include "UI/dialogs/accountdialog.h"
 
 AccountTab::AccountTab(QWidget *parent, AccountPool *accountPool) :
 	QWidget(parent),
@@ -20,7 +20,7 @@ AccountTab::AccountTab(QWidget *parent, AccountPool *accountPool) :
 	ui_->accounts_tableView->setColumnWidth(0, 200);
 	ui_->accounts_tableView->setColumnWidth(1, 100);
 	ui_->accounts_tableView->horizontalHeader()->setSortIndicatorShown(true);
-	ui_->accounts_tableView->hideColumn(AccountPool::Column::Uuid);
+	ui_->accounts_tableView->hideColumn(AccountPool::Column::Name);
 	ui_->accounts_tableView->hideColumn(AccountPool::Column::Created);
 	ui_->accounts_tableView->hideColumn(AccountPool::Column::LastUsed);
 
@@ -41,6 +41,7 @@ void AccountTab::changeEvent(QEvent *event)
 {
 	if (event->type() == QEvent::LanguageChange){
 		ui_->retranslateUi(this);
+		accountPool_->resetLanguage();
 	}else
 		QWidget::changeEvent(event);
 }
@@ -55,13 +56,13 @@ void AccountTab::on_deleteAccount_pb_clicked()
 {
 	auto index = ui_->accounts_tableView->currentIndex();
 	if(index.isValid()){
-		accountPool_->removeAccount(accountPool_->uuidFromIndex(index));
+		accountPool_->removeAccount(accountPool_->nameFromIndex(index));
 	}
 }
 
 void AccountTab::on_setAccountActive_pb_clicked()
 {
-	accountPool_->setSelectedAccountUuid(accountPool_->uuidFromIndex(ui_->accounts_tableView->currentIndex()));
+	accountPool_->setSelectedAccountName(accountPool_->nameFromIndex(ui_->accounts_tableView->currentIndex()));
 }
 
 void AccountTab::accountSortRecord()
@@ -78,11 +79,11 @@ void AccountTab::on_accounts_tableView_pressed(const QModelIndex &/*index*/)
 void AccountTab::on_accounts_tableView_doubleClicked(const QModelIndex &index)
 {
 	if(index.isValid()){
-		auto oldAccountUuid = accountPool_->uuidFromIndex(index);
+		auto oldaccountName = accountPool_->nameFromIndex(index);
 		if(index.column() == 0){
-			accountPool_->setSelectedAccountUuid(oldAccountUuid);
+			accountPool_->setSelectedAccountName(oldaccountName);
 		} else{
-			auto accountDialog = new AccountDialog(this, accountPool_, oldAccountUuid);
+			auto accountDialog = new AccountDialog(this, accountPool_, oldaccountName);
 			accountDialog->exec();
 		}
 	}

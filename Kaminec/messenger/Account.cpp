@@ -15,8 +15,11 @@ Account::Account(const QString &playername,
 	accessToken_(accessToken),
 	created_(created),
 	lastUsed_(lastUsed)
+{}
+
+QString Account::name() const
 {
-	uuid_ = QUuid::createUuid().toString().replace("-", "").replace("{", "").replace("}", "");
+	return mode_==Mode::Certified?uuid_:playername_;
 }
 
 Mode Account::mode() const

@@ -42,31 +42,40 @@ AccountPool::AccountPool(QObject *parent) :
 	for(auto it : accountsVariant.toMap()){
 		auto modeStr = value(it, "mode").toString();
 		::Mode mode;
-		if(modeStr == "online")
-			mode = Mode::Online;
-		else/* if(modeStr == "offline")*/
-			mode = Mode::Offline;
+		if(modeStr == "certified")
+			mode = Mode::Certified;
+		else/* if(modeStr == "uncertified")*/
+			mode = Mode::Uncertified;
 
 		Account account(value(it, "playername").toString(),
 						mode,
 						value(it, "email").toString(),
 						value(it, "uuid").toString(),
 						value(it, "accessToken").toString());
-		accountsMap_.insert(account.uuid(), account);
+		accountsMap_.insert(account.name(), account);
 		model_.appendRow(account2itemList(account));
 	}
 
 	sort(getAccountSorting(), getAccountAscending());
 
-	auto items = model_.findItems(getSelectedAccountUuid(), Qt::MatchExactly, Column::Uuid);
+	auto items = model_.findItems(getSelectedAccountName(), Qt::MatchExactly, Column::Name);
 	if(!items.isEmpty())
 		model_.item(items.first()->row(), Column::Playername)->setCheckState(Qt::Checked);//set check state
 }
 
-Account AccountPool::check(const QString &accountUuid) const
+void AccountPool::resetLanguage()
 {
-	auto account = accountsMap_.value(accountUuid);
-	if(account.mode() == Mode::Online){
+	model_.setHeaderData(Column::Playername, Qt::Horizontal, tr("Playername"));
+	model_.setHeaderData(Column::Mode, Qt::Horizontal, tr("Mode"));
+	model_.setHeaderData(Column::Email, Qt::Horizontal, tr("Email"));
+	model_.setHeaderData(Column::Created, Qt::Horizontal, tr("Created"));
+	model_.setHeaderData(Column::LastUsed, Qt::Horizontal, tr("lastUsed"));
+}
+
+Account AccountPool::check(const QString &accountName) const
+{
+	auto account = accountsMap_.value(accountName);
+	if(account.mode() == Mode::Certified){
 		validate(account);
 	} else{
 
@@ -103,19 +112,19 @@ QStandardItemModel *AccountPool::getAccountsModel()
 	return &model_;
 }
 
-QString AccountPool::uuidFromIndex(const QModelIndex &index) const
+QString AccountPool::nameFromIndex(const QModelIndex &index) const
 {
-	return model_.item(index.row(), Column::Uuid)->data(Qt::DisplayRole).toString();
+	return model_.item(index.row(), Column::Name)->data(Qt::DisplayRole).toString();
 }
 
-Account AccountPool::getAccount(const QString &accountUuid) const
+Account AccountPool::getAccount(const QString &accountName) const
 {
-	return accountsMap_.value(accountUuid);
+	return accountsMap_.value(accountName);
 }
 
-bool AccountPool::containAccount(const QString &accountUuid) const
+bool AccountPool::containAccount(const QString &accountName) const
 {
-	return accountsMap_.contains(accountUuid);
+	return accountsMap_.contains(accountName);
 }
 
 void AccountPool::insertAccount(const Account &account)
@@ -123,82 +132,82 @@ void AccountPool::insertAccount(const Account &account)
 	model_.appendRow(account2itemList(account));
 
 	auto accounts = accountsObject_.value("accounts").toObject();
-	accounts.insert(account.uuid(), account2object(account));
+	accounts.insert(account.name(), account2object(account));
 	accountsObject_.insert("accounts", accounts);
 	writeToFile();
 
 	if(accountsMap_.isEmpty())
-		setSelectedAccountUuid(account.uuid());
-	accountsMap_.insert(account.uuid(), account);
+		setSelectedAccountName(account.name());
+	accountsMap_.insert(account.name(), account);
 	sort(getAccountSorting(), getAccountAscending());
 }
 
-void AccountPool::removeAccount(const QString &accountUuid)
+void AccountPool::removeAccount(const QString &accountName)
 {
 	//if the account to be removed is selected, set the first in remains as the selected
-	if(getSelectedAccountUuid() == accountUuid && accountsMap_.count() > 1){
-		auto items = model_.findItems(accountUuid, Qt::MatchExactly, Column::Uuid);
+	if(getSelectedAccountName() == accountName && accountsMap_.count() > 1){
+		auto items = model_.findItems(accountName, Qt::MatchExactly, Column::Name);
 		if(!items.isEmpty()){
 			auto row = items.first()->row()==1?2:1;
 			model_.item(row, Column::Playername)->setCheckState(Qt::Checked);
-			accountsObject_.insert("selectedAccountUuid", model_.item(row, Column::Uuid)->data(Qt::DisplayRole).toString());
+			accountsObject_.insert("selectedaccountName", model_.item(row, Column::Name)->data(Qt::DisplayRole).toString());
 			writeToFile();
 		}
 	}
 
 	QJsonObject accounts = accountsObject_.value("accounts").toObject();
-	accounts.remove(accountUuid);
+	accounts.remove(accountName);
 	accountsObject_.insert("accounts", accounts);
 	writeToFile();
-	auto row = model_.findItems(accountUuid, Qt::MatchExactly, Column::Uuid).first()->row();
+	auto row = model_.findItems(accountName, Qt::MatchExactly, Column::Name).first()->row();
 	model_.removeRow(row);
-	accountsMap_.remove(accountUuid);
+	accountsMap_.remove(accountName);
 }
 
-void AccountPool::editAccount(const QString &oldAccountUuid, Account newAccount)
+void AccountPool::editAccount(const QString &oldaccountName, Account newAccount)
 {
-	auto oldaccount = accountsMap_.take(oldAccountUuid);
+	auto oldaccount = accountsMap_.take(oldaccountName);
 	newAccount.setLastUsed(oldaccount.created());
-	accountsMap_.insert(newAccount.uuid(), newAccount);
+	accountsMap_.insert(newAccount.name(), newAccount);
 
-	if(accountsObject_.value("selectedaccountName").toString() == oldAccountUuid)
-		accountsObject_.insert("selectedaccountName", newAccount.uuid());
+	if(accountsObject_.value("selectedaccountName").toString() == oldaccountName)
+		accountsObject_.insert("selectedaccountName", newAccount.name());
 	QJsonObject accounts = accountsObject_.value("accounts").toObject();
-	accounts.remove(oldAccountUuid);
-	accounts.insert(newAccount.uuid(), account2object(newAccount));
+	accounts.remove(oldaccountName);
+	accounts.insert(newAccount.name(), account2object(newAccount));
 	accountsObject_.insert("accounts", accounts);
 	writeToFile();
 
-	model_.removeRow(model_.findItems(oldAccountUuid, Qt::MatchExactly, Column::Uuid).first()->row());
+	model_.removeRow(model_.findItems(oldaccountName, Qt::MatchExactly, Column::Name).first()->row());
 	model_.appendRow(account2itemList(newAccount));
 }
 
-void AccountPool::setSelectedAccountUuid(const QString &accountUuid)
+void AccountPool::setSelectedAccountName(const QString &accountName)
 {
-	auto oldAccountUuid = getSelectedAccountUuid();
-	accountsObject_.insert("selectedAccountUuid", QJsonValue(accountUuid));
+	auto oldaccountName = getSelectedAccountName();
+	accountsObject_.insert("selectedaccountName", QJsonValue(accountName));
 
 	writeToFile();
 
-	auto items = model_.findItems(oldAccountUuid, Qt::MatchExactly, Column::Uuid);
+	auto items = model_.findItems(oldaccountName, Qt::MatchExactly, Column::Name);
 	if(!items.isEmpty())
 		model_.item(items.first()->row(), Column::Playername)->setCheckState(Qt::Unchecked);//remove check state
 
-	items = model_.findItems(accountUuid, Qt::MatchExactly, Column::Uuid);
+	items = model_.findItems(accountName, Qt::MatchExactly, Column::Name);
 	if(!items.isEmpty())
 		model_.item(items.first()->row(), Column::Playername)->setCheckState(Qt::Checked);//set check state
 }
 
-QString AccountPool::getSelectedAccountUuid()
+QString AccountPool::getSelectedAccountName()
 {
-	if(!accountsObject_.contains("selectedAccountUuid")) return "";
-	auto selectedAccountUuid = accountsObject_.value("selectedAccountUuid").toString();
-	if(!accountsMap_.contains(selectedAccountUuid) && model_.rowCount() != 0){
-		selectedAccountUuid = uuidFromIndex(model_.index(0,0));
-		accountsObject_.insert("selectedAccountUuid", QJsonValue(selectedAccountUuid));
+	if(!accountsObject_.contains("selectedAccountName")) return "";
+	auto selectedAccountName = accountsObject_.value("selectedaccountName").toString();
+	if(!accountsMap_.contains(selectedAccountName) && model_.rowCount() != 0){
+		selectedAccountName = nameFromIndex(model_.index(0,0));
+		accountsObject_.insert("selectedAccountName", QJsonValue(selectedAccountName));
 		writeToFile();//set the first account as selected
 	}
-	return selectedAccountUuid;
+	return selectedAccountName;
 }
 
 void AccountPool::setClientToken(const QString &clientToken)
@@ -243,23 +252,23 @@ bool AccountPool::getAccountAscending() const
 QList<QStandardItem *> AccountPool::account2itemList(const Account &account)
 {
 	auto playernameItem = new QStandardItem(account.playername());
-	auto modeItem = new QStandardItem(account.mode() == Mode::Online?"online":"offline");
+	auto modeItem = new QStandardItem(account.mode() == Mode::Certified?"certified":"uncertified");
 	auto emailItem = new QStandardItem(account.email());
 	auto createdItem = new QStandardItem(account.created().toString(Qt::ISODateWithMs));
 	auto lastUsedItem = new QStandardItem(account.lastUsed().toString(Qt::ISODateWithMs));
-	auto uuidItem = new QStandardItem(account.uuid());
+	auto nameItem = new QStandardItem(account.name());
 	modeItem->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 	playernameItem->setCheckable(false);
 	playernameItem->setCheckState(Qt::Unchecked);
 
-	return QList<QStandardItem*>{ playernameItem, modeItem, emailItem, createdItem, lastUsedItem, uuidItem };
+	return QList<QStandardItem*>{ playernameItem, modeItem, emailItem, createdItem, lastUsedItem, nameItem };
 }
 
 QJsonObject AccountPool::account2object(const Account &account)
 {
-	if(account.mode() == Mode::Online)
+	if(account.mode() == Mode::Certified)
 		return QJsonObject{
-			{"mode", "online"},
+			{"mode", "certified"},
 			{"email", account.email()},
 			{"uuid", account.uuid()},
 			{"accessToken", account.accessToken()},
@@ -269,9 +278,7 @@ QJsonObject AccountPool::account2object(const Account &account)
 		};
 	else
 		return QJsonObject{
-			{"mode", "offline"},
-			{"email", account.email()},
-			{"uuid", account.uuid()},
+			{"mode", "uncertified"},
 			{"playername", account.playername()},
 			{"created", account.created().toString(Qt::ISODateWithMs)},
 			{"lastUsed", account.lastUsed().toString(Qt::ISODateWithMs)}

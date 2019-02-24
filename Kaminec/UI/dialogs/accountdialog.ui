@@ -54,9 +54,9 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QRadioButton" name="online_rb">
+      <widget class="QRadioButton" name="certified_rb">
        <property name="text">
-        <string>Online</string>
+        <string>Certified</string>
        </property>
        <property name="checked">
         <bool>true</bool>
@@ -64,9 +64,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QRadioButton" name="offline_rb">
+      <widget class="QRadioButton" name="uncertified_rb">
        <property name="text">
-        <string>Offline</string>
+        <string>Uncertified</string>
        </property>
        <property name="checked">
         <bool>false</bool>
@@ -231,8 +231,8 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>online_rb</tabstop>
-  <tabstop>offline_rb</tabstop>
+  <tabstop>certified_rb</tabstop>
+  <tabstop>uncertified_rb</tabstop>
   <tabstop>email_le</tabstop>
   <tabstop>password_le</tabstop>
   <tabstop>showPassword_pb</tabstop>

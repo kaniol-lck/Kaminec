@@ -16,23 +16,25 @@ class AccountPool : public QObject
 public:
 	explicit AccountPool(QObject *parent = nullptr);
 
-	Account check(const QString& accountUuid) const;
+	void resetLanguage();
+
+	Account check(const QString &accountName) const;
 	bool validate(const Account &account) const;
 
 	QStandardItemModel* getAccountsModel();
 
 	void initAccounts();
 
-	Account getAccount(const QString &accountUuid) const;
+	Account getAccount(const QString &accountName) const;
 	QMap<QString, Account> getAccounts() const;
-	bool containAccount(const QString &accountUuid) const;
+	bool containAccount(const QString &accountName) const;
 
 	void insertAccount(const Account &account);
-	void removeAccount(const QString &accountUuid);
-	void editAccount(const QString &oldAccountUuid, Account newAccount);
+	void removeAccount(const QString &accountName);
+	void editAccount(const QString &oldaccountName, Account newAccount);
 
-	void setSelectedAccountUuid(const QString &accountUuid);
-	QString getSelectedAccountUuid();
+	void setSelectedAccountName(const QString &accountName);
+	QString getSelectedAccountName();
 
 	void setClientToken(const QString &clientToken);
 	QString getClientToken() const;
@@ -43,7 +45,7 @@ public:
 	void setAccountAscending(bool accountAscending);
 	bool getAccountAscending() const;
 
-	QString uuidFromIndex(const QModelIndex &index) const;
+	QString nameFromIndex(const QModelIndex &index) const;
 	static QList<QStandardItem*> account2itemList(const Account &account);
 	static QJsonObject account2object(const Account &account);
 
@@ -51,7 +53,7 @@ public:
 
 	void writeToFile();
 
-	enum Column{ Playername, Mode, Email, Created, LastUsed, Uuid };
+	enum Column{ Playername, Mode, Email, Created, LastUsed, Name };
 
 private slots:
 	void validateFinished(bool succuss);

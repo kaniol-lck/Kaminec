@@ -10,13 +10,14 @@ class Account
 {
 public:
 	explicit Account(const QString &playername = "Steve",
-					 Mode mode = Mode::Offline,
+					 Mode mode = Mode::Uncertified,
 					 const QString &email = "",
 					 const QString &uuid = "",
 					 const QString &accessToken = "",
 					 const QDateTime &created = QDateTime::currentDateTime(),
 					 const QDateTime &lastUsed = QDateTime());
 
+	QString name() const;
 	QString playername() const;
 	Mode mode() const;
 	QString email() const;

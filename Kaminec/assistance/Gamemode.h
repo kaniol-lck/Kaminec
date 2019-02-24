@@ -3,8 +3,8 @@
 
 enum class Mode
 {
-    Online,
-    Offline
+	Certified,
+	Uncertified
 };
 
 #endif // GAMEMODE_H

@@ -56,7 +56,7 @@ Arguments LaunchParser::gameArguments() const
 		{"${resolution_height}", QString::number(size.second)},
 	};
 
-	if(account_.mode()==Mode::Online){
+	if(account_.mode()==Mode::Certified){
 		replace_list.insert("${auth_access_token}", account_.accessToken());
 		replace_list.insert("${user_type}", "mojang");
 	} else{

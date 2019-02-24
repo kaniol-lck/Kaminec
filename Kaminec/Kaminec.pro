@@ -26,7 +26,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
 	UI/kamineclauncher.cpp \
 	UI/preferences.cpp \
-	UI/accountdialog.cpp \
+	UI/dialogs/accountdialog.cpp \
     assistance/Custom.cpp \
     assistance/Path.cpp \
 	assistance/utility.cpp \
@@ -69,7 +69,7 @@ SOURCES += main.cpp\
     assistance/PathReplacer.cpp \
     messenger/Account.cpp \
     LAminec/AccountPool.cpp \
-    UI/profiledialog.cpp \
+    UI/dialogs/profiledialog.cpp \
     LAminec/GameVersionController.cpp \
     messenger/GameVersion.cpp \
     UI/preferences_tabs/javatab.cpp \
@@ -84,7 +84,7 @@ SOURCES += main.cpp\
 
 HEADERS  += UI/kamineclauncher.h \
 	UI/preferences.h \
-	UI/accountdialog.h \
+	UI/dialogs/accountdialog.h \
     assistance/Custom.h \
     assistance/Gamemode.h \
     assistance/Path.h \
@@ -130,7 +130,7 @@ HEADERS  += UI/kamineclauncher.h \
     messenger/Account.h \
     LAminec/AccountPool.h \
     exception/Exceptions.hpp \
-    UI/profiledialog.h \
+    UI/dialogs/profiledialog.h \
     LAminec/GameVersionController.h \
     messenger/GameVersion.h \
     UI/preferences_tabs/javatab.h \
@@ -146,8 +146,8 @@ HEADERS  += UI/kamineclauncher.h \
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preferences.ui \
-    UI/accountdialog.ui \
-    UI/profiledialog.ui \
+    UI/dialogs/accountdialog.ui \
+    UI/dialogs/profiledialog.ui \
     UI/preferences_tabs/javatab.ui \
     UI/kamineclauncher_tabs/accounttab.ui \
     UI/kamineclauncher_tabs/profiletab.ui \
