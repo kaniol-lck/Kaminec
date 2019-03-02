@@ -31,8 +31,9 @@ private slots:
 
 	void on_action_Download_Progress_triggered();
 
-private:
 	void setBackGround();
+
+private:
 	void retranslateUi();
 
 private:

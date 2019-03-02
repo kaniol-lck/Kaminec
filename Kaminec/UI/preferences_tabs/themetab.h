@@ -20,8 +20,13 @@ public:
 
 	~ThemeTab();
 
+signals:
+	void updateBackground();
+
 private slots:
 	void on_font_pb_clicked();
+
+	void on_background_showPb_clicked();
 
 private:
 	Ui::ThemeTab *ui_;

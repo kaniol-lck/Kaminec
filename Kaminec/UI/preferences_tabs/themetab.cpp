@@ -2,14 +2,17 @@
 #include "ui_themetab.h"
 
 #include <QFontDialog>
+#include <QFileDialog>
 
 ThemeTab::ThemeTab(QWidget *parent) :
 	QWidget(parent),
 	ui_(new Ui::ThemeTab)
 {
 	ui_->setupUi(this);
-	ui_->fontComboBox->setCurrentFont(qApp->font());
-
+	auto font = qApp->font();
+	ui_->fontComboBox->setCurrentFont(font);
+	ui_->font_spinBox->setValue(font.pointSize());
+	ui_->background_le->setText(custom_.getBackground());
 }
 
 void ThemeTab::accepted()
@@ -30,4 +33,14 @@ void ThemeTab::on_font_pb_clicked()
 	auto font = QFontDialog::getFont(&ok, qApp->font(), this, tr("Choose font for Launcher..."));
 	if(ok)
 		ui_->fontComboBox->setCurrentFont(font);
+}
+
+void ThemeTab::on_background_showPb_clicked()
+{
+	auto filename = QFileDialog::getOpenFileName(this, tr("Choose background for Launcher..."), ui_->background_le->text(), "Images(*.png *.jpg *.jpeg *.gif)");
+	if(!filename.isEmpty()){
+		custom_.setBackground(filename);
+		ui_->background_le->setText(filename);
+		emit updateBackground();
+	}
 }

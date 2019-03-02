@@ -50,13 +50,15 @@ void KaminecLauncher::on_action_preferences_triggered()
 {
 	//create preferences windows
 	auto preferences = new Preferences(this, accountPool_, profileManager_);
+	connect(preferences, &Preferences::updateBackground, this, &setBackGround);
 	preferences->exec();
+	disconnect(preferences, &Preferences::updateBackground, this, &setBackGround);
 }
 
 void KaminecLauncher::setBackGround()
 {
 	//set backGround
-	QPixmap pixmap = QPixmap(":/main/res/background.png").scaled(this->size());
+	QPixmap pixmap = QPixmap(Custom().getBackground()).scaled(size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
 	QPalette palette(this->palette());
 	palette.setBrush(QPalette::Background, QBrush(pixmap));
 	this->setPalette(palette);

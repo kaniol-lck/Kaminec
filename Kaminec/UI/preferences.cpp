@@ -26,6 +26,8 @@ Preferences::Preferences(QWidget *parent, AccountPool *accountPool, ProfileManag
 	ui_->preferencesSwitch->addTab(pathTab_, tr("Path"));
 	ui_->preferencesSwitch->addTab(launcherTab_, tr("Launcher"));
 	ui_->preferencesSwitch->addTab(themeTab_, tr("Theme"));
+
+	connect(themeTab_, &ThemeTab::updateBackground, this, &updateBackground);
 }
 
 Preferences::~Preferences()

@@ -26,6 +26,7 @@ public:
 
 signals:
 	void settingfinished();
+	void updateBackground();
 
 private slots:
 	void on_buttonBox_accepted();
