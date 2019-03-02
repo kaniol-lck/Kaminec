@@ -40,8 +40,6 @@ private slots:
 	void accessTokenUpdate(QString accessToken);
 	void clientTokenUpdate(QString clientToken);
 	void playerNameUpdate(QString playername);
-	void authFinished(bool ok);
-	void authError(QString error, QString errorMessage);
 
 private:
 	Ui::AccountDialog *ui_;

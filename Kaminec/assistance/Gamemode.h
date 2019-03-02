@@ -1,7 +1,7 @@
 #ifndef GAMEMODE_H
 #define GAMEMODE_H
 
-enum class Mode
+enum class GameMode
 {
 	Certified,
 	Uncertified

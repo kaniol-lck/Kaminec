@@ -22,9 +22,6 @@ signals:
 	void stateChanged(QProcess::ProcessState);
 	void exceptionMessage(QString);
 
-public slots:
-	void gameFinished();
-
 private:
 	QProcess *gameProcess_;
 	Logger logger_;

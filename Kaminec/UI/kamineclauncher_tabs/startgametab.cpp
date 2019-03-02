@@ -12,9 +12,32 @@ StartGameTab::StartGameTab(QWidget *parent, Launcher *launcher, AccountPool *acc
 	profileManager_(profileManager)
 {
 	ui_->setupUi(this);
-	connect(launcher_, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(stateChanged(QProcess::ProcessState)));
-	connect(launcher_, SIGNAL(finished(int)), this, SLOT(gameFinished(int)));
-	connect(launcher_, SIGNAL(exceptionMessage(QString)), this, SLOT(exceptionMessage(QString)));
+	connect(launcher_, &Launcher::stateChanged, [&](QProcess::ProcessState newState)
+	{
+		qDebug()<<newState;
+		if(newState == QProcess::Starting){
+			ui_->start_pb->setText(tr("Launching Java..."));
+			ui_->start_pb->setEnabled(false);
+		} else if(newState == QProcess::Running){
+			ui_->start_pb->setText(tr("Gaming..."));
+			ui_->start_pb->setEnabled(false);
+		} else /*if(newState == QProcess::NotRunning)*/{
+			ui_->start_pb->setText(tr("Launch"));
+			ui_->start_pb->setEnabled(true);
+		}
+	});
+
+	connect(launcher_, &Launcher::finished, [&](int /*i*/)
+	{
+		ui_->start_pb->setText(tr("Launch"));
+		ui_->start_pb->setEnabled(true);
+	});
+
+	connect(launcher_, &Launcher::exceptionMessage, [&](QString message)
+	{
+		QMessageBox::warning(this, tr("error"), message);
+	}
+);
 }
 
 StartGameTab::~StartGameTab()
@@ -32,8 +55,8 @@ void StartGameTab::changeEvent(QEvent *event)
 
 void StartGameTab::on_start_pb_clicked()
 {
-	auto selectedaccountName = accountPool_->getSelectedAccountName();
-	if(!accountPool_->containAccount(selectedaccountName)){
+	auto selectedAccountName = accountPool_->getSelectedAccountName();
+	if(!accountPool_->containAccount(selectedAccountName)){
 		QMessageBox::warning(this, tr("Launch Error"), tr("Please create your account first."));
 		return;
 	}
@@ -42,36 +65,10 @@ void StartGameTab::on_start_pb_clicked()
 		QMessageBox::warning(this, tr("Launch Error"), tr("Please create your profile first."));
 		return;
 	}
-	auto account = accountPool_->check(selectedaccountName);
+	auto account = accountPool_->check(selectedAccountName);
 	auto profile = profileManager_->getProfile(selectedProfileName);
 
 	launcher_->start(profile, account);
 	ui_->start_pb->setText(tr("Gaming..."));
 	ui_->start_pb->setEnabled(false);
-}
-
-void StartGameTab::stateChanged(QProcess::ProcessState newState)
-{
-	qDebug()<<newState;
-	if(newState == QProcess::Starting){
-		ui_->start_pb->setText(tr("Launching Java..."));
-		ui_->start_pb->setEnabled(false);
-	} else if(newState == QProcess::Running){
-		ui_->start_pb->setText(tr("Gaming..."));
-		ui_->start_pb->setEnabled(false);
-	} else /*if(newState == QProcess::NotRunning)*/{
-		ui_->start_pb->setText(tr("Launch"));
-		ui_->start_pb->setEnabled(true);
-	}
-}
-
-void StartGameTab::gameFinished(int /*i*/)
-{
-	ui_->start_pb->setText(tr("Launch"));
-	ui_->start_pb->setEnabled(true);
-}
-
-void StartGameTab::exceptionMessage(QString message)
-{
-	QMessageBox::warning(this, tr("error"), message);
 }

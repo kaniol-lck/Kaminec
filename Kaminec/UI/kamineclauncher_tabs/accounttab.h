@@ -26,8 +26,6 @@ private slots:
 
 	void on_setAccountActive_pb_clicked();
 
-	void accountSortRecord();
-
 	void on_accounts_tableView_pressed(const QModelIndex &);
 
 	void on_accounts_tableView_doubleClicked(const QModelIndex &index);

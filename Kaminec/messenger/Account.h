@@ -10,7 +10,7 @@ class Account
 {
 public:
 	explicit Account(const QString &playername = "Steve",
-					 Mode mode = Mode::Uncertified,
+					 GameMode mode = GameMode::Uncertified,
 					 const QString &email = "",
 					 const QString &uuid = "",
 					 const QString &accessToken = "",
@@ -19,7 +19,7 @@ public:
 
 	QString name() const;
 	QString playername() const;
-	Mode mode() const;
+	GameMode mode() const;
 	QString email() const;
 	QString uuid() const;
 	QString accessToken() const;
@@ -30,7 +30,7 @@ public:
 
 private:
 	QString playername_;
-	Mode mode_;
+	GameMode mode_;
 	QString email_;
 	QString uuid_;
 	QString accessToken_;

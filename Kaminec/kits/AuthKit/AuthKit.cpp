@@ -16,22 +16,22 @@ AuthKit::AuthKit(AuthResponse *authResponse) :
 
 void AuthKit::authenticate(const QByteArray &data) const
 {
-	post(makeRequest("/authenticate"), data, SLOT(authenticateResponse(QNetworkReply*)));;
+	post(makeRequest("/authenticate"), data, &AuthResponse::authenticateResponse);;
 }
 
 void AuthKit::validate(const QByteArray &data) const
 {
-	post(makeRequest("/validate"), data, SLOT(validateResponse(QNetworkReply*)));
+	post(makeRequest("/validate"), data, &AuthResponse::validateResponse);
 }
 
 void AuthKit::refresh(const QByteArray &data) const
 {
-	post(makeRequest("/refresh"), data, SLOT(refreshResponse(QNetworkReply*)));
+	post(makeRequest("/refresh"), data, &AuthResponse::refreshResponse);
 }
 
 void AuthKit::invalidate(const QByteArray &data) const
 {
-	post(makeRequest("/invalidate"), data, SLOT(invalidateResponse(QNetworkReply*)));
+	post(makeRequest("/invalidate"), data, &AuthResponse::invalidateResponse);
 }
 
 QNetworkRequest AuthKit::makeRequest(const QString& endpoint) const
@@ -44,15 +44,16 @@ QNetworkRequest AuthKit::makeRequest(const QString& endpoint) const
 	return request;
 }
 
-void AuthKit::post(const QNetworkRequest &request, const QByteArray &data, const char *slotFunction) const
+template<typename SF>
+void AuthKit::post(const QNetworkRequest &request, const QByteArray &data, SF slotFunction) const
 {
 	QTimer timer;
 	timer.setInterval(10000);
 	timer.setSingleShot(true);
 	QEventLoop eventloop;
-	QObject::connect(&timer, SIGNAL(timeout()), &eventloop, SLOT(quit()));
-	QObject::connect(manager_.get(), SIGNAL(finished(QNetworkReply*)), authResponse_, slotFunction);
-	QObject::connect(manager_.get(), SIGNAL(finished(QNetworkReply*)), &eventloop, SLOT(quit()));
+	QObject::connect(&timer, &QTimer::timeout, &eventloop, &QEventLoop::quit);
+	QObject::connect(manager_.get(), &QNetworkAccessManager::finished, authResponse_, slotFunction);
+	QObject::connect(manager_.get(), &QNetworkAccessManager::finished, &eventloop, &QEventLoop::quit);
 
 	timer.start();
 	manager_->post(request, data);
@@ -64,6 +65,6 @@ void AuthKit::post(const QNetworkRequest &request, const QByteArray &data, const
 		qDebug() << "Timeout";
 	}
 
-	QObject::disconnect(manager_.get(), SIGNAL(finished(QNetworkReply*)), authResponse_, slotFunction);
-	QObject::disconnect(manager_.get(), SIGNAL(finished(QNetworkReply*)), &eventloop, SLOT(quit()));
+	QObject::disconnect(manager_.get(), &QNetworkAccessManager::finished, authResponse_, slotFunction);
+	QObject::disconnect(manager_.get(), &QNetworkAccessManager::finished, &eventloop, &QEventLoop::quit);
 }

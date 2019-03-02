@@ -8,7 +8,7 @@
 class LaunchPack
 {
 public:
-	LaunchPack(Mode mode,
+	LaunchPack(GameMode mode,
 			   QStringList classPaths,
 			   Arguments JVMConfigure,
 			   QString mainClass,
@@ -26,7 +26,7 @@ public:
 	QStringList startCode() const;
 
 private:
-	Mode mode_;
+	GameMode mode_;
 	QStringList classPaths_;
 	Arguments JVMConfigure_;
 	QString mainClass_;

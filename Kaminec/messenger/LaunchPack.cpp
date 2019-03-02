@@ -1,6 +1,6 @@
 #include "LaunchPack.h"
 
-LaunchPack::LaunchPack(Mode mode,
+LaunchPack::LaunchPack(GameMode mode,
 					   QStringList classPaths,
 					   Arguments JVMArguments,
 					   QString mainClass,

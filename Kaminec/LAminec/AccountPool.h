@@ -55,9 +55,6 @@ public:
 
 	enum Column{ Playername, Mode, Email, Created, LastUsed, Name };
 
-private slots:
-	void validateFinished(bool succuss);
-
 public slots:
 	void sortRecord(int column);
 

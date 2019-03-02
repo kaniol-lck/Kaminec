@@ -2,7 +2,7 @@
 
 
 Account::Account(const QString &playername,
-				 Mode mode,
+				 GameMode mode,
 				 const QString &email,
 				 const QString &uuid,
 				 const QString &accessToken,
@@ -19,10 +19,10 @@ Account::Account(const QString &playername,
 
 QString Account::name() const
 {
-	return mode_==Mode::Certified?uuid_:playername_;
+	return mode_==GameMode::Certified?uuid_:playername_;
 }
 
-Mode Account::mode() const
+GameMode Account::mode() const
 {
 	return mode_;
 }

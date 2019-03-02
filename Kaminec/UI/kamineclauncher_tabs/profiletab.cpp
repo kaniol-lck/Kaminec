@@ -28,8 +28,11 @@ ProfileTab::ProfileTab(QWidget *parent, ProfileManager *profileManager) :
 	font.setPointSize(13);
 	ui_->profiles_tableView->horizontalHeader()->setFont(font);
 
-	connect(ui_->profiles_tableView->horizontalHeader(), SIGNAL(sectionClicked(int)), profileManager_, SLOT(sortRecord(int)));
-	connect(ui_->profiles_tableView->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(profileSortRecord()));
+	connect(ui_->profiles_tableView->horizontalHeader(), &QHeaderView::sectionClicked, profileManager_, &ProfileManager::sortRecord);
+	connect(ui_->profiles_tableView->horizontalHeader(), &QHeaderView::sectionClicked, [&]()
+	{
+		profileManager_->setProfileAscending(ui_->profiles_tableView->horizontalHeader()->sortIndicatorOrder() == Qt::AscendingOrder);
+	});
 }
 
 ProfileTab::~ProfileTab()

@@ -28,8 +28,11 @@ AccountTab::AccountTab(QWidget *parent, AccountPool *accountPool) :
 	font.setPointSize(13);
 	ui_->accounts_tableView->horizontalHeader()->setFont(font);
 
-	connect(ui_->accounts_tableView->horizontalHeader(), SIGNAL(sectionClicked(int)), accountPool_, SLOT(sortRecord(int)));
-	connect(ui_->accounts_tableView->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(accountSortRecord()));
+	connect(ui_->accounts_tableView->horizontalHeader(), &QHeaderView::sectionClicked, accountPool_, &AccountPool::sortRecord);
+	connect(ui_->accounts_tableView->horizontalHeader(), &QHeaderView::sectionClicked, [&]()
+	{
+		accountPool_->setAccountAscending(ui_->accounts_tableView->horizontalHeader()->sortIndicatorOrder() == Qt::AscendingOrder);
+	});
 }
 
 AccountTab::~AccountTab()
@@ -63,11 +66,6 @@ void AccountTab::on_deleteAccount_pb_clicked()
 void AccountTab::on_setAccountActive_pb_clicked()
 {
 	accountPool_->setSelectedAccountName(accountPool_->nameFromIndex(ui_->accounts_tableView->currentIndex()));
-}
-
-void AccountTab::accountSortRecord()
-{
-	accountPool_->setAccountAscending(ui_->accounts_tableView->horizontalHeader()->sortIndicatorOrder() == Qt::AscendingOrder);
 }
 
 void AccountTab::on_accounts_tableView_pressed(const QModelIndex &/*index*/)

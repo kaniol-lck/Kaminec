@@ -41,11 +41,11 @@ AccountPool::AccountPool(QObject *parent) :
 	auto accountsVariant = accountsObject_.value("accounts").toVariant();
 	for(auto it : accountsVariant.toMap()){
 		auto modeStr = value(it, "mode").toString();
-		::Mode mode;
+		GameMode mode;
 		if(modeStr == "certified")
-			mode = Mode::Certified;
+			mode = GameMode::Certified;
 		else/* if(modeStr == "uncertified")*/
-			mode = Mode::Uncertified;
+			mode = GameMode::Uncertified;
 
 		Account account(value(it, "playername").toString(),
 						mode,
@@ -61,6 +61,10 @@ AccountPool::AccountPool(QObject *parent) :
 	auto items = model_.findItems(getSelectedAccountName(), Qt::MatchExactly, Column::Name);
 	if(!items.isEmpty())
 		model_.item(items.first()->row(), Column::Playername)->setCheckState(Qt::Checked);//set check state
+
+	connect(authResponse_, &AuthResponse::validateFinished, [&](bool success){
+		success_ = success;
+	});
 }
 
 void AccountPool::resetLanguage()
@@ -75,7 +79,7 @@ void AccountPool::resetLanguage()
 Account AccountPool::check(const QString &accountName) const
 {
 	auto account = accountsMap_.value(accountName);
-	if(account.mode() == Mode::Certified){
+	if(account.mode() == GameMode::Certified){
 		validate(account);
 	} else{
 
@@ -87,9 +91,7 @@ bool AccountPool::validate(const Account &account) const
 {
 	QByteArray data = AuthKit::kTokenStyle.arg(account.accessToken(),
 											   getClientToken()).toUtf8();
-	connect(authResponse_, SIGNAL(validateFinished(bool)), this, SLOT(validateFinished(bool)));
 	authKit_.validate(data);
-	disconnect(authResponse_, SIGNAL(validateFinished(bool)), this, SLOT(validateFinished(bool)));
 
 	return success_;
 }
@@ -150,7 +152,7 @@ void AccountPool::removeAccount(const QString &accountName)
 		if(!items.isEmpty()){
 			auto row = items.first()->row()==1?2:1;
 			model_.item(row, Column::Playername)->setCheckState(Qt::Checked);
-			accountsObject_.insert("selectedaccountName", model_.item(row, Column::Name)->data(Qt::DisplayRole).toString());
+			accountsObject_.insert("selectedAccountName", model_.item(row, Column::Name)->data(Qt::DisplayRole).toString());
 			writeToFile();
 		}
 	}
@@ -170,8 +172,8 @@ void AccountPool::editAccount(const QString &oldaccountName, Account newAccount)
 	newAccount.setLastUsed(oldaccount.created());
 	accountsMap_.insert(newAccount.name(), newAccount);
 
-	if(accountsObject_.value("selectedaccountName").toString() == oldaccountName)
-		accountsObject_.insert("selectedaccountName", newAccount.name());
+	if(accountsObject_.value("selectedAccountName").toString() == oldaccountName)
+		accountsObject_.insert("selectedAccountName", newAccount.name());
 	QJsonObject accounts = accountsObject_.value("accounts").toObject();
 	accounts.remove(oldaccountName);
 	accounts.insert(newAccount.name(), account2object(newAccount));
@@ -185,7 +187,7 @@ void AccountPool::editAccount(const QString &oldaccountName, Account newAccount)
 void AccountPool::setSelectedAccountName(const QString &accountName)
 {
 	auto oldaccountName = getSelectedAccountName();
-	accountsObject_.insert("selectedaccountName", QJsonValue(accountName));
+	accountsObject_.insert("selectedAccountName", QJsonValue(accountName));
 
 	writeToFile();
 
@@ -201,7 +203,7 @@ void AccountPool::setSelectedAccountName(const QString &accountName)
 QString AccountPool::getSelectedAccountName()
 {
 	if(!accountsObject_.contains("selectedAccountName")) return "";
-	auto selectedAccountName = accountsObject_.value("selectedaccountName").toString();
+	auto selectedAccountName = accountsObject_.value("selectedAccountName").toString();
 	if(!accountsMap_.contains(selectedAccountName) && model_.rowCount() != 0){
 		selectedAccountName = nameFromIndex(model_.index(0,0));
 		accountsObject_.insert("selectedAccountName", QJsonValue(selectedAccountName));
@@ -252,7 +254,7 @@ bool AccountPool::getAccountAscending() const
 QList<QStandardItem *> AccountPool::account2itemList(const Account &account)
 {
 	auto playernameItem = new QStandardItem(account.playername());
-	auto modeItem = new QStandardItem(account.mode() == Mode::Certified?"certified":"uncertified");
+	auto modeItem = new QStandardItem(account.mode() == GameMode::Certified?"certified":"uncertified");
 	auto emailItem = new QStandardItem(account.email());
 	auto createdItem = new QStandardItem(account.created().toString(Qt::ISODateWithMs));
 	auto lastUsedItem = new QStandardItem(account.lastUsed().toString(Qt::ISODateWithMs));
@@ -266,7 +268,7 @@ QList<QStandardItem *> AccountPool::account2itemList(const Account &account)
 
 QJsonObject AccountPool::account2object(const Account &account)
 {
-	if(account.mode() == Mode::Certified)
+	if(account.mode() == GameMode::Certified)
 		return QJsonObject{
 			{"mode", "certified"},
 			{"email", account.email()},
@@ -307,11 +309,6 @@ void AccountPool::writeToFile()
 	auto bytes = QJsonDocument(accountsObject_).toJson();
 	out<<bytes;
 	accountsFile_.close();
-}
-
-void AccountPool::validateFinished(bool success)
-{
-	success_ = success;
 }
 
 void AccountPool::sortRecord(int column)

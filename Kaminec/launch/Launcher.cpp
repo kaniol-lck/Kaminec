@@ -13,10 +13,12 @@ Launcher::Launcher(QObject *parent) :
 	gameProcess_(new QProcess(this)),
 	logger_(new Logger(this))
 {
-	//forward finished infomation
-	connect(gameProcess_, SIGNAL(finished(int)), this, SIGNAL(finished(int)));
 	//delete natives after playing
-	connect(gameProcess_, SIGNAL(finished(int)), this, SLOT(gameFinished()));
+	connect(gameProcess_, static_cast<void(QProcess::*)(int)>(&QProcess::finished), [&](int i){
+		emit finished(i);
+		deleteDirectory(Path::nativesPath());
+		logger_.finishGame();
+	});
 }
 
 void Launcher::start(const Profile &profile, const Account &account)
@@ -54,10 +56,4 @@ void Launcher::extractNatives(const QStringList &nativesPaths)
 		if(!QFile(extractPath).exists()) continue;
 		JlCompress::extractDir(extractPath, Path::nativesPath());
 	}
-}
-
-void Launcher::gameFinished()
-{
-	deleteDirectory(Path::nativesPath());
-	logger_.finishGame();
 }

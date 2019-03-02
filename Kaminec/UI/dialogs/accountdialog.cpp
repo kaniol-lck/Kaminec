@@ -16,6 +16,14 @@ AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool) :
 	setFixedSize(360,240);
 	ui_->password_le->setEchoMode(QLineEdit::Password);
 	on_certified_rb_clicked();
+
+	connect(authResponse_, &AuthResponse::authError, [&](QString error, QString errorMessage){
+		QMessageBox::warning(this, error, errorMessage);
+	});
+
+	connect(authResponse_, &AuthResponse::invalidateFinished, [&](bool ok){
+		success_ = ok;
+	});
 }
 
 AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool, const QString &accountName) :
@@ -26,7 +34,7 @@ AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool, const QS
 	setWindowTitle(tr("Edit Account"));
 	ui_->email_le->setText(oldAccount_->email());
 	ui_->playername_le->setText(oldAccount_->playername());
-	if(oldAccount_->mode() == Mode::Certified){
+	if(oldAccount_->mode() == GameMode::Certified){
 		isValidated = true;
 		uuid_ = oldAccount_->uuid();
 		accessToken_ = oldAccount_->accessToken();
@@ -51,7 +59,7 @@ AccountDialog::~AccountDialog()
 
 void AccountDialog::on_buttonBox_accepted()
 {
-	Mode mode = ui_->certified_rb->isChecked()?Mode::Certified:Mode::Uncertified;
+	GameMode mode = ui_->certified_rb->isChecked()?GameMode::Certified:GameMode::Uncertified;
 	QString email = ui_->email_le->text();
 	QString playerName = ui_->playername_le->text();
 	QString uuid;
@@ -62,7 +70,7 @@ void AccountDialog::on_buttonBox_accepted()
 		return;
 	}
 
-	if(mode == Mode::Uncertified){
+	if(mode == GameMode::Uncertified){
 		uuid = "";
 	} else{
 		uuid = uuid_;
@@ -101,11 +109,7 @@ void AccountDialog::on_log_in_out_pb_clicked()
 		//Log out
 		QByteArray data = AuthKit::kTokenStyle.arg(accessToken_, clientToken_).toUtf8();
 		ui_->log_in_out_pb->setEnabled(false);
-		connect(authResponse_, SIGNAL(authError(QString,QString)), this, SLOT(authError(QString,QString)));
-		connect(authResponse_, SIGNAL(invalidateFinished(bool)), this, SLOT(authFinished(bool)));
 		authkit_.invalidate(data);
-		disconnect(authResponse_, SIGNAL(invalidateFinished(bool)), this, SLOT(authFinished(bool)));
-		disconnect(authResponse_, SIGNAL(authError(QString,QString)), this, SLOT(authError(QString,QString)));
 
 		ui_->log_in_out_pb->setEnabled(true);
 		if(success_){
@@ -202,14 +206,4 @@ void AccountDialog::clientTokenUpdate(QString clientToken)
 void AccountDialog::playerNameUpdate(QString playername)
 {
 	ui_->playername_le->setText(playername);
-}
-
-void AccountDialog::authFinished(bool ok)
-{
-	success_ = ok;
-}
-
-void AccountDialog::authError(QString error, QString errorMessage)
-{
-	QMessageBox::warning(this, error, errorMessage);
 }

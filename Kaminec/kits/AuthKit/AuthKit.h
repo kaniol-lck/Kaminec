@@ -24,7 +24,8 @@ public:
 
 private:
 	QNetworkRequest makeRequest(const QString &endpoint) const;
-	void post(const QNetworkRequest &request, const QByteArray& data, const char *slotFunction) const;
+	template<typename SF>
+	void post(const QNetworkRequest &request, const QByteArray& data, SF slotFunction) const;
 
 	AuthResponse *authResponse_;
 	std::shared_ptr<QNetworkAccessManager> manager_;

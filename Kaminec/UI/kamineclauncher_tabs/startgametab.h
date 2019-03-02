@@ -24,10 +24,6 @@ public:
 private slots:
 	void on_start_pb_clicked();
 
-	void stateChanged(QProcess::ProcessState newState);
-	void gameFinished(int i);
-	void exceptionMessage(QString message);
-
 private:
 	Ui::StartGameTab *ui_;
 	Launcher *launcher_;
