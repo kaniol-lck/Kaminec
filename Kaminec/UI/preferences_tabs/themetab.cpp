@@ -3,6 +3,7 @@
 
 #include <QFontDialog>
 #include <QFileDialog>
+#include <QDebug>
 
 ThemeTab::ThemeTab(QWidget *parent) :
 	QWidget(parent),
@@ -13,13 +14,13 @@ ThemeTab::ThemeTab(QWidget *parent) :
 	ui_->fontComboBox->setCurrentFont(font);
 	ui_->font_spinBox->setValue(font.pointSize());
 	ui_->background_le->setText(custom_.getBackground());
+	connect(ui_->fontComboBox, &QFontComboBox::currentFontChanged, this, &updateFont);
+	connect(ui_->font_spinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &updateFont);
 }
 
 void ThemeTab::accepted()
 {
-	auto font = ui_->fontComboBox->currentFont();
-	qApp->setFont(font);
-	custom_.setFont(font.toString());
+
 }
 
 ThemeTab::~ThemeTab()
@@ -31,8 +32,10 @@ void ThemeTab::on_font_pb_clicked()
 {
 	bool ok;
 	auto font = QFontDialog::getFont(&ok, qApp->font(), this, tr("Choose font for Launcher..."));
-	if(ok)
+	if(ok){
 		ui_->fontComboBox->setCurrentFont(font);
+		ui_->font_spinBox->setValue(font.pointSize());
+	}
 }
 
 void ThemeTab::on_background_showPb_clicked()
@@ -43,4 +46,12 @@ void ThemeTab::on_background_showPb_clicked()
 		ui_->background_le->setText(filename);
 		emit updateBackground();
 	}
+}
+
+void ThemeTab::updateFont()
+{
+	auto font = ui_->fontComboBox->currentFont();
+	font.setPointSize(ui_->font_spinBox->value());
+	qApp->setFont(font);
+	custom_.setFont(font.toString());
 }

@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QProcess>
+#include <QStandardItemModel>
 
 #include "launch/LaunchParser.h"
 #include "launch/Logger.h"
@@ -12,6 +13,8 @@ class Launcher : public QObject
 	Q_OBJECT
 public:
 	explicit Launcher(QObject *parent = nullptr);
+
+	QStandardItemModel* getOutputModel();
 
 	void start(const Profile &profile, const Account &account);
 
@@ -25,6 +28,7 @@ signals:
 private:
 	QProcess *gameProcess_;
 	Logger logger_;
+	QStandardItemModel model_;
 };
 
 #endif // LAUNCHER_H

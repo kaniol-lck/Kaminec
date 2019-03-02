@@ -10,19 +10,27 @@
 
 Launcher::Launcher(QObject *parent) :
 	QObject(parent),
-	gameProcess_(new QProcess(this)),
+	gameProcess_(new QProcess()),
 	logger_(new Logger(this))
 {
+	connect(gameProcess_, &QProcess::stateChanged, this, &stateChanged);
+	connect(gameProcess_, &QProcess::readyRead, [&]{model_.appendRow(new QStandardItem(QString(gameProcess_->readAll()).trimmed()));});
 	//delete natives after playing
 	connect(gameProcess_, static_cast<void(QProcess::*)(int)>(&QProcess::finished), [&](int i){
-		emit finished(i);
-		deleteDirectory(Path::nativesPath());
 		logger_.finishGame();
+		deleteDirectory(Path::nativesPath());
+		emit finished(i);
 	});
+}
+
+QStandardItemModel *Launcher::getOutputModel()
+{
+	return &model_;
 }
 
 void Launcher::start(const Profile &profile, const Account &account)
 {
+	model_.clear();
 	try{
 		logger_.startLog();
 		logger_.startGenStartcode();

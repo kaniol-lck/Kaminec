@@ -45,6 +45,7 @@
 
 QTabBar::tab {
 	min-width:100px;
+	min-height:40px;
 	border: 0px solid;
 	padding:3px;
 }

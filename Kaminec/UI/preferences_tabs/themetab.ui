@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>422</width>
     <height>600</height>
    </rect>
   </property>
@@ -16,14 +16,7 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="4">
-      <widget class="QPushButton" name="font_pb">
-       <property name="text">
-        <string>Choose Font...</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0" colspan="2">
+     <item row="0" column="0">
       <widget class="QLabel" name="font_label">
        <property name="text">
         <string>Font:</string>
@@ -33,7 +26,7 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="2">
+     <item row="0" column="1" colspan="2">
       <widget class="QFontComboBox" name="fontComboBox">
        <property name="editable">
         <bool>false</bool>
@@ -53,26 +46,29 @@
        </property>
       </widget>
      </item>
-    </layout>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
+     <item row="0" column="4">
+      <widget class="QPushButton" name="font_pb">
+       <property name="text">
+        <string>Choose Font...</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
       <widget class="QLabel" name="background_label">
        <property name="text">
         <string>Background:</string>
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QLineEdit" name="background_le"/>
-     </item>
-     <item>
+     <item row="1" column="4">
       <widget class="QPushButton" name="background_showPb">
        <property name="text">
         <string>...</string>
        </property>
       </widget>
+     </item>
+     <item row="1" column="1" colspan="3">
+      <widget class="QLineEdit" name="background_le"/>
      </item>
     </layout>
    </item>

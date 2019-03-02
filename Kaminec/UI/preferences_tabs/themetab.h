@@ -28,6 +28,8 @@ private slots:
 
 	void on_background_showPb_clicked();
 
+	void updateFont();
+
 private:
 	Ui::ThemeTab *ui_;
 	Custom custom_;

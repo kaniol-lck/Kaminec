@@ -16,8 +16,9 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 	launcher_(new Launcher(this)),
 	downloadProgressDialog_(new DownloadProgressDialog(this, downloader_)),
 	startGameTab_(new StartGameTab(this, launcher_, accountPool_, profileManager_)),
-	accounttab_(new AccountTab(this, accountPool_)),
-	profiletab_(new ProfileTab(this, profileManager_))
+	accountTab_(new AccountTab(this, accountPool_)),
+	profileTab_(new ProfileTab(this, profileManager_)),
+	gameOutputTab_(new GameOutputTab(this, launcher_->getOutputModel()))
 {
 	//setup ui
 	ui_->setupUi(this);
@@ -36,8 +37,19 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 	ui_->mainToolBar->setGraphicsEffect(shadowEffect2);
 
 	ui_->moduleSwitch->addTab(startGameTab_, tr("Start Game"));
-	ui_->moduleSwitch->addTab(accounttab_, tr("Account"));
-	ui_->moduleSwitch->addTab(profiletab_, tr("Profile"));
+	ui_->moduleSwitch->addTab(accountTab_, tr("Account"));
+	ui_->moduleSwitch->addTab(profileTab_, tr("Profile"));
+	ui_->moduleSwitch->addTab(gameOutputTab_, tr("Game Output"));
+//	ui_->moduleSwitch->removeTab(ui_->moduleSwitch->indexOf(gameOutputTab_));
+
+	connect(launcher_, &Launcher::stateChanged, [&](QProcess::ProcessState newState)
+	{
+		if(newState == QProcess::Starting){
+//			ui_->moduleSwitch->addTab(gameOutputTab_, tr("Game Output"));
+		} else if(newState == QProcess::NotRunning){
+//			ui_->moduleSwitch->removeTab(ui_->moduleSwitch->indexOf(gameOutputTab_));
+		}
+	});
 }
 
 KaminecLauncher::~KaminecLauncher()
@@ -58,7 +70,7 @@ void KaminecLauncher::on_action_preferences_triggered()
 void KaminecLauncher::setBackGround()
 {
 	//set backGround
-	QPixmap pixmap = QPixmap(Custom().getBackground()).scaled(size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+	QPixmap pixmap = QPixmap(Custom().getBackground()).scaled(size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
 	QPalette palette(this->palette());
 	palette.setBrush(QPalette::Background, QBrush(pixmap));
 	this->setPalette(palette);
@@ -69,6 +81,7 @@ void KaminecLauncher::retranslateUi()
 	ui_->moduleSwitch->setTabText(0, tr("Start Game"));
 	ui_->moduleSwitch->setTabText(1, tr("Account"));
 	ui_->moduleSwitch->setTabText(2, tr("Profile"));
+	ui_->moduleSwitch->setTabText(3, tr("Game Output"));
 }
 
 void KaminecLauncher::on_action_Download_Progress_triggered()

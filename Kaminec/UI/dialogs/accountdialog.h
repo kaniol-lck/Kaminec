@@ -36,11 +36,6 @@ private slots:
 
 	void on_uncertified_rb_clicked();
 
-	void uuidUpdate(QString uuid);
-	void accessTokenUpdate(QString accessToken);
-	void clientTokenUpdate(QString clientToken);
-	void playerNameUpdate(QString playername);
-
 private:
 	Ui::AccountDialog *ui_;
 	AuthResponse *authResponse_;

@@ -17,13 +17,12 @@ AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool) :
 	ui_->password_le->setEchoMode(QLineEdit::Password);
 	on_certified_rb_clicked();
 
-	connect(authResponse_, &AuthResponse::authError, [&](QString error, QString errorMessage){
-		QMessageBox::warning(this, error, errorMessage);
-	});
-
-	connect(authResponse_, &AuthResponse::invalidateFinished, [&](bool ok){
-		success_ = ok;
-	});
+	connect(authResponse_, &AuthResponse::authError, [&](QString error, QString errorMessage){QMessageBox::warning(this, error, errorMessage);});
+	connect(authResponse_, &AuthResponse::invalidateFinished, [&](bool ok){success_ = ok;});
+	connect(authResponse_, &AuthResponse::uuidUpdate, [&](QString uuid){uuid_ = uuid;});
+	connect(authResponse_, &AuthResponse::accessTokenUpdate, [&](QString accessToken){accessToken_ = accessToken;});
+	connect(authResponse_, &AuthResponse::clientTokenUpdate, [&](QString clientToken){clientToken_  = clientToken;});
+	connect(authResponse_, &AuthResponse::playerNameUpdate, [&](QString playername){ui_->playername_le->setText(playername);});
 }
 
 AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool, const QString &accountName) :
@@ -129,19 +128,7 @@ void AccountDialog::on_log_in_out_pb_clicked()
 														  ui_->password_le->text()).toUtf8();
 
 		ui_->log_in_out_pb->setEnabled(false);
-		connect(authResponse_, SIGNAL(authError(QString,QString)), this, SLOT(authError(QString,QString)));
-		connect(authResponse_, SIGNAL(uuidUpdate(QString)), this, SLOT(uuidUpdate(QString)));
-		connect(authResponse_, SIGNAL(accessTokenUpdate(QString)), this, SLOT(accessTokenUpdate(QString)));
-		connect(authResponse_, SIGNAL(clientTokenUpdate(QString)), this, SLOT(clientTokenUpdate(QString)));
-		connect(authResponse_, SIGNAL(playerNameUpdate(QString)), this, SLOT(playerNameUpdate(QString)));
-		connect(authResponse_, SIGNAL(authenticateFinished(bool)), this, SLOT(authFinished(bool)));
 		authkit_.authenticate(data);
-		disconnect(authResponse_, SIGNAL(authError(QString,QString)), this, SLOT(authError(QString,QString)));
-		disconnect(authResponse_, SIGNAL(uuidUpdate(QString)), this, SLOT(uuidUpdate(QString)));
-		disconnect(authResponse_, SIGNAL(accessTokenUpdate(QString)), this, SLOT(accessTokenUpdate(QString)));
-		disconnect(authResponse_, SIGNAL(clientTokenUpdate(QString)), this, SLOT(clientTokenUpdate(QString)));
-		disconnect(authResponse_, SIGNAL(playerNameUpdate(QString)), this, SLOT(playerNameUpdate(QString)));
-		disconnect(authResponse_, SIGNAL(authenticateFinished(bool)), this, SLOT(authFinished(bool)));
 
 		ui_->log_in_out_pb->setEnabled(true);
 		if(success_){
@@ -186,24 +173,4 @@ void AccountDialog::on_uncertified_rb_clicked()
 	ui_->password_le->setVisible(false);
 	ui_->showPassword_pb->setVisible(false);
 	ui_->log_in_out_pb->setVisible(false);
-}
-
-void AccountDialog::uuidUpdate(QString uuid)
-{
-	uuid_ = uuid;
-}
-
-void AccountDialog::accessTokenUpdate(QString accessToken)
-{
-	accessToken_ = accessToken;
-}
-
-void AccountDialog::clientTokenUpdate(QString clientToken)
-{
-	clientToken_  = clientToken;
-}
-
-void AccountDialog::playerNameUpdate(QString playername)
-{
-	ui_->playername_le->setText(playername);
 }

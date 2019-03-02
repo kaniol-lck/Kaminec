@@ -29,15 +29,12 @@ StartGameTab::StartGameTab(QWidget *parent, Launcher *launcher, AccountPool *acc
 
 	connect(launcher_, &Launcher::finished, [&](int /*i*/)
 	{
-		ui_->start_pb->setText(tr("Launch"));
-		ui_->start_pb->setEnabled(true);
 	});
 
 	connect(launcher_, &Launcher::exceptionMessage, [&](QString message)
 	{
 		QMessageBox::warning(this, tr("error"), message);
-	}
-);
+	});
 }
 
 StartGameTab::~StartGameTab()
@@ -69,6 +66,4 @@ void StartGameTab::on_start_pb_clicked()
 	auto profile = profileManager_->getProfile(selectedProfileName);
 
 	launcher_->start(profile, account);
-	ui_->start_pb->setText(tr("Gaming..."));
-	ui_->start_pb->setEnabled(false);
 }
