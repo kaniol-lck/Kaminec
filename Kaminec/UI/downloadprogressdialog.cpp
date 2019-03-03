@@ -1,13 +1,15 @@
 #include "downloadprogressdialog.h"
 #include "ui_downloadprogressdialog.h"
 
-DownloadProgressDialog::DownloadProgressDialog(QWidget *parent, Downloader *downloader) :
+#include "kits/DownloadKit/DownloadKit.h"
+
+DownloadProgressDialog::DownloadProgressDialog(QWidget *parent) :
 	QDialog(parent),
-	ui_(new Ui::DownloadProgressDialog),
-	downloader_(downloader)
+	ui_(new Ui::DownloadProgressDialog)
 {
+	DownloadKit::init(this);
 	ui_->setupUi(this);
-	ui_->download_tableView->setModel(downloader_->getDownloadModel());
+	ui_->download_treeView->setModel(DownloadKit::instance()->getModel());
 }
 
 DownloadProgressDialog::~DownloadProgressDialog()

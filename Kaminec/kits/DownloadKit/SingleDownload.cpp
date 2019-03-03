@@ -8,21 +8,20 @@
 #include <QNetworkRequest>
 
 
-SingleDownload::SingleDownload(QObject *parent, QNetworkAccessManager *manager, int index):
+SingleDownload::SingleDownload(QObject *parent, QNetworkAccessManager *manager):
     QObject(parent),
     manager_(manager),
-    output_(new QFile(this)),
-    index_(index)
+	output_(new QFile(this))
 {
 
 }
 
-bool SingleDownload::isDownload() const
+bool SingleDownload::isOccupied() const
 {
-    return isdownload_;
+	return isOccupied_;
 }
 
-void SingleDownload::start(const QList<QStandardItem *> &modelItem, const DownloadInfo &downloadInfo)
+void SingleDownload::start(const DownloadInfo &downloadInfo, const QList<QStandardItem *> &modelItem)
 {
     modelItem_ = modelItem;
     QString filename = downloadInfo.path_;
@@ -31,50 +30,33 @@ void SingleDownload::start(const QList<QStandardItem *> &modelItem, const Downlo
 		dir.mkpath(dir.path());
     output_->setFileName(filename);
 	if(!output_->open(QIODevice::ReadWrite)){
-        emit finished(index_);
+		emit finished(modelItem_.first()->row());
 		throw FileOpenException(output_->fileName());
-        return;
     }
 	qDebug()<<"Start download:"<<output_->fileName();
 
     QNetworkRequest request(downloadInfo.url_);
     currentDownload_ = manager_->get(request);
-    connect(currentDownload_,SIGNAL(downloadProgress(qint64,qint64)),SLOT(downloadProgress(qint64,qint64)));
-    connect(currentDownload_,SIGNAL(finished()),SLOT(downloadFinished()));
-    connect(currentDownload_,SIGNAL(readyRead()),SLOT(downloadReadyRead()));
 
-	isdownload_ = true;
-}
+	connect(currentDownload_, &QNetworkReply::finished, this, [&]{
+		output_->close();
 
-void SingleDownload::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
-{
-    if(isdownload_){
-        modelItem_.at(1)->setText(QString::number(bytesReceived));
-        if(modelItem_.at(2)->text()=="0")
-			modelItem_.at(2)->setText(QString::number(bytesTotal));
-	}
-}
+//		qDebug()<<modelItem_.at(0)->text()<<" from "<<modelItem_.at(4)->text();
 
-void SingleDownload::downloadReadyRead()
-{
-    if(output_->isWritable()){
-        output_->write(currentDownload_->readAll());
-    }
-}
+		isOccupied_ = false;
 
-void SingleDownload::downloadFinished()
-{
-    output_->close();
+		if(currentDownload_->error()){
+			throw DownloadException(currentDownload_->errorString());
+		}else {
+			qDebug()<<"Succeed:"<<output_->fileName();
+			emit finished(modelItem_.first()->row());
+		}
+	});
 
-    qDebug()<<"downloader "<<index_<<" finished downloading file:"<<output_->fileName();
-	qDebug()<<modelItem_.at(0)->text()<<" from "<<modelItem_.at(4)->text();
+	connect(currentDownload_, &QNetworkReply::readyRead, this, [&]{
+		if(output_->isWritable())
+			output_->write(currentDownload_->readAll());
+	});
 
-    isdownload_ = false;
-
-    if(currentDownload_->error()){
-		throw DownloadException(currentDownload_->errorString());
-	}else {
-        qDebug()<<"Succeed:"<<output_->fileName();
-        emit finished(index_);
-	}
+	isOccupied_ = true;
 }

@@ -3,18 +3,19 @@
 
 #include "UI/preferences.h"
 #include "assistance/Path.h"
-#include "assistance/gamemode.h"
+#include "assistance/Gamemode.h"
+#include "download/VersionManifestDownload.h"
 
 #include <QGraphicsEffect>
+#include <QDebug>
 
 KaminecLauncher::KaminecLauncher(QWidget *parent) :
     QMainWindow(parent),
 	ui_(new Ui::KaminecLauncher),
-	downloader_(new Downloader(this)),
 	accountPool_(new AccountPool(this)),
 	profileManager_(new ProfileManager(this)),
 	launcher_(new Launcher(this)),
-	downloadProgressDialog_(new DownloadProgressDialog(this, downloader_)),
+	downloadProgressDialog_(new DownloadProgressDialog(this)),
 	startGameTab_(new StartGameTab(this, launcher_, accountPool_, profileManager_)),
 	accountTab_(new AccountTab(this, accountPool_)),
 	profileTab_(new ProfileTab(this, profileManager_)),
@@ -103,4 +104,13 @@ void KaminecLauncher::changeEvent(QEvent *event)
 		retranslateUi();
 	}else
 		QMainWindow::changeEvent(event);
+}
+
+void KaminecLauncher::on_actionDownload_Game_triggered()
+{
+	auto versionManifestDownload = new VersionManifestDownload(this);
+	connect(versionManifestDownload, &VersionManifestDownload::downloadFinished, []{
+		qDebug()<<"!";
+	});
+	versionManifestDownload->AddDownload();
 }

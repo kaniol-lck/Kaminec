@@ -3,7 +3,11 @@
 
 #include <QMainWindow>
 
+#include "LAminec/AccountPool.h"
+#include "LAminec/ProfileManager.h"
+#include "launch/Launcher.h"
 #include "UI/downloadprogressdialog.h"
+
 #include "UI/kamineclauncher_tabs/startgametab.h"
 #include "UI/kamineclauncher_tabs/accounttab.h"
 #include "UI/kamineclauncher_tabs/profiletab.h"
@@ -18,7 +22,7 @@ class KaminecLauncher : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit KaminecLauncher(QWidget *parent = 0);
+	explicit KaminecLauncher(QWidget *parent = nullptr);
     ~KaminecLauncher();
 
 	bool startGame();
@@ -34,12 +38,13 @@ private slots:
 
 	void setBackGround();
 
+	void on_actionDownload_Game_triggered();
+
 private:
 	void retranslateUi();
 
 private:
 	Ui::KaminecLauncher *ui_;
-	Downloader *downloader_;
 	AccountPool *accountPool_;
 	ProfileManager *profileManager_;
 	Launcher *launcher_;

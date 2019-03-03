@@ -17,7 +17,7 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QTableView" name="download_tableView">
+      <widget class="QTreeView" name="download_treeView">
        <property name="styleSheet">
         <string notr="true">background-color: rgba(255, 255, 255, 100);</string>
        </property>

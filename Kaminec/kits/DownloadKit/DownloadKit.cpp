@@ -1,88 +1,60 @@
-#include "downloadkit.h"
+#include "DownloadKit.h"
 
 #include <QFileInfo>
 #include <QEventLoop>
 #include <QDebug>
+#include <cassert>
+
+DownloadKit *DownloadKit::pInstance = nullptr;
 
 DownloadKit::DownloadKit(QObject *parent) : QObject(parent)
 {
-	for(int index = 0; index!= downloadNumber_;++index){
-		downloaderPool_.append(new SingleDownload(this,&manager_,index));
-    }
-	model_.setColumnCount(5);
-	model_.setHeaderData(0,Qt::Horizontal,"filename");
-	model_.setHeaderData(1,Qt::Horizontal,"downloaded size");
-	model_.setHeaderData(2,Qt::Horizontal,"total size");
-	model_.setHeaderData(3,Qt::Horizontal,"path");
-	model_.setHeaderData(4,Qt::Horizontal,"url");
-
-
-	//for each downloader
-	for(int index = 0; index != downloadNumber_; index++){
-		connect(downloaderPool_.at(index),SIGNAL(finished(int)),SLOT(startNextDownload(int)));
+	for(int index = 0; index!= downloadNumber_; ++index){
+		downloaderPool_.append(new SingleDownload(this,&manager_));
+		connect(downloaderPool_.at(index), &SingleDownload::finished, this, &DownloadKit::singleFinished);
 		//once downloader finished and start next download
 	}
+	model_.setColumnCount(3);
+	model_.setHeaderData(Column::FileName, Qt::Horizontal, tr("File Name"));
+	model_.setHeaderData(Column::FileType, Qt::Horizontal, tr("File Type"));
+	model_.setHeaderData(Column::Status, Qt::Horizontal, tr("Status"));
 }
 
-void DownloadKit::append(const DownloadInfo &item)
+void DownloadKit::init(QObject *parent)
 {
-	auto info = fromDownloadInfo(item);
+	pInstance = new DownloadKit(parent);
+}
 
-	if(item.size_==0)
-		info.at(2)->setText(QString("unkonwn"));
+DownloadKit *DownloadKit::instance()
+{
+	assert(pInstance != nullptr);
+	return pInstance;
+}
 
-	QFileInfo fileInfo(item.path_);
-	if(!fileInfo.exists() ||
-	   (fileInfo.size() == 0)){
-		mutex_.lock();
-		downloadQueue_.enqueue(item);
-		model_.appendRow(info);
-		itemList_.append(info);
-		++totalCount_;
-		mutex_.unlock();
+void DownloadKit::appendDownloadPack(const DownloadPack &downloadPack)
+{
+	for(auto downloadInfo : downloadPack.fileList()){
+		QFileInfo fileInfo(downloadInfo.path());
+		//download only if file does not exist or has empty size(download failed)
+		if(!fileInfo.exists() || (fileInfo.size() == 0))
+			downloadInfoQueue_.enqueue(downloadInfo);
+		spur();
 	}
 
-	startDownload();
-}
-
-void DownloadKit::append(const QList<DownloadInfo> &itemList)
-{
-    for(auto &item: itemList)
-        append(item);
-}
-
-void DownloadKit::startDownload()
-{
-	//for each downloader
-	for(int index = 0; index != downloadNumber_; index++){
-		//if downloader is not downloading and download queue is not empty
-		if(!downloaderPool_.at(index)->isDownload()&&!downloadQueue_.empty()){
-			//add a task to the free downloader
-			downloaderPool_.at(index)->start(itemList_.takeFirst(),downloadQueue_.dequeue());
-		}
+	auto list = downloadPack.toRowList();
+	auto packItem = list.takeFirst();
+	for(auto rowItems : list){
+		downloadRowQueue_.enqueue(rowItems);
+		model_.appendRow(rowItems);
+		auto childItem = rowItems.first();
+		packItem.first()->setChild(childItem->row(), childItem);
 	}
 }
 
-int DownloadKit::waitForFinished()
+void DownloadKit::appendDownloadPack(const DownloadPack &downloadPack, std::function<void()> slotFuntion)
 {
-    QEventLoop eventloop(this);
-    connect(this,SIGNAL(finished()),&eventloop,SLOT(quit()));
-    eventloop.exec();
-	if(!downloadQueue_.empty()){
-        qDebug()<<"exceptional finished.";
-        return -1;
-    }
-    return 0;
-}
-
-int DownloadKit::getDownloadedCount()
-{
-	return downloadedCount_;
-}
-
-int DownloadKit::getTotalCount()
-{
-	return totalCount_;
+	appendDownloadPack(downloadPack);
+	slotFunctions.insert(downloadPack.packName(), slotFuntion);
 }
 
 QStandardItemModel *DownloadKit::getModel()
@@ -90,43 +62,44 @@ QStandardItemModel *DownloadKit::getModel()
 	return &model_;
 }
 
-void DownloadKit::startNextDownload(int index)
+void DownloadKit::spur()
 {
-    qDebug()<<"downloader "<<index<<" finished,next";
-	++downloadedCount_;
-	emit downloadedCountChanged(downloadedCount_);
-
-	if(downloadQueue_.empty()){
-        bool d = false;
-		for(auto downloader: downloaderPool_){
-            if(downloader->isDownload()){
-                d = true;
-                break;
-            }
-        }
-        if(!d){
-            qDebug()<<"All finished";
-            emit finished();
-        }
-        return;
+	for(auto singleDownloader : downloaderPool_){
+		if(downloadInfoQueue_.isEmpty()||downloadRowQueue_.isEmpty()) break;
+		if(!singleDownloader->isOccupied())
+			singleDownloader->start(downloadInfoQueue_.dequeue(), downloadRowQueue_.dequeue());
 	}
-
-	mutex_.lock();
-	downloaderPool_.at(index)->start(itemList_.takeFirst(),downloadQueue_.dequeue());
-	mutex_.unlock();
 }
 
-void DownloadKit::singleFinished(int /*index*/)
+void DownloadKit::singleFinished(int row)
 {
-}
+	qDebug()<<"downloader finished,next";
 
-QList<QStandardItem *> DownloadKit::fromDownloadInfo(const DownloadInfo &downloadInfo)
-{
-	return QList<QStandardItem*>{
-		new QStandardItem(downloadInfo.name_),
-		new QStandardItem(),
-		new QStandardItem(QString::number(downloadInfo.size_)),
-		new QStandardItem(downloadInfo.path_),
-		new QStandardItem(downloadInfo.url_.toString())
-	};
+	if(downloadInfoQueue_.empty()){
+		bool noTask = true;
+		for(auto downloader: downloaderPool_){
+			if(downloader->isOccupied()){
+				noTask = false;
+				break;
+			}
+		}
+		if(noTask){
+			qDebug()<<"All finished.";
+			emit finished();
+		}
+		return;
+	}
+	bool downloadedAll = true;
+	auto parent = model_.item(row, 0)->parent();
+	for(auto child : model_.findItems("", Qt::MatchRecursive)){
+		if(child->parent() == parent &&
+		   model_.item(child->row(), Column::Status)->data(Qt::DisplayRole) == tr("Status")){
+			downloadedAll = false;
+			break;
+		}
+	}
+	if(downloadedAll)
+		slotFunctions.take(parent->data(Qt::DisplayRole).toString());
+
+	spur();
 }

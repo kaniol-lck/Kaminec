@@ -14,21 +14,14 @@ class SingleDownload : public QObject
 {
     Q_OBJECT
 public:
-    explicit SingleDownload(QObject *parent,QNetworkAccessManager *manager,int index);
+	explicit SingleDownload(QObject *parent, QNetworkAccessManager *manager);
 
-    bool isDownload() const;
+	bool isOccupied() const;
 
-	void start(const QList<QStandardItem *> &modelItem, const DownloadInfo &downloadInfo);
+	void start(const DownloadInfo &downloadInfo, const QList<QStandardItem *> &modelItem);
 
 signals:
-    void finished(int) const;
-
-private slots:
-    void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
-    void downloadReadyRead();
-    void downloadFinished();
-
-public slots:
+	void finished(int row) const;
 
 private:
 	QNetworkAccessManager *manager_;
@@ -36,8 +29,7 @@ private:
 	QFile *output_;
 
 	QList<QStandardItem*> modelItem_;
-	bool isdownload_ = false;
-	int index_;
+	bool isOccupied_ = false;
 };
 
 #endif // SINGLEDOWNLOAD_H

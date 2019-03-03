@@ -126,7 +126,14 @@ QToolBar::separator {
     <addaction name="separator"/>
     <addaction name="action_preferences"/>
    </widget>
+   <widget class="QMenu" name="menu_Download">
+    <property name="title">
+     <string>&amp;Download</string>
+    </property>
+    <addaction name="actionDownload_Game"/>
+   </widget>
    <addaction name="menu_Tools"/>
+   <addaction name="menu_Download"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <property name="enabled">
@@ -182,6 +189,11 @@ QToolBar::separator {
   <action name="action_Download_Progress">
    <property name="text">
     <string>&amp;Download Progress</string>
+   </property>
+  </action>
+  <action name="actionDownload_Game">
+   <property name="text">
+    <string>Download Game</string>
    </property>
   </action>
  </widget>

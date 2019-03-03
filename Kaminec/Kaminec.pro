@@ -33,9 +33,6 @@ SOURCES += main.cpp\
     check/Checker.cpp \
     check/CheckJson.cpp \
     check/CheckAssets.cpp \
-    download/DownloadAssets.cpp \
-	download/DownloadJson.cpp \
-    download/Downloader.cpp \
     kits/AssetKit/AssetKit.cpp \
     kits/AssetKit/AssetObject.cpp \
     kits/AuthKit/AuthKit.cpp \
@@ -65,7 +62,6 @@ SOURCES += main.cpp\
     exception/JsonParseException.cpp \
     check/CheckParser.cpp \
     launch/LaunchParser.cpp \
-    download/DownloadParser.cpp \
     assistance/PathReplacer.cpp \
     messenger/Account.cpp \
     LAminec/AccountPool.cpp \
@@ -81,7 +77,10 @@ SOURCES += main.cpp\
     UI/downloadprogressdialog.cpp \
     UI/preferences_tabs/themetab.cpp \
     UI/preferences_tabs/launchertab.cpp \
-    UI/kamineclauncher_tabs/gameoutputtab.cpp
+    UI/kamineclauncher_tabs/gameoutputtab.cpp \
+    download/VersionManifestDownload.cpp \
+    download/DownloadPack.cpp \
+    UI/dialogs/downloadgamedialog.cpp
 
 HEADERS  += UI/kamineclauncher.h \
 	UI/preferences.h \
@@ -94,9 +93,6 @@ HEADERS  += UI/kamineclauncher.h \
     check/Checker.h \
     check/CheckJson.h \
     check/CheckAssets.h \
-    download/DownloadAssets.h \
-	download/DownloadJson.h \
-    download/Downloader.h \
     kits/AssetKit/AssetKit.h \
     kits/AssetKit/AssetObject.h \
     kits/AuthKit/AuthKit.h \
@@ -126,7 +122,6 @@ HEADERS  += UI/kamineclauncher.h \
     exception/JsonParseException.h \
     check/CheckParser.h \
     launch/LaunchParser.h \
-    download/DownloadParser.h \
     assistance/PathReplacer.h \
     messenger/Account.h \
     LAminec/AccountPool.h \
@@ -144,7 +139,10 @@ HEADERS  += UI/kamineclauncher.h \
     UI/preferences_tabs/themetab.h \
     assistance/languages.hpp \
     UI/preferences_tabs/launchertab.h \
-    UI/kamineclauncher_tabs/gameoutputtab.h
+    UI/kamineclauncher_tabs/gameoutputtab.h \
+    download/VersionManifestDownload.h \
+    download/DownloadPack.h \
+    UI/dialogs/downloadgamedialog.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preferences.ui \
@@ -159,7 +157,8 @@ FORMS    += UI/kamineclauncher.ui \
     UI/downloadprogressdialog.ui \
     UI/preferences_tabs/themetab.ui \
     UI/preferences_tabs/launchertab.ui \
-    UI/kamineclauncher_tabs/gameoutputtab.ui
+    UI/kamineclauncher_tabs/gameoutputtab.ui \
+    UI/dialogs/downloadgamedialog.ui
 
 TRANSLATIONS = ../Kaminec_translate/languages/en_US.ts \
 			   ../Kaminec_translate/languages/zh_CN.ts
