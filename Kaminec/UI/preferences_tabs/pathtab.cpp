@@ -73,7 +73,7 @@ void PathTab::on_javaPath_showPb_2_clicked()
 
 void PathTab::on_corePath_showPb_clicked()
 {
-	auto corePath = QFileDialog::getExistingDirectory(0, tr("Please choose the upper directory,we will automaticly create \".minecraft\" folder"),
+	auto corePath = QFileDialog::getExistingDirectory(this, tr("Please choose the upper directory,we will automaticly create \".minecraft\" folder"),
 													  ui_->corePath_le->text());
 	if(corePath!=""){
 		if(corePath.endsWith("/.minecraft"))
@@ -86,7 +86,7 @@ void PathTab::on_corePath_showPb_clicked()
 
 void PathTab::on_defaultGamePath_showPb_clicked()
 {
-	auto defaultGamePath = QFileDialog::getExistingDirectory(0, tr("Please choose the upper directory,we will automaticly create \".minecraft\" folder"),
+	auto defaultGamePath = QFileDialog::getExistingDirectory(this, tr("Please choose the upper directory,we will automaticly create \".minecraft\" folder"),
 													  ui_->defaultGamePath_le->text());
 	if(defaultGamePath!=""){
 		if(defaultGamePath.endsWith("/.minecraft"))

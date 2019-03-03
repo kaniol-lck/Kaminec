@@ -66,6 +66,11 @@ Arguments LaunchParser::gameArguments() const
 	if(custom_.getFullScreen())
 		gameArguments.setOption("--fullscreen");
 
+	if(custom_.getServerMode()){
+		gameArguments.setOption("--server", custom_.getServer());
+		gameArguments.setOption("--port", custom_.getServerPort());
+	}
+
 	for(auto it = replace_list.begin(); it != replace_list.end(); it++){
 		gameArguments.replace(it.key(), it.value());
 	}

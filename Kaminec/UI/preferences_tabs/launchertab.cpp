@@ -21,15 +21,6 @@ LauncherTab::LauncherTab(QWidget *parent) :
 void LauncherTab::accepted()
 {
 	custom_.setLogFileNumber(ui_->logNumber_spinBox->value());
-
-	auto lang = languages.at(ui_->lang_cb->currentIndex());
-	if(lang != custom_.getLanguage()){
-		custom_.setLanguage(lang);
-		auto translator = new QTranslator();
-		if(!translator->load(QCoreApplication::applicationDirPath()+"/languages/"+lang+".qm"))
-			return;
-		qApp->installTranslator(translator);
-	}
 }
 
 LauncherTab::~LauncherTab()
@@ -40,4 +31,16 @@ LauncherTab::~LauncherTab()
 void LauncherTab::on_logNumber_spinBox_valueChanged(int arg1)
 {
 	ui_->logTip_label->setVisible(arg1 == -1);
+}
+
+void LauncherTab::on_lang_cb_currentIndexChanged(const QString &)
+{
+	auto lang = languages.at(ui_->lang_cb->currentIndex());
+	if(lang != custom_.getLanguage()){
+		custom_.setLanguage(lang);
+		auto translator = new QTranslator();
+		if(!translator->load(QCoreApplication::applicationDirPath()+"/languages/"+lang+".qm"))
+			return;
+		qApp->installTranslator(translator);
+	}
 }

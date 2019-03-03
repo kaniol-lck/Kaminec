@@ -11,7 +11,7 @@
 #include "exception/Exceptions.hpp"
 #include "assistance/utility.h"
 
-Logger::Logger(QObject *parent = 0) :
+Logger::Logger(QObject *parent) :
 	QObject(parent)
 {
 	QDir dir(Path::loggerPath());
@@ -35,6 +35,7 @@ void Logger::finishGenStartcode()
 {
 	if(!logFile_.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
 		throw FileOpenException(logFile_.fileName());
+	qDebug()<<logFile_.fileName();
 	QTextStream out(&logFile_);
 	out << "generate startcode time:" << formatTime(genStartCodeTime_.elapsed()) << endl;
 	logFile_.close();

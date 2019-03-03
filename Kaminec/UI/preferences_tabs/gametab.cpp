@@ -11,6 +11,9 @@ GameTab::GameTab(QWidget *parent) :
 	auto size = custom_.getGameWindowSize();
 	ui_->width_sb->setValue(size.first);
 	ui_->height_sb->setValue(size.second);
+	ui_->serverMode_gb->setChecked(custom_.getServerMode());
+	ui_->ip_le->setText(custom_.getServer());
+	ui_->port_le->setText(custom_.getServerPort());
 }
 
 void GameTab::accepted()
@@ -19,6 +22,9 @@ void GameTab::accepted()
 	custom_.setCustomizeResolution(ui_->customizeResolution_gb->isChecked());
 	custom_.setGameWindowSize(ui_->width_sb->value(),
 							  ui_->height_sb->value());
+	custom_.setServerMode(ui_->serverMode_gb->isChecked());
+	custom_.setServer(ui_->ip_le->text());
+	custom_.setServerPort(ui_->port_le->text());
 }
 
 GameTab::~GameTab()

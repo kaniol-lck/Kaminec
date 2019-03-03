@@ -50,6 +50,7 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 //			ui_->moduleSwitch->removeTab(ui_->moduleSwitch->indexOf(gameOutputTab_));
 		}
 	});
+	ui_->mainToolBar->setVisible(false);
 }
 
 KaminecLauncher::~KaminecLauncher()
@@ -62,9 +63,9 @@ void KaminecLauncher::on_action_preferences_triggered()
 {
 	//create preferences windows
 	auto preferences = new Preferences(this, accountPool_, profileManager_);
-	connect(preferences, &Preferences::updateBackground, this, &setBackGround);
+	connect(preferences, &Preferences::updateBackground, this, &KaminecLauncher::setBackGround);
 	preferences->exec();
-	disconnect(preferences, &Preferences::updateBackground, this, &setBackGround);
+	disconnect(preferences, &Preferences::updateBackground, this, &KaminecLauncher::setBackGround);
 }
 
 void KaminecLauncher::setBackGround()
@@ -78,10 +79,10 @@ void KaminecLauncher::setBackGround()
 
 void KaminecLauncher::retranslateUi()
 {
-	ui_->moduleSwitch->setTabText(0, tr("Start Game"));
-	ui_->moduleSwitch->setTabText(1, tr("Account"));
-	ui_->moduleSwitch->setTabText(2, tr("Profile"));
-	ui_->moduleSwitch->setTabText(3, tr("Game Output"));
+	ui_->moduleSwitch->setTabText(ui_->moduleSwitch->indexOf(startGameTab_), tr("Start Game"));
+	ui_->moduleSwitch->setTabText(ui_->moduleSwitch->indexOf(accountTab_), tr("Account"));
+	ui_->moduleSwitch->setTabText(ui_->moduleSwitch->indexOf(profileTab_), tr("Profile"));
+	ui_->moduleSwitch->setTabText(ui_->moduleSwitch->indexOf(gameOutputTab_), tr("Game Output"));
 }
 
 void KaminecLauncher::on_action_Download_Progress_triggered()

@@ -14,8 +14,8 @@ ThemeTab::ThemeTab(QWidget *parent) :
 	ui_->fontComboBox->setCurrentFont(font);
 	ui_->font_spinBox->setValue(font.pointSize());
 	ui_->background_le->setText(custom_.getBackground());
-	connect(ui_->fontComboBox, &QFontComboBox::currentFontChanged, this, &updateFont);
-	connect(ui_->font_spinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &updateFont);
+	connect(ui_->fontComboBox, &QFontComboBox::currentFontChanged, this, &ThemeTab::updateFont);
+	connect(ui_->font_spinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &ThemeTab::updateFont);
 }
 
 void ThemeTab::accepted()

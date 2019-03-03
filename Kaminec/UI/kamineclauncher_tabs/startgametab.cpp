@@ -52,6 +52,8 @@ void StartGameTab::changeEvent(QEvent *event)
 
 void StartGameTab::on_start_pb_clicked()
 {
+	ui_->start_pb->setText(tr("Preparing..."));
+	ui_->start_pb->setEnabled(false);
 	auto selectedAccountName = accountPool_->getSelectedAccountName();
 	if(!accountPool_->containAccount(selectedAccountName)){
 		QMessageBox::warning(this, tr("Launch Error"), tr("Please create your account first."));

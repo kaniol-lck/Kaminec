@@ -72,6 +72,18 @@ QTabBar::tab:selected {
       <property name="currentIndex">
        <number>-1</number>
       </property>
+      <property name="elideMode">
+       <enum>Qt::ElideNone</enum>
+      </property>
+      <property name="tabsClosable">
+       <bool>false</bool>
+      </property>
+      <property name="movable">
+       <bool>false</bool>
+      </property>
+      <property name="tabBarAutoHide">
+       <bool>false</bool>
+      </property>
      </widget>
     </item>
    </layout>

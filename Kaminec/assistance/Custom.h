@@ -3,6 +3,7 @@
 
 #include <QSettings>
 #include <QCoreApplication>
+#include <QFont>
 #include <QStandardPaths>
 
 #include "assistance/languages.hpp"
@@ -32,13 +33,13 @@ public:
 
 	//launcher settings
 	getterAndSetter(LogFileNumber, Int, logFileNumber, 10)
-	getterAndSetter(Font, String, font, "")
+	getterAndSetter(Font, String, font, QFont("微软雅黑", 9))
 	getterAndSetter(Background, String, background, ":/main/res/background.png")
 
 	//directory settings
 	getterAndSetter_prefix(CoreGameFileDirectory, String, coreDirectory, "path/", QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/.minecraft")
 	getterAndSetter_prefix(DefaultGameDirectory, String, gameDirectory, "path/", getCoreGameFileDirectory())
-	getterAndSetter_prefix(JavaDirectory, String, JavaDirectory, "path/", "")
+	getterAndSetter_prefix(JavaDirectory, String, JavaDirectory, "path/", "C:/ProgramData/Oracle/Java/javapath/javaw.exe")//!!!!!!!
 	getterAndSetter_prefix(GameVersionsDirectory, String, gameVersionDirectory, "path/", "<core>/versions")
 	getterAndSetter_prefix(GameLibrariesDirectory, String, gameLibrariesDirectory, "path/", "<core>/libraries")
 	getterAndSetter_prefix(AssetsDirectory, String, assetsDirectory, "path/", "<core>/assets")
@@ -78,7 +79,8 @@ public:
 	void setGameWindowSize(QPair<int, int> size);
 	QPair<int, int> getGameWindowSize() const;
 
-	getterAndSetter(ServerSocket, String, serverSocket, "")
+	getterAndSetter(Server, String, server, "")
+	getterAndSetter(ServerPort, String, port, 25565)
 	getterAndSetter(ServerMode, Bool, serverMode, false)
 
 private:

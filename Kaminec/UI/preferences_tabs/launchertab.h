@@ -23,6 +23,8 @@ public:
 private slots:
 	void on_logNumber_spinBox_valueChanged(int arg1);
 
+	void on_lang_cb_currentIndexChanged(const QString &arg1);
+
 private:
 	Ui::LauncherTab *ui_;
 	Custom custom_;
