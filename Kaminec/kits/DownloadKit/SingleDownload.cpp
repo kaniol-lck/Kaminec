@@ -21,25 +21,27 @@ bool SingleDownload::isOccupied() const
 	return isOccupied_;
 }
 
-void SingleDownload::start(const DownloadInfo &downloadInfo, const QList<QStandardItem *> &modelItem)
+void SingleDownload::start(const QPair<QString, DownloadInfo> &downloadInfo)
 {
-    modelItem_ = modelItem;
-    QString filename = downloadInfo.path_;
+	packName_ = downloadInfo.first;
+	fileName_ = downloadInfo.second.name();
+	QString filename = downloadInfo.second.path();
 	QDir dir = QFileInfo(filename).path();
     if(!dir.exists())
 		dir.mkpath(dir.path());
     output_->setFileName(filename);
 	if(!output_->open(QIODevice::ReadWrite)){
-		emit finished(modelItem_.first()->row());
+		emit finished(packName_, fileName_);
 		throw FileOpenException(output_->fileName());
     }
 	qDebug()<<"Start download:"<<output_->fileName();
 
-    QNetworkRequest request(downloadInfo.url_);
+	QNetworkRequest request(downloadInfo.second.url());
     currentDownload_ = manager_->get(request);
 
 	connect(currentDownload_, &QNetworkReply::finished, this, [&]{
 		output_->close();
+		emit finished(packName_, fileName_);
 
 //		qDebug()<<modelItem_.at(0)->text()<<" from "<<modelItem_.at(4)->text();
 
@@ -49,7 +51,6 @@ void SingleDownload::start(const DownloadInfo &downloadInfo, const QList<QStanda
 			throw DownloadException(currentDownload_->errorString());
 		}else {
 			qDebug()<<"Succeed:"<<output_->fileName();
-			emit finished(modelItem_.first()->row());
 		}
 	});
 

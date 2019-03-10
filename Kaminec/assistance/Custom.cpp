@@ -49,9 +49,7 @@ void Custom::setLanguage(QString &language)
 
 QString Custom::getLanguage() const
 {
-	auto index = languages_code.indexOf(QLocale().country());
-	if(index == -1) index = 0;
-	return settings_.value("language", languages.at(index)).toString();
+	return settings_.value("language", QLocale::system().name()).toString();
 }
 
 void Custom::setGameWindowSize(int width, int height)

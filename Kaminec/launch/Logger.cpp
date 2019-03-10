@@ -1,4 +1,4 @@
-#include "logger.h"
+#include "Logger.h"
 
 #include <QDir>
 #include <QTime>
@@ -10,6 +10,7 @@
 #include "assistance/Path.h"
 #include "exception/Exceptions.hpp"
 #include "assistance/utility.h"
+#include "assistance/Custom.h"
 
 Logger::Logger(QObject *parent) :
 	QObject(parent)
@@ -63,6 +64,8 @@ void Logger::logLaunchPack(const LaunchPack &launchPack)
 	//time
 	out << "version chain:" << endl;
 	out << versionChain2String(launchPack.versionChain()) << endl << endl;
+	out << "java paths:" << endl;
+	out << Custom().getJavaDirectory() << endl << endl;
 	out << "class paths:" << endl;
 	out << launchPack.classPaths().join("\n") << endl << endl;
 	out << "game main class:" << endl;

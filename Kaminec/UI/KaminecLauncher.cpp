@@ -4,7 +4,7 @@
 #include "UI/preferences.h"
 #include "assistance/Path.h"
 #include "assistance/Gamemode.h"
-#include "download/VersionManifestDownload.h"
+#include "UI/dialogs/gamedownloaddialog.h"
 
 #include <QGraphicsEffect>
 #include <QDebug>
@@ -108,9 +108,6 @@ void KaminecLauncher::changeEvent(QEvent *event)
 
 void KaminecLauncher::on_actionDownload_Game_triggered()
 {
-	auto versionManifestDownload = new VersionManifestDownload(this);
-	connect(versionManifestDownload, &VersionManifestDownload::downloadFinished, []{
-		qDebug()<<"!";
-	});
-	versionManifestDownload->AddDownload();
+	auto gameDownloadDialog = new GameDownloadDialog(this);
+	gameDownloadDialog->show();
 }

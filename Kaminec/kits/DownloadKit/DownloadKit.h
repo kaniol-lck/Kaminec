@@ -3,60 +3,36 @@
 
 #include "messenger/DownloadInfo.h"
 #include "kits/DownloadKit/SingleDownload.h"
-#include "download/DownloadPack.h"
+#include "messenger/DownloadPack.h"
 
 #include <QList>
 #include <QQueue>
 #include <QMutex>
-#include <QStandardItemModel>
 #include <functional>
 
 #include <QObject>
 
 class DownloadKit : public QObject
 {
-    Q_OBJECT
-private:
-	explicit DownloadKit(QObject *parent = nullptr);
-	DownloadKit() = delete;
-	DownloadKit(DownloadKit&) = delete;
-
+	Q_OBJECT
 public:
-	static void init(QObject *parent);
-	static DownloadKit *instance();
+	DownloadKit(QObject *parent = nullptr);
 
-	void appendDownloadPack(const DownloadPack &downloadPack);
-	void appendDownloadPack(const DownloadPack &downloadPack, std::function<void()> slotFuntion);
-
-	QStandardItemModel* getModel();
+	void appendDownloadFile(const QString &packName, const DownloadInfo &downloadInfo);
 
 	void spur();
-
-	enum Column { FileName, FileType, Status };
-
 signals:
-	void finished();
+	void finished(QString packName, QString fileName);
 
 public slots:
-	void singleFinished(int row);
+	void singleFinished(const QString &packName, const QString &fileName);
 
 private:
 	QNetworkAccessManager manager_;
-	QQueue<DownloadInfo> downloadInfoQueue_;
-	QQueue<QList<QStandardItem*>> downloadRowQueue_;
-
-	QTime downloadTime_;
-	int totalCount_ = 0;
-	int downloadedCount_ = 0;
-
-	QStandardItemModel model_;
-
+	QQueue<QPair<QString, DownloadInfo>> downloadInfoQueue_;
 	QList<SingleDownload*> downloaderPool_;
 	static const int downloadNumber_ = 16;
 
-	QMap<QString, std::function<void()>> slotFunctions;
-
-	static DownloadKit *pInstance;
 };
 
 #endif // DOWNLOADKIT_H

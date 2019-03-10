@@ -18,17 +18,18 @@ public:
 
 	bool isOccupied() const;
 
-	void start(const DownloadInfo &downloadInfo, const QList<QStandardItem *> &modelItem);
+	void start(const QPair<QString, DownloadInfo> &downloadInfo);
 
 signals:
-	void finished(int row) const;
+	void finished(QString packName, QString fileName);
 
 private:
 	QNetworkAccessManager *manager_;
 	QNetworkReply *currentDownload_;
 	QFile *output_;
 
-	QList<QStandardItem*> modelItem_;
+	QString packName_;
+	QString fileName_;
 	bool isOccupied_ = false;
 };
 

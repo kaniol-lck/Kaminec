@@ -1,7 +1,7 @@
 #include "profiletab.h"
 #include "ui_profiletab.h"
 
-#include "UI/dialogs/profileDialog.h"
+#include "UI/dialogs/profiledialog.h"
 #include "LAminec/GameVersionController.h"
 
 ProfileTab::ProfileTab(QWidget *parent, ProfileManager *profileManager) :

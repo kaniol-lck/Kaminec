@@ -79,8 +79,10 @@ SOURCES += main.cpp\
     UI/preferences_tabs/launchertab.cpp \
     UI/kamineclauncher_tabs/gameoutputtab.cpp \
     download/VersionManifestDownload.cpp \
-    download/DownloadPack.cpp \
-    UI/dialogs/downloadgamedialog.cpp
+    messenger/DownloadPack.cpp \
+    download/Downloader.cpp \
+    UI/dialogs/gamedownloaddialog.cpp \
+    download/GameClientDownload.cpp
 
 HEADERS  += UI/kamineclauncher.h \
 	UI/preferences.h \
@@ -141,8 +143,10 @@ HEADERS  += UI/kamineclauncher.h \
     UI/preferences_tabs/launchertab.h \
     UI/kamineclauncher_tabs/gameoutputtab.h \
     download/VersionManifestDownload.h \
-    download/DownloadPack.h \
-    UI/dialogs/downloadgamedialog.h
+    messenger/DownloadPack.h \
+    download/Downloader.h \
+    UI/dialogs/gamedownloaddialog.h \
+    download/GameClientDownload.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preferences.ui \
@@ -158,7 +162,7 @@ FORMS    += UI/kamineclauncher.ui \
     UI/preferences_tabs/themetab.ui \
     UI/preferences_tabs/launchertab.ui \
     UI/kamineclauncher_tabs/gameoutputtab.ui \
-    UI/dialogs/downloadgamedialog.ui
+    UI/dialogs/gamedownloaddialog.ui
 
 TRANSLATIONS = ../Kaminec_translate/languages/en_US.ts \
 			   ../Kaminec_translate/languages/zh_CN.ts

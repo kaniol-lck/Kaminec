@@ -14,7 +14,7 @@ class LauncherTab : public QWidget
 	Q_OBJECT
 
 public:
-	explicit LauncherTab(QWidget *parent = 0);
+	explicit LauncherTab(QWidget *parent = nullptr);
 
 	void accepted();
 
@@ -23,7 +23,7 @@ public:
 private slots:
 	void on_logNumber_spinBox_valueChanged(int arg1);
 
-	void on_lang_cb_currentIndexChanged(const QString &arg1);
+	void on_lang_cb_currentIndexChanged(int index);
 
 private:
 	Ui::LauncherTab *ui_;

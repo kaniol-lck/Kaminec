@@ -6,27 +6,27 @@
 #include <QString>
 #include <QUrl>
 
-struct DownloadInfo
+class DownloadInfo
 {
+public:
 	explicit DownloadInfo(const QString &name,
 						  const int     &size,
 						  const QString &path,
 						  const QUrl &url,
 						  const QString &type);
 
-	QString name_;
-	int   size_;
-	QString path_;
-	QUrl    url_;
-	QString type_;
-
-
-public:
 	int size() const;
 	QString name() const;
 	QString path() const;
 	QUrl url() const;
 	QString type() const;
+
+private:
+	QString name_;
+	int   size_;
+	QString path_;
+	QUrl    url_;
+	QString type_;
 };
 
 #endif // DOWNLOADINFO_H

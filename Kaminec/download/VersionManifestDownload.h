@@ -7,8 +7,9 @@ class VersionManifestDownload : public QObject
 {
 	Q_OBJECT
 public:
-	explicit VersionManifestDownload(QObject *parent = nullptr);
+	explicit VersionManifestDownload(QObject *parent, QString fileName);
 
+	bool exists();
 	void AddDownload();
 
 	QVariant waitForDownloaded();
@@ -16,7 +17,8 @@ public:
 signals:
 	void downloadFinished();
 
-public slots:
+private:
+	QString fileName_;
 };
 
 #endif // VERSIONMANIFESTDOWNLOAD_H

@@ -15,8 +15,6 @@ public:
 	QString packName() const;
 	QList<DownloadInfo> fileList() const;
 
-	QList<QList<QStandardItem*>> toRowList() const;
-
 private:
 	QString packName_;
 	QList<DownloadInfo> fileList_;

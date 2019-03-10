@@ -39,7 +39,7 @@ public:
 	//directory settings
 	getterAndSetter_prefix(CoreGameFileDirectory, String, coreDirectory, "path/", QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/.minecraft")
 	getterAndSetter_prefix(DefaultGameDirectory, String, gameDirectory, "path/", getCoreGameFileDirectory())
-	getterAndSetter_prefix(JavaDirectory, String, JavaDirectory, "path/", "C:/ProgramData/Oracle/Java/javapath/javaw.exe")//!!!!!!!
+	getterAndSetter_prefix(JavaDirectory, String, JavaDirectory, "path/", "javaw")
 	getterAndSetter_prefix(GameVersionsDirectory, String, gameVersionDirectory, "path/", "<core>/versions")
 	getterAndSetter_prefix(GameLibrariesDirectory, String, gameLibrariesDirectory, "path/", "<core>/libraries")
 	getterAndSetter_prefix(AssetsDirectory, String, assetsDirectory, "path/", "<core>/assets")
