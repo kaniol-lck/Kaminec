@@ -1,4 +1,4 @@
-#include "profilemanager.h"
+#include "ProfileManager.h"
 
 #include "assistance/PathReplacer.h"
 #include "assistance/utility.h"
@@ -41,7 +41,7 @@ ProfileManager::ProfileManager(QObject *parent) :
 		throw JsonParseException(profilesFile_.fileName(), ok.errorString(), true);
 
 	auto profilesVariant = profilesObject_.value("profiles").toVariant();
-	for(auto it : profilesVariant.toMap()){
+	for(const auto &it : profilesVariant.toMap()){
 		auto typeStr = value(it, "type").toString();
 		ProfileType type;
 		if(typeStr == "custom")

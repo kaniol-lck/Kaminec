@@ -1,6 +1,6 @@
 # Kaminec Launcher
 
-version:**beta v0.8.5**
+version:**beta v0.8.6**
 
 [中文README 点击就送](README_zh_CN.md)
 

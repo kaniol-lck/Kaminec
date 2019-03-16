@@ -8,7 +8,7 @@ class GameCoreJar
 public:
 	GameCoreJar(const QVariant &gameCoreJarVariant, const QString &version);
 
-	QString name() const;
+	QString version() const;
 	QString path() const;
 	QString sha1() const;
 	int size() const;

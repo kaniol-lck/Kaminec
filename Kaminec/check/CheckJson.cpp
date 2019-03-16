@@ -33,7 +33,7 @@ CheckInfo CheckJson::getAssetsCheckInfo() const
 CheckInfo CheckJson::getClientCheckInfo() const
 {
 	auto client = jsonKit_.client();
-	return CheckInfo(client.name(),
+	return CheckInfo(client.version(),
 					 client.size(),
 					 QCryptographicHash::Sha1,
 					 client.sha1(),

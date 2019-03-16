@@ -23,7 +23,8 @@
     selection-color: rgb(0, 0, 0);
 	selection-background-color: rgba(255, 255, 255, 191);
 	border: none;
-}</string>
+}
+</string>
      </property>
     </widget>
    </item>

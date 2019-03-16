@@ -1,6 +1,6 @@
 # Kaminec启动器
 
-版本号：**beta v0.8.5**
+版本号：**beta v0.8.6**
 
 > *这是一个叫做Kaminec的Minecraft启动器*
 

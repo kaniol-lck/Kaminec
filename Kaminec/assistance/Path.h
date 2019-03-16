@@ -20,8 +20,8 @@ public:
 	//launcher
 	static QString loggerPath();
 
-	static QString getJsonPath(const QString &version);
-	static QString getAssetIndexPath(const QString &index);
+	static QString jsonPath(const QString &version);
+	static QString assetIndexPath(const QString &index);
 
 };
 

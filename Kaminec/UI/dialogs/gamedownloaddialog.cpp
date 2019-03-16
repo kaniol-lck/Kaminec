@@ -1,79 +1,48 @@
 #include "gamedownloaddialog.h"
 #include "ui_gamedownloaddialog.h"
 
+#include "download/GameDownload.h"
 #include "download/VersionManifestDownload.h"
-#include "exception/Exceptions.hpp"
-#include "assistance/PathReplacer.h"
+#include "messenger/GameVersion.h"
+#include "download/VersionDownload.h"
+#include "download/GameJsonDownload.h"
+#include "download/GameClientDownload.h"
+#include "download/GameLibrariesDownload.h"
 
 #include <QDebug>
-#include <QFile>
-#include <QJsonDocument>
+#include <cassert>
 
 GameDownloadDialog::GameDownloadDialog(QWidget *parent) :
 	QDialog(parent),
-	ui_(new Ui::GameDownloadDialog)
+	ui_(new Ui::GameDownloadDialog),
+	gameDownload_(new GameDownload(this))
 {
 	ui_->setupUi(this);
-	proxyModel_.setSourceModel(&model_);
 	reapplyFilter();
-	proxyModel_.setFilterKeyColumn(Column::Type);
-	ui_->gameDownload_tableView->setModel(&proxyModel_);
+	ui_->gameDownload_tableView->setModel(gameDownload_->getModel());
 	auto versionManifestDownload = new VersionManifestDownload(this, "<launcher>/version_manifest.json");
-
-	model_.setColumnCount(5);
-	model_.setHeaderData(0,Qt::Horizontal, tr("Version Id"));
-	model_.setHeaderData(1,Qt::Horizontal, tr("Type"));
-	model_.setHeaderData(2,Qt::Horizontal, tr("Time"));
-	model_.setHeaderData(3,Qt::Horizontal, tr("Release Time"));
-	model_.setHeaderData(4,Qt::Horizontal, tr("Url"));
 
 	ui_->gameDownload_tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 //	ui_->gameDownload_tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
 //	ui_->gameDownload_tableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
 	ui_->gameDownload_tableView->setColumnWidth(0, 80);
 	ui_->gameDownload_tableView->setColumnWidth(1, 80);
-//	ui_->gameDownload_tableView->hideColumn(Column::Type);
-	ui_->gameDownload_tableView->hideColumn(Column::Time);
-	ui_->gameDownload_tableView->hideColumn(Column::ReleaseTime);
-	ui_->gameDownload_tableView->hideColumn(Column::Url);
+//	ui_->gameDownload_tableView->hideColumn(GameDownload::Column::Type);
+	ui_->gameDownload_tableView->hideColumn(GameDownload::Column::Time);
+	ui_->gameDownload_tableView->hideColumn(GameDownload::Column::ReleaseTime);
+	ui_->gameDownload_tableView->hideColumn(GameDownload::Column::Url);
 
-	if(versionManifestDownload->exists())
-		loadVersions();
+	if(versionManifestDownload->exists()){
+		gameDownload_->loadJson();
+	}
 	else{
-		connect(versionManifestDownload, &VersionManifestDownload::downloadFinished, this, &GameDownloadDialog::loadVersions);
-		versionManifestDownload->AddDownload();
+		connect(versionManifestDownload, &VersionManifestDownload::downloadFinished, gameDownload_, &GameDownload::loadJson);
+		versionManifestDownload->addDownload();
 	}
 
 	connect(ui_->enableSnapshot_checkBox, &QCheckBox::stateChanged, this, &GameDownloadDialog::reapplyFilter);
 	connect(ui_->enableOldBeta_checkBox, &QCheckBox::stateChanged, this, &GameDownloadDialog::reapplyFilter);
 	connect(ui_->enableOldAlpha_checkBox, &QCheckBox::stateChanged, this, &GameDownloadDialog::reapplyFilter);
-}
-
-void GameDownloadDialog::loadVersions()
-{
-	QFile file(PathReplacer::replace("<launcher>/version_manifest.json"));
-	if(!file.open(QIODevice::ReadOnly))
-		throw FileOpenException(file.fileName());
-
-	QByteArray jsonByte;
-	jsonByte.resize(static_cast<int>(file.bytesAvailable()));
-	jsonByte = file.readAll();
-	file.close();
-
-	QJsonParseError ok;
-	auto jsonDoc = QJsonDocument::fromJson(jsonByte,&ok);
-	if(ok.error != QJsonParseError::NoError)
-		throw JsonParseException(file.fileName(), ok.errorString(), true);
-
-	auto versionList = jsonDoc.toVariant().toMap().value("versions").toList();
-	for(auto i: versionList)
-		model_.appendRow(QList<QStandardItem*>{
-							 new QStandardItem(i.toMap().value("id").toString()),
-							 new QStandardItem(i.toMap().value("type").toString()),
-							 new QStandardItem(i.toMap().value("time").toString()),
-							 new QStandardItem(i.toMap().value("releaseTime").toString()),
-							 new QStandardItem(i.toMap().value("url").toString())
-						 });
 }
 
 GameDownloadDialog::~GameDownloadDialog()
@@ -83,12 +52,32 @@ GameDownloadDialog::~GameDownloadDialog()
 
 void GameDownloadDialog::reapplyFilter()
 {
-	QString str = "(release)";
-	if(ui_->enableSnapshot_checkBox->isChecked())
-		str.append("|(snapshot)");
-	if(ui_->enableOldBeta_checkBox->isChecked())
-		str.append("|(old_beta)");
-	if(ui_->enableOldAlpha_checkBox->isChecked())
-		str.append("|(old_alpha)");
-	proxyModel_.setFilterRegExp(QRegExp(str));
+	gameDownload_->reapplyFilter(ui_->enableSnapshot_checkBox->isChecked(),
+								 ui_->enableOldBeta_checkBox->isChecked(),
+								 ui_->enableOldAlpha_checkBox->isChecked());
+}
+
+void GameDownloadDialog::on_download_pb_clicked()
+{
+	auto row = ui_->gameDownload_tableView->currentIndex().row();
+	assert(row != -1);
+	GameVersion version = gameDownload_->getGameVersion(ui_->gameDownload_tableView->model()->index(row, 0).data().toString());
+	auto versionDownload = new VersionDownload(this, version);
+	auto downloadFile = [=]{
+		if(!versionDownload->gameClientDownload()->exists())
+			versionDownload->gameClientDownload()->addDownload();
+		if(!versionDownload->gameLibrariesDownload()->exists())
+			versionDownload->gameLibrariesDownload()->addDownload();
+	};
+	if(!versionDownload->gameJsonDownload()->exists()){
+		connect(versionDownload->gameJsonDownload(), &GameJsonDownload::downloadFinished, versionDownload, &VersionDownload::loadJson);
+		connect(versionDownload->gameJsonDownload(), &GameJsonDownload::downloadFinished, downloadFile);
+		versionDownload->gameJsonDownload()->addDownload();
+	} else
+		downloadFile();
+}
+
+void GameDownloadDialog::on_gameDownload_tableView_pressed(const QModelIndex &/*index*/)
+{
+	ui_->download_pb->setEnabled(true);
 }

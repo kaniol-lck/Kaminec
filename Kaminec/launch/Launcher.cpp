@@ -14,7 +14,10 @@ Launcher::Launcher(QObject *parent) :
 	logger_(new Logger(this))
 {
 	connect(gameProcess_, &QProcess::stateChanged, this, &Launcher::stateChanged);
-	connect(gameProcess_, &QProcess::readyRead, [&]{model_.appendRow(new QStandardItem(QString(gameProcess_->readAll()).trimmed()));});
+	connect(gameProcess_, &QProcess::readyRead, [&]{
+		for(auto str : QString(gameProcess_->readAll()).trimmed().split("\n"))
+		model_.appendRow(new QStandardItem(str));
+	});
 	//delete natives after playing
 	connect(gameProcess_, static_cast<void(QProcess::*)(int)>(&QProcess::finished), [&](int i){
 		logger_.finishGame();

@@ -9,7 +9,7 @@ GameCoreJar::GameCoreJar(const QVariant &gameCoreJarVariant, const QString &vers
 	version_(version)
 {}
 
-QString GameCoreJar::name() const
+QString GameCoreJar::version() const
 {
 	return version_;
 }

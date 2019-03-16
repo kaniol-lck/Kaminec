@@ -2,12 +2,12 @@
 #define GAMEDOWNLOADDIALOG_H
 
 #include <QDialog>
-#include <QStandardItemModel>
-#include <QSortFilterProxyModel>
 
 namespace Ui {
 	class GameDownloadDialog;
 }
+
+class GameDownload;
 
 class GameDownloadDialog : public QDialog
 {
@@ -17,16 +17,16 @@ public:
 	explicit GameDownloadDialog(QWidget *parent = nullptr);
 	~GameDownloadDialog();
 
-	enum Column{ Id, Type, Time, ReleaseTime, Url };
-
 private slots:
-	void loadVersions();
 	void reapplyFilter();
+
+	void on_download_pb_clicked();
+
+	void on_gameDownload_tableView_pressed(const QModelIndex &);
 
 private:
 	Ui::GameDownloadDialog *ui_;
-	QStandardItemModel model_;
-	QSortFilterProxyModel proxyModel_;
+	GameDownload *gameDownload_;
 };
 
 #endif // GAMEDOWNLOADDIALOG_H

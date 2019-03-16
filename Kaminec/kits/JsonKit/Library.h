@@ -14,6 +14,7 @@ public:
 	QString packageName() const;
 	QString version() const;
 
+	QString fileName() const;
 	int size() const;
 	QString sha1() const;
 	QString path() const;

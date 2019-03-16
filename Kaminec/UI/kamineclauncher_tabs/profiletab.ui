@@ -32,17 +32,9 @@
 }
 
 QHeaderView {
-	color: rgb(127, 127, 127);
-	background-color: rgba(191, 191, 191, 127);
-    border: none;
-	min-height: 40px;
-	border-bottom: 1px solid rgba(191, 191, 191, 127);
-}
-
-QHeaderView:section {
-	color: black;
-	background-color: rgba(191, 191, 191, 127);
-    border: none;
+	color: rgba(0, 0, 0, 255);
+	background-color: rgba(255, 255, 255, 255);
+    border: 1px;
 	min-height: 40px;
 	border-bottom: 1px solid rgba(191, 191, 191, 127);
 }

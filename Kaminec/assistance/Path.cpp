@@ -67,12 +67,12 @@ QString Path::loggerPath()
 	return path;
 }
 
-QString Path::getJsonPath(const QString& version)
+QString Path::jsonPath(const QString& version)
 {
 	return PathReplacer::replace("<versions>/%1/%1.json").arg(version);
 }
 
-QString Path::getAssetIndexPath(const QString &index)
+QString Path::assetIndexPath(const QString &index)
 {
 	return PathReplacer::replace("<indexes>/%1.json").arg(index);
 }

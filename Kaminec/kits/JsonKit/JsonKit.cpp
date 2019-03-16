@@ -9,7 +9,7 @@
 
 JsonKit::JsonKit(const QString &version)
 {
-	QFile jsonFile(Path::getJsonPath(version));
+	QFile jsonFile(Path::jsonPath(version));
 
 	//open json file and parse
 	if(!jsonFile.exists())

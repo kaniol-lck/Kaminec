@@ -1,17 +1,20 @@
 #ifndef GAMECLIENTDOWNLOAD_H
 #define GAMECLIENTDOWNLOAD_H
 
-#include <QObject>
+#include "FileDownload.h"
+#include "kits/JsonKit/GameCoreJar.h"
 
-class GameClientDownload : public QObject
+class GameClientDownload : public FileDownload
 {
 	Q_OBJECT
 public:
-	explicit GameClientDownload(QObject *parent = nullptr);
+	explicit GameClientDownload(QObject *parent, const GameCoreJar &client);
 
-signals:
+	bool exists() const;
+	void addDownload();
 
-public slots:
+private:
+	GameCoreJar client_;
 };
 
 #endif // GAMECLIENTDOWNLOAD_H

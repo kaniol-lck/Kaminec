@@ -7,17 +7,17 @@
 #include <QFileInfo>
 
 VersionManifestDownload::VersionManifestDownload(QObject *parent, QString fileName) :
-	QObject(parent),
+	FileDownload(parent),
 	fileName_(fileName)
 {}
 
-bool VersionManifestDownload::exists()
+bool VersionManifestDownload::exists() const
 {
 	QFileInfo fileInfo(PathReplacer::replace(fileName_));
 	return fileInfo.exists() && (fileInfo.size() != 0);
 }
 
-void VersionManifestDownload::AddDownload()
+void VersionManifestDownload::addDownload()
 {
 	Downloader::instance()->appendDownloadPack(
 				DownloadPack("Version Manifest",

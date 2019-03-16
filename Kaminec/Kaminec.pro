@@ -82,7 +82,12 @@ SOURCES += main.cpp\
     messenger/DownloadPack.cpp \
     download/Downloader.cpp \
     UI/dialogs/gamedownloaddialog.cpp \
-    download/GameClientDownload.cpp
+    download/GameClientDownload.cpp \
+    download/GameJsonDownload.cpp \
+    download/FileDownload.cpp \
+    download/VersionDownload.cpp \
+    download/GameDownload.cpp \
+    download/GameLibrariesDownload.cpp
 
 HEADERS  += UI/kamineclauncher.h \
 	UI/preferences.h \
@@ -146,7 +151,12 @@ HEADERS  += UI/kamineclauncher.h \
     messenger/DownloadPack.h \
     download/Downloader.h \
     UI/dialogs/gamedownloaddialog.h \
-    download/GameClientDownload.h
+    download/GameClientDownload.h \
+    download/GameJsonDownload.h \
+    download/FileDownload.h \
+    download/VersionDownload.h \
+    download/GameDownload.h \
+    download/GameLibrariesDownload.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preferences.ui \

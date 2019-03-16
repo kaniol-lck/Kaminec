@@ -33,6 +33,16 @@ QString Library::version() const
 	return nameList_.at(2);
 }
 
+QString Library::fileName() const
+{
+	if(isNatives())
+		return QString("%1-%2-%3.jar")
+				.arg(packageName(), version(), nativeKey());
+	else
+		return QString("%1-%2.jar")
+				.arg(packageName(), version());
+}
+
 int Library::size() const
 {
 	return isNatives()?value(libraryVariant_, "downloads", "classifiers", nativeKey(), "size").toInt():

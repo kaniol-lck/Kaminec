@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string notr="true">Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <spacer name="verticalSpacer">

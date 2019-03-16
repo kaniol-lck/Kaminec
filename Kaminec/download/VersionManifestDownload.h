@@ -1,21 +1,18 @@
 #ifndef VERSIONMANIFESTDOWNLOAD_H
 #define VERSIONMANIFESTDOWNLOAD_H
 
-#include <QObject>
+#include "FileDownload.h"
 
-class VersionManifestDownload : public QObject
+class VersionManifestDownload : public FileDownload
 {
 	Q_OBJECT
 public:
 	explicit VersionManifestDownload(QObject *parent, QString fileName);
 
-	bool exists();
-	void AddDownload();
+	bool exists() const;
+	void addDownload();
 
 	QVariant waitForDownloaded();
-
-signals:
-	void downloadFinished();
 
 private:
 	QString fileName_;
