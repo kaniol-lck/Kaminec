@@ -39,6 +39,7 @@ void SingleDownload::start(const QPair<QString, DownloadInfo> &downloadInfo)
 	QNetworkRequest request(downloadInfo.second.url());
     currentDownload_ = manager_->get(request);
 
+//	connect(currentDownload_, &QNetworkReply::downloadProgress, this, [&]{});
 	connect(currentDownload_, &QNetworkReply::finished, this, [&]{
 		output_->close();
 		emit finished(packName_, fileName_);

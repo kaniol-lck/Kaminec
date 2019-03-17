@@ -28,7 +28,7 @@ bool AssetObjectsDownload::exists() const
 void AssetObjectsDownload::addDownload()
 {
 	Downloader::instance()->appendDownloadPack(
-				DownloadPack("Asset Objects Download",
+				DownloadPack(tr("Asset Objects Download"),
 							 assetObjectInfos_),
 				[=]{emit downloadFinished();});
 }

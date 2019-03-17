@@ -13,7 +13,7 @@ AssetIndexDownload::AssetIndexDownload(QObject *parent, const AssetIndex &assetI
 bool AssetIndexDownload::exists() const
 {
 	QFileInfo fileInfo(Path::assetIndexPath(assetIndex_.id()));
-	return fileInfo.exists() && (fileInfo.size() != assetIndex_.size());
+	return fileInfo.exists() && (fileInfo.size() == assetIndex_.size());
 }
 
 void AssetIndexDownload::addDownload()

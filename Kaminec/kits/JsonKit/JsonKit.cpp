@@ -18,7 +18,7 @@ JsonKit::JsonKit(const QString &version)
 		throw FileOpenException(jsonFile.fileName());
 
 	QByteArray jsonBytes;
-	jsonBytes.resize(jsonFile.bytesAvailable());
+	jsonBytes.resize(static_cast<int>(jsonFile.bytesAvailable()));
 	jsonBytes = jsonFile.readAll();
 	jsonFile.close();
 

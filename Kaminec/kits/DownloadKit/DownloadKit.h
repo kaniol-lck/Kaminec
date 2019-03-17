@@ -21,6 +21,7 @@ public:
 	void spur();
 
 signals:
+	void started(QString packName, QString fileName);
 	void finished(QString packName, QString fileName);
 
 public slots:

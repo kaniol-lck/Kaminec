@@ -23,14 +23,17 @@ public:
 	void appendDownloadPack(const DownloadPack &downloadPack);
 	void appendDownloadPack(const DownloadPack &downloadPack, std::function<void()> slotFuntion);
 
-	static QList<QStandardItem *> downloadPack2items(const DownloadPack &downloadPack);
-	static QMap<QString, bool> downloadPack2map(const DownloadPack &downloadPack);
-
 	enum Column { FileName, FileType, Status };
+	enum StatusType { Waiting, Downloading, Finished };
+
+	static QList<QStandardItem *> info2items(const DownloadInfo &downloadInfo);
+	static QMap<QString, Downloader::StatusType> downloadPack2map(const DownloadPack &downloadPack);
 
 private:
 	DownloadKit downloadKit_;
-	QMap<QString, QMap<QString, bool>> downloadStatus_;
+	QMap<QString, QMap<QString, StatusType>> downloadStatus_;
+	QMap<QString, QList<QStandardItem *>> downloadPackItems_;
+	QMap<QString, QMap<QString, QList<QStandardItem *>>> downloadItems_;
 	QStandardItemModel model_;
 	QMap<QString, std::function<void()>> slotFunctions_;
 

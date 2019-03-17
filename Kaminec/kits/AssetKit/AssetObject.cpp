@@ -24,7 +24,7 @@ int AssetObject::size() const
 
 QString AssetObject::path() const
 {
-	return QString("%1/%2").arg(hash().left(2), hash());
+	return QString("<objects>/%1/%2").arg(hash().left(2), hash());
 }
 
 QString AssetObject::url() const

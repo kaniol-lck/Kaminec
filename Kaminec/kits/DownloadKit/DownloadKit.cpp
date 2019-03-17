@@ -19,10 +19,8 @@ void DownloadKit::appendDownloadFile(const QString &packName, const DownloadInfo
 {
 	QFileInfo fileInfo(downloadInfo.path());
 	//download only if file does not exist or has empty size(download failed)
-	if(fileInfo.exists() && (fileInfo.size() != 0)){
-		emit finished(packName, downloadInfo.name());
+	if(fileInfo.exists() && (fileInfo.size() != 0))
 		return;
-	}
 	downloadInfoQueue_.enqueue(qMakePair(packName, downloadInfo));
 	spur();
 }
@@ -32,7 +30,9 @@ void DownloadKit::spur()
 	for(auto singleDownloader : downloaderPool_){
 		if(downloadInfoQueue_.isEmpty()) break;
 		if(!singleDownloader->isOccupied()){
-			singleDownloader->start(downloadInfoQueue_.dequeue());
+			auto info = downloadInfoQueue_.dequeue();
+			emit started(info.first, info.second.name());
+			singleDownloader->start(info);
 		}
 	}
 }
