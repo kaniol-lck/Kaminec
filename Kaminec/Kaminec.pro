@@ -95,7 +95,7 @@ HEADERS  += UI/kamineclauncher.h \
 	UI/preferences.h \
 	UI/dialogs/accountdialog.h \
     assistance/Custom.h \
-    assistance/Gamemode.h \
+    messenger/GameMode.h \
     assistance/Path.h \
     assistance/systeminfo.h \
 	assistance/utility.h \

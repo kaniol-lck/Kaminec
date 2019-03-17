@@ -1,15 +1,15 @@
 #ifndef STARTGAMETAB_H
 #define STARTGAMETAB_H
 
-#include "LAminec/AccountPool.h"
-#include "LAminec/ProfileManager.h"
-#include "launch/Launcher.h"
-
 #include <QWidget>
 
 namespace Ui {
 	class StartGameTab;
 }
+
+class AccountPool;
+class ProfileManager;
+class Launcher;
 
 class StartGameTab : public QWidget
 {

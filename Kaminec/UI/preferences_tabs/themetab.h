@@ -14,7 +14,7 @@ class ThemeTab : public QWidget
 	Q_OBJECT
 
 public:
-	explicit ThemeTab(QWidget *parent = 0);
+	explicit ThemeTab(QWidget *parent = nullptr);
 
 	void accepted();
 

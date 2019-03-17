@@ -14,7 +14,7 @@ class JavaTab : public QWidget
 	Q_OBJECT
 
 public:
-	explicit JavaTab(QWidget *parent = 0);
+	explicit JavaTab(QWidget *parent = nullptr);
 
 	void accepted();
 

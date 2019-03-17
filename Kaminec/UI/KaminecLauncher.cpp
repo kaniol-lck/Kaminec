@@ -3,8 +3,16 @@
 
 #include "UI/preferences.h"
 #include "assistance/Path.h"
-#include "assistance/Gamemode.h"
+#include "messenger/GameMode.h"
 #include "UI/dialogs/gamedownloaddialog.h"
+#include "LAminec/AccountPool.h"
+#include "LAminec/ProfileManager.h"
+#include "launch/Launcher.h"
+#include "UI/downloadprogressdialog.h"
+#include "UI/kamineclauncher_tabs/startgametab.h"
+#include "UI/kamineclauncher_tabs/accounttab.h"
+#include "UI/kamineclauncher_tabs/profiletab.h"
+#include "UI/kamineclauncher_tabs/gameoutputtab.h"
 
 #include <QGraphicsEffect>
 #include <QDebug>

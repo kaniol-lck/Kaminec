@@ -16,6 +16,5 @@ bool Ruler::isAllow()
 			break;
 		}
 	}
-
 	return allow;
 }

@@ -4,7 +4,6 @@
 #include "messenger/DownloadInfo.h"
 
 #include <QObject>
-#include <QList>
 #include <QStandardItem>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>

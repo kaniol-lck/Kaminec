@@ -4,7 +4,6 @@
 #include <QList>
 #include <QVariant>
 
-#include "assistance/utility.h"
 #include "kits/Ruler/Rule.h"
 
 class Ruler

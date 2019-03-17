@@ -14,7 +14,7 @@ class PathTab : public QWidget
 	Q_OBJECT
 
 public:
-	explicit PathTab(QWidget *parent = 0);
+	explicit PathTab(QWidget *parent = nullptr);
 
 	void accepted();
 

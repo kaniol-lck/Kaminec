@@ -2,15 +2,13 @@
 #define DOWNLOADKIT_H
 
 #include "messenger/DownloadInfo.h"
-#include "kits/DownloadKit/SingleDownload.h"
 #include "messenger/DownloadPack.h"
 
-#include <QList>
-#include <QQueue>
-#include <QMutex>
-#include <functional>
-
 #include <QObject>
+#include <QQueue>
+#include <QNetworkAccessManager>
+
+class SingleDownload;
 
 class DownloadKit : public QObject
 {
@@ -21,6 +19,7 @@ public:
 	void appendDownloadFile(const QString &packName, const DownloadInfo &downloadInfo);
 
 	void spur();
+
 signals:
 	void finished(QString packName, QString fileName);
 

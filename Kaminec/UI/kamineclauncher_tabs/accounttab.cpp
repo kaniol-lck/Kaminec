@@ -2,6 +2,7 @@
 #include "ui_accounttab.h"
 
 #include "UI/dialogs/accountdialog.h"
+#include "LAminec/AccountPool.h"
 
 AccountTab::AccountTab(QWidget *parent, AccountPool *accountPool) :
 	QWidget(parent),

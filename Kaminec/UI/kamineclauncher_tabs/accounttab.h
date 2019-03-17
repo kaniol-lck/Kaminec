@@ -1,13 +1,13 @@
 #ifndef ACCOUNTTAB_H
 #define ACCOUNTTAB_H
 
-#include "LAminec/AccountPool.h"
-
 #include <QWidget>
 
 namespace Ui {
 	class AccountTab;
 }
+
+class AccountPool;
 
 class AccountTab : public QWidget
 {

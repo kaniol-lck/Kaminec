@@ -1,6 +1,9 @@
 #include "accountdialog.h"
 #include "ui_accountdialog.h"
 
+#include "kits/AuthKit/AuthResponse.h"
+#include "LAminec/AccountPool.h"
+
 #include <QMessageBox>
 
 AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool) :

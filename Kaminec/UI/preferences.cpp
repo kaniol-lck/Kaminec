@@ -2,6 +2,13 @@
 #include "ui_preferences.h"
 
 #include "assistance/Path.h"
+#include "UI/preferences_tabs/javatab.h"
+#include "UI/preferences_tabs/gametab.h"
+#include "UI/preferences_tabs/pathtab.h"
+#include "UI/preferences_tabs/launchertab.h"
+#include "UI/preferences_tabs/themetab.h"
+#include "LAminec/AccountPool.h"
+#include "LAminec/ProfileManager.h"
 
 #include <QProcess>
 #include <QFileDialog>

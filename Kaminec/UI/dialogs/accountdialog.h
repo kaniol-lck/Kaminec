@@ -1,13 +1,13 @@
 #ifndef ACCOUNTDIALOG_H
 #define ACCOUNTDIALOG_H
 
-#include "assistance/Custom.h"
 #include "messenger/Account.h"
 #include "kits/AuthKit/AuthKit.h"
-#include "LAminec/AccountPool.h"
 
 #include <QDialog>
 #include <memory>
+
+class AccountPool;
 
 namespace Ui {
 	class AccountDialog;

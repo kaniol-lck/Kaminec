@@ -1,7 +1,7 @@
 #ifndef ACCOUNT_H
 #define ACCOUNT_H
 
-#include "assistance/Gamemode.h"
+#include "messenger/GameMode.h"
 
 #include <QDateTime>
 #include <QUuid>

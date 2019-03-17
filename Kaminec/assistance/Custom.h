@@ -6,8 +6,6 @@
 #include <QFont>
 #include <QStandardPaths>
 
-#include "assistance/languages.hpp"
-
 #define getterAndSetter(name, type, key, defaultValue) \
 	void set##name(const decltype(QVariant().to##type()) &key){\
 		settings_.setValue(#key, key);\

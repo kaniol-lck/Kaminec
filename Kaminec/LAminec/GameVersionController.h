@@ -3,8 +3,6 @@
 
 #include "messenger/GameVersion.h"
 
-#include <QList>
-
 class GameVersionController
 {
 public:

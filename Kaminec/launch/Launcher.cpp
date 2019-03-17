@@ -2,6 +2,7 @@
 
 #include "assistance/Path.h"
 #include "assistance/utility.h"
+#include "launch/LaunchParser.h"
 
 #include <QDir>
 #include <QDebug>

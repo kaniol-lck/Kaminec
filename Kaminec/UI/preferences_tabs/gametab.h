@@ -14,7 +14,7 @@ class GameTab : public QWidget
 	Q_OBJECT
 
 public:
-	explicit GameTab(QWidget *parent = 0);
+	explicit GameTab(QWidget *parent = nullptr);
 
 	void accepted();
 

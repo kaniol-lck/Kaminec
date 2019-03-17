@@ -1,6 +1,10 @@
 #include "startgametab.h"
 #include "ui_startgametab.h"
 
+#include "LAminec/AccountPool.h"
+#include "LAminec/ProfileManager.h"
+#include "launch/Launcher.h"
+
 #include <QMessageBox>
 #include <QDebug>
 

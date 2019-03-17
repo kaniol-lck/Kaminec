@@ -3,15 +3,15 @@
 
 #include <QMainWindow>
 
-#include "LAminec/AccountPool.h"
-#include "LAminec/ProfileManager.h"
-#include "launch/Launcher.h"
-#include "UI/downloadprogressdialog.h"
+class AccountPool;
+class ProfileManager;
+class Launcher;
 
-#include "UI/kamineclauncher_tabs/startgametab.h"
-#include "UI/kamineclauncher_tabs/accounttab.h"
-#include "UI/kamineclauncher_tabs/profiletab.h"
-#include "UI/kamineclauncher_tabs/gameoutputtab.h"
+class DownloadProgressDialog;
+class StartGameTab;
+class AccountTab;
+class ProfileTab;
+class GameOutputTab;
 
 namespace Ui {
 	class KaminecLauncher;

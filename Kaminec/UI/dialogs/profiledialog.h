@@ -1,7 +1,7 @@
 #ifndef PROFILEDIALOG_H
 #define PROFILEDIALOG_H
 
-#include "LAminec/ProfileManager.h"
+#include "messenger/Profile.h"
 
 #include <QDialog>
 #include <memory>
@@ -9,6 +9,8 @@
 namespace Ui {
 	class ProfileDialog;
 }
+
+class ProfileManager;
 
 class ProfileDialog : public QDialog
 {

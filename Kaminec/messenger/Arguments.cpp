@@ -1,6 +1,7 @@
 #include "Arguments.h"
 
 #include "kits/Ruler/Ruler.h"
+#include "assistance/utility.h"
 
 #include <QString>
 

@@ -1,5 +1,7 @@
 #include "DownloadKit.h"
 
+#include "kits/DownloadKit/SingleDownload.h"
+
 #include <QFileInfo>
 #include <QEventLoop>
 #include <QDebug>
@@ -53,6 +55,5 @@ void DownloadKit::singleFinished(const QString &packName, const QString &fileNam
 		}
 		return;
 	}
-
 	spur();
 }

@@ -1,5 +1,7 @@
 #include "Custom.h"
 
+#include <QLocale>
+
 Custom::Custom() :
 	settings_("./Kaminec_settings.ini", QSettings::IniFormat)
 {}

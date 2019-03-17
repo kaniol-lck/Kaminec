@@ -1,5 +1,7 @@
 #include "AuthKit.h"
 
+#include "kits/AuthKit/AuthResponse.h"
+
 #include <QObject>
 #include <QEventLoop>
 #include <QTimer>

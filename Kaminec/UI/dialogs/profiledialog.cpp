@@ -1,6 +1,7 @@
 #include "profileDialog.h"
-#include "ui_profileDialog.h"
+#include "ui_profiledialog.h"
 
+#include "LAminec/ProfileManager.h"
 #include "LAminec/GameVersionController.h"
 
 #include <QMessageBox>

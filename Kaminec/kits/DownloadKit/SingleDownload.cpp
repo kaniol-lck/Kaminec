@@ -1,4 +1,4 @@
-#include "singledownload.h"
+#include "SingleDownload.h"
 #include "messenger/DownloadInfo.h"
 #include "exception/Exceptions.hpp"
 

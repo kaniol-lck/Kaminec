@@ -1,7 +1,7 @@
 #ifndef LAUNCHPACK_H
 #define LAUNCHPACK_H
 
-#include "assistance/Gamemode.h"
+#include "messenger/GameMode.h"
 #include "messenger/Arguments.h"
 #include "messenger/GameVersion.h"
 

@@ -3,12 +3,13 @@
 
 #include "messenger/Account.h"
 #include "kits/AuthKit/AuthKit.h"
-#include "kits/AuthKit/AuthResponse.h"
 
 #include <QObject>
 #include <QFile>
 #include <QJsonObject>
 #include <QStandardItemModel>
+
+class AuthResponse;
 
 class AccountPool : public QObject
 {

@@ -1,11 +1,11 @@
 #ifndef AUTHKIT_H
 #define AUTHKIT_H
 
-#include "kits/AuthKit/AuthResponse.h"
-
 #include <memory>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
+
+class AuthResponse;
 
 class AuthKit
 {

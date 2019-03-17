@@ -5,8 +5,9 @@
 #include <QProcess>
 #include <QStandardItemModel>
 
-#include "launch/LaunchParser.h"
 #include "launch/Logger.h"
+#include "messenger/Profile.h"
+#include "messenger/Account.h"
 
 class Launcher : public QObject
 {

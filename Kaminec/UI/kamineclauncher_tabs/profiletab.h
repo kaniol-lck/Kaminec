@@ -1,13 +1,13 @@
 #ifndef PROFILETAB_H
 #define PROFILETAB_H
 
-#include "LAminec/ProfileManager.h"
-
 #include <QWidget>
 
 namespace Ui {
 	class ProfileTab;
 }
+
+class ProfileManager;
 
 class ProfileTab : public QWidget
 {

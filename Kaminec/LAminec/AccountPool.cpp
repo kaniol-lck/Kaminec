@@ -3,9 +3,9 @@
 #include "assistance/PathReplacer.h"
 #include "assistance/utility.h"
 #include "exception/Exceptions.hpp"
+#include "kits/AuthKit/AuthResponse.h"
 
 #include <QJsonDocument>
-#include <QJsonObject>
 #include <QDebug>
 
 AccountPool::AccountPool(QObject *parent) :

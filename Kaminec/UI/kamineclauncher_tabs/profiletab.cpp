@@ -3,6 +3,7 @@
 
 #include "UI/dialogs/profiledialog.h"
 #include "LAminec/GameVersionController.h"
+#include "LAminec/ProfileManager.h"
 
 ProfileTab::ProfileTab(QWidget *parent, ProfileManager *profileManager) :
 	QWidget(parent),
