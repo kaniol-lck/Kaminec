@@ -16,7 +16,7 @@ GameLibrariesDownload::GameLibrariesDownload(QObject *parent, const QList<Librar
 										  libraray.size(),
 										  PathReplacer::replace(libraray.path()),
 										  libraray.url(),
-										  "Game Library File");
+										  tr("Game Library File"));
 	}
 }
 

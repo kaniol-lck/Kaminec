@@ -21,10 +21,11 @@ public:
 	GameVersion getGameVersion(const QString &versionName) const;
 
 	enum Column{ Id, Type, Time, ReleaseTime, Url };
+
 public slots:
 	void reapplyFilter(bool enableSnapshot, bool enableOldBeta, bool enableOldAlpha);
 
-	void loadJson();
+	void loadManifest();
 
 private:
 	QFile manifestFile_;

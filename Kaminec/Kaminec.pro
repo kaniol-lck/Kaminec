@@ -87,7 +87,9 @@ SOURCES += main.cpp\
     download/FileDownload.cpp \
     download/VersionDownload.cpp \
     download/GameDownload.cpp \
-    download/GameLibrariesDownload.cpp
+    download/GameLibrariesDownload.cpp \
+    download/AssetIndexDownload.cpp \
+    download/AssetObjectsDownload.cpp
 
 HEADERS  += UI/kamineclauncher.h \
 	UI/preferences.h \
@@ -156,7 +158,9 @@ HEADERS  += UI/kamineclauncher.h \
     download/FileDownload.h \
     download/VersionDownload.h \
     download/GameDownload.h \
-    download/GameLibrariesDownload.h
+    download/GameLibrariesDownload.h \
+    download/AssetIndexDownload.h \
+    download/AssetObjectsDownload.h
 
 FORMS    += UI/kamineclauncher.ui \
     UI/preferences.ui \

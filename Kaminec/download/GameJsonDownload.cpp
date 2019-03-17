@@ -8,9 +8,7 @@
 GameJsonDownload::GameJsonDownload(QObject *parent, const GameVersion &version) :
 	FileDownload(parent),
 	version_(version)
-{
-
-}
+{}
 
 bool GameJsonDownload::exists() const
 {

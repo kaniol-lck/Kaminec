@@ -55,7 +55,7 @@ void GameDownload::reapplyFilter(bool enableSnapshot, bool enableOldBeta, bool e
 	proxyModel_.setFilterRegExp(QRegExp(str));
 }
 
-void GameDownload::loadJson()
+void GameDownload::loadManifest()
 {
 	if(!manifestFile_.open(QIODevice::ReadOnly))
 		throw FileOpenException(manifestFile_.fileName());
