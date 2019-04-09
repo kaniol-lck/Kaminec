@@ -82,7 +82,7 @@ void Logger::logLaunchPack(const LaunchPack &launchPack)
 QString Logger::versionChain2String(QList<GameVersion> versionChain)
 {
 	QStringList gameVersionNameList;
-	for(auto gameVersion : versionChain)
+	for(const auto &gameVersion : versionChain)
 		gameVersionNameList << gameVersion.versionName();
 	return gameVersionNameList.join(" -> ");
 }

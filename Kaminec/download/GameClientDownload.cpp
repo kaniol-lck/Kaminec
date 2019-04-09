@@ -2,8 +2,10 @@
 
 #include "download/Downloader.h"
 #include "assistance/PathReplacer.h"
+#include "assistance/Custom.h"
 
 #include <QFileInfo>
+#include <QDebug>
 
 GameClientDownload::GameClientDownload(QObject *parent, const GameCoreJar &client) :
 	FileDownload(parent),
@@ -18,13 +20,16 @@ bool GameClientDownload::exists() const
 
 void GameClientDownload::addDownload()
 {
+	auto url = Custom().getUseBMCLAPI()?QString("https://bmclapi2.bangbang93.com/mc/game/%1/client/%2/client.jar").arg(client_.version(), client_.sha1()):
+										client_.url();
+	qDebug()<<url;
 	Downloader::instance()->appendDownloadPack(
 				DownloadPack(client_.version() + " Jar Download",
 							 QList<DownloadInfo>{
 								 DownloadInfo(client_.version() + ".jar",
 								 client_.size(),
 								 PathReplacer::replace(client_.path()),
-								 client_.url(),
+								 url,
 								 "Game Core File")}),
 				[=]{emit downloadFinished();});
 }

@@ -23,7 +23,7 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 	accountPool_(new AccountPool(this)),
 	profileManager_(new ProfileManager(this)),
 	launcher_(new Launcher(this)),
-	downloadProgressDialog_(new DownloadProgressDialog(this)),
+	downloadProgressDialog_(new DownloadProgressDialog()),
 	startGameTab_(new StartGameTab(this, launcher_, accountPool_, profileManager_)),
 	accountTab_(new AccountTab(this, accountPool_)),
 	profileTab_(new ProfileTab(this, profileManager_)),
@@ -35,15 +35,15 @@ KaminecLauncher::KaminecLauncher(QWidget *parent) :
 
 	auto *shadowEffect = new QGraphicsDropShadowEffect();
 	shadowEffect->setBlurRadius(4);
-	shadowEffect->setColor(QColor(0, 0, 0, 160));
-	shadowEffect->setOffset(2);
+	shadowEffect->setColor(QColor(64, 64, 64, 191));
+	shadowEffect->setOffset(2, 2);
 	ui_->moduleSwitch->setGraphicsEffect(shadowEffect);
 
-	auto *shadowEffect2 = new QGraphicsDropShadowEffect();
-	shadowEffect2->setBlurRadius(4);
-	shadowEffect2->setColor(QColor(0, 0, 0, 160));
-	shadowEffect2->setOffset(2);
-	ui_->mainToolBar->setGraphicsEffect(shadowEffect2);
+//	auto *shadowEffect2 = new QGraphicsDropShadowEffect();
+//	shadowEffect2->setBlurRadius(4);
+//	shadowEffect2->setColor(QColor(0, 0, 0, 160));
+//	shadowEffect2->setOffset(2);
+//	ui_->mainToolBar->setGraphicsEffect(shadowEffect2);
 
 	ui_->moduleSwitch->addTab(startGameTab_, tr("Start Game"));
 	ui_->moduleSwitch->addTab(accountTab_, tr("Account"));

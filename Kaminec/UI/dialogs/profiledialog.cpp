@@ -15,7 +15,7 @@ ProfileDialog::ProfileDialog(QWidget *parent, ProfileManager *profilemanager) :
 	ui_->hint_label->setText(tr("Create Profile"));
 	setWindowTitle(tr("Create Profile"));
 	setFixedSize(360, 185);
-	for(auto version : GameVersionController().getGameVersions())
+	for(const auto &version : GameVersionController().getGameVersions())
 		ui_->version_cb->addItem(version.versionName());
 }
 

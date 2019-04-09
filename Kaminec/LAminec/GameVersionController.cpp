@@ -7,7 +7,7 @@
 GameVersionController::GameVersionController()
 {
 	QDir versionsDir(Path::versionsPath());
-	for(auto versionName : versionsDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System))
+	for(const auto &versionName : versionsDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System))
 		gameVersions_ << GameVersion(versionName);
 }
 

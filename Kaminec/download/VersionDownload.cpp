@@ -15,7 +15,7 @@ VersionDownload::VersionDownload(QObject *parent, const GameVersion &version) :
 {
 	if(gameJsonDownload_->exists())
 		loadJson();
-	if(assetIndexDownload_->exists())
+	if(assetIndexDownload_ && assetIndexDownload_->exists())
 		loadAssetIndex();
 }
 
@@ -54,6 +54,8 @@ void VersionDownload::loadJson()
 	gameClientDownload_ = new GameClientDownload(this, jsonKit_->client());
 	gameLibrariesDownload_ = new GameLibrariesDownload(this, jsonKit_->libraries());
 	assetIndexDownload_ = new AssetIndexDownload(this, jsonKit_->assetIndex());
+	if(assetIndexDownload_->exists())
+		loadAssetIndex();
 }
 
 void VersionDownload::loadAssetIndex()

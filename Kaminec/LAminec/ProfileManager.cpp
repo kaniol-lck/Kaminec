@@ -263,14 +263,14 @@ void ProfileManager::sort(const QString &accountSorting, bool accountAscending)
 void ProfileManager::fixProfiles(QList<GameVersion> gameVersions)
 {
 	QStringList homelessVersionNames;
-	for(auto gameVersion : gameVersions)
+	for(const auto &gameVersion : gameVersions)
 		homelessVersionNames << gameVersion.versionName();
-	for(auto profile : getProfiles()){
+	for(const auto &profile : getProfiles()){
 		auto index = homelessVersionNames.indexOf(profile.lastVersionId().versionName());
 		if(index != 1)
 			homelessVersionNames.removeAt(index);
 	}
-	for(auto homelessVersionName : homelessVersionNames){
+	for(const auto &homelessVersionName : homelessVersionNames){
 		insertProfile(Profile(homelessVersionName, ProfileType::Custom, GameVersion(homelessVersionName)));
 	}
 }

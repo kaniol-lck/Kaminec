@@ -66,7 +66,7 @@ void Downloader::appendDownloadPack(const DownloadPack &downloadPack)
 	model_.appendRow(packItems);
 	downloadStatus_.insert(downloadPack.packName(), downloadPack2map(downloadPack));
 
-	for(auto downloadInfo : downloadPack.fileList())
+	for(const auto &downloadInfo : downloadPack.fileList())
 		downloadKit_.appendDownloadFile(downloadPack.packName(), downloadInfo);
 }
 
@@ -88,7 +88,7 @@ QList<QStandardItem *> Downloader::info2items(const DownloadInfo &downloadInfo)
 QMap<QString, Downloader::StatusType> Downloader::downloadPack2map(const DownloadPack &downloadPack)
 {
 	QMap<QString, StatusType> map;
-	for(auto info : downloadPack.fileList())
+	for(const auto &info : downloadPack.fileList())
 		map.insert(info.name(), StatusType::Waiting);
 	return  map;
 }

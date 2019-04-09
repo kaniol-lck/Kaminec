@@ -27,7 +27,7 @@ void DownloadKit::appendDownloadFile(const QString &packName, const DownloadInfo
 
 void DownloadKit::spur()
 {
-	for(auto singleDownloader : downloaderPool_){
+	for(const auto &singleDownloader : downloaderPool_){
 		if(downloadInfoQueue_.isEmpty()) break;
 		if(!singleDownloader->isOccupied()){
 			auto info = downloadInfoQueue_.dequeue();
@@ -44,7 +44,7 @@ void DownloadKit::singleFinished(const QString &packName, const QString &fileNam
 
 	if(downloadInfoQueue_.empty()){
 		bool noTask = true;
-		for(auto downloader: downloaderPool_){
+		for(const auto &downloader: downloaderPool_){
 			if(downloader->isOccupied()){
 				noTask = false;
 				break;

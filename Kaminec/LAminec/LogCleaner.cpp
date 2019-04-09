@@ -26,7 +26,7 @@ void LogCleaner::clean()
 	//=-=-=-=-=-=-=-=-=↑for 21 century
 
 	auto count = 0;
-	for(auto fileInfo : dir.entryInfoList()){
+	for(const auto &fileInfo : dir.entryInfoList()){
 		if(regExp.exactMatch(fileInfo.fileName())){
 			count++;
 			if(count > leaveNumber)

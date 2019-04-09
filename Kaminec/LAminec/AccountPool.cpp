@@ -39,7 +39,7 @@ AccountPool::AccountPool(QObject *parent) :
 		throw JsonParseException(accountsFile_.fileName(), ok.errorString(), true);
 
 	auto accountsVariant = accountsObject_.value("accounts").toVariant();
-	for(auto it : accountsVariant.toMap()){
+	for(const auto &it : accountsVariant.toMap()){
 		auto modeStr = value(it, "mode").toString();
 		GameMode mode;
 		if(modeStr == "certified")

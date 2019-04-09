@@ -18,7 +18,7 @@ AssetKit::AssetKit(const QString &assetIndexId)
 		throw FileOpenException(assetsFile.fileName());
 
 	QByteArray assetsBytes;
-	assetsBytes.resize(assetsFile.bytesAvailable());
+	assetsBytes.resize(static_cast<int>(assetsFile.bytesAvailable()));
 	assetsBytes = assetsFile.readAll();
 	assetsFile.close();
 

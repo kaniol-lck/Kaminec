@@ -33,6 +33,7 @@ public:
 	getterAndSetter(LogFileNumber, Int, logFileNumber, 10)
 	getterAndSetter(Font, String, font, QFont("微软雅黑", 9))
 	getterAndSetter(Background, String, background, ":/main/res/background.png")
+	getterAndSetter(UseBMCLAPI, Bool, useBMCLAPI, false)
 
 	//directory settings
 	getterAndSetter_prefix(CoreGameFileDirectory, String, coreDirectory, "path/", QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/.minecraft")

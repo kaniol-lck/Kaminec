@@ -16,7 +16,7 @@ Launcher::Launcher(QObject *parent) :
 {
 	connect(gameProcess_, &QProcess::stateChanged, this, &Launcher::stateChanged);
 	connect(gameProcess_, &QProcess::readyRead, [&]{
-		for(auto str : QString(gameProcess_->readAll()).trimmed().split("\n"))
+		for(const auto &str : QString(gameProcess_->readAll()).trimmed().split("\n"))
 		model_.appendRow(new QStandardItem(str));
 	});
 	//delete natives after playing
@@ -64,7 +64,7 @@ void Launcher::extractNatives(const QStringList &nativesPaths)
 {
 	QDir().mkdir(Path::nativesPath());
 
-	for(auto extractPath : nativesPaths){
+	for(const auto &extractPath : nativesPaths){
 		if(!QFile(extractPath).exists()) continue;
 		JlCompress::extractDir(extractPath, Path::nativesPath());
 	}

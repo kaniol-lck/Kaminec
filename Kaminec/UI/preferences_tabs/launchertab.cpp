@@ -11,9 +11,10 @@ LauncherTab::LauncherTab(QWidget *parent) :
 {
 	ui_->setupUi(this);
 	ui_->logNumber_spinBox->setValue(custom_.getLogFileNumber());
+	ui_->bmclapi_checkBox->setChecked(custom_.getUseBMCLAPI());
 
 	auto lang = custom_.getLanguage();
-	for(auto l : languages_display)
+	for(const auto &l : languages_display)
 		ui_->lang_cb->addItem(l);
 	ui_->lang_cb->setCurrentIndex(languages.indexOf(lang));
 }
@@ -21,6 +22,7 @@ LauncherTab::LauncherTab(QWidget *parent) :
 void LauncherTab::accepted()
 {
 	custom_.setLogFileNumber(ui_->logNumber_spinBox->value());
+	custom_.setUseBMCLAPI(ui_->bmclapi_checkBox->isChecked());
 }
 
 LauncherTab::~LauncherTab()
