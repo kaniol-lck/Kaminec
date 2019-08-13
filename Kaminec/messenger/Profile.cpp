@@ -1,4 +1,4 @@
-#include "profile.h"
+#include "Profile.h"
 
 Profile::Profile(const QString &name,
 				 ProfileType type,

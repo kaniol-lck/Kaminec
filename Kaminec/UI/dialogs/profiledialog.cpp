@@ -1,4 +1,4 @@
-#include "profileDialog.h"
+#include "profiledialog.h"
 #include "ui_profiledialog.h"
 
 #include "LAminec/ProfileManager.h"
