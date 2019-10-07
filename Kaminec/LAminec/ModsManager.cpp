@@ -1,4 +1,4 @@
-#include "modsmanager.h"
+#include "ModsManager.h"
 
 #include <QList>
 #include <cassert>
