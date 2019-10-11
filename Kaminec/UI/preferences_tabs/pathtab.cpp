@@ -44,7 +44,8 @@ PathTab::PathTab(QWidget *parent) :
 
 void PathTab::accepted()
 {
-	custom_.setCoreGameFileDirectory(ui_->corePath_le->text());
+    custom_.setJavaDirectory(ui_->javaPath_le_2->text());
+    custom_.setCoreGameFileDirectory(ui_->corePath_le->text());
 	custom_.setDefaultGameDirectory(ui_->defaultGamePath_le->text());
 	custom_.setGameVersionsDirectory(ui_->versionsPath_le->text());
 	custom_.setGameLibrariesDirectory(ui_->libsPath_le->text());
@@ -64,11 +65,11 @@ PathTab::~PathTab()
 
 void PathTab::on_javaPath_showPb_2_clicked()
 {
-	auto path = QFileDialog::getExistingDirectory(this, tr("Please choose the version directory"),
-												  ui_->versionsPath_le->text());
-
-	if(path!="")
-		ui_->versionsPath_le->setText(path);
+    auto javaPath = QFileDialog::getOpenFileName(this,
+                                                 tr("Choose javaw,exe..."),
+                                                 "C:/","javaw(javaw.exe)");
+    if(javaPath!="")
+        ui_->javaPath_le_2->setText(javaPath);
 }
 
 void PathTab::on_corePath_showPb_clicked()

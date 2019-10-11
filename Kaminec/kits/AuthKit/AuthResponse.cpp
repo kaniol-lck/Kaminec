@@ -1,7 +1,6 @@
 #include "AuthResponse.h"
 
 #include "assistance/utility.h"
-#include "assistance/Custom.h"
 #include "exception/Exceptions.hpp"
 
 #include <QNetworkRequest>

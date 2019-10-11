@@ -23,6 +23,8 @@ ProfileManager::ProfileManager(QObject *parent) :
 	model_.setHeaderData(Column::Created, Qt::Horizontal, tr("Created"));
 	model_.setHeaderData(Column::LastUsed, Qt::Horizontal, tr("LastUsed"));
 
+    if(!profilesFile_.exists()) return;
+
 	if(!profilesFile_.open(QIODevice::ReadWrite | QIODevice::Text))
 		throw FileOpenException(profilesFile_.fileName());
 
