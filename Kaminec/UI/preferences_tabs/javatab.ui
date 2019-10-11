@@ -90,7 +90,7 @@
       <item>
        <widget class="QGroupBox" name="customJVMArgs_gb">
         <property name="title">
-         <string>Custom Java Arguments</string>
+         <string>Custom JVM Arguments</string>
         </property>
         <property name="checkable">
          <bool>true</bool>

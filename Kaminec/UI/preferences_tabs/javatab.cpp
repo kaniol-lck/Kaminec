@@ -51,7 +51,7 @@ void JavaTab::on_javaPath_showPb_clicked()
 
 void JavaTab::on_addArg_pushButton_clicked()
 {
-    auto arg = QInputDialog::getText(this, tr("custom Argument."), tr("Input your custom Argument here:"));
+    auto arg = QInputDialog::getText(this, tr("Custom Argument"), tr("Input your custom Argument here:"));
     if(!arg.isNull() && arg != "")
         ui_->customJVMArgs_listWidget->addItem(arg);
 }
