@@ -26,15 +26,17 @@ Arguments LaunchParser::JVMConfigure() const
 	auto range = custom_.getMemoryAllocateRange();
 
 	Arguments JVMArgs;
-		JVMArgs.setOption("-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump");
-		JVMArgs.setOption("-XX:+UseG1GC");
-		JVMArgs.setOption("-XX:-UseAdaptiveSizePolicy");
-		JVMArgs.setOption("-XX:-OmitStackTraceInFastThrow");
-		JVMArgs.setOption(QString("-Djava.library.path=%1").arg(Path::nativesPath()));
-		JVMArgs.setOption("-Dfml.ignoreInvalidMinecraftCertificates=true");
-		JVMArgs.setOption(QString("-Xmn%1m").arg(range.first));
-		JVMArgs.setOption(QString("-Xmx%1m").arg(range.second));
-		JVMArgs.setOption("-Dfml.ignorePatchDiscrepancies=true");
+    JVMArgs.setOption("-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump");
+    JVMArgs.setOption(QString("-Djava.library.path=%1").arg(Path::nativesPath()));
+    JVMArgs.setOption("-Dfml.ignoreInvalidMinecraftCertificates=true");
+    JVMArgs.setOption(QString("-Xmn%1m").arg(range.first));
+    JVMArgs.setOption(QString("-Xmx%1m").arg(range.second));
+    JVMArgs.setOption("-Dfml.ignorePatchDiscrepancies=true");
+
+    if(custom_.getUseCustomJVMArguments()){
+        for(const auto& arg : custom_.getCustomJVMArguments())
+            JVMArgs.setOption(arg);
+    }
 
 	return JVMArgs;
 }

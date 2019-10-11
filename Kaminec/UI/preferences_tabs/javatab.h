@@ -23,6 +23,10 @@ public:
 private slots:
 	void on_javaPath_showPb_clicked();
 
+    void on_addArg_pushButton_clicked();
+
+    void on_removeArg_pushButton_clicked();
+
 private:
 	Ui::JavaTab *ui_;
 	Custom custom_;

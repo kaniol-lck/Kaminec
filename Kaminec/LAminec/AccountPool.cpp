@@ -150,7 +150,7 @@ void AccountPool::removeAccount(const QString &accountName)
 	if(getSelectedAccountName() == accountName && accountsMap_.count() > 1){
 		auto items = model_.findItems(accountName, Qt::MatchExactly, Column::Name);
 		if(!items.isEmpty()){
-			auto row = items.first()->row()==1?2:1;
+            auto row = items.first()->row()==0?1:0;
 			model_.item(row, Column::Playername)->setCheckState(Qt::Checked);
 			accountsObject_.insert("selectedAccountName", model_.item(row, Column::Name)->data(Qt::DisplayRole).toString());
 			writeToFile();

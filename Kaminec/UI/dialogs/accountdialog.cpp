@@ -24,7 +24,7 @@ AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool) :
 	connect(authResponse_, &AuthResponse::invalidateFinished, [&](bool ok){success_ = ok;});
 	connect(authResponse_, &AuthResponse::uuidUpdate, [&](QString uuid){uuid_ = uuid;});
 	connect(authResponse_, &AuthResponse::accessTokenUpdate, [&](QString accessToken){accessToken_ = accessToken;});
-	connect(authResponse_, &AuthResponse::clientTokenUpdate, [&](QString clientToken){clientToken_  = clientToken;});
+    connect(authResponse_, &AuthResponse::clientTokenUpdate, [&](QString clientToken){accountPool_->setClientToken(clientToken);});
 	connect(authResponse_, &AuthResponse::playerNameUpdate, [&](QString playername){ui_->playername_le->setText(playername);});
 }
 

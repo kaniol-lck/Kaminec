@@ -64,6 +64,7 @@ public:
 	void setJVMArgumentsPolicy(JVMArgumentsPolicy policy);
 	JVMArgumentsPolicy getJVMArgumentsPolicy();
 
+    getterAndSetter(UseCustomJVMArguments, Bool, useCustomJVMArguments, false)
 	void setCustomJVMArguments(QStringList arguments);
 	QStringList getCustomJVMArguments() const;
 
