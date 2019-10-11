@@ -30,8 +30,6 @@ private slots:
 
 	void on_showPassword_pb_toggled(bool checked);
 
-	void on_log_in_out_pb_clicked();
-
 	void on_certified_rb_clicked();
 
 	void on_uncertified_rb_clicked();
@@ -44,6 +42,7 @@ private:
 	QString uuid_;
 	QString accessToken_;
 	QString clientToken_;
+    QString playername_;
 	std::shared_ptr<Account> oldAccount_;
 	bool success_ = false;
 	bool isValidated = false;

@@ -21,11 +21,11 @@ AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool) :
 	on_certified_rb_clicked();
 
 	connect(authResponse_, &AuthResponse::authError, [&](QString error, QString errorMessage){QMessageBox::warning(this, error, errorMessage);});
-	connect(authResponse_, &AuthResponse::invalidateFinished, [&](bool ok){success_ = ok;});
+    connect(authResponse_, &AuthResponse::authenticateFinished, [&](bool ok){success_ = ok;});
 	connect(authResponse_, &AuthResponse::uuidUpdate, [&](QString uuid){uuid_ = uuid;});
 	connect(authResponse_, &AuthResponse::accessTokenUpdate, [&](QString accessToken){accessToken_ = accessToken;});
     connect(authResponse_, &AuthResponse::clientTokenUpdate, [&](QString clientToken){accountPool_->setClientToken(clientToken);});
-	connect(authResponse_, &AuthResponse::playerNameUpdate, [&](QString playername){ui_->playername_le->setText(playername);});
+    connect(authResponse_, &AuthResponse::playerNameUpdate, [&](QString playername){playername_ = playername;});
 }
 
 AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool, const QString &accountName) :
@@ -47,7 +47,6 @@ AccountDialog::AccountDialog(QWidget *parent, AccountPool *accountPool, const QS
 		ui_->password_label->setVisible(false);
 		ui_->password_le->setVisible(false);
 		ui_->showPassword_pb->setVisible(false);
-		ui_->log_in_out_pb->setText(tr("Log out"));
 	} else{
 		ui_->uncertified_rb->setChecked(true);
 		on_uncertified_rb_clicked();
@@ -65,19 +64,37 @@ void AccountDialog::on_buttonBox_accepted()
 	QString email = ui_->email_le->text();
 	QString playerName = ui_->playername_le->text();
 	QString uuid;
-	QString accessToken;
-
-	if(playerName.isEmpty()){
-		QMessageBox::warning(this, tr("Warning"), tr("The playername cannot be empty."));
-		return;
-	}
+    QString accessToken;
 
 	if(mode == GameMode::Uncertified){
+        if(playerName.isEmpty()){
+            QMessageBox::warning(this, tr("Warning"), tr("The playername cannot be empty."));
+            return;
+        }
 		uuid = "";
 	} else{
-		uuid = uuid_;
-		accessToken = accessToken_;
-	}
+
+        setEnabled(false);
+        //Log in
+        QByteArray data = AuthKit::kAuthenticateStyle.arg(ui_->email_le->text(),
+                                                          ui_->password_le->text()).toUtf8();
+
+        authkit_.authenticate(data);
+        //wait for authentication...
+        qDebug()<<success_;
+        if(success_){
+            Account account(playername_, mode, email, uuid_, accessToken_);
+            if(accountPool_->containAccount(account.name())){
+                QMessageBox::warning(this, tr("Warning"), tr("The account already exists."));
+                return;
+            }
+            accountPool_->insertAccount(account);
+            accept();
+            return;
+        } else{
+            return;
+        }
+    }
 
 	Account account(playerName, mode, email, uuid_, accessToken_);
 
@@ -105,54 +122,11 @@ void AccountDialog::on_showPassword_pb_toggled(bool checked)
 	}
 }
 
-void AccountDialog::on_log_in_out_pb_clicked()
-{
-	if(isValidated){
-		//Log out
-		QByteArray data = AuthKit::kTokenStyle.arg(accessToken_, clientToken_).toUtf8();
-		ui_->log_in_out_pb->setEnabled(false);
-		authkit_.invalidate(data);
-
-		ui_->log_in_out_pb->setEnabled(true);
-		if(success_){
-			ui_->email_le->setEnabled(true);
-			ui_->password_label->setVisible(true);
-			ui_->password_le->setVisible(true);
-			ui_->showPassword_pb->setVisible(true);
-			ui_->log_in_out_pb->setText(tr("Log in"));
-			ui_->playername_le->setText("");
-			isValidated = false;
-		} else{
-			//		QMessageBox::warning(this, "Error", "");
-		}
-	} else{
-		//Log in
-		QByteArray data = AuthKit::kAuthenticateStyle.arg(ui_->email_le->text(),
-														  ui_->password_le->text()).toUtf8();
-
-		ui_->log_in_out_pb->setEnabled(false);
-		authkit_.authenticate(data);
-
-		ui_->log_in_out_pb->setEnabled(true);
-		if(success_){
-			ui_->email_le->setEnabled(false);
-			ui_->password_label->setVisible(false);
-			ui_->password_le->setVisible(false);
-			ui_->showPassword_pb->setVisible(false);
-			ui_->log_in_out_pb->setText(tr("Log out"));
-			isValidated = true;
-		} else{
-			//		QMessageBox::warning(this, "Error", "");
-		}
-	}
-}
-
 void AccountDialog::on_certified_rb_clicked()
 {
 	ui_->playername_le->setEnabled(false);
 	ui_->email_label->setVisible(true);
 	ui_->email_le->setVisible(true);
-	ui_->log_in_out_pb->setVisible(true);
 	if(!isValidated){
 		ui_->playername_label->setVisible(false);
 		ui_->playername_le->setVisible(false);
@@ -175,5 +149,4 @@ void AccountDialog::on_uncertified_rb_clicked()
 	ui_->password_label->setVisible(false);
 	ui_->password_le->setVisible(false);
 	ui_->showPassword_pb->setVisible(false);
-	ui_->log_in_out_pb->setVisible(false);
 }

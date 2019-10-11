@@ -82,8 +82,8 @@ void AccountTab::on_accounts_tableView_doubleClicked(const QModelIndex &index)
 		if(index.column() == 0){
 			accountPool_->setSelectedAccountName(oldaccountName);
 		} else{
-			auto accountDialog = new AccountDialog(this, accountPool_, oldaccountName);
-			accountDialog->exec();
+//			auto accountDialog = new AccountDialog(this, accountPool_, oldaccountName);
+//			accountDialog->exec();
 		}
 	}
 }

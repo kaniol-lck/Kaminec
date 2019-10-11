@@ -21,7 +21,7 @@ void AuthResponse::authenticateResponse(QNetworkReply *reply) const
 
 	if(statusCode == 200){
 		//parse json we've got
-		qDebug()<<value(json, "selectedProfile", "id").toString();
+        qDebug()<<json;
 		emit uuidUpdate(value(json, "selectedProfile", "id").toString());
 		emit accessTokenUpdate(value(json, "accessToken").toString());
 		emit clientTokenUpdate(value(json, "clientToken").toString());
