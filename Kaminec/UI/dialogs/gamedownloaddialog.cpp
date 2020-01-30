@@ -25,14 +25,18 @@ GameDownloadDialog::GameDownloadDialog(QWidget *parent) :
 	auto versionManifestDownload = new VersionManifestDownload(this, "<launcher>/version_manifest.json");
 
 	ui_->gameDownload_tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-//	ui_->gameDownload_tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
-//	ui_->gameDownload_tableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
+    ui_->gameDownload_tableView->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
+    ui_->gameDownload_tableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
 	ui_->gameDownload_tableView->setColumnWidth(0, 80);
-	ui_->gameDownload_tableView->setColumnWidth(1, 80);
-//	ui_->gameDownload_tableView->hideColumn(GameDownload::Column::Type);
-	ui_->gameDownload_tableView->hideColumn(GameDownload::Column::Time);
-	ui_->gameDownload_tableView->hideColumn(GameDownload::Column::ReleaseTime);
-	ui_->gameDownload_tableView->hideColumn(GameDownload::Column::Url);
+    ui_->gameDownload_tableView->setColumnWidth(1, 80);
+
+    ui_->hideTime_checkBox->setCheckState(custom_.getHideTime()?Qt::Checked:Qt::Unchecked);
+    ui_->hideReleaseTime_checkBox->setCheckState(custom_.getHideReleaseTime()?Qt::Checked:Qt::Unchecked);
+    ui_->hideUrl_checkBox->setCheckState(custom_.getHideUrl()?Qt::Checked:Qt::Unchecked);
+
+    ui_->enableSnapshot_checkBox->setCheckState(custom_.getEnableSnapsot()?Qt::Checked:Qt::Unchecked);
+    ui_->enableOldAlpha_checkBox->setCheckState(custom_.getEnableOldAlpha()?Qt::Checked:Qt::Unchecked);
+    ui_->enableOldBeta_checkBox->setCheckState(custom_.getEnableOldBeta()?Qt::Checked:Qt::Unchecked);
 
 	if(versionManifestDownload->exists()){
 		gameDownload_->loadManifest();
@@ -97,4 +101,39 @@ void GameDownloadDialog::on_download_pb_clicked()
 void GameDownloadDialog::on_gameDownload_tableView_pressed(const QModelIndex &/*index*/)
 {
 	ui_->download_pb->setEnabled(true);
+}
+
+void GameDownloadDialog::on_hideTime_checkBox_stateChanged(int arg1)
+{
+    if(arg1 == Qt::Checked)
+        ui_->gameDownload_tableView->hideColumn(GameDownload::Column::Time);
+    else
+        ui_->gameDownload_tableView->showColumn(GameDownload::Column::Time);
+}
+
+void GameDownloadDialog::on_hideUrl_checkBox_stateChanged(int arg1)
+{
+    if(arg1 == Qt::Checked)
+        ui_->gameDownload_tableView->hideColumn(GameDownload::Column::Url);
+    else
+        ui_->gameDownload_tableView->showColumn(GameDownload::Column::Url);
+}
+
+void GameDownloadDialog::on_hideReleaseTime_checkBox_stateChanged(int arg1)
+{
+    if(arg1 == Qt::Checked)
+        ui_->gameDownload_tableView->hideColumn(GameDownload::Column::ReleaseTime);
+    else
+        ui_->gameDownload_tableView->showColumn(GameDownload::Column::ReleaseTime);
+}
+
+void GameDownloadDialog::on_GameDownloadDialog_finished(int /*result*/)
+{
+    custom_.setHideTime(ui_->hideTime_checkBox->isChecked());
+    custom_.setHideReleaseTime(ui_->hideReleaseTime_checkBox->isChecked());
+    custom_.setHideUrl(ui_->hideUrl_checkBox->isChecked());
+
+    custom_.setEnableSnapsot(ui_->enableSnapshot_checkBox->isChecked());
+    custom_.setEnableOldAlpha(ui_->enableOldAlpha_checkBox->isChecked());
+    custom_.setEnableOldBeta(ui_->enableOldBeta_checkBox->isChecked());
 }

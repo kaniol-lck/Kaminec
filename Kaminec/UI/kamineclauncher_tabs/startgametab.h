@@ -7,6 +7,7 @@ namespace Ui {
 	class StartGameTab;
 }
 
+class QMenu;
 class AccountPool;
 class ProfileManager;
 class Launcher;
@@ -29,6 +30,7 @@ private:
 	Launcher *launcher_;
 	AccountPool *accountPool_;
 	ProfileManager *profileManager_;
+    QMenu *menu_;
 };
 
 #endif // STARTGAMETAB_H

@@ -7,15 +7,28 @@
 
 #include <QMessageBox>
 #include <QDebug>
+#include <QMenu>
 
 StartGameTab::StartGameTab(QWidget *parent, Launcher *launcher, AccountPool *accountPool, ProfileManager *profileManager) :
 	QWidget(parent),
 	ui_(new Ui::StartGameTab),
 	launcher_(launcher),
 	accountPool_(accountPool),
-	profileManager_(profileManager)
+    profileManager_(profileManager),
+    menu_(new QMenu(this))
 {
 	ui_->setupUi(this);
+
+    for(auto profile : profileManager_->getProfiles())
+        menu_->addAction(profile.name());
+    ui_->start_pb->setMenu(menu_);
+    ui_->start_pb->setText(tr("Launch") + " " + profileManager_->getSelectedProfileName());
+
+    connect(menu_, &QMenu::triggered, [&](QAction *action){
+
+        ui_->start_pb->setText(tr("Launch") + " " + action->text());
+    });
+
 	connect(launcher_, &Launcher::stateChanged, [&](QProcess::ProcessState newState)
 	{
 		qDebug()<<newState;

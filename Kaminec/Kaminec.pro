@@ -37,6 +37,7 @@ SOURCES += main.cpp\
     kits/AssetKit/AssetObject.cpp \
     kits/AuthKit/AuthKit.cpp \
     kits/AuthKit/AuthResponse.cpp \
+    kits/AuthKit/authpayload.cpp \
     kits/DownloadKit/DownloadKit.cpp \
     kits/DownloadKit/SingleDownload.cpp \
     kits/JsonKit/AssetIndex.cpp \
@@ -95,6 +96,7 @@ HEADERS  += UI/kamineclauncher.h \
 	UI/preferences.h \
 	UI/dialogs/accountdialog.h \
     assistance/Custom.h \
+    kits/AuthKit/authpayload.h \
     messenger/GameMode.h \
     assistance/Path.h \
     assistance/systeminfo.h \

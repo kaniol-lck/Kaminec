@@ -3,6 +3,7 @@
 #include "assistance/PathReplacer.h"
 #include "assistance/utility.h"
 #include "exception/Exceptions.hpp"
+#include "kits/AuthKit/authpayload.h"
 #include "kits/AuthKit/AuthResponse.h"
 
 #include <QJsonDocument>
@@ -89,9 +90,10 @@ Account AccountPool::check(const QString &accountName) const
 
 bool AccountPool::validate(const Account &account) const
 {
-	QByteArray data = AuthKit::kTokenStyle.arg(account.accessToken(),
-											   getClientToken()).toUtf8();
-	authKit_.validate(data);
+    ValidatePayload payload;
+    payload.setAccessToken(account.accessToken());
+    payload.setClientToken(getClientToken());
+    authKit_.validate(payload);
 
 	return success_;
 }

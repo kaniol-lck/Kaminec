@@ -81,6 +81,34 @@
       </spacer>
      </item>
      <item>
+      <widget class="QCheckBox" name="hideUrl_checkBox">
+       <property name="text">
+        <string>Hide Url</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="hideReleaseTime_checkBox">
+       <property name="text">
+        <string>Hide Release Time</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="hideTime_checkBox">
+       <property name="text">
+        <string>Hide Time</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QCheckBox" name="enableSnapshot_checkBox">
        <property name="text">
         <string>Enable Snapshot</string>

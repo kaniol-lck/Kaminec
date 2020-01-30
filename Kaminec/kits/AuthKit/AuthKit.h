@@ -5,6 +5,8 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 
+#include "authpayload.h"
+
 class AuthResponse;
 
 class AuthKit
@@ -12,11 +14,11 @@ class AuthKit
 public:
 	AuthKit(AuthResponse *authResponse);
 
-	void authenticate(const QByteArray &data) const;
-	void validate(const QByteArray &data) const;
-	void refresh(const QByteArray &data) const;
-	void signout(const QByteArray &data) const = delete;//we needn't this method currently
-	void invalidate(const QByteArray &data) const;
+    void authenticate(const AuthenticatePayload &payload) const;
+    void validate(const ValidatePayload &payload) const;
+    void refresh(const RefreshPayload &payload) const;
+    void signout(const SignoutPayload &payload) const = delete;//we needn't this method currently
+    void invalidate(const InvalidatePayload &payload) const;
 
 	static const QString kYggdrasilServer;
 	static const QString kAuthenticateStyle;
@@ -25,7 +27,7 @@ public:
 private:
 	QNetworkRequest makeRequest(const QString &endpoint) const;
 	template<typename SF>
-	void post(const QNetworkRequest &request, const QByteArray& data, SF slotFunction) const;
+    void post(const QNetworkRequest &request, const AuthPayload& payload, SF slotFunction) const;
 
 	AuthResponse *authResponse_;
 	std::shared_ptr<QNetworkAccessManager> manager_;

@@ -17,11 +17,11 @@
 
 #define getterAndSetter_prefix(name, type, key, prefix, defaultValue) \
 	void set##name(const decltype(QVariant().to##type()) &key){\
-		settings_.setValue(QString(prefix) + #key, key);\
+        settings_.setValue(QString(prefix) + "/" + #key, key);\
 	}\
 	\
 	decltype(QVariant().to##type()) get##name() const{\
-		return settings_.value(QString(prefix) + #key, defaultValue).to##type();\
+        return settings_.value(QString(prefix) + "/" + #key, defaultValue).to##type();\
 	}
 
 class Custom
@@ -37,18 +37,27 @@ public:
 	getterAndSetter(UseBMCLAPI, Bool, useBMCLAPI, false)
 
 	//directory settings
-	getterAndSetter_prefix(CoreGameFileDirectory, String, coreDirectory, "path/", QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/.minecraft")
-	getterAndSetter_prefix(DefaultGameDirectory, String, gameDirectory, "path/", getCoreGameFileDirectory())
-	getterAndSetter_prefix(JavaDirectory, String, JavaDirectory, "path/", "javaw")
-	getterAndSetter_prefix(GameVersionsDirectory, String, gameVersionDirectory, "path/", "<core>/versions")
-	getterAndSetter_prefix(GameLibrariesDirectory, String, gameLibrariesDirectory, "path/", "<core>/libraries")
-	getterAndSetter_prefix(AssetsDirectory, String, assetsDirectory, "path/", "<core>/assets")
-	getterAndSetter_prefix(AssetsIndexesDirectory, String, assetsIndexesDirectory, "path/", "<assets>/indexes")
-	getterAndSetter_prefix(AssetsObjectsDirectory, String, assetsObjectsDirectory, "path/", "<assets>/objects")
-	getterAndSetter_prefix(GameNativesDirectory, String, gameNativesDirectory, "path/", "<launcher>/natives")
-	getterAndSetter_prefix(UnusedModsDirectory, String, unusedModsDirectory, "path/", "<game>/unused_mods")
-	getterAndSetter_prefix(SavesBackupDirectory, String, savesBackupDirectory, "path/", "<game>/savesBackup")
-	getterAndSetter_prefix(LoggerDirectory, String, loggerDirectory, "path/", "<launcher>/launcher_logs")
+    getterAndSetter_prefix(CoreGameFileDirectory, String, coreDirectory, "path", QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/.minecraft")
+    getterAndSetter_prefix(DefaultGameDirectory, String, gameDirectory, "path", getCoreGameFileDirectory())
+    getterAndSetter_prefix(JavaDirectory, String, JavaDirectory, "path", "javaw")
+    getterAndSetter_prefix(GameVersionsDirectory, String, gameVersionDirectory, "path", "<core>/versions")
+    getterAndSetter_prefix(GameLibrariesDirectory, String, gameLibrariesDirectory, "path", "<core>/libraries")
+    getterAndSetter_prefix(AssetsDirectory, String, assetsDirectory, "path", "<core>/assets")
+    getterAndSetter_prefix(AssetsIndexesDirectory, String, assetsIndexesDirectory, "path", "<assets>/indexes")
+    getterAndSetter_prefix(AssetsObjectsDirectory, String, assetsObjectsDirectory, "path", "<assets>/objects")
+    getterAndSetter_prefix(GameNativesDirectory, String, gameNativesDirectory, "path", "<launcher>/natives")
+    getterAndSetter_prefix(UnusedModsDirectory, String, unusedModsDirectory, "path", "<game>/unused_mods")
+    getterAndSetter_prefix(SavesBackupDirectory, String, savesBackupDirectory, "path", "<game>/savesBackup")
+    getterAndSetter_prefix(LoggerDirectory, String, loggerDirectory, "path", "<launcher>/launcher_logs")
+
+    //download display settings
+    getterAndSetter_prefix(HideTime, Bool, hideTime, "downloadDisplay", true)
+    getterAndSetter_prefix(HideReleaseTime, Bool, hideReleaseTime, "downloadDisplay", true)
+    getterAndSetter_prefix(HideUrl, Bool, hideUrl, "downloadDisplay", true)
+
+    getterAndSetter_prefix(EnableSnapsot, Bool, enableSnapsot ,"downloadDisplay", true)
+    getterAndSetter_prefix(EnableOldBeta, Bool, enableOldBeta ,"downloadDisplay", true)
+    getterAndSetter_prefix(EnableOldAlpha, Bool, enableOldAlpha ,"downloadDisplay", true)
 
 	//JVM settings
 	void setMemoryAllocateRange(int minimum, int maximum);

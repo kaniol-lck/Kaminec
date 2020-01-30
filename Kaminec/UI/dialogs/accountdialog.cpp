@@ -1,6 +1,7 @@
 #include "accountdialog.h"
 #include "ui_accountdialog.h"
 
+#include "kits/AuthKit/authpayload.h"
 #include "kits/AuthKit/AuthResponse.h"
 #include "LAminec/AccountPool.h"
 
@@ -76,10 +77,11 @@ void AccountDialog::on_buttonBox_accepted()
 
         setEnabled(false);
         //Log in
-        QByteArray data = AuthKit::kAuthenticateStyle.arg(ui_->email_le->text(),
-                                                          ui_->password_le->text()).toUtf8();
+        AuthenticatePayload payload;
+        payload.setUsername(ui_->email_le->text());
+        payload.setPassword(ui_->password_le->text());
 
-        authkit_.authenticate(data);
+        authkit_.authenticate(payload);
         //wait for authentication...
         qDebug()<<success_;
         if(success_){

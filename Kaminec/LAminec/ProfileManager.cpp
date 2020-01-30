@@ -120,7 +120,7 @@ void ProfileManager::removeProfile(const QString &profileName)
 	if(getSelectedProfileName() == profileName && profilesMap_.count() > 1){
 		auto items = model_.findItems(profileName, Qt::MatchExactly, Column::Name);
 		if(!items.isEmpty()){
-			auto row = items.first()->row()==1?2:1;
+            auto row = items.first()->row()==0?1:0;
 			model_.item(row, Column::Name)->setCheckState(Qt::Checked);
 			profilesObject_.insert("selectedprofileName", model_.item(row, Column::Name)->data(Qt::DisplayRole).toString());
 			writeToFile();
