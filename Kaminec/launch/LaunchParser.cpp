@@ -49,7 +49,7 @@ Arguments LaunchParser::gameArguments() const
 		{"${auth_player_name}", account_.playername()},
 		{"${auth_uuid}", account_.uuid()},
 		{"${version_name}", profile_.lastVersionId().versionName()},
-		{"${game_directory}", profile_.gameDir()},
+        {"${game_directory}", profile_.gameDir().isEmpty()?custom_.getDefaultGameDirectory():profile_.gameDir()},
 		{"${assets_root}", Path::assetsPath()},
 		{"${assets_index_name}", launchJson_.getAssetsIndexId()},
 		{"${version_type}", "Kaminec Launcher"},

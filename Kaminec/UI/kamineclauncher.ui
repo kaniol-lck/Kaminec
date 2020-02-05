@@ -94,7 +94,7 @@ QTabBar::tab:selected {
      <x>0</x>
      <y>0</y>
      <width>960</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -159,24 +159,19 @@ QToolBar::separator {
 </string>
    </property>
    <property name="orientation">
-    <enum>Qt::Vertical</enum>
+    <enum>Qt::Horizontal</enum>
    </property>
    <property name="toolButtonStyle">
     <enum>Qt::ToolButtonIconOnly</enum>
    </property>
    <attribute name="toolBarArea">
-    <enum>LeftToolBarArea</enum>
+    <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
    <addaction name="action_Download_Progress"/>
    <addaction name="action_preferences"/>
-  </widget>
-  <widget class="QStatusBar" name="statusBar">
-   <property name="styleSheet">
-    <string notr="true">background-color: rgba(63, 63, 63, 127);</string>
-   </property>
   </widget>
   <action name="action_preferences">
    <property name="text">

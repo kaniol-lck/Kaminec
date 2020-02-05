@@ -17,72 +17,72 @@ StartGameTab::StartGameTab(QWidget *parent, Launcher *launcher, AccountPool *acc
     profileManager_(profileManager),
     menu_(new QMenu(this))
 {
-	ui_->setupUi(this);
+    ui_->setupUi(this);
 
     for(auto profile : profileManager_->getProfiles())
-        menu_->addAction(profile.name());
-    ui_->start_pb->setMenu(menu_);
-    ui_->start_pb->setText(tr("Launch") + " " + profileManager_->getSelectedProfileName());
+        ui_->profiles_cb->addItem(profile.name());
 
-    connect(menu_, &QMenu::triggered, [&](QAction *action){
+    ui_->profiles_cb->setCurrentIndex(ui_->profiles_cb->findText(profileManager_->getSelectedProfileName(), Qt::MatchExactly));
 
-        ui_->start_pb->setText(tr("Launch") + " " + action->text());
+    connect(launcher_, &Launcher::stateChanged, [&](QProcess::ProcessState newState)
+    {
+        qDebug()<<newState;
+        if(newState == QProcess::Starting){
+            ui_->start_pb->setText(tr("Launching Java..."));
+            ui_->start_pb->setEnabled(false);
+        } else if(newState == QProcess::Running){
+            ui_->start_pb->setText(tr("Gaming..."));
+            ui_->start_pb->setEnabled(false);
+        } else /*if(newState == QProcess::NotRunning)*/{
+            ui_->start_pb->setText(tr("Launch"));
+            ui_->start_pb->setEnabled(true);
+        }
     });
 
-	connect(launcher_, &Launcher::stateChanged, [&](QProcess::ProcessState newState)
-	{
-		qDebug()<<newState;
-		if(newState == QProcess::Starting){
-			ui_->start_pb->setText(tr("Launching Java..."));
-			ui_->start_pb->setEnabled(false);
-		} else if(newState == QProcess::Running){
-			ui_->start_pb->setText(tr("Gaming..."));
-			ui_->start_pb->setEnabled(false);
-		} else /*if(newState == QProcess::NotRunning)*/{
-			ui_->start_pb->setText(tr("Launch"));
-			ui_->start_pb->setEnabled(true);
-		}
-	});
+    connect(launcher_, &Launcher::finished, [&](int /*i*/)
+    {
+    });
 
-	connect(launcher_, &Launcher::finished, [&](int /*i*/)
-	{
-	});
-
-	connect(launcher_, &Launcher::exceptionMessage, [&](QString message)
-	{
-		QMessageBox::warning(this, tr("error"), message);
-	});
+    connect(launcher_, &Launcher::exceptionMessage, [&](QString message)
+    {
+        QMessageBox::warning(this, tr("error"), message);
+    });
 }
 
 StartGameTab::~StartGameTab()
 {
-	delete ui_;
+    delete ui_;
 }
 
 void StartGameTab::changeEvent(QEvent *event)
 {
-	if (event->type() == QEvent::LanguageChange){
-		ui_->retranslateUi(this);
-	}else
-		QWidget::changeEvent(event);
+    if (event->type() == QEvent::LanguageChange){
+        ui_->retranslateUi(this);
+    }else
+        QWidget::changeEvent(event);
 }
 
 void StartGameTab::on_start_pb_clicked()
 {
-	ui_->start_pb->setText(tr("Preparing..."));
-	ui_->start_pb->setEnabled(false);
-	auto selectedAccountName = accountPool_->getSelectedAccountName();
-	if(!accountPool_->containAccount(selectedAccountName)){
-		QMessageBox::warning(this, tr("Launch Error"), tr("Please create your account first."));
-		return;
-	}
-	auto selectedProfileName = profileManager_->getSelectedProfileName();
-	if(!profileManager_->containProfile(selectedProfileName)){
-		QMessageBox::warning(this, tr("Launch Error"), tr("Please create your profile first."));
-		return;
-	}
-	auto account = accountPool_->check(selectedAccountName);
-	auto profile = profileManager_->getProfile(selectedProfileName);
+    ui_->start_pb->setText(tr("Preparing..."));
+    ui_->start_pb->setEnabled(false);
+    auto selectedAccountName = accountPool_->getSelectedAccountName();
+    if(!accountPool_->containAccount(selectedAccountName)){
+        QMessageBox::warning(this, tr("Launch Error"), tr("Please create your account first."));
+        return;
+    }
+    auto selectedProfileName = profileManager_->getSelectedProfileName();
+    if(!profileManager_->containProfile(selectedProfileName)){
+        QMessageBox::warning(this, tr("Launch Error"), tr("Please create your profile first."));
+        return;
+    }
+    auto account = accountPool_->check(selectedAccountName);
+    auto profile = profileManager_->getProfile(selectedProfileName);
 
-	launcher_->start(profile, account);
+    launcher_->start(profile, account);
+}
+
+void StartGameTab::on_profiles_cb_currentIndexChanged(const QString &arg1)
+{
+    profileManager_->setSelectedProfileName(arg1);
 }

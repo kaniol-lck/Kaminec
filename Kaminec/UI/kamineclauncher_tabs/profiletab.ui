@@ -45,7 +45,7 @@ QHeaderView {
       <set>QAbstractItemView::NoEditTriggers</set>
      </property>
      <property name="selectionMode">
-      <enum>QAbstractItemView::SingleSelection</enum>
+      <enum>QAbstractItemView::ExtendedSelection</enum>
      </property>
      <property name="selectionBehavior">
       <enum>QAbstractItemView::SelectRows</enum>
@@ -103,46 +103,6 @@ QPushButton:disabled{
        </property>
        <property name="text">
         <string>Add</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="setProfileActive_pb">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>120</width>
-         <height>40</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>14</pointsize>
-         <weight>50</weight>
-         <bold>false</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton{
-	color: rgb(255, 255, 255);
-	border: 0px;
-	background-color: rgba(255, 255, 255, 63);
-}
-QPushButton:hover{
-	background-color: rgba(255, 255, 255, 79);
-}
-QPushButton:disabled{
-	color: rgb(63, 63, 63);
-	background-color: rgba(127, 127, 127, 191);
-}</string>
-       </property>
-       <property name="text">
-        <string>Set Active</string>
        </property>
       </widget>
      </item>

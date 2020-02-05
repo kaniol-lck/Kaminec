@@ -31,7 +31,7 @@ GameVersion Profile::lastVersionId() const
 
 QString Profile::gameDir() const
 {
-	return gameDir_;
+    return gameDir_;
 }
 
 QDateTime Profile::created() const

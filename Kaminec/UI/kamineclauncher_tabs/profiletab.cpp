@@ -1,6 +1,8 @@
 #include "profiletab.h"
 #include "ui_profiletab.h"
 
+#include <QDebug>
+
 #include "UI/dialogs/profiledialog.h"
 #include "LAminec/GameVersionController.h"
 #include "LAminec/ProfileManager.h"
@@ -11,7 +13,6 @@ ProfileTab::ProfileTab(QWidget *parent, ProfileManager *profileManager) :
 	profileManager_(profileManager)
 {
 	ui_->setupUi(this);
-	ui_->setProfileActive_pb->setEnabled(false);
 	ui_->deleteProfile_pb->setEnabled(false);
 	ui_->profiles_tableView->setModel(profileManager_->getProfilesModel());
 
@@ -57,10 +58,11 @@ void ProfileTab::on_addProfile_pb_clicked()
 
 void ProfileTab::on_deleteProfile_pb_clicked()
 {
-	auto index = ui_->profiles_tableView->currentIndex();
-	if(index.isValid()){
-		profileManager_->removeProfile(profileManager_->nameFromIndex(index));
-	}
+    QStringList profileNameList;
+    for(auto index : ui_->profiles_tableView->selectionModel()->selectedRows())
+        profileNameList<<profileManager_->nameFromIndex(index);
+    for(auto profileName : profileNameList)
+        profileManager_->removeProfile(profileName);
 }
 
 void ProfileTab::on_setProfileActive_pb_clicked()
@@ -81,7 +83,6 @@ void ProfileTab::profileSortRecord()
 
 void ProfileTab::on_profiles_tableView_pressed(const QModelIndex &)
 {
-	ui_->setProfileActive_pb->setEnabled(true);
 	ui_->deleteProfile_pb->setEnabled(true);
 }
 

@@ -218,7 +218,7 @@ QList<QStandardItem *> ProfileManager::profile2itemList(const Profile &profile)
 {
 	auto nameItem = new QStandardItem(profile.name());
 	auto lastVersionIdItem = new QStandardItem(profile.lastVersionId().versionName());
-	auto gameDirItem = new QStandardItem(profile.gameDir());
+    auto gameDirItem = new QStandardItem(profile.gameDir().isEmpty()?"Default":profile.gameDir());
 	auto createdItem = new QStandardItem(profile.created().toString(Qt::ISODateWithMs));
 	auto lastUsedItem = new QStandardItem(profile.lastUsed().toString(Qt::ISODateWithMs));
 	nameItem->setCheckable(false);

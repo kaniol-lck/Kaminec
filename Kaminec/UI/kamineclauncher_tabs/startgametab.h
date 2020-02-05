@@ -25,6 +25,8 @@ public:
 private slots:
 	void on_start_pb_clicked();
 
+    void on_profiles_cb_currentIndexChanged(const QString &arg1);
+
 private:
 	Ui::StartGameTab *ui_;
 	Launcher *launcher_;
